@@ -1,0 +1,25 @@
+# Fichiers auxiliaires LaTeX
+*.aux
+*.log
+*.toc
+*.out
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.bbl
+*.blg
+*.gf
+*.idx
+*.ilg
+*.ind
+*.lof
+*.lot
+*.nav
+*.snm
+*.vrb
+# Fichiers temporaires
+*~
+*.bak
+.DS_Store
+# Previews de chapitres en cours (non mergés)
+Chapitre*_preview.pdf

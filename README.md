@@ -1,0 +1,61 @@
+# Bible de l'Électronique
+
+Ouvrage de référence multi-niveaux en électronique, du composant physique au système complet.
+Rédigé en LaTeX, compilé avec `pdflatex` (CircuiTikZ pour les schémas).
+
+## Public et philosophie
+
+Double lectorat : accessible aux débutants **et** de qualité référence pour ingénieurs/chercheurs.
+Chaque chapitre est structuré en trois niveaux :
+
+- 🟢 **Bases** — intuitif, sans Maxwell/ARQS
+- 🟡 **Approfondissement** — modèle d'ingénierie
+- 🔴 **Niveau Ingénieur** — modèle physique avec limites réelles
+
+Principes : pas d'affirmation sans justification, hypothèses explicites, causalité physique
+traçable de bout en bout, liens inter-chapitres systématiques.
+
+## État d'avancement
+
+**Phase V0.1** (production de contenu) — en cours.
+
+| Partie | Chapitres | Sujet | État |
+|--------|-----------|-------|------|
+| I    | 1–6   | Fondamentaux              | ✅ |
+| II   | 7–9   | Composants passifs        | ✅ |
+| III  | 10–12 | Régime sinusoïdal         | ✅ |
+| IV   | 13–14 | Fonctions de transfert    | ✅ |
+| V    | 15–19 | Semi-conducteurs          | ✅ |
+| VI   | 20–29 | Électronique numérique    | ✅ |
+| VII  | 30–32 | Alimentations             | ✅ |
+| VIII | 33–34 | Asservissement            | 🚧 |
+| IX   | 35–37 | CEM / PCB                 | ⬜ |
+
+**Phase V0.5** (à venir) — passe de correction + visuels sur l'ensemble.
+**Ne pas mélanger V0.1 et V0.5.**
+
+## Compilation
+
+```bash
+pdflatex Bible_Elec.tex
+pdflatex Bible_Elec.tex   # 2e passe (sommaire)
+pdflatex Bible_Elec.tex   # 3e passe (références stables)
+```
+
+## Conventions éditoriales (rappel)
+
+- Environnements colorés : `bases`, `approfondissement`, `ingenieur`, `formule`, `intuition`,
+  `attention`, `pratique`, `retenir`.
+- Résumés en 3 tableaux par niveau en fin de chapitre.
+- 6 exercices/chapitre (2 débutant, 2 intermédiaire, 2 ingénieur) + 4 questions de compréhension.
+- Schémas CircuiTikZ `american` : courants intégrés sur les fils (`i=`), labels non superposés,
+  tracés orthogonaux, masse commune fermée.
+
+## Workflow par chapitre
+
+1. Rédaction d'un fichier `ChapitreNN.tex` autonome
+2. Compilation + vérification visuelle (PDF)
+3. Relecture (peer review)
+4. Corrections ciblées → « Bon à Tirer »
+5. Merge dans `Bible_Elec.tex`
+6. Commit git
