@@ -28,7 +28,7 @@ traçable de bout en bout, liens inter-chapitres systématiques.
 | V    | 15–19 | Semi-conducteurs          | ✅ |
 | VI   | 20–29 | Électronique numérique    | ✅ |
 | VII  | 30–32 | Alimentations             | ✅ |
-| VIII | 33–34 | Asservissement            | 🚧 |
+| VIII | 33–34 | Asservissement            | ✅ |
 | IX   | 35–37 | CEM / PCB                 | ⬜ |
 
 **Phase V0.5** (à venir) — passe de correction + visuels sur l'ensemble.

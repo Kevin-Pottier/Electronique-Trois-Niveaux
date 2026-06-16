@@ -17844,4 +17844,842 @@ Mode courant & Casse le pôle LC $\Rightarrow$ Type II suffit. Standard moderne,
 \end{center}
 \end{ingenieur}
 
+
+% ============================================================================
+\part{Asservissement}
+% ============================================================================
+
+% ============================================================================
+% CHAPITRE 33 : ASSERVISSEMENT ET TRANSFORMÉE DE LAPLACE
+% VERSION PEER-REVIEW
+% Fichier autonome à intégrer dans Bible_Elec.tex
+% Ouvre la PARTIE VIII : ASSERVISSEMENT
+% ============================================================================
+
+\chapter{Asservissement et transformée de Laplace}
+
+\begin{center}
+\textit{Le régulateur de tension, l'AOP contre-réactionné, l'alimentation à découpage :\\
+tous, sans le dire, faisaient de l'asservissement. Réguler une grandeur,\\
+c'est la mesurer, la comparer à une consigne, et corriger l'écart ---\\
+en boucle. Ce chapitre donne enfin le cadre formel de cette idée\\
+omniprésente, et l'outil qui la dompte : la transformée de Laplace,\\
+qui change les équations différentielles en simple algèbre.}
+\end{center}
+
+\vspace{0.5cm}
+
+Depuis le chapitre 18 (la rétroaction de l'AOP) jusqu'au chapitre 32 (la stabilité du découpage), un même principe revient : la \textbf{boucle de contre-réaction}. Ce chapitre lui donne son cadre général --- l'\textbf{asservissement} --- et l'outil mathématique qui permet de le concevoir : la \textbf{transformée de Laplace}. Elle transforme les équations différentielles (difficiles) en fractions rationnelles en $s$ (faciles), où pôles et zéros racontent tout le comportement. C'est l'aboutissement théorique du livre : la formalisation de ce que les chapitres précédents pratiquaient déjà.
+
+% ============================================================================
+\section{Les Bases}
+
+\begin{bases}
+Boucle ouverte contre boucle fermée, les éléments d'un asservissement, et pourquoi la contre-réaction est si puissante. Prérequis : chapitres 13 (réponse en fréquence), 18 (rétroaction de l'AOP).
+\end{bases}
+
+\subsection{Boucle ouverte, boucle fermée}
+
+\begin{formule}
+\textbf{Commande en boucle ouverte :} on applique une commande \textit{calculée} sans vérifier le résultat. Un radiateur réglé sur ``puissance 1500 W'' chauffe sans savoir la température de la pièce. Simple, mais aveugle : toute perturbation (fenêtre ouverte) ou erreur de modèle fausse le résultat, sans correction.
+
+\textbf{Commande en boucle fermée (asservissement) :} on \textbf{mesure} la grandeur de sortie, on la \textbf{compare} à la consigne, et on corrige selon l'\textbf{écart}. Un thermostat mesure la température, la compare à \SI{20}{°C}, et ajuste le chauffage en continu. Le système \textit{réagit} aux perturbations et aux erreurs --- c'est ce qui fait toute la différence.
+\end{formule}
+
+\subsection{Les éléments d'une boucle d'asservissement}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth, scale=1.15, every node/.style={font=\small}, transform shape]
+  % Sommateur
+  \draw (0,0) circle (0.32);
+  \node at (0,0) {$\Sigma$};
+  \node[above left=-2pt] at (-0.22,0.22) {\footnotesize $+$};
+  \node[below left=-2pt] at (-0.18,-0.22) {\footnotesize $-$};
+  % Entrée consigne
+  \draw[->] (-2.6,0) -- (-0.32,0);
+  \node[above] at (-1.45,0.05) {$R(s)$};
+  \node[below, font=\footnotesize] at (-1.45,-0.05) {consigne};
+  % Erreur
+  \draw[->] (0.32,0) -- (1.7,0);
+  \node[above] at (1.0,0.05) {$\varepsilon(s)$};
+  % Correcteur
+  \draw[thick] (1.7,-0.6) rectangle (3.5,0.6);
+  \node[align=center] at (2.6,0) {Correcteur\\[2pt] $C(s)$};
+  % Commande
+  \draw[->] (3.5,0) -- (5.3,0);
+  \node[above] at (4.4,0.05) {$U(s)$};
+  % Procédé
+  \draw[thick] (5.3,-0.6) rectangle (7.3,0.6);
+  \node[align=center] at (6.3,0) {Procédé\\[2pt] $G(s)$};
+  % Sortie
+  \draw[->] (7.3,0) -- (9.8,0);
+  \node[above] at (9.0,0.05) {$Y(s)$};
+  \node[below, font=\footnotesize] at (9.0,-0.05) {sortie};
+  \coordinate (tap) at (8.1,0);
+  \filldraw (tap) circle (1.6pt);
+  % Retour par le capteur
+  \draw (tap) -- (8.1,-1.9);
+  \draw[thick] (6.7,-2.5) rectangle (8.5,-1.3);
+  \node[align=center] at (7.6,-1.9) {Capteur\\[2pt] $H(s)$};
+  \draw[->] (6.7,-1.9) -- (0,-1.9) -- (0,-0.32);
+  \node[below, font=\footnotesize] at (3.2,-1.9) {mesure $H(s)\,Y(s)$};
+\end{tikzpicture}
+\end{center}
+
+\begin{formule}
+\begin{itemize}[nosep]
+\item \textbf{La consigne} $R(s)$ : la valeur désirée (température voulue, tension de sortie\ldots), exprimée dans le domaine de Laplace.
+\item \textbf{Le comparateur} (sommateur) : calcule l'\textbf{erreur} $\varepsilon(s) = R(s) - H(s)Y(s)$.
+\item \textbf{Le correcteur} $C(s)$ : transforme l'erreur en commande (le ``cerveau'' --- chapitre 34).
+\item \textbf{Le procédé} $G(s)$ : le système à piloter (le moteur, le convertisseur, la pièce à chauffer).
+\item \textbf{Le capteur} $H(s)$ : mesure la sortie et la ramène au comparateur.
+\end{itemize}
+\textbf{Convention :} les blocs sont des \textbf{fonctions de transfert} en $s$ (la transformée de Laplace, introduite dans la section suivante), donc les signaux sont eux aussi notés dans le domaine de Laplace ($R$, $\varepsilon$, $U$, $Y$ en fonction de $s$) --- c'est ce qui rend licite l'écriture ``sortie $=$ bloc $\times$ entrée'' ($Y = G\,U$). En temporel, ce produit serait une convolution.
+
+On reconnaît exactement l'architecture du régulateur de tension (chapitre 30) : référence = consigne, diviseur = capteur, ampli d'erreur = comparateur + correcteur, ballast + charge = procédé. \textbf{Le régulateur était un asservissement qui ne disait pas son nom.}
+\end{formule}
+
+\subsection{Pourquoi la contre-réaction est si puissante}
+
+\begin{formule}
+Le chapitre 18 l'a montré pour l'AOP ; généralisons. Si le gain direct (correcteur + procédé) est $A$ et le retour est $\beta$, la sortie suit :
+\[
+\boxed{\frac{y}{r} = \frac{A}{1 + A\beta}}
+\]
+Quand le \textbf{gain de boucle} $A\beta \gg 1$ :
+\[
+\frac{y}{r} \approx \frac{1}{\beta}
+\]
+\textbf{Trois conséquences décisives :}
+\begin{enumerate}[nosep]
+\item \textbf{Précision} : la sortie ne dépend (presque) plus de $A$, mais seulement du retour $\beta$ --- des composants passifs précis et stables (un diviseur résistif).
+\item \textbf{Insensibilité} : si $A$ varie (température, vieillissement, dispersion), $y/r$ bouge très peu --- la boucle ``absorbe'' les imperfections du procédé.
+\item \textbf{Rejet de perturbation} : une perturbation entrant dans le procédé est divisée par $1 + A\beta$ en sortie. Plus le gain de boucle est élevé, mieux la boucle ``efface'' les perturbations.
+\end{enumerate}
+\textbf{C'est tout l'intérêt d'asservir :} échanger du gain (qu'on a en abondance) contre de la précision, de la stabilité et de l'immunité (qu'on désire).
+\end{formule}
+
+\begin{retenir}
+\textbf{L'essentiel :}
+\begin{enumerate}[nosep]
+\item Boucle ouverte : aveugle. Boucle fermée : mesure, compare, corrige l'erreur.
+\item Éléments : consigne, comparateur, correcteur $C(s)$, procédé $G(s)$, capteur $H(s)$.
+\item Contre-réaction : $y/r = A/(1+A\beta) \to 1/\beta$ si $A\beta \gg 1$.
+\item On échange du gain contre précision, insensibilité et rejet de perturbation.
+\end{enumerate}
+\end{retenir}
+
+% ============================================================================
+\section{Approfondissement}
+
+\vspace{0.3cm}
+\textit{L'outil qui rend tout cela calculable : la transformée de Laplace, les fonctions de transfert, et les pôles qui gouvernent la dynamique.}
+\vspace{0.3cm}
+
+\begin{approfondissement}
+La transformée de Laplace, la fonction de transfert, pôles et zéros, et les réponses des systèmes du 1\textsuperscript{er} et 2\textsuperscript{nd} ordre. Prérequis : chapitres 9 (RC), 13 (Bode), 14 (fonctions de transfert).
+\end{approfondissement}
+
+\subsection{La transformée de Laplace : pourquoi et comment}
+
+\begin{formule}
+Les systèmes physiques sont décrits par des \textbf{équations différentielles} (un condensateur : $i = C\,dv/dt$ ; une bobine : $v = L\,di/dt$). Les résoudre directement est pénible. La \textbf{transformée de Laplace} les change en équations \textbf{algébriques} grâce à une propriété magique :
+\[
+\mathcal{L}\!\left[\frac{df}{dt}\right] = s\,F(s) \qquad \mathcal{L}\!\left[\int f\,dt\right] = \frac{F(s)}{s}
+\]
+\textbf{Dériver devient multiplier par $s$ ; intégrer devient diviser par $s$.} La variable $s = \sigma + j\omega$ est complexe : sa partie imaginaire $\omega$ est la pulsation (le régime sinusoïdal du chapitre 11 est le cas particulier $s = j\omega$), sa partie réelle $\sigma$ décrit la croissance ou décroissance exponentielle.
+
+Une équation différentielle linéaire devient ainsi une simple fraction en $s$, qu'on manipule avec de l'algèbre.
+\end{formule}
+
+\begin{intuition}
+\textbf{Laplace généralise Fourier.} Le chapitre 13 analysait les circuits en régime sinusoïdal établi avec $j\omega$ : on y voyait l'amplitude et la phase à chaque fréquence. Laplace ajoute la dimension \textit{transitoire} (le $\sigma$) : non seulement ``comment le système répond à chaque fréquence'', mais aussi ``comment il s'établit dans le temps'' (montée, oscillations, amortissement). C'est l'outil unifié du régime établi \textit{et} du transitoire.
+\end{intuition}
+
+\subsection{La fonction de transfert, pôles et zéros}
+
+\begin{formule}
+La \textbf{fonction de transfert} $H(s) = Y(s)/X(s)$ caractérise entièrement un système linéaire. C'est une fraction rationnelle :
+\[
+H(s) = K\,\frac{(s - z_1)(s - z_2)\cdots}{(s - p_1)(s - p_2)\cdots}
+\]
+\begin{itemize}[nosep]
+\item Les \textbf{zéros} $z_i$ (racines du numérateur) : fréquences où la transmission s'annule.
+\item Les \textbf{pôles} $p_i$ (racines du dénominateur) : fréquences propres du système --- ils \textbf{gouvernent la dynamique}.
+\end{itemize}
+
+\textbf{Le critère de stabilité fondamental :}
+\[
+\boxed{\text{Système stable} \iff \text{tous les pôles ont une partie réelle négative}}
+\]
+Un pôle $p = \sigma + j\omega$ correspond à une réponse en $e^{\sigma t}\cos(\omega t)$. Si $\sigma < 0$ : l'oscillation s'amortit (stable). Si $\sigma > 0$ : elle diverge (instable). Si $\sigma = 0$ : oscillation entretenue (marginal). \textbf{La stabilité se lit directement dans la position des pôles dans le plan complexe} --- c'est tout l'enjeu du chapitre 34.
+\end{formule}
+
+\subsection{Le système du premier ordre}
+
+\begin{formule}
+Le plus simple --- déjà rencontré avec le filtre RC (chapitre 9) :
+\[
+H(s) = \frac{K}{1 + \tau s}
+\]
+Un seul pôle réel en $s = -1/\tau$. Réponse à un échelon :
+\[
+y(t) = K\left(1 - e^{-t/\tau}\right)
+\]
+\begin{itemize}[nosep]
+\item $\tau$ : la \textbf{constante de temps}. À $t = \tau$, la sortie a atteint 63\,\% ; à $t = 3\tau$, 95\,\% ; à $t = 5\tau$, 99\,\%.
+\item Pas de dépassement, pas d'oscillation : un premier ordre est \textbf{toujours stable} et monotone.
+\end{itemize}
+C'est le comportement d'une charge de condensateur, d'une mise en température, d'un moteur en vitesse : la signature universelle du ``une seule réserve d'énergie''.
+\end{formule}
+
+\subsection{Le système du second ordre}
+
+\begin{formule}
+Deux réserves d'énergie qui s'échangent (L et C, masse et ressort\ldots) donnent un second ordre, décrit par sa forme canonique :
+\[
+H(s) = \frac{K\,\omega_0^2}{s^2 + 2\zeta\omega_0\,s + \omega_0^2}
+\]
+\begin{itemize}[nosep]
+\item $\omega_0$ : la \textbf{pulsation propre} (rapidité intrinsèque).
+\item $\zeta$ (zêta) : le \textbf{coefficient d'amortissement}, qui décide tout :
+\end{itemize}
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{3.1cm}p{2.7cm}p{6.0cm}}
+\toprule
+\textbf{Amortissement} & \textbf{Pôles} & \textbf{Réponse à l'échelon} \\
+\midrule
+$\zeta > 1$ (sur-amorti) & 2 pôles réels & Lente, sans dépassement \\
+$\zeta = 1$ (critique) & 1 pôle double réel & La plus rapide \textit{sans} dépassement \\
+$0 < \zeta < 1$ (sous-amorti) & 2 pôles complexes & Rapide mais avec \textbf{dépassement} et oscillations \\
+$\zeta = 0$ (non amorti) & 2 pôles imaginaires purs & Oscillation entretenue (instable en pratique) \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{formule}
+
+\begin{intuition}
+\textbf{Le compromis rapidité/dépassement en une image.} Un $\zeta$ faible donne un système rapide mais qui ``dépasse'' la cible et oscille avant de se stabiliser (pensez à une suspension de voiture trop souple qui rebondit). Un $\zeta$ élevé ne dépasse jamais mais est lent (suspension trop dure). L'amortissement critique $\zeta = 1$ est la frontière : le plus rapide \textit{sans} dépassement. En pratique on vise souvent $\zeta \approx 0{,}7$ --- un dépassement modéré ($\sim 5\,\%$) pour gagner en rapidité. C'est exactement le réglage d'un correcteur (chapitre 34) et la signature de la résonance LC d'un découpage (chapitre 32).
+\end{intuition}
+
+% ============================================================================
+\section{Niveau Ingénieur}
+
+\begin{ingenieur}
+La précision en régime permanent, le compromis rapidité/stabilité, et la vision unifiée : tout le livre était de l'asservissement. Prérequis : chapitres 18, 30, 32.
+\end{ingenieur}
+
+\subsection{La précision : erreur statique et classe du système}
+
+\begin{formule}
+Une boucle suit-elle exactement sa consigne en régime établi ? Le \textbf{théorème de la valeur finale} donne l'erreur permanente :
+\[
+\varepsilon_\infty = \lim_{t\to\infty}\varepsilon(t) = \lim_{s\to 0} s\,\varepsilon(s)
+\]
+Le résultat dépend du nombre d'\textbf{intégrateurs} (pôles en $s = 0$) dans la boucle ouverte --- la \textbf{classe} du système :
+\begin{itemize}[nosep]
+\item \textbf{Classe 0} (aucun intégrateur) : erreur statique \textbf{non nulle} sur une consigne constante. Elle vaut $1/(1 + K)$ : plus le gain $K$ est grand, plus l'erreur est faible, mais jamais nulle.
+\item \textbf{Classe 1} (un intégrateur) : erreur statique \textbf{nulle} sur une consigne constante (l'intégrateur accumule l'erreur jusqu'à l'annuler), mais erreur constante sur une rampe.
+\item \textbf{Classe 2} (deux intégrateurs) : suit même les rampes sans erreur.
+\end{itemize}
+\textbf{C'est pourquoi un correcteur intégral (le ``I'' du PID, chapitre 34) est si précieux} : il ajoute un intégrateur, donc annule l'erreur statique. Le régulateur de tension du chapitre 30 atteint sa précision exactement ainsi --- son ampli d'erreur à fort gain agit comme un quasi-intégrateur.
+\end{formule}
+
+\subsection{Le compromis fondamental : rapidité contre stabilité}
+
+\begin{attention}
+\textbf{On ne peut pas être à la fois infiniment rapide et infiniment stable.} Augmenter le gain de boucle (pour la précision et la rapidité) rapproche les pôles de l'axe imaginaire, voire les fait passer à droite : le système devient oscillant, puis instable. C'est le même mur qu'au chapitre 18 (marges de phase) et au chapitre 32 (stabilité du SMPS), vu maintenant côté pôles :
+\begin{itemize}[nosep]
+\item Gain trop \textbf{faible} : stable mais lent et imprécis (erreur statique élevée).
+\item Gain trop \textbf{fort} : rapide mais oscillant, dépassement excessif, voire instabilité.
+\item \textbf{Le bon réglage} : assez de gain pour la précision et la rapidité, pas trop pour garder une marge de stabilité ($\zeta \approx 0{,}7$, marge de phase $\sim\SI{60}{°}$).
+\end{itemize}
+Concevoir un correcteur (chapitre 34), c'est naviguer ce compromis : placer les pôles de la boucle fermée là où l'on veut, entre rapidité et amortissement.
+\end{attention}
+
+\subsection{Perturbations et robustesse}
+
+\begin{formule}
+Un bon asservissement ne suit pas seulement la consigne : il \textbf{rejette les perturbations}. Une perturbation $d(s)$ entrant dans le procédé apparaît en sortie atténuée par le gain de boucle :
+\[
+\frac{y}{d} = \frac{G}{1 + C\,G\,H}
+\]
+Plus $|CGH|$ est grand \textbf{dans la bande de la perturbation}, mieux elle est rejetée. Mais ce gain chute avec la fréquence (pôles) : une boucle rejette bien les perturbations \textbf{lentes} (dérive thermique, variation de charge moyenne) et mal les \textbf{rapides} (au-delà de sa bande passante). C'est exactement ce qu'on a vu au chapitre 30 : le PSRR d'un régulateur, excellent en continu, s'effondre en haute fréquence --- le PSRR \textit{est} le rejet de perturbation de la boucle d'alimentation.
+\end{formule}
+
+\subsection{Vision unifiée : tout le livre était de l'asservissement}
+
+\begin{intuition}
+\textbf{Ce chapitre révèle la structure cachée de la moitié du livre.}
+\begin{itemize}[nosep]
+\item L'\textbf{AOP contre-réactionné} (chapitre 18) : $y/r = A/(1+A\beta)$, gain de boucle, marges de phase --- c'était un asservissement de tension.
+\item Le \textbf{régulateur linéaire} (chapitre 30) : référence, capteur, ampli d'erreur, ballast --- un asservissement, précis grâce à son quasi-intégrateur.
+\item L'\textbf{alimentation à découpage} (chapitre 32) : pôle LC, compensation Type III, mode courant --- un asservissement avec un procédé du second ordre.
+\item Le \textbf{sigma-delta} (chapitre 27), la \textbf{PLL} (chapitre 22), la \textbf{polarisation} d'un transistor (chapitre 16) : tous des boucles.
+\end{itemize}
+La transformée de Laplace et l'analyse des pôles sont le langage commun de tous ces systèmes. Le chapitre 34 complète l'outillage : le correcteur PID, le lieu des racines, et la lecture des marges sur Bode --- de quoi \textbf{concevoir} n'importe quel asservissement, et non plus seulement le reconnaître.
+\end{intuition}
+
+% === EXERCICES ===
+\section*{Exercices}
+\addcontentsline{toc}{section}{Exercices}
+
+\subsection*{Niveau débutant}
+
+\textbf{Exercice 33.1 ---} Un système du premier ordre a $\tau = \SI{200}{ms}$. (a) Combien de temps pour atteindre 95\,\% de la valeur finale ? (b) 99\,\% ? (c) Y a-t-il un dépassement ?
+
+\begin{pratique}
+\textbf{Solution :}
+
+(a) 95\,\% à $t = 3\tau = \SI{600}{ms}$. \quad (b) 99\,\% à $t = 5\tau = \SI{1}{s}$.
+
+(c) Non : un premier ordre n'a qu'un pôle réel, sa réponse est monotone croissante --- jamais de dépassement ni d'oscillation. Le dépassement exige au moins un second ordre sous-amorti.
+\end{pratique}
+
+\textbf{Exercice 33.2 ---} Un asservissement a un gain direct $A = 1000$ et un retour $\beta = 0{,}1$. (a) Quel est le gain en boucle fermée $y/r$ ? (b) Si $A$ chute à 500 (vieillissement), de combien varie $y/r$ ?
+
+\begin{pratique}
+\textbf{Solution :}
+
+(a) $y/r = A/(1+A\beta) = 1000/(1+100) = 1000/101 = 9{,}90$.
+
+(b) $A = 500$ : $y/r = 500/(1+50) = 500/51 = 9{,}80$. Variation : $(9{,}90-9{,}80)/9{,}90 = 1\,\%$ pour une chute de \textbf{50\,\%} de $A$. La boucle a divisé la sensibilité par $\sim 50$ (le facteur $1+A\beta$) : c'est l'insensibilité de la contre-réaction en action.
+\end{pratique}
+
+\subsection*{Niveau intermédiaire}
+
+\textbf{Exercice 33.3 ---} Un système du second ordre a $\omega_0 = \SI{100}{rad/s}$ et $\zeta = 0{,}5$. (a) Les pôles sont-ils réels ou complexes ? (b) Calculez-les. (c) Le système est-il stable ?
+
+\begin{pratique}
+\textbf{Solution :} pôles racines de $s^2 + 2\zeta\omega_0 s + \omega_0^2 = 0$, soit $s = -\zeta\omega_0 \pm \omega_0\sqrt{\zeta^2-1}$.
+
+(a) $\zeta = 0{,}5 < 1 \Rightarrow$ racine négative sous le radical $\Rightarrow$ pôles \textbf{complexes conjugués}.
+
+(b) $s = -0{,}5\times100 \pm 100\sqrt{0{,}25-1} = -50 \pm 100\,j\sqrt{0{,}75} = -50 \pm 86{,}6\,j$.
+
+(c) Partie réelle $= -50 < 0$ pour les deux pôles $\Rightarrow$ \textbf{stable}. La réponse oscille à $\sim\SI{86.6}{rad/s}$ en s'amortissant avec une enveloppe en $e^{-50t}$. Comme $\zeta < 1$, il y aura du dépassement.
+\end{pratique}
+
+\textbf{Exercice 33.4 ---} On applique un échelon à un circuit RLC série ($R = \SI{10}{\ohm}$, $L = \SI{1}{mH}$, $C = \SI{1}{\micro F}$), sortie aux bornes de $C$. (a) Calculez $\omega_0$ et $\zeta$. (b) Le régime est-il oscillant ?
+
+\begin{pratique}
+\textbf{Solution :} pour un RLC série, $\omega_0 = 1/\sqrt{LC}$ et $\zeta = \frac{R}{2}\sqrt{C/L}$.
+
+(a) $\omega_0 = 1/\sqrt{10^{-3}\times10^{-6}} = 1/\sqrt{10^{-9}} = \SI{31623}{rad/s}$ ($\approx \SI{5.03}{kHz}$).
+
+$\zeta = \frac{10}{2}\sqrt{10^{-6}/10^{-3}} = 5\times\sqrt{10^{-3}} = 5\times0{,}0316 = 0{,}158$.
+
+(b) $\zeta = 0{,}158 \ll 1$ : régime \textbf{très oscillant} (faiblement amorti), avec un dépassement important. C'est le même second ordre que le filtre LC de sortie d'un découpage (chapitre 32) --- d'où la nécessité d'amortir ou de compenser.
+\end{pratique}
+
+\subsection*{Niveau ingénieur}
+
+\textbf{Exercice 33.5 ---} Une boucle de classe 0 a un gain de boucle statique $K = 49$. (a) Quelle erreur statique sur une consigne constante ? (b) Que devient-elle si on ajoute un intégrateur (classe 1) ? (c) Quel inconvénient l'intégrateur introduit-il ?
+
+\begin{pratique}
+\textbf{Solution :}
+
+(a) Erreur statique classe 0 : $\varepsilon_\infty = 1/(1+K) = 1/50 = 2\,\%$. La sortie se stabilise 2\,\% en dessous de la consigne, indéfiniment.
+
+(b) Avec un intégrateur (classe 1) : $\varepsilon_\infty = 0$. L'intégrateur accumule l'erreur tant qu'elle est non nulle, jusqu'à l'annuler complètement. C'est la précision parfaite en régime établi.
+
+(c) L'intégrateur ajoute $-\SI{90}{°}$ de phase à toutes les fréquences $\Rightarrow$ il \textbf{dégrade la marge de phase} et tend à déstabiliser. Tout l'art du correcteur PID (chapitre 34) est de bénéficier de la précision du ``I'' sans perdre la stabilité --- d'où l'ajout du terme dérivé ``D''.
+\end{pratique}
+
+\textbf{Exercice 33.6 ---} Un régulateur de tension (chapitre 30) a un gain de boucle de \SI{80}{dB} en continu, tombant à \SI{20}{dB} à \SI{100}{kHz}. (a) De combien atténue-t-il une perturbation d'alimentation à \SI{100}{Hz} (gain de boucle $\approx \SI{80}{dB}$) ? (b) À \SI{100}{kHz} ? (c) Reliez au PSRR du chapitre 30.
+
+\begin{pratique}
+\textbf{Solution :} le rejet de perturbation vaut $\approx 1+|CGH| \approx |CGH|$ quand le gain est grand.
+
+(a) À \SI{100}{Hz} : \SI{80}{dB} de gain de boucle $\Rightarrow$ atténuation $\times 10^{80/20} = \times 10\,000$. Une ondulation de \SI{100}{mV} devient \SI{10}{\micro V}. Excellent.
+
+(b) À \SI{100}{kHz} : \SI{20}{dB} $\Rightarrow$ atténuation $\times 10 = $ seulement. Une ondulation de \SI{100}{mV} devient \SI{10}{mV}. Médiocre.
+
+(c) C'est exactement le PSRR : il \textit{est} le gain de boucle de l'alimentation vu comme rejet de perturbation. Fort en continu, faible en HF --- d'où l'inefficacité d'un LDO seul contre l'ondulation de découpage (chapitre 30), et la nécessité d'un filtrage LC complémentaire.
+\end{pratique}
+
+\subsection*{Questions de compréhension}
+
+\begin{enumerate}[nosep]
+\item En quoi une commande en boucle fermée est-elle fondamentalement supérieure à une boucle ouverte face aux perturbations et aux erreurs de modèle ? Donnez l'intuition, pas la formule.
+\item La transformée de Laplace change la dérivation en multiplication par $s$. Pourquoi cette simple propriété rend-elle les équations différentielles solubles par algèbre ?
+\item Pourquoi la stabilité se lit-elle dans le signe de la partie réelle des pôles ? Reliez un pôle $\sigma + j\omega$ à une réponse temporelle $e^{\sigma t}\cos(\omega t)$.
+\item Un intégrateur annule l'erreur statique mais dégrade la stabilité. Expliquez ce double effet et pourquoi il motive l'ajout d'un terme dérivé dans un PID.
+\end{enumerate}
+
+% === RÉSUMÉ ===
+\section*{Résumé du chapitre}
+\addcontentsline{toc}{section}{Résumé du chapitre}
+
+\begin{bases}[title={\color{white} Résumé --- Les Bases}]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{3.5cm}p{9.5cm}}
+\toprule
+Boucle ouverte/fermée & Ouverte : aveugle. Fermée : mesure, compare, corrige l'erreur \\
+Éléments & Consigne, comparateur, correcteur $C(s)$, procédé $G(s)$, capteur $H(s)$ \\
+Contre-réaction & $y/r = A/(1+A\beta) \to 1/\beta$ si $A\beta \gg 1$ \\
+Intérêt & Précision + insensibilité + rejet de perturbation (gain échangé contre qualité) \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{bases}
+
+\begin{approfondissement}[title={\color{white} Résumé --- Approfondissement}]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{3.5cm}p{9.5cm}}
+\toprule
+Laplace & Dériver $\to \times s$, intégrer $\to /s$ : équations diff. deviennent algèbre \\
+Fonction de transfert & $H(s) = Y/X$, fraction rationnelle. Pôles gouvernent la dynamique \\
+Stabilité & Stable $\iff$ tous les pôles à partie réelle négative \\
+1\textsuperscript{er} ordre & $K/(1+\tau s)$ : monotone, 63\,\% à $\tau$, toujours stable \\
+2\textsuperscript{nd} ordre & $\omega_0$, $\zeta$ : $\zeta<1$ oscillant, $\zeta=1$ critique, $\zeta\approx0{,}7$ optimal \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{approfondissement}
+
+\begin{ingenieur}[title={\color{white} Résumé --- Niveau Ingénieur}]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{3.5cm}p{9.5cm}}
+\toprule
+Précision & Classe (nb d'intégrateurs) : classe 0 erreur $1/(1+K)$, classe 1 erreur nulle \\
+Compromis & Rapidité vs stabilité : gain $\uparrow$ rapproche les pôles de l'instabilité \\
+Rejet perturbation & $y/d = G/(1+CGH)$ : fort en BF, faible en HF (= le PSRR du Ch.30) \\
+Vision unifiée & AOP, régulateur, SMPS, PLL, sigma-delta : tous des asservissements \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{ingenieur}
+
+% ============================================================================
+% CHAPITRE 34 : CORRECTEUR PID, LIEU DES RACINES ET MARGES DE STABILITÉ
+% VERSION PEER-REVIEW
+% Fichier autonome à intégrer dans Bible_Elec.tex
+% Clôt la PARTIE VIII : ASSERVISSEMENT
+% ============================================================================
+
+\chapter{Correcteur PID, lieu des racines et marges de stabilité}
+
+\begin{center}
+\textit{Le chapitre précédent a posé le cadre : une boucle, un procédé, un correcteur.\\
+Restait la question décisive --- comment régler ce correcteur ?\\
+Trois actions suffisent à dompter presque tous les systèmes :\\
+proportionnelle, intégrale, dérivée. Ce chapitre montre ce que fait\\
+chacune, comment placer les pôles de la boucle fermée (lieu des racines),\\
+et comment lire la stabilité directement sur Bode.}
+\end{center}
+
+\vspace{0.5cm}
+
+Le chapitre 33 a formalisé l'asservissement et introduit Laplace ; il restait le correcteur $C(s)$ comme une boîte à remplir. Ce chapitre la remplit avec le \textbf{PID}, le correcteur universel de l'industrie : trois actions élémentaires --- \textbf{P}roportionnelle, \textbf{I}ntégrale, \textbf{D}érivée --- dont la combinaison règle le compromis précision / rapidité / stabilité. On verra ensuite deux outils de conception complémentaires : le \textbf{lieu des racines} (où vont les pôles quand on monte le gain) et la lecture des \textbf{marges} sur Bode (chapitre 18). C'est le chapitre qui transforme la compréhension des boucles en capacité à les \textit{concevoir}.
+
+% ============================================================================
+\section{Les Bases}
+
+\begin{bases}
+Les trois actions du PID --- ce que chacune fait, son intérêt et son défaut. Prérequis : chapitre 33 (boucle fermée, erreur, classe), chapitre 18 (rétroaction).
+\end{bases}
+
+\subsection{L'action proportionnelle (P) : réagir à l'erreur}
+
+\begin{formule}
+La commande est proportionnelle à l'erreur :
+\[
+u = K_p\,\varepsilon
+\]
+Plus l'écart est grand, plus on corrige fort. C'est l'instinct de base : « loin de la cible $\Rightarrow$ pousser fort ; proche $\Rightarrow$ pousser doucement ».
+
+\textbf{Effets de $K_p$ :}
+\begin{itemize}[nosep]
+\item $K_p \uparrow$ : réponse plus \textbf{rapide} et erreur statique \textbf{réduite} (mais jamais nulle en classe 0, chapitre 33 : $\varepsilon_\infty = 1/(1+K)$).
+\item $K_p$ trop grand : la boucle \textbf{oscille}, puis devient instable (les pôles se rapprochent de l'axe imaginaire).
+\end{itemize}
+\textbf{Le défaut intrinsèque du P seul : l'erreur résiduelle.} Pour produire une commande, il faut une erreur non nulle ($u = K_p\varepsilon$ : si $\varepsilon = 0$, $u = 0$). Un correcteur purement proportionnel laisse donc toujours un écart permanent --- il faut le terme intégral pour l'effacer.
+\end{formule}
+
+\subsection{L'action intégrale (I) : effacer l'erreur résiduelle}
+
+\begin{formule}
+La commande intègre l'erreur dans le temps :
+\[
+u = K_i \int \varepsilon\,dt
+\]
+Tant qu'il reste une erreur, l'intégrale \textbf{s'accumule} et pousse la commande --- jusqu'à ce que l'erreur soit \textbf{exactement nulle}. C'est l'intégrateur de la classe 1 (chapitre 33) qui annule l'erreur statique.
+
+\textbf{Effets de $K_i$ :}
+\begin{itemize}[nosep]
+\item \textbf{Erreur statique nulle} : l'avantage décisif. La sortie atteint exactement la consigne en régime établi.
+\item \textbf{Mais $-\SI{90}{°}$ de phase} ajoutés (un intégrateur, chapitre 33) : l'intégrale \textbf{dégrade la stabilité} et ralentit la réponse. Trop d'intégrale $\Rightarrow$ oscillations lentes.
+\end{itemize}
+\end{formule}
+
+\subsection{L'action dérivée (D) : anticiper}
+
+\begin{formule}
+La commande réagit à la \textbf{vitesse} de variation de l'erreur :
+\[
+u = K_d\,\frac{d\varepsilon}{dt}
+\]
+Si l'erreur diminue vite, le dérivé \textbf{freine} la commande à l'avance, avant d'atteindre la cible : il \textbf{anticipe} et amortit. C'est le terme qui ajoute de l'amortissement et réduit le dépassement.
+
+\textbf{Effets de $K_d$ :}
+\begin{itemize}[nosep]
+\item $+\SI{90}{°}$ de phase (un dérivateur) : il \textbf{améliore la marge de phase} et la stabilité, autorise un $K_p$ plus élevé donc une réponse plus rapide sans osciller.
+\item \textbf{Mais il amplifie le bruit} : dériver un signal bruité (chapitre 18, $e_n$) accentue les hautes fréquences. Un dérivé pur est inutilisable tel quel --- il faut le filtrer (niveau ingénieur).
+\end{itemize}
+\end{formule}
+
+\begin{intuition}
+\textbf{Conduire une voiture résume le PID.} Le \textbf{P} regarde l'écart actuel à la ligne (corriger proportionnellement). Le \textbf{I} corrige un défaut persistant (volant légèrement décentré $\Rightarrow$ on accumule une correction jusqu'à rouler droit). Le \textbf{D} anticipe : voyant le virage \textit{arriver}, on tourne \textit{avant} de dévier. P réagit au présent, I corrige le passé accumulé, D anticipe le futur.
+\end{intuition}
+
+\begin{retenir}
+\textbf{L'essentiel :}
+\begin{enumerate}[nosep]
+\item \textbf{P} ($K_p\varepsilon$) : rapidité, réduit l'erreur sans l'annuler. Trop $\Rightarrow$ oscille.
+\item \textbf{I} ($K_i\!\int\!\varepsilon$) : annule l'erreur statique, mais $-\SI{90}{°}$ de phase $\Rightarrow$ déstabilise.
+\item \textbf{D} ($K_d\,d\varepsilon/dt$) : anticipe, amortit, $+\SI{90}{°}$ de phase, mais amplifie le bruit.
+\item Le PID combine les trois : précision (I) + rapidité (P) + amortissement (D).
+\end{enumerate}
+\end{retenir}
+
+% ============================================================================
+\section{Approfondissement}
+
+\vspace{0.3cm}
+\textit{Le PID complet, l'effet de chaque action sur la réponse, et le réglage du correcteur.}
+\vspace{0.3cm}
+
+\begin{approfondissement}
+La fonction de transfert du PID, l'effet des termes sur la réponse indicielle, et les méthodes de réglage. Prérequis : chapitres 13 (Bode), 33 (Laplace, pôles).
+\end{approfondissement}
+
+\subsection{La fonction de transfert du PID}
+
+\begin{formule}
+En combinant les trois actions et en passant en Laplace (chapitre 33) :
+\[
+\boxed{C(s) = K_p + \frac{K_i}{s} + K_d\,s = K_p\left(1 + \frac{1}{T_i\,s} + T_d\,s\right)}
+\]
+\begin{itemize}[nosep]
+\item $T_i = K_p/K_i$ : la \textbf{constante de temps d'intégration} (temps pour que l'action I égale l'action P).
+\item $T_d = K_d/K_p$ : la \textbf{constante de temps de dérivation} (horizon d'anticipation).
+\end{itemize}
+Le PID apporte un \textbf{pôle à l'origine} (l'intégrateur, en $s = 0$) et \textbf{deux zéros} (réglables via $T_i$, $T_d$). Ces deux zéros sont les leviers du concepteur : on les place pour ``rattraper'' la phase que les pôles du procédé font chuter --- c'est précisément le rôle des compensateurs Type II/III du découpage (chapitre 32), qui sont des PID déguisés.
+\end{formule}
+
+\subsection{L'effet de chaque action sur la réponse indicielle}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+  % Axes
+  \draw[->] (0,0) -- (8.4,0) node[right, font=\small]{$t$};
+  \draw[->] (0,0) -- (0,3.6) node[above, font=\small]{sortie};
+  % Consigne
+  \draw[dashed, thick] (0,2.6) -- (8.2,2.6);
+  \node[left, font=\footnotesize] at (0,2.6) {consigne};
+  % P seul : monte et se stabilise sous la consigne (erreur statique)
+  \draw[thick, blue!70!black] (0,0) .. controls (1.0,2.0) and (1.6,1.95) .. (3.0,1.95) -- (8.2,1.95);
+  \node[blue!70!black, font=\footnotesize, right] at (8.2,1.95) {P};
+  \node[blue!70!black, font=\footnotesize] at (5.0,1.7) {erreur statique};
+  % PI : monte, dépasse, revient sur la consigne
+  \draw[thick, orange!85!black] (0,0) .. controls (0.9,2.9) and (1.5,3.2) .. (2.2,2.95) .. controls (2.8,2.75) and (3.4,2.5) .. (4.2,2.6) -- (8.2,2.6);
+  \node[orange!85!black, font=\footnotesize, right] at (8.2,2.62) {PI};
+  % PID : monte vite, peu de dépassement, sur la consigne
+  \draw[thick, red!80!black] (0,0) .. controls (0.7,2.55) and (1.3,2.75) .. (2.0,2.68) .. controls (2.6,2.62) and (3.2,2.58) .. (4.0,2.6) -- (8.2,2.6);
+  \node[red!80!black, font=\footnotesize] at (1.9,3.15) {PID};
+\end{tikzpicture}
+\end{center}
+
+\begin{formule}
+\textbf{Lecture du graphe :}
+\begin{itemize}[nosep]
+\item \textbf{P seul} (bleu) : réponse rapide mais se stabilise \textit{sous} la consigne --- l'erreur statique résiduelle.
+\item \textbf{PI} (orange) : l'intégrale efface l'erreur (la courbe rejoint la consigne) mais au prix d'un \textbf{dépassement} et d'oscillations (le $-\SI{90}{°}$ de l'intégrateur).
+\item \textbf{PID} (rouge) : le terme dérivé amortit $\Rightarrow$ montée rapide, dépassement réduit, et toujours erreur nulle. Le meilleur compromis.
+\end{itemize}
+\end{formule}
+
+\begin{pratique}
+\textbf{Effet qualitatif d'une augmentation de chaque gain (toutes choses égales) :}
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{p{1.8cm}p{2.2cm}p{2.3cm}p{2.2cm}p{2.0cm}}
+\toprule
+\textbf{Gain} & \textbf{Rapidité} & \textbf{Dépass.} & \textbf{Err. stat.} & \textbf{Stabilité} \\
+\midrule
+$K_p \uparrow$ & augmente & augmente & diminue & dégrade \\
+$K_i \uparrow$ & augmente & augmente & \textbf{annule} & dégrade \\
+$K_d \uparrow$ & ~$\approx$ & diminue & ~$\approx$ & améliore \\
+\bottomrule
+\end{tabular}
+\end{center}
+Ce tableau guide le réglage manuel : on augmente $K_p$ pour la rapidité, on ajoute $K_i$ pour la précision, on dose $K_d$ pour amortir le dépassement qu'ils créent.
+\end{pratique}
+
+\subsection{Régler un PID : les méthodes}
+
+\begin{formule}
+\textbf{Réglage manuel} (le plus courant en pratique) : augmenter $K_p$ jusqu'à une réponse vive mais limite-oscillante, ajouter $K_i$ pour annuler l'erreur statique, puis $K_d$ pour réduire le dépassement. Itérer.
+
+\textbf{Méthode de Ziegler-Nichols} (réglage empirique classique) : on augmente $K_p$ (sans I ni D) jusqu'au \textbf{gain critique} $K_u$ où la boucle oscille de façon entretenue, à la \textbf{période} $T_u$. Des formules empiriques donnent alors $K_p$, $T_i$, $T_d$ à partir de $K_u$ et $T_u$. Rapide mais agressif (dépassement marqué) : un point de départ, pas un réglage final.
+
+\textbf{Réglage par modèle} : si l'on connaît $G(s)$, on place les pôles de la boucle fermée à la position désirée (lieu des racines, niveau ingénieur) ou l'on impose une marge de phase cible sur Bode. C'est l'approche de conception, par opposition à l'empirique.
+\end{formule}
+
+% ============================================================================
+\section{Niveau Ingénieur}
+
+\begin{ingenieur}
+Le lieu des racines, les marges de stabilité sur Bode, et le PID réel (filtrage du dérivé, anti-windup, version numérique). Prérequis : chapitres 13 (Bode), 18 (marges), 33 (pôles).
+\end{ingenieur}
+
+\subsection{Le lieu des racines : où vont les pôles}
+
+\begin{formule}
+Le \textbf{lieu des racines} (\textit{root locus}) trace le déplacement des \textbf{pôles de la boucle fermée} dans le plan complexe quand on fait varier un paramètre --- typiquement le gain $K$ --- de 0 à l'infini.
+\end{formule}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0, >=Stealth]
+  % Axes (plan complexe)
+  \draw[->] (-4.2,0) -- (1.2,0) node[right, font=\footnotesize]{$\sigma$ (Ré)};
+  \draw[->] (0,-2.3) -- (0,2.3) node[above, font=\footnotesize]{$j\omega$ (Im)};
+  % Axe imaginaire = frontière de stabilité
+  \node[font=\footnotesize, align=center] at (-3.1,2.0) {stable\\ ($\sigma<0$)};
+  \node[font=\footnotesize, align=center] at (0.7,2.0) {instable};
+  % Pôles en boucle ouverte (croix)
+  \node at (-3.0,0) {\textcolor{blue!70!black}{$\times$}};
+  \node at (-0.8,0) {\textcolor{blue!70!black}{$\times$}};
+  \node[above, font=\footnotesize, blue!70!black] at (-3.0,0.12) {$p_1$};
+  \node[below, font=\footnotesize, blue!70!black] at (-0.8,-0.12) {$p_2$};
+  % Branches : partent des pôles, se rejoignent puis montent vers l'axe imaginaire
+  % Branche le long de l'axe réel entre les deux pôles
+  \draw[thick, red!75!black] (-3.0,0) -- (-1.9,0);
+  \draw[thick, red!75!black] (-0.8,0) -- (-1.9,0);
+  % Point de séparation puis branches complexes qui montent et traversent l'axe imaginaire
+  \draw[thick, red!75!black] (-1.9,0) .. controls (-1.9,1.0) and (-1.4,1.6) .. (-0.5,2.1);
+  \draw[thick, red!75!black] (-1.9,0) .. controls (-1.9,-1.0) and (-1.4,-1.6) .. (-0.5,-2.1);
+  % Sens de parcours (K croissant)
+  \draw[->, red!75!black, thick] (-1.9,0.7) -- (-1.75,1.15);
+  \draw[->, red!75!black, thick] (-1.9,-0.7) -- (-1.75,-1.15);
+  % Point de croisement de l'axe imaginaire = limite de stabilité
+  \filldraw[red!75!black] (-0.62,1.85) circle (1.6pt);
+  \node[right, font=\footnotesize, red!75!black] at (-0.5,1.5) {$K = K_{\text{crit}}$};
+  % Légende K=0 sous l'axe, décalée pour ne pas toucher p1
+  \node[below, font=\footnotesize, blue!70!black] at (-3.0,-0.18) {$K=0$};
+\end{tikzpicture}
+\end{center}
+
+\begin{formule}
+\textbf{Règles de lecture :}
+\begin{itemize}[nosep]
+\item Les branches \textbf{partent des pôles} de la boucle ouverte ($K = 0$, croix bleues) et finissent sur les zéros ou à l'infini ($K \to \infty$).
+\item Quand $K$ augmente, les pôles se déplacent : ici ils se rejoignent sur l'axe réel, puis \textbf{partent en complexes} (le système devient oscillant) et \textbf{montent vers l'axe imaginaire}.
+\item \textbf{Le point de croisement de l'axe imaginaire donne le gain critique $K_{\text{crit}}$ :} au-delà, les pôles passent dans le demi-plan droit ($\sigma > 0$) $\Rightarrow$ \textbf{instabilité} (chapitre 33).
+\end{itemize}
+\textbf{L'intérêt pour le concepteur :} le lieu des racines montre d'un coup d'œil jusqu'où l'on peut pousser le gain, et où placer les zéros du correcteur (PID) pour ``tirer'' les branches vers la gauche (plus de stabilité) ou les amortir. Ajouter un zéro attire le lieu vers lui --- c'est ainsi que le terme dérivé stabilise.
+\end{formule}
+
+\subsection{Les marges de stabilité sur Bode}
+
+\begin{formule}
+La même information se lit sur le diagramme de Bode du \textbf{gain de boucle} $T(s) = C(s)G(s)H(s)$ (chapitres 13, 18), souvent plus pratique en conception fréquentielle :
+\end{formule}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+  % --- Diagramme de gain ---
+  \draw[->] (0,0) -- (7.6,0) node[right, font=\footnotesize]{$\log f$};
+  \draw[->] (0,-0.3) -- (0,2.6) node[above, font=\footnotesize]{$|T|$ dB};
+  \draw[dashed] (0,1.3) -- (7.2,1.3);
+  \node[left, font=\footnotesize] at (0,1.3) {0 dB};
+  % Courbe de gain décroissante
+  \draw[thick, blue!70!black] (0.2,2.4) .. controls (2.5,2.0) and (3.5,1.6) .. (4.3,1.3) .. controls (5.2,0.95) and (6.2,0.5) .. (7.2,0.1);
+  % Fréquence de croisement de gain (|T|=1 -> 0dB)
+  \draw[dotted] (4.3,0) -- (4.3,1.3);
+  \node[below, font=\footnotesize] at (4.3,0) {$f_c$};
+  % --- Marge de gain : repère où la phase = -180 ---
+  \draw[dotted] (6.0,0) -- (6.0,1.3);
+  \draw[<->, red!75!black, thick] (6.0,0.45) -- (6.0,1.3);
+  \node[right, font=\footnotesize, red!75!black] at (6.05,0.85) {marge de gain};
+\end{tikzpicture}
+\end{center}
+
+\begin{formule}
+\textbf{Les deux marges (chapitre 18, formalisées) :}
+\begin{itemize}[nosep]
+\item \textbf{Marge de phase} : à la fréquence de croisement $f_c$ (où $|T| = \SI{0}{dB}$), c'est l'écart entre la phase réelle et $-\SI{180}{°}$. Une marge $> \SI{45}{°}$ (idéalement \SI{60}{°}) garantit un amortissement correct ($\zeta \approx 0{,}7$, chapitre 33).
+\item \textbf{Marge de gain} : à la fréquence où la phase atteint $-\SI{180}{°}$, c'est l'écart en dB entre $|T|$ et \SI{0}{dB}. Une marge $> \SI{6}{dB}$ ($\times 2$) donne une réserve avant l'instabilité.
+\end{itemize}
+\textbf{Le lien entre les deux représentations :} le point où le lieu des racines croise l'axe imaginaire (gain critique) correspond exactement au point où la marge de gain s'annule sur Bode. Ce sont deux vues du \textbf{même} critère de stabilité --- lieu des racines (côté pôles, plan $s$) et marges (côté fréquence, Bode).
+\end{formule}
+
+\subsection{Le PID réel : filtrage, anti-windup, numérique}
+
+\begin{attention}
+\textbf{Trois corrections indispensables pour un PID utilisable :}
+
+\textbf{1. Filtrage du dérivé.} Un dérivé pur $K_d\,s$ a un gain qui croît \textit{indéfiniment} avec la fréquence : il amplifie le bruit jusqu'à saturer la commande. On utilise donc un \textbf{dérivé filtré} :
+\[
+K_d\,\frac{s}{1 + \tau_f\,s} \qquad (\tau_f \approx T_d/N,\; N \sim 8\text{--}20)
+\]
+Le filtre coupe le gain au-delà de $1/\tau_f$ : on garde l'anticipation utile, on jette le bruit HF.
+
+\textbf{2. Anti-windup.} Si l'actionneur \textbf{sature} (un moteur ne dépasse pas sa tension max), l'erreur persiste mais la commande ne peut plus monter --- pourtant l'\textbf{intégrale continue d'accumuler} (\textit{windup}). Au retour dans la zone linéaire, cette intégrale gonflée provoque un énorme dépassement. La parade (\textbf{anti-windup}) : geler ou décharger l'intégrateur tant que la commande est saturée. Indispensable dès qu'il y a saturation --- c'est-à-dire presque toujours.
+
+\textbf{3. Version numérique.} Un PID est aujourd'hui presque toujours implanté dans un microcontrôleur (chapitre 26) : l'intégrale devient une somme, le dérivé une différence, le tout exécuté à la \textbf{période d'échantillonnage} $T_e$. Il faut $T_e$ assez petit devant la dynamique du procédé (typiquement $T_e < T_{\text{réponse}}/10$) pour que la discrétisation (chapitre 27) ne dégrade pas la boucle, et veiller au retard d'échantillonnage qui \textit{réduit} la marge de phase.
+\end{attention}
+
+\subsection{Vue d'ensemble : concevoir une boucle, de bout en bout}
+
+\begin{intuition}
+\textbf{La démarche complète du concepteur d'asservissement} rassemble tout le livre :
+\begin{enumerate}[nosep]
+\item \textbf{Modéliser le procédé} $G(s)$ : identifier ses pôles (constantes de temps, résonances --- chapitre 33). Un moteur, un convertisseur (chapitre 32), un étage thermique.
+\item \textbf{Choisir la structure du correcteur} : P, PI, ou PID selon le besoin de précision et d'amortissement.
+\item \textbf{Régler les gains} : placer les pôles de la boucle fermée (lieu des racines) ou viser une marge de phase de \SI{60}{°} sur Bode (chapitre 18).
+\item \textbf{Ajouter les protections réelles} : filtrage du dérivé, anti-windup, et vérifier en numérique.
+\item \textbf{Valider} : réponse indicielle (dépassement, temps de réponse), rejet de perturbation (chapitre 33), robustesse aux variations du procédé.
+\end{enumerate}
+C'est exactement ce que fait, sous le capot, tout régulateur de tension (chapitre 30), tout contrôleur de découpage (chapitre 32), tout asservissement de moteur ou de température. \textbf{Le PID et l'analyse de stabilité sont l'outillage universel de la boucle fermée} --- la clé de voûte qui relie l'électronique analogique (l'AOP du chapitre 18), la puissance (les alimentations) et le numérique (le calculateur qui exécute la loi de commande).
+\end{intuition}
+
+% === EXERCICES ===
+\section*{Exercices}
+\addcontentsline{toc}{section}{Exercices}
+
+\subsection*{Niveau débutant}
+
+\textbf{Exercice 34.1 ---} Un système est asservi avec un correcteur purement proportionnel $K_p = 9$, sur un procédé de gain statique unité (classe 0). (a) Quelle est l'erreur statique relative ? (b) Comment l'annuler complètement ?
+
+\begin{pratique}
+\textbf{Solution :}
+
+(a) En classe 0, $\varepsilon_\infty = 1/(1+K) = 1/(1+9) = 0{,}1 = \textbf{10\,\%}$. La sortie se stabilise 10\,\% sous la consigne.
+
+(b) Ajouter une action \textbf{intégrale} (passer en PI). L'intégrateur accumule l'erreur jusqu'à l'annuler : erreur statique nulle, quel que soit le gain.
+\end{pratique}
+
+\textbf{Exercice 34.2 ---} Associez chaque symptôme à l'action PID à ajuster : (a) la sortie n'atteint jamais tout à fait la consigne ; (b) la sortie dépasse trop et oscille avant de se stabiliser ; (c) la réponse est trop lente.
+
+\begin{pratique}
+\textbf{Solution :}
+
+(a) Erreur résiduelle $\Rightarrow$ augmenter l'\textbf{intégrale} $K_i$ (ou en ajouter une).
+
+(b) Dépassement/oscillation $\Rightarrow$ augmenter le \textbf{dérivé} $K_d$ (amortit) ou réduire $K_p$/$K_i$.
+
+(c) Trop lent $\Rightarrow$ augmenter le \textbf{proportionnel} $K_p$ (puis amortir avec $K_d$ si ça dépasse).
+\end{pratique}
+
+\subsection*{Niveau intermédiaire}
+
+\textbf{Exercice 34.3 ---} Un PID a $K_p = 2$, $K_i = \SI{10}{s^{-1}}$, $K_d = \SI{0.05}{s}$. (a) Écrivez $C(s)$. (b) Calculez les constantes $T_i$ et $T_d$. (c) Quel terme domine en très basse fréquence ? En très haute fréquence ?
+
+\begin{pratique}
+\textbf{Solution :}
+
+(a) $C(s) = 2 + \dfrac{10}{s} + 0{,}05\,s$.
+
+(b) $T_i = K_p/K_i = 2/10 = \SI{0.2}{s}$. $T_d = K_d/K_p = 0{,}05/2 = \SI{0.025}{s}$.
+
+(c) En très basse fréquence ($s \to 0$) : le terme $K_i/s \to \infty$ domine (l'intégrale --- gain énorme en continu, d'où la précision). En très haute fréquence ($s \to \infty$) : le terme $K_d\,s$ domine (le dérivé --- d'où la nécessité de le filtrer).
+\end{pratique}
+
+\textbf{Exercice 34.4 ---} Par la méthode de Ziegler-Nichols, on mesure un gain critique $K_u = 8$ et une période d'oscillation $T_u = \SI{0.5}{s}$. La règle PID donne $K_p = 0{,}6\,K_u$, $T_i = 0{,}5\,T_u$, $T_d = 0{,}125\,T_u$. Calculez les trois paramètres.
+
+\begin{pratique}
+\textbf{Solution :}
+
+$K_p = 0{,}6\times8 = \textbf{4,8}$. \quad $T_i = 0{,}5\times0{,}5 = \SI{0.25}{s}$. \quad $T_d = 0{,}125\times0{,}5 = \SI{0.0625}{s}$.
+
+D'où $K_i = K_p/T_i = 4{,}8/0{,}25 = \SI{19.2}{s^{-1}}$ et $K_d = K_p T_d = 4{,}8\times0{,}0625 = \SI{0.3}{s}$. À affiner ensuite : Ziegler-Nichols donne un dépassement souvent élevé ($\sim 25\,\%$), c'est un point de départ.
+\end{pratique}
+
+\subsection*{Niveau ingénieur}
+
+\textbf{Exercice 34.5 ---} Sur le diagramme de Bode du gain de boucle, on lit à la fréquence de croisement $f_c = \SI{1}{kHz}$ une phase de $-\SI{130}{°}$, et à la fréquence où la phase vaut $-\SI{180}{°}$ un gain de $-\SI{8}{dB}$. (a) Quelles sont les marges de phase et de gain ? (b) Le système est-il stable et bien amorti ? (c) Que faire pour augmenter la marge de phase sans changer $f_c$ ?
+
+\begin{pratique}
+\textbf{Solution :}
+
+(a) Marge de phase $= -130 - (-180) = \SI{50}{°}$. Marge de gain $= 0 - (-8) = \SI{8}{dB}$.
+
+(b) MP $= \SI{50}{°}$ ($> \SI{45}{°}$) et MG $= \SI{8}{dB}$ ($> \SI{6}{dB}$) : \textbf{stable et correctement amorti} ($\zeta \approx 0{,}5$--$0{,}6$, léger dépassement acceptable).
+
+(c) Ajouter de l'\textbf{avance de phase} autour de $f_c$ : un terme dérivé (ou un correcteur à avance de phase) apporte du $+$phase au croisement, remontant la marge vers \SI{60}{°} sans déplacer $f_c$. C'est exactement le rôle stabilisateur du ``D''.
+\end{pratique}
+
+\textbf{Exercice 34.6 ---} Un PID numérique pilote un procédé dont le temps de réponse est \SI{200}{ms}. (a) Quelle période d'échantillonnage $T_e$ choisir (règle $T_e < T_{\text{rép}}/10$) ? (b) L'actionneur sature régulièrement : quel problème cela pose-t-il à l'intégrateur et quelle est la parade ? (c) Pourquoi faut-il filtrer le terme dérivé ?
+
+\begin{pratique}
+\textbf{Solution :}
+
+(a) $T_e < 200/10 = \SI{20}{ms}$ : on prend par exemple $T_e = \SI{10}{ms}$ ($\SI{100}{Hz}$), avec marge. Plus court réduit le retard de discrétisation (qui ronge la marge de phase), mais charge le calculateur.
+
+(b) \textbf{Windup} : pendant la saturation, l'erreur persiste et l'intégrale gonfle sans effet sur la sortie ; au retour en zone linéaire, cette intégrale énorme provoque un fort dépassement. Parade : \textbf{anti-windup} (geler/décharger l'intégrateur tant que la commande est saturée).
+
+(c) Le dérivé pur amplifie le bruit (gain $\propto f$) jusqu'à saturer la commande et user l'actionneur. Le \textbf{filtrage} ($K_d s/(1+\tau_f s)$) coupe le gain en HF : on conserve l'anticipation utile sans le bruit.
+\end{pratique}
+
+\subsection*{Questions de compréhension}
+
+\begin{enumerate}[nosep]
+\item Pourquoi un correcteur purement proportionnel laisse-t-il toujours une erreur statique en classe 0 ? Reliez à l'équation $u = K_p\varepsilon$.
+\item L'action intégrale annule l'erreur mais dégrade la stabilité ; l'action dérivée stabilise mais amplifie le bruit. Expliquez pourquoi le PID complet est un compromis entre ces effets opposés.
+\item Sur le lieu des racines, que signifie le passage d'une branche dans le demi-plan droit ? Reliez ce moment au gain critique et à la marge de gain nulle sur Bode.
+\item Pourquoi le windup de l'intégrateur n'apparaît-il qu'en présence de saturation de l'actionneur, et pourquoi provoque-t-il un dépassement au retour en zone linéaire ?
+\end{enumerate}
+
+% === RÉSUMÉ ===
+\section*{Résumé du chapitre}
+\addcontentsline{toc}{section}{Résumé du chapitre}
+
+\begin{bases}[title={\color{white} Résumé --- Les Bases}]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{3.0cm}p{10.0cm}}
+\toprule
+Action P & $K_p\varepsilon$ : rapidité, réduit l'erreur sans l'annuler. Trop $\Rightarrow$ oscille \\
+Action I & $K_i\!\int\!\varepsilon$ : annule l'erreur statique, mais $-\SI{90}{°}$ $\Rightarrow$ déstabilise \\
+Action D & $K_d\,d\varepsilon/dt$ : anticipe, amortit, $+\SI{90}{°}$, mais amplifie le bruit \\
+PID & Combine les trois : précision (I) + rapidité (P) + amortissement (D) \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{bases}
+
+\begin{approfondissement}[title={\color{white} Résumé --- Approfondissement}]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{3.0cm}p{10.0cm}}
+\toprule
+$C(s)$ du PID & $K_p + K_i/s + K_d\,s$ : un pôle à l'origine + deux zéros réglables \\
+Réponse & P : erreur statique. PI : dépassement. PID : rapide, amorti, précis \\
+Réglage des gains & $K_p$ rapidité, $K_i$ précision, $K_d$ amortissement \\
+Méthodes & Manuel, Ziegler-Nichols (empirique), par modèle (placement de pôles) \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{approfondissement}
+
+\begin{ingenieur}[title={\color{white} Résumé --- Niveau Ingénieur}]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{3.0cm}p{10.0cm}}
+\toprule
+Lieu des racines & Déplacement des pôles BF avec $K$ : croisement de l'axe $j\omega$ = $K_{\text{crit}}$ \\
+Marges (Bode) & Phase $> \SI{45}{°}$, gain $> \SI{6}{dB}$. Même critère que le lieu des racines \\
+PID réel & Dérivé filtré ($K_d s/(1+\tau_f s)$), anti-windup, version numérique ($T_e < T_{\text{rép}}/10$) \\
+Démarche & Modéliser $G$, choisir P/PI/PID, régler (pôles ou marges), protéger, valider \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{ingenieur}
+
 \end{document}
