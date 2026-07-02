@@ -19434,4 +19434,637 @@ Débogage & Spectre (signer la source), sonde champ proche (localiser), pince RF
 Ce chapitre a donné les lois et les remèdes ; mais la CEM se gagne ou se perd \textbf{au routage} : c'est la géométrie des courants de retour, des plans et des boucles qui fixe $C_p$, $M$, $Z_g$ et les surfaces rayonnantes. C'est précisément l'objet du chapitre 36 --- concevoir le PCB pour que les problèmes de ce chapitre n'existent pas.
 \end{retenir}
 
+
+
+% ============================================================================
+% CHAPITRE 36 : CONCEPTION DE PCB — LE CIRCUIT IMPRIMÉ EST UN COMPOSANT
+% VERSION PEER-REVIEW
+% Fichier autonome à intégrer dans Bible_Elec.tex
+% ============================================================================
+
+\chapter{Conception de PCB : le circuit imprimé est un composant}
+
+\begin{center}
+\textit{Le schéma dit ce que le circuit fait ;\\
+le routage décide s'il le fera. Sur un circuit imprimé,\\
+chaque piste est une inductance, chaque paire de conducteurs un condensateur,\\
+et chaque courant une boucle qu'il faut savoir dessiner.}
+\end{center}
+
+\vspace{0.5cm}
+
+Le chapitre 35 s'est conclu sur un constat : la CEM se gagne ou se perd au routage, parce que la géométrie fixe les capacités parasites, les mutuelles, les impédances communes et les surfaces rayonnantes. Ce chapitre transforme ce constat en méthode : comprendre le circuit imprimé (PCB, \emph{printed circuit board}) comme un \textbf{composant à part entière}, avec ses résistances, inductances et capacités distribuées --- puis en déduire les règles de conception : empilage des couches, chemins de retour, découplage, distribution d'alimentation, routage de puissance et thermique. Le chapitre 37 prolongera vers les hautes fréquences, quand les pistes deviennent des lignes de transmission.
+
+% ============================================================================
+\section{Les Bases}
+
+\begin{bases}
+L'anatomie d'un circuit imprimé, les parasites d'une simple piste, et la question qui gouverne tout le chapitre : \emph{où revient le courant ?} Prérequis : chapitres 7--9 (R, L, C physiques), chapitre 35 (boucles et couplages).
+\end{bases}
+
+\subsection{Anatomie d'un circuit imprimé}
+
+Un PCB est un sandwich de cuivre et d'isolant. Le diélectrique standard, le \textbf{FR-4}, est un composite de fibre de verre et de résine époxy ($\varepsilon_r \approx 4$ à $4{,}6$ selon la fréquence et le lot). Le cuivre est laminé en feuilles d'épaisseur normalisée --- l'usage a gardé l'unité anglo-saxonne : « 1~oz » correspond à environ $\SI{35}{\micro m}$, « 2~oz » à $\SI{70}{\micro m}$.
+
+Le vocabulaire essentiel :
+\begin{itemize}[itemsep=1pt]
+  \item \textbf{piste} (\emph{trace}) : conducteur gravé reliant deux points ;
+  \item \textbf{plan} : couche de cuivre continue (masse ou alimentation) ;
+  \item \textbf{via} : trou métallisé reliant des couches entre elles ;
+  \item \textbf{pastille} (\emph{pad}) : zone de cuivre où se soude un composant ;
+  \item \textbf{vernis épargne} et \textbf{sérigraphie} : la couche isolante verte (ou autre) et le marquage blanc --- cosmétiques pour l'électricité, utiles pour la fabrication.
+\end{itemize}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[xscale=1.0, yscale=1.55]
+  % Couches (coupe) — 4 couches
+  % TOP
+  \fill[orange!75!black] (0,3.0) rectangle (9.0,3.12);
+  \node[right, font=\footnotesize] at (9.15,3.06) {L1 --- signaux (cuivre \SI{35}{\micro m})};
+  % prepreg
+  \fill[green!25!white] (0,2.55) rectangle (9.0,3.0);
+  \node[right, font=\footnotesize] at (9.15,2.78) {préimprégné $\approx \SI{0.2}{mm}$};
+  % GND plane
+  \fill[orange!75!black] (0,2.43) rectangle (9.0,2.55);
+  \node[right, font=\footnotesize] at (9.15,2.49) {L2 --- \textbf{plan de masse}};
+  % core
+  \fill[green!40!white] (0,1.35) rectangle (9.0,2.43);
+  \node[right, font=\footnotesize] at (9.15,1.89) {âme FR-4 $\approx \SI{1}{mm}$};
+  % PWR plane
+  \fill[orange!75!black] (0,1.23) rectangle (9.0,1.35);
+  \node[right, font=\footnotesize] at (9.15,1.29) {L3 --- plan d'alimentation};
+  % prepreg
+  \fill[green!25!white] (0,0.78) rectangle (9.0,1.23);
+  \node[right, font=\footnotesize] at (9.15,1.00) {préimprégné $\approx \SI{0.2}{mm}$};
+  % BOTTOM
+  \fill[orange!75!black] (0,0.66) rectangle (9.0,0.78);
+  \node[right, font=\footnotesize] at (9.15,0.72) {L4 --- signaux};
+  % Un via traversant
+  \draw[fill=gray!60] (2.2,0.60) rectangle (2.45,3.18);
+  \fill[white] (2.265,0.60) rectangle (2.385,3.18);
+  \node[below, font=\footnotesize] at (2.32,0.55) {via traversant};
+  % Une piste en L1 (vue en coupe : petit rectangle)
+  \fill[orange!75!black] (5.4,3.12) rectangle (5.9,3.24);
+  \node[above, font=\footnotesize] at (5.65,3.26) {piste (coupe)};
+\end{tikzpicture}
+\caption{Coupe d'un empilage 4 couches classique : signaux--masse--alimentation--signaux. La finesse du diélectrique entre une couche de signaux et son plan voisin ($\approx \SI{0.2}{mm}$) est un choix délibéré : elle réduit les boucles de courant (section suivante).}
+\end{figure}
+
+\subsection{La piste n'est pas un fil idéal}
+
+Toute la discipline du routage découle d'un fait : les éléments parasites d'une piste sont du même ordre que les composants qu'on soude dessus, dès que les fréquences montent. Trois ordres de grandeur à connaître par c\oe ur :
+
+\begin{formule}
+Pour du cuivre 1~oz ($\SI{35}{\micro m}$) :
+\begin{align*}
+R_{\square} &\approx \SI{0.5}{m\ohm}\ \text{par carré}\\
+L' &\approx \SI{1}{nH/mm}\quad \text{(piste loin de tout plan)}\\
+C' &\approx \SI{15}{}\ \text{à}\ \SI{20}{pF/cm^2}\quad \text{(face à un plan, écart } \SI{0.2}{mm}\text{)}
+\end{align*}
+\end{formule}
+
+La \textbf{résistance par carré} $R_\square$ mérite explication : la résistance d'un ruban vaut $R = \rho\,l/(w\,t)$ ; à épaisseur $t$ fixée, elle ne dépend que du \emph{nombre de carrés} $l/w$ mis bout à bout. Une piste de $\SI{0.2}{mm}$ de large et $\SI{10}{cm}$ de long, c'est 500 carrés : environ $\SI{0.25}{\ohm}$ --- déjà $\SI{50}{mV}$ de chute sous $\SI{200}{mA}$, et le double à $\SI{100}{\celsius}$ (chapitre 2 : le cuivre prend $+0{,}4\,\%/\si{\celsius}$).
+
+Quant à l'inductance, on retrouve la valeur du chapitre 35 : $\sim\SI{1}{nH/mm}$. À $\SI{100}{MHz}$, $\SI{3}{cm}$ de piste font $\SI{19}{\ohm}$ --- devant les $\SI{0.25}{\ohm}$ résistifs, c'est \textbf{l'inductance qui gouverne le comportement dynamique} du routage.
+
+\begin{intuition}
+Changer de regard : un PCB n'est pas un plan de câblage, c'est un \textbf{réseau de composants R--L--C distribués} dont vous choisissez les valeurs en dessinant des géométries. Router, c'est dimensionner ces composants invisibles pour qu'ils restent négligeables --- ou pour qu'ils travaillent pour vous (plans, capacité inter-plans).
+\end{intuition}
+
+\subsection{La question fondamentale : où revient le courant ?}
+
+Tout courant circule en boucle fermée (chapitre 1) : ce qui sort d'une broche revient à sa source. Le concepteur dessine soigneusement l'aller\ldots{} et laisse trop souvent le retour se débrouiller dans « la masse ». Or c'est la \textbf{boucle complète} qui fixe l'inductance, le couplage et le rayonnement (chapitre 35). La règle de comportement du retour :
+
+\begin{retenir}
+Le courant de retour emprunte le chemin de \textbf{moindre impédance}. En basse fréquence, l'impédance est résistive : le retour prend le chemin le plus \emph{court} (ligne droite dans le plan). En haute fréquence (dès quelques centaines de kilohertz), elle est inductive : le retour prend le chemin de \emph{moindre inductance}, c'est-à-dire celui qui minimise la surface de boucle --- \textbf{juste sous la piste aller}, qu'il suit fidèlement, même si ce chemin est plus long.
+\end{retenir}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.9,
+  fleche/.style={decoration={markings, mark=at position 0.55 with {\arrow{Stealth[length=2.6mm]}}}, postaction={decorate}}
+]
+  % Plan (vue de dessus)
+  \fill[orange!12] (0,0) rectangle (11,4.6);
+  \draw[thick] (0,0) rectangle (11,4.6);
+  \node[font=\footnotesize] at (9.9,0.35) {plan de masse (vue de dessus)};
+  % Source et charge
+  \node[draw, fill=gray!15, thick, minimum width=1.1cm, minimum height=0.8cm, font=\footnotesize] (S) at (1.3,3.7) {source};
+  \node[draw, fill=gray!15, thick, minimum width=1.1cm, minimum height=0.8cm, font=\footnotesize] (C) at (9.7,3.7) {charge};
+  % Piste aller en U inversé (descend, longe, remonte)
+  \draw[very thick, blue!65!black, fleche] (S.east) -- node[above, pos=0.5, font=\footnotesize] {piste aller (couche L1)} (C.west);
+  % Retour BF : ligne droite en pointillé long
+  \draw[very thick, red!70!black, dashed, fleche] (C.south) .. controls (8.6,1.4) and (2.6,1.4) .. node[below, pos=0.5, font=\footnotesize, align=center] {retour BF : le plus court\\ (moindre résistance)} (S.south);
+  % Retour HF : suit la piste
+  \draw[very thick, green!45!black, densely dotted, fleche] (C.south west) .. controls (8.5,2.95) and (2.7,2.95) .. (S.south east);
+  \node[green!45!black, font=\footnotesize] at (5.5,2.6) {retour HF : sous la piste (moindre inductance)};
+\end{tikzpicture}
+\caption{Dans le plan de masse, le courant de retour ne prend pas le même chemin selon la fréquence. En HF, il « colle » sous la piste aller : la boucle aller--retour devient minuscule --- c'est le grand service que rend un plan continu.}
+\end{figure}
+
+Ce comportement n'est pas un choix du concepteur, c'est la physique --- et elle joue \emph{pour} vous à une condition : que le chemin sous la piste \textbf{existe}. Tout l'art du routage consiste à ne jamais le casser.
+
+\subsection{Les quatre règles d'or du débutant}
+
+Avant tout raffinement, quatre habitudes éliminent l'essentiel des problèmes :
+
+\begin{enumerate}[itemsep=2pt]
+  \item \textbf{Un plan de masse continu} sous les signaux --- entier, sans découpes « esthétiques » ;
+  \item \textbf{Découpler chaque circuit intégré} : un condensateur céramique au plus près de chaque paire d'alimentation, connecté court (section approfondissement) ;
+  \item \textbf{Pistes courtes pour les signaux rapides} : horloges, fronts raides, n\oe uds de commutation --- la longueur, c'est de l'inductance et de l'antenne ;
+  \item \textbf{Dimensionner les pistes de puissance} : la largeur se calcule (échauffement, chute de tension), elle ne se devine pas.
+\end{enumerate}
+
+% ============================================================================
+\section{Approfondissement}
+
+\begin{approfondissement}
+L'empilage des couches, la physique du chemin de retour (et le crime de la fente dans le plan), le découplage réel avec ses parasites, les largeurs de piste, et l'organisation mixte analogique--numérique. Prérequis : chapitres 9, 12 (résonance), 29, 35.
+\end{approfondissement}
+
+\subsection{L'empilage : pourquoi quatre couches changent la vie}
+
+Sur un PCB \textbf{double face} sans plan, chaque retour de courant doit être routé explicitement : chaque liaison est une boucle dont la surface dépend du talent du concepteur, les retours se partagent des pistes communes (impédance commune, chapitre 35), et le moindre oubli se paie en couplages. C'est faisable pour de la basse fréquence soignée ; c'est une lutte permanente dès qu'il y a du numérique rapide ou du découpage.
+
+Le \textbf{quatre couches} signaux--masse--alimentation--signaux règle structurellement le problème :
+
+\begin{itemize}[itemsep=2pt]
+  \item chaque piste de signal a un \textbf{plan de référence adjacent} à $\approx \SI{0.2}{mm}$ : le retour passe dessous, la boucle est minimale \emph{par construction}, sans effort de routage ;
+  \item la paire de plans masse--alimentation forme un \textbf{condensateur distribué} ($\approx \SI{15}{}$--$\SI{20}{pF/cm^2}$ pour un espacement fin) à très faible inductance --- un étage de découplage gratuit et excellent en HF ;
+  \item l'impédance de la « masse » s'effondre : un plan présente une fraction de l'inductance de n'importe quelle piste, et le couplage par impédance commune devient marginal.
+\end{itemize}
+
+Le surcoût de fabrication (typiquement $\times 1{,}5$ à $\times 2$ en prototypage) est presque toujours remboursé dès la première campagne CEM évitée. En 6 ou 8 couches, on généralise : chaque couche de signaux rapides doit avoir son plan adjacent, et l'on évite de faire se faire face deux couches de signaux.
+
+\begin{attention}
+Un plan d'\textbf{alimentation} n'est un bon plan de référence que s'il est lui-même solidement découplé vers la masse. Dans le doute --- et pour les signaux les plus critiques --- on référence à la \textbf{masse} : c'est elle le zéro commun de tous les étages.
+\end{attention}
+
+\subsection{Le chemin de retour, quantitativement}
+
+Sous une piste de hauteur $h$ au-dessus d'un plan, le courant de retour ne circule pas sur un fil fantôme : il s'étale dans le plan avec une densité qui décroît de part et d'autre de l'aplomb de la piste. Pour une microruban (\emph{microstrip}), la répartition classique est :
+
+\begin{formule}
+\[
+J(x) \approx \frac{I}{\pi h}\,\frac{1}{1 + \left(\dfrac{x}{h}\right)^{2}}
+\qquad\text{($x$ : distance latérale à l'aplomb de la piste)}
+\]
+Environ $80\,\%$ du courant de retour circule dans une bande de $\pm 3h$ autour de la piste.
+\end{formule}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[xscale=0.62, yscale=1.0]
+  % axes
+  \draw[-{Stealth}] (-8.2,0) -- (8.6,0) node[right=2pt] {\footnotesize $x/h$};
+  \draw[-{Stealth}] (-8.0,-0.15) -- (-8.0,3.4) node[above=2pt] {\footnotesize $J(x)$ (retour)};
+  \foreach \x in {-6,-3,3,6} \draw (\x,0) -- (\x,-0.1) node[below, font=\footnotesize] {\x};
+  % courbe 1/(1+x^2) scaled: J(0)=3
+  \draw[very thick, red!70!black, domain=-7.8:7.8, samples=120] plot (\x, {3/(1+(\x)*(\x))});
+  % piste au-dessus
+  \fill[blue!65!black] (-0.55,3.05) rectangle (0.55,3.3);
+  \node[above, font=\footnotesize, blue!65!black] at (0,3.32) {piste aller (hauteur $h$ au-dessus du plan)};
+  % bande ±3h
+  \draw[dashed] (-3,0) -- (-3,1.6);
+  \draw[dashed] (3,0) -- (3,1.6);
+  \draw[{Stealth}-{Stealth}] (-3,1.35) -- (3,1.35);
+  \node[font=\footnotesize, align=center] at (-5.7,2.15) {$\pm 3h$ :\\ $\approx 80\,\%$ du courant};
+  \draw[-{Stealth}, thin] (-4.35,1.9) -- (-2.7,1.42);
+\end{tikzpicture}
+\caption{Densité du courant de retour dans le plan, sous une microruban. Le retour est concentré à l'aplomb de la piste : c'est une donnée physique à protéger, pas une option de routage.}
+\end{figure}
+
+Deux conséquences directes :
+
+\begin{itemize}[itemsep=2pt]
+  \item \textbf{Rapprocher le plan} (diminuer $h$) resserre le retour et réduit l'inductance de boucle : une piste à $\SI{0.2}{mm}$ d'un plan présente une inductance de boucle de l'ordre de $\SI{0.2}{}$ à $\SI{0.5}{nH/mm}$ selon sa largeur --- plusieurs fois moins qu'isolée. C'est aussi ce qui réduit la diaphonie entre pistes voisines : chacune tient son champ près d'elle.
+  \item \textbf{Deux signaux dont les bandes de retour ne se recouvrent pas ne se couplent presque pas} par le plan : espacer les pistes de quelques $h$ suffit --- inutile (et nuisible) de découper le plan pour les « isoler ».
+\end{itemize}
+
+\subsection{Le crime capital : la fente dans le plan de retour}
+
+Que se passe-t-il quand une piste rapide enjambe une découpe du plan (fente de séparation, rangée de trous de connecteur, plan « esthétiquement » morcelé) ? Le retour ne peut plus suivre : il \textbf{contourne} la fente. La boucle aller--retour, minuscule jusque-là, s'ouvre brutalement.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.9,
+  fleche/.style={decoration={markings, mark=at position 0.55 with {\arrow{Stealth[length=2.6mm]}}}, postaction={decorate}}
+]
+  % Plan
+  \fill[orange!12] (0,0) rectangle (11,4.6);
+  \draw[thick] (0,0) rectangle (11,4.6);
+  % Fente verticale au milieu
+  \fill[white] (5.2,1.1) rectangle (5.8,4.6);
+  \draw[thick] (5.2,1.1) rectangle (5.8,4.6);
+  \node[font=\footnotesize, align=center] at (5.5,4.85) {fente dans le plan};
+  % Piste aller au-dessus de la fente
+  \draw[very thick, blue!65!black, fleche] (0.8,3.6) -- node[above, pos=0.22, font=\footnotesize] {piste aller} (10.2,3.6);
+  % Retour qui contourne par le bas de la fente
+  \draw[very thick, red!70!black, dashed, fleche]
+    (10.2,3.35) -- (6.1,3.35) .. controls (5.9,3.3) and (5.95,1.2) .. (5.9,0.95)
+    -- (5.1,0.95) .. controls (5.05,1.2) and (5.1,3.3) .. (4.9,3.35) -- (0.8,3.35);
+  \node[red!70!black, font=\footnotesize, align=center] at (8.6,1.7) {le retour contourne :\\ grande boucle ajoutée};
+  \draw[red!70!black, -{Stealth}] (7.6,1.7) -- (6.05,2.1);
+  % Surface de boucle mise en évidence
+  \fill[red!25, opacity=0.55] (4.9,1.0) rectangle (6.1,3.33);
+\end{tikzpicture}
+\caption{Piste franchissant une fente du plan : le courant de retour fait le tour. La surface rougie est la boucle créée --- inductance en série dans le signal, antenne en émission, et la fente elle-même rayonne (antenne à fente, chapitre 35).}
+\end{figure}
+
+La facture est triple :
+\begin{enumerate}[itemsep=1pt]
+  \item une \textbf{inductance série} apparaît dans le signal (dégradation des fronts, rebonds --- chapitre 29) ;
+  \item la boucle ajoutée \textbf{rayonne} en $f^2 A$ (chapitre 35) et capte en réception ;
+  \item le détour de retour passe sous \emph{d'autres} pistes : couplage par impédance commune offert à toute la zone.
+\end{enumerate}
+
+Les corollaires pratiques : ne jamais router de signal rapide au-dessus d'une coupure de plan ; vérifier les zones de connecteurs (les rangées de perçages forment des fentes en pointillé --- laisser des ponts de cuivre entre les trous) ; et lors d'un \textbf{changement de couche}, penser au retour : si les deux couches sont référencées au même plan, un via suffit au signal ; si la référence change (plan masse $\to$ plan alim), placer un \textbf{via de couture} (ou un condensateur de liaison entre plans) au plus près, pour offrir au courant de retour son passage d'un plan à l'autre.
+
+\subsection{Le découplage réel : des nanohenrys avant des nanofarads}
+
+Le chapitre 29 a montré \emph{pourquoi} découpler (appels de courant impulsionnels des circuits numériques) ; voyons \emph{comment}. Un condensateur de découplage réel est un circuit R--L--C série (chapitre 9) : sa capacité $C$, sa résistance série ESR, et surtout son inductance série totale --- boîtier (ESL, $\sim\SI{0.5}{}$ à $\SI{1}{nH}$ pour un CMS courant) \textbf{plus le montage} : pistes d'accès et vias vers les plans. Au-dessus de la fréquence de résonance série $f_0 = 1/(2\pi\sqrt{LC})$, le « condensateur » est une inductance.
+
+\begin{formule}
+\[
+Z_{\text{découplage}}(f) = \sqrt{\mathrm{ESR}^2 + \left(2\pi f L_{\text{tot}} - \frac{1}{2\pi f C}\right)^{\!2}}
+\qquad
+L_{\text{tot}} = \mathrm{ESL} + L_{\text{montage}}
+\]
+En pratique, en HF : $Z \approx 2\pi f L_{\text{tot}}$ --- \textbf{c'est le montage qui fixe la performance}, pas la valeur en nanofarads.
+\end{formule}
+
+Ordre de grandeur : $\SI{100}{nF}$ avec $L_{\text{tot}} = \SI{3}{nH}$ (boîtier 0603 + $\SI{5}{mm}$ d'accès) résonne vers $\SI{9}{MHz}$ et présente $\approx \SI{1.9}{\ohm}$ à $\SI{100}{MHz}$ ; le même avec $L_{\text{tot}} = \SI{1.5}{nH}$ (0402, vias collés aux pastilles) : $\approx \SI{0.9}{\ohm}$. Diviser l'inductance de montage vaut mieux que multiplier la capacité.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.92]
+  % ---- Mauvais montage (gauche) ----
+  \node[font=\footnotesize\bfseries] at (2.5,3.35) {À éviter : boucle longue};
+  \fill[gray!20] (0.2,0) rectangle (4.8,0.28);
+  \node[font=\footnotesize] at (2.5,-0.32) {plans (coupe)};
+  % IC
+  \fill[gray!45] (0.5,1.9) rectangle (1.7,2.5);
+  \node[font=\footnotesize] at (1.1,2.2) {CI};
+  % condo loin
+  \fill[blue!55!black] (3.6,1.9) rectangle (4.2,2.25);
+  \node[font=\footnotesize, blue!55!black] at (3.9,2.55) {$C$};
+  % longues pistes + vias éloignés
+  \draw[very thick] (1.7,2.05) -- (3.6,2.05);
+  \draw[very thick] (0.9,1.9) -- (0.9,0.28);
+  \draw[very thick] (4.4,2.05) -- (4.2,2.05);
+  \draw[very thick] (4.4,2.05) -- (4.4,0.28);
+  % boucle
+  \draw[red!70!black, very thick, dashed, -{Stealth}] (1.75,1.75) .. controls (2.9,1.5) and (3.9,1.2) .. (4.15,0.5);
+  \node[red!70!black, font=\footnotesize, align=center] at (2.35,0.72) {grande boucle\\ $\Rightarrow$ $L$ élevée};
+  % ---- Bon montage (droite) ----
+  \node[font=\footnotesize\bfseries] at (8.6,3.35) {À faire : boucle minimale};
+  \fill[gray!20] (6.3,0) rectangle (10.9,0.28);
+  % IC
+  \fill[gray!45] (6.6,1.9) rectangle (7.8,2.5);
+  \node[font=\footnotesize] at (7.2,2.2) {CI};
+  % condo collé
+  \fill[blue!55!black] (8.15,1.9) rectangle (8.75,2.25);
+  \node[font=\footnotesize, blue!55!black] at (8.45,2.55) {$C$};
+  % accès courts, vias sous les pastilles
+  \draw[very thick] (7.8,2.05) -- (8.15,2.05);
+  \draw[very thick] (8.05,1.9) -- (8.05,0.28);
+  \draw[very thick] (8.85,1.9) -- (8.85,0.28);
+  \draw[very thick] (8.75,2.05) -- (8.85,2.05);
+  \node[font=\footnotesize, align=left, right] at (9.0,1.45) {vias au ras\\ des pastilles};
+  \draw[red!70!black, very thick, dashed, -{Stealth}] (8.1,1.7) .. controls (8.3,1.2) .. (8.5,0.55);
+  \node[red!70!black, font=\footnotesize, right] at (9.0,0.5) {petite boucle};
+\end{tikzpicture}
+\caption{Le même condensateur, deux performances. À gauche, pistes d'accès longues et vias distants : plusieurs nanohenrys de montage. À droite, condensateur au ras des broches, vias directement sur les pastilles : la boucle alimentation--condensateur--masse est minimale.}
+\end{figure}
+
+Les règles de montage qui en découlent : condensateur \textbf{au plus près} des broches d'alimentation, \textbf{vias directement sur les pastilles} (ou dessous), boîtier petit (0402 mieux que 0805), et un condensateur \emph{par paire de broches} d'alimentation plutôt qu'un gros collectif au bout de la carte. Les plans rapprochés complètent la panoplie au-dessus de quelques dizaines de mégahertz, là où même le meilleur CMS est déjà inductif.
+
+\subsection{Largeur de piste : courant, échauffement, chute de tension}
+
+Trois critères dimensionnent une piste de puissance :
+
+\begin{enumerate}[itemsep=2pt]
+  \item \textbf{Échauffement} : les abaques normatives (famille IPC-2221) relient section, courant et élévation de température. Repères pour du 1~oz en couche externe, $\Delta T = \SI{10}{\celsius}$ : environ $\SI{0.3}{mm}$ pour $\SI{1}{A}$, $\SI{0.8}{mm}$ pour $\SI{2}{A}$, $\SI{2.5}{mm}$ pour $\SI{5}{A}$. En couche \textbf{interne} (refroidissement moindre), compter environ le double de largeur ; à courant fort, préférer du 2~oz ou des plans.
+  \item \textbf{Chute de tension} : se calcule avec $R_\square$ ($\S$ Bases). Une alimentation $\SI{3.3}{V}$ qui tolère $1\,\%$ de chute n'accepte que $\SI{33}{mV}$ : sous $\SI{2}{A}$, cela impose $R \le \SI{16.5}{m\ohm}$, soit 33 carrés --- une piste de $\SI{3}{mm}$ ne peut pas dépasser $\SI{10}{cm}$.
+  \item \textbf{Isolement} : l'écart entre conducteurs se dimensionne selon la tension (normes IPC/CEI selon le produit) --- quelques dixièmes de millimètre suffisent en basse tension, mais le secteur exige des distances d'isolement et lignes de fuite spécifiques (chapitre 32, sécurité).
+\end{enumerate}
+
+\subsection{Cartes mixtes : partitionner par le placement, pas en découpant la masse}
+
+Le réflexe historique « séparer la masse analogique et la masse numérique » produit plus de sinistres qu'il n'en évite : des plans découpés, des signaux qui enjambent les fentes ($\S$ précédent), et une boucle géante refermée quelque part au hasard. La physique du retour donne la vraie solution :
+
+\begin{itemize}[itemsep=2pt]
+  \item \textbf{un seul plan de masse continu} ;
+  \item \textbf{partition par le placement} : zone analogique d'un côté, zone numérique de l'autre, convertisseurs (chapitre 27) à la frontière ; les retours numériques restent sous les pistes numériques ($\pm 3h$ !) et ne traversent jamais la zone analogique ;
+  \item \textbf{aucune piste ne franchit la frontière} ailleurs qu'aux interfaces prévues --- c'est une règle de routage, vérifiable, pas un acte de foi dans une fente.
+\end{itemize}
+
+Une découpe de plan ne se justifie que dans des cas précis --- isolement galvanique (les deux « masses » sont réellement deux référentiels, chapitre 32), ou exigence de courants de fuite (médical) --- et alors \emph{rien} ne doit enjamber la douve, hormis les barrières d'isolement prévues.
+
+% ============================================================================
+\section{Niveau Ingénieur}
+
+\begin{ingenieur}
+Le réseau de distribution d'énergie (PDN) et son impédance cible, les anti-résonances entre étages de découplage, le routage des convertisseurs (boucle chaude, n\oe ud SW), la gestion thermique par le cuivre, et la revue de carte. Prérequis : chapitres 12, 29, 32, 35.
+\end{ingenieur}
+
+\subsection{Le PDN : l'alimentation vue comme une impédance}
+
+Du point de vue d'un circuit rapide, « l'alimentation » est l'impédance $Z_{\mathrm{PDN}}(f)$ vue entre ses broches VDD et VSS. Chaque appel de courant $\Delta I(f)$ y crée une fluctuation $\Delta V = Z_{\mathrm{PDN}}\,\Delta I$. Le cahier des charges s'écrit alors en une ligne :
+
+\begin{formule}
+\[
+Z_{\mathrm{PDN}}(f) \le Z_{\text{cible}} = \frac{\Delta V_{\max}}{\Delta I_{\max}}
+\qquad\text{sur toute la bande des appels de courant.}
+\]
+Exemple : rail $\SI{1.2}{V}$, ondulation dynamique tolérée $\SI{60}{mV}$ ($5\,\%$), transitoires de $\SI{2}{A}$ : $Z_{\text{cible}} = \SI{30}{m\ohm}$ du continu jusqu'aux fréquences des fronts.
+\end{formule}
+
+Aucun composant ne tient $\SI{30}{m\ohm}$ sur six décades. Le PDN est donc une \textbf{cascade d'étages qui se relaient} en fréquence, chacun prenant la main quand le précédent devient inductif :
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{4.2cm}p{3.4cm}p{5.0cm}}
+\toprule
+\textbf{Étage} & \textbf{Bande efficace} & \textbf{Limité par} \\
+\midrule
+Régulateur (boucle, ch.~33) & continu $\to$ $\sim\SI{100}{kHz}$ & bande passante de l'asservissement \\
+Électrolytiques / bulk & $\SI{10}{kHz}$ $\to$ $\sim\SI{1}{MHz}$ & ESR, ESL \\
+Céramiques CMS & $\SI{1}{}$ $\to$ $\sim\SI{100}{MHz}$ & $L_{\text{tot}}$ de montage \\
+Plans rapprochés & $\SI{100}{MHz}$ $\to$ GHz & espacement, surface \\
+Capacité embarquée (die, boîtier) & au-delà & hors de portée du routeur \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[xscale=1.05, yscale=0.9]
+  % axes log-log
+  \draw[-{Stealth}] (0,0) -- (10.2,0) node[right=2pt] {\footnotesize $f$ (log)};
+  \draw[-{Stealth}] (0,0) -- (0,4.5) node[above=2pt] {\footnotesize $|Z_{\mathrm{PDN}}|$ (log)};
+  \foreach \x/\lab in {1.4/10~kHz, 3.8/1~MHz, 6.2/100~MHz, 8.6/10~GHz}
+    {\draw (\x,0) -- (\x,-0.1) node[below, font=\footnotesize] {\lab};}
+  % Z cible
+  \draw[dashed, thick, red!70!black] (0.2,1.5) -- (9.6,1.5) node[pos=0.93, above, font=\footnotesize] {$Z_{\text{cible}}$};
+  % enveloppe PDN : V (régulateur montant), creux bulk, bosse, creux céramique, bosse (anti-résonance), descente plans puis remontée
+  \draw[very thick, blue!65!black]
+    (0.3,0.7) -- (1.2,0.55)            % régulateur bas en BF
+    .. controls (1.9,0.5) and (2.1,1.15) .. (2.5,1.28)   % monte (L sortie)
+    .. controls (2.8,1.35) and (3.0,0.75) .. (3.4,0.7)   % creux bulk
+    .. controls (3.9,0.65) and (4.2,1.32) .. (4.6,1.38)  % anti-résonance
+    .. controls (4.9,1.42) and (5.1,0.62) .. (5.5,0.58)  % creux céramiques
+    .. controls (6.0,0.55) and (6.3,1.30) .. (6.7,1.36)  % anti-résonance 2
+    .. controls (7.1,1.40) and (7.3,0.75) .. (7.8,0.65)  % plans
+    .. controls (8.4,0.55) and (9.0,1.0) .. (9.5,1.9);   % remontée finale inductive
+  % annotations
+  \node[font=\footnotesize, align=center] at (1.1,2.6) {régulateur\\ (boucle)};
+  \draw[-{Stealth}] (1.1,2.25) -- (0.9,0.85);
+  \node[font=\footnotesize, align=center] at (3.3,2.6) {bulk};
+  \draw[-{Stealth}] (3.3,2.25) -- (3.35,0.9);
+  \node[font=\footnotesize, align=center] at (5.5,2.6) {céramiques};
+  \draw[-{Stealth}] (5.5,2.25) -- (5.5,0.78);
+  \node[font=\footnotesize, align=center] at (7.9,2.6) {plans};
+  \draw[-{Stealth}] (7.9,2.25) -- (7.85,0.85);
+  \node[red!70!black, font=\footnotesize, align=center] at (8.15,3.75) {anti-résonances :\\ à surveiller};
+  \draw[red!70!black, -{Stealth}] (7.25,3.55) -- (4.65,1.55);
+  \draw[red!70!black, -{Stealth}] (7.45,3.4) -- (6.72,1.55);
+\end{tikzpicture}
+\caption{Allure de l'impédance d'un PDN : chaque étage creuse sa bande, et les transitions entre étages font des bosses (anti-résonances) qui doivent rester sous l'impédance cible.}
+\end{figure}
+
+\textbf{Les anti-résonances.} Entre deux étages, il existe toujours une bande où le premier est déjà inductif et le second encore capacitif : un circuit L--C \emph{parallèle} (chapitre 12) --- pic d'impédance. Si un appel de courant du circuit (harmonique d'horloge\ldots) tombe sur ce pic, le rail « sonne ». Remèdes : rapprocher les fréquences de résonance des étages (valeurs étagées), compter sur l'ESR pour amortir (un PDN trop peu résistif sonne plus fort --- le paradoxe du « trop parfait », déjà vu au chapitre 12), et vérifier par simulation ou mesure que l'enveloppe reste sous $Z_{\text{cible}}$.
+
+\begin{pratique}
+\textbf{Faut-il encore panacher 100 nF + 10 nF + 1 nF ?} La recette traditionnelle des valeurs étagées visait à multiplier les creux d'impédance. Avec les céramiques modernes (X7R, faibles ESL), la différence entre valeurs vient surtout du montage : dix condensateurs \emph{identiques} bien montés font une impédance plus basse et plus régulière (moins d'anti-résonances internes) que trois valeurs mal réparties. Le panachage garde son sens \emph{entre étages} (bulk / céramique / plans), plus qu'à l'intérieur de l'étage céramique. Ce qui ne se discute pas : l'inductance de montage.
+\end{pratique}
+
+\subsection{Router un convertisseur à découpage : la boucle chaude}
+
+Le chapitre 32 a identifié les formes d'ondes ; le routage décide de ce qu'elles émettent. Dans un abaisseur (buck), le courant \textbf{discontinu} --- celui qui change en quelques dizaines de nanosecondes --- circule dans la maille $C_{\mathrm{in}} \to$ transistor haut $\to$ diode/transistor bas $\to$ retour à $C_{\mathrm{in}}$ : la \textbf{boucle chaude}. Son $\mathrm{d}I/\mathrm{d}t$ énorme fait d'elle, via sa surface, la source magnétique dominante de la carte (chapitre 35 : rayonnement $\propto f^2 A I$).
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.95, transform shape]
+  % Entrée
+  \draw (0,3) node[left] {$V_{\mathrm{in}}$} to[short] (1.0,3) node[circ]{};
+  \draw (1.0,3) to[C, l_=$C_{\mathrm{in}}$] (1.0,0) node[circ]{};
+  % Transistor haut (interrupteur)
+  \draw (1.0,3) to[short] (2.6,3);
+  \draw (2.6,3) to[nos, l=$Q_1$] (4.2,3);
+  \draw (4.2,3) to[short] (5.0,3) node[circ]{};
+  \node[above, font=\footnotesize] at (5.0,3.08) {n\oe ud SW};
+  % Diode bas (roue libre) vers masse
+  \draw (5.0,3) to[D*, l=$D$] (5.0,0) node[circ]{};
+  % Sortie : L puis Cout
+  \draw (5.0,3) to[L, l=$L$] (7.4,3) node[circ]{};
+  \draw (7.4,3) to[C, l=$C_{\mathrm{out}}$] (7.4,0) node[circ]{};
+  \draw (7.4,3) to[short] (8.6,3) node[right] {$V_{\mathrm{out}}$};
+  % Masse
+  \draw (1.0,0) to[short] (7.4,0);
+  \draw (4.2,0) -- (4.2,-0.28);
+  \draw[very thick] (3.92,-0.28) -- (4.48,-0.28);
+  \draw[very thick] (4.01,-0.41) -- (4.39,-0.41);
+  \draw[very thick] (4.10,-0.54) -- (4.30,-0.54);
+  % Boucle chaude surlignée
+  \draw[red!70!black, very thick, dashed, rounded corners=3pt,
+        decoration={markings, mark=at position 0.25 with {\arrow{Stealth[length=3mm]}}}, postaction={decorate}]
+    (1.35,2.62) -- (4.75,2.62) -- (4.75,0.38) -- (1.35,0.38) -- cycle;
+  \node[red!70!black, font=\footnotesize\bfseries, align=center] at (2.9,1.5) {boucle chaude\\ surface à minimiser};
+\end{tikzpicture}
+\caption{Abaisseur : la boucle chaude $C_{\mathrm{in}}$--$Q_1$--$D$--masse porte le courant haché. Sa surface, fixée par le placement, gouverne l'émission magnétique du convertisseur ; $C_{\mathrm{in}}$ (céramique) doit être collé à $Q_1$ et à $D$.}
+\end{figure}
+
+Les règles qui en découlent, par priorité :
+
+\begin{enumerate}[itemsep=2pt]
+  \item \textbf{Minimiser la surface de la boucle chaude} : $C_{\mathrm{in}}$ céramique au contact direct de $Q_1$ et du retour de $D$/$Q_2$ --- quelques millimètres, même couche, retour par le plan juste dessous. C'est le geste le plus rentable de toute la carte.
+  \item \textbf{Compacter le n\oe ud SW} : c'est le n\oe ud à fort $\mathrm{d}V/\mathrm{d}t$ (source \emph{électrique}, chapitre 35) --- surface de cuivre minimale nécessaire au courant et à la thermique, pas de plan étalé, rien de sensible dessous ni à côté (le couplage capacitif y est offert).
+  \item \textbf{Référencer la commande} : le driver de grille et sa boucle de commande reviennent au point d'émission/source de $Q_1$--$Q_2$ par leur propre chemin court (l'impédance commune avec la boucle de puissance injecterait $L\,\mathrm{d}i/\mathrm{d}t$ directement dans la grille, chapitre 29).
+  \item \textbf{Point de connexion des masses au régulateur} : masse de puissance et masse de signal du contrôleur se rejoignent en \emph{un} point, près de la broche prévue --- déclinaison locale du point unique BF du chapitre 35.
+  \item Le \textbf{shunt} de mesure de courant, s'il existe, se câble en quatre fils (Kelvin) : les pistes de mesure partent des pastilles mêmes du shunt, pas du chemin de puissance.
+\end{enumerate}
+
+\subsection{Le cuivre comme radiateur}
+
+Sous quelques watts, le PCB \emph{est} le dissipateur. Les ordres de grandeur à connaître :
+
+\begin{itemize}[itemsep=2pt]
+  \item une surface de cuivre extérieure de $\SI{10}{cm^2}$ (recto, convection naturelle) évacue grossièrement $\SI{1}{W}$ pour $\SI{40}{}$ à $\SI{50}{\celsius}$ d'échauffement --- l'étalement au-delà de quelques centimètres carrés rapporte de moins en moins (la chaleur ne s'étale plus dans le cuivre mince) ;
+  \item le FR-4 est un isolant thermique ($\lambda \approx \SI{0.3}{W/(m.K)}$, contre $\approx \SI{390}{}$ pour le cuivre) : pour traverser la carte, il faut des \textbf{vias thermiques}. Un via standard (perçage \SI{0.3}{mm}, fût \SI{25}{\micro m}) présente de l'ordre de $\SI{100}{}$ à $\SI{150}{K/W}$ : on les met en réseau --- neuf vias sous une pastille thermique ramènent la traversée à $\sim\SI{15}{K/W}$ ;
+  \item la chaîne thermique se raisonne comme un circuit (chapitre 2, analogie électrique--thermique) : jonction $\to$ boîtier $\to$ pastille $\to$ vias $\to$ plan $\to$ air, en série --- le maillon dominant est celui qu'il faut traiter.
+\end{itemize}
+
+\begin{attention}
+Cuivre thermique et cuivre électrique se disputent les mêmes couches : un beau plan d'étalement sous le n\oe ud SW est aussi\ldots{} une belle antenne à $\mathrm{d}V/\mathrm{d}t$ (chapitre 35). L'arbitrage thermique/CEM se fait n\oe ud par n\oe ud : étaler les n\oe uds \emph{calmes} (sortie, masse), compacter les n\oe uds \emph{agités} (SW) en dissipant par l'autre face via des vias.
+\end{attention}
+
+\subsection{La revue de carte : une checklist d'ingénieur}
+
+Avant d'envoyer en fabrication, une passe systématique --- dans cet ordre, chaque point renvoyant à sa physique :
+
+\begin{enumerate}[itemsep=1pt]
+  \item \textbf{Empilage} : chaque couche de signaux a-t-elle son plan de référence adjacent ?
+  \item \textbf{Retours} : aucun signal rapide n'enjambe une fente ; changements de couche accompagnés (via/condensateur de couture) ; zones de connecteurs pontées.
+  \item \textbf{Découplage} : un condensateur par paire de broches, boucles de montage minimales, vias au ras des pastilles.
+  \item \textbf{PDN} : impédance cible tenue, anti-résonances vérifiées sur les rails critiques.
+  \item \textbf{Puissance} : boucle chaude compacte, n\oe ud SW contenu, largeurs et isolements calculés, masses signal/puissance jointes au bon point.
+  \item \textbf{Interfaces} : protections au connecteur (TVS au point d'entrée, chapitre 35), retours des câbles maîtrisés, blindages repris au châssis.
+  \item \textbf{Thermique} : chemins de chaleur identifiés, vias thermiques en réseau, arbitrages CEM faits consciemment.
+\end{enumerate}
+
+\begin{pratique}
+\textbf{L'outil ne route pas la physique.} L'autorouteur et les règles de DRC vérifient des contraintes géométriques (largeurs, isolements) --- pas les boucles de courant, pas les retours, pas les couplages. Les cartes qui passent la CEM du premier coup sont celles où le concepteur a placé \emph{à la main} les quelques éléments critiques (boucle chaude, découplages, horloges, connecteurs) avant de laisser l'outil remplir le reste. Dix minutes de placement réfléchi valent des semaines de reprise.
+\end{pratique}
+
+% ============================================================================
+\section*{Exercices}
+\addcontentsline{toc}{section}{Exercices}
+
+\subsection*{Niveau débutant}
+
+\textbf{Exercice 36.1 ---} Une piste d'alimentation fait $\SI{15}{cm}$ de long, $\SI{0.3}{mm}$ de large, en cuivre 1~oz ($R_\square \approx \SI{0.5}{m\ohm}$). Elle transporte $\SI{500}{mA}$. (a) Calculez sa résistance et la chute de tension. (b) Que devient la chute si la carte fonctionne à $\SI{85}{\celsius}$ ambiants (coefficient du cuivre $\approx +0{,}4\,\%/\si{\celsius}$, référence $\SI{25}{\celsius}$) ?
+
+\begin{pratique}
+\textbf{Solution :}
+
+(a) Nombre de carrés : $l/w = 150/0{,}3 = 500$. $R = 500 \times \SI{0.5}{m\ohm} = \SI{0.25}{\ohm}$. Chute : $\Delta V = 0{,}25 \times 0{,}5 = \SI{125}{mV}$.
+
+(b) $\Delta T = \SI{60}{\celsius}$ (sans compter l'auto-échauffement) : $R \approx 0{,}25 \times (1 + 0{,}004 \times 60) = \SI{0.31}{\ohm}$, soit $\Delta V \approx \SI{155}{mV}$ --- près de $5\,\%$ d'un rail $\SI{3.3}{V}$, avant même le premier transitoire. Élargir (chaque doublement de largeur divise $R$ par deux) ou raccourcir.
+\end{pratique}
+
+\textbf{Exercice 36.2 ---} Sur un deux-couches, un collègue propose de « faire propre » en quadrillant la face arrière : un plan de masse découpé en quatre îlots reliés par des ponts fins, « un par fonction ». Trois pistes rapides traversent la carte de part en part. Critiquez.
+
+\begin{pratique}
+\textbf{Solution :}
+
+Chaque frontière entre îlots est une \textbf{fente} : les trois pistes rapides qui la franchissent voient leur courant de retour dévié par les ponts --- boucles ajoutées (inductance série, rayonnement en $f^2A$), et retours de fonctions différentes \textbf{concentrés dans les mêmes ponts} : couplage par impédance commune garanti entre les quatre « fonctions » qu'on voulait isoler. Un plan \textbf{continu} + partition par le \textbf{placement} (aucune piste rapide ne traversant les zones des autres) fait exactement ce que le quadrillage promettait, sans ses défauts.
+\end{pratique}
+
+\subsection*{Niveau intermédiaire}
+
+\textbf{Exercice 36.3 ---} Un condensateur de découplage $C = \SI{100}{nF}$ a une ESL de $\SI{0.6}{nH}$. Montage A : $\SI{6}{mm}$ de pistes d'accès et vias éloignés, $L_{\text{montage}} = \SI{2.4}{nH}$. Montage B : vias au ras des pastilles, $L_{\text{montage}} = \SI{0.9}{nH}$. Pour chaque montage : (a) fréquence de résonance série ; (b) impédance à $\SI{100}{MHz}$ (ESR négligée) ; (c) conclusion.
+
+\begin{pratique}
+\textbf{Solution :}
+
+(a) $L_A = \SI{3.0}{nH}$ : $f_0 = \dfrac{1}{2\pi\sqrt{L_A C}} = \dfrac{1}{2\pi\sqrt{\SI{3e-9}{} \times \SI{1e-7}{}}} \approx \SI{9.2}{MHz}$.
+$L_B = \SI{1.5}{nH}$ : $f_0 \approx \SI{13}{MHz}$.
+
+(b) À $\SI{100}{MHz}$, bien au-dessus de $f_0$, $Z \approx 2\pi f L$ : $Z_A \approx \SI{1.9}{\ohm}$ ; $Z_B \approx \SI{0.94}{\ohm}$.
+
+(c) Même composant, impédance divisée par deux par le seul routage. À ces fréquences, la valeur $C$ n'apparaît même plus dans le résultat : \textbf{on route des nanohenrys, pas des nanofarads}.
+\end{pratique}
+
+\textbf{Exercice 36.4 ---} Une carte 4 couches a ses plans masse et alimentation espacés de $\SI{0.2}{mm}$ (FR-4, $\varepsilon_r = 4{,}4$), sur une surface utile de $\SI{80}{cm^2}$. (a) Estimez la capacité inter-plans. (b) Quel étage du PDN ce condensateur constitue-t-il, et pourquoi est-il irremplaçable dans sa bande ? (c) Le fabricant propose un espacement de $\SI{0.1}{mm}$ : intérêt ?
+
+\begin{pratique}
+\textbf{Solution :}
+
+(a) $C = \varepsilon_0 \varepsilon_r \dfrac{A}{d} = 8{,}85\times10^{-12} \times 4{,}4 \times \dfrac{\SI{80e-4}{}}{\SI{2e-4}{}} \approx \SI{1.6}{nF}$ (soit $\approx \SI{19}{pF/cm^2}$).
+
+(b) L'étage \textbf{haute fréquence} ($\gtrsim \SI{100}{MHz}$) : $\SI{1.6}{nF}$ semble ridicule, mais son inductance d'accès est quasi nulle (le « condensateur » est partout, sans piste ni via d'accès) --- là où le meilleur CMS est déjà inductif. Aucun composant rapporté ne peut le remplacer dans cette bande.
+
+(c) $d$ divisé par deux : capacité doublée ($\approx \SI{3.2}{nF}$) et surtout inductance de la paire de plans réduite d'autant --- le relais avec l'étage céramique se fait plus bas en impédance. Gain réel en émission et en intégrité d'alimentation, pour un surcoût d'empilage modeste.
+\end{pratique}
+
+\subsection*{Niveau ingénieur}
+
+\textbf{Exercice 36.5 ---} Une horloge à $\SI{50}{MHz}$ (fronts raides, harmoniques impaires) parcourt $\SI{8}{cm}$ au-dessus d'un plan à $h = \SI{0.2}{mm}$, mais franchit une fente de $\SI{3}{cm}$ de long ; le retour contourne par une extrémité, à $\SI{1.5}{cm}$ du point de franchissement. L'harmonique de rang 5 ($\SI{250}{MHz}$) porte $\SI{4}{mA}$. (a) Estimez la surface de boucle sans la fente, puis la surface ajoutée par le contournement. (b) Avec la formule du chapitre 35 ($E \approx \num{1.32e-14}\,f^2 A I / r$), comparez le champ à $\SI{3}{m}$ dans les deux cas à une limite d'allure classe B ($\approx 46$~dB\textmu V/m, soit $\SI{200}{\micro V/m}$, à cette fréquence). (c) Concluez sur le « coût CEM » d'une fente.
+
+\begin{pratique}
+\textbf{Solution :}
+
+(a) Sans fente : boucle $\approx$ longueur $\times$ hauteur $= \SI{8}{cm} \times \SI{0.02}{cm} = \SI{0.16}{cm^2}$. Contournement : le retour s'écarte de l'aplomb sur $\approx \SI{1.5}{cm}$ de part et d'autre du franchissement --- surface ajoutée de l'ordre de $\SI{1.5}{cm} \times \SI{1.5}{cm} \approx \SI{2.3}{cm^2}$ (ordre de grandeur triangulaire) : \textbf{quinze fois} la boucle d'origine.
+
+(b) Sans fente : $E = \num{1.32e-14} \times (\num{2.5e8})^2 \times \SI{1.6e-5}{} \times \SI{4e-3}{} / 3 \approx \SI{18}{\micro V/m}$ ($\approx 25$~dB\textmu V/m) : $\SI{21}{dB}$ de marge. Avec la fente : $A \approx \SI{2.3e-4}{m^2}$, $E \approx \SI{250}{\micro V/m}$ ($\approx 48$~dB\textmu V/m) : \textbf{dépassement} d'environ $\SI{2}{dB}$, et il faudrait encore ajouter le rayonnement propre de la fente excitée (antenne à fente, chapitre 35) et les autres harmoniques.
+
+(c) Une seule fente transforme une piste inoffensive en source d'échec : le passage de $\SI{0.16}{}$ à $\SI{2.3}{cm^2}$ coûte $\approx 20\log(14{,}6) \approx \SI{23}{dB}$. La règle « aucun signal rapide au-dessus d'une coupure » n'est pas un dogme : c'est de l'arithmétique.
+\end{pratique}
+
+\textbf{Exercice 36.6 ---} Rail $\SI{1.0}{V}$, transitoires $\Delta I = \SI{3}{A}$, budget dynamique $\SI{50}{mV}$. (a) Impédance cible ? (b) Un condensateur céramique bien monté présente $L_{\text{tot}} = \SI{1.5}{nH}$ (ESR $\approx \SI{10}{m\ohm}$) : quelle est son impédance à $\SI{80}{MHz}$, et combien en faut-il en parallèle pour tenir la cible à cette fréquence (montages supposés indépendants) ? (c) Pourquoi cette hypothèse d'indépendance devient-elle fausse au-delà, et qu'est-ce qui prend le relais ?
+
+\begin{pratique}
+\textbf{Solution :}
+
+(a) $Z_{\text{cible}} = \Delta V / \Delta I = 0{,}05/3 \approx \SI{17}{m\ohm}$.
+
+(b) À $\SI{80}{MHz}$ (au-dessus de la résonance) : $Z_1 \approx 2\pi f L_{\text{tot}} = 2\pi \times \SI{8e7}{} \times \SI{1.5e-9}{} \approx \SI{0.75}{\ohm}$. Nombre : $n \ge Z_1/Z_{\text{cible}} = 0{,}75/0{,}017 \approx 45$ condensateurs.
+
+(c) À $n$ élevé, les condensateurs partagent les mêmes portions de plans et l'inductance \emph{commune} d'accès (spreading) ne se divise plus par $n$ : la mise en parallèle sature. C'est précisément la bande où la \textbf{paire de plans rapprochés} (exercice 36.4) prend le relais --- son inductance d'accès est distribuée et quasi nulle. D'où la hiérarchie du PDN : au-delà de quelques dizaines de mégahertz, on ne « rajoute pas des condensateurs », on soigne l'empilage.
+\end{pratique}
+
+\subsection*{Questions de compréhension}
+
+\textbf{Q1.} Pourquoi le courant de retour haute fréquence suit-il la piste aller, même si ce chemin est plus long ?
+
+\textit{Réponse : en HF, l'impédance du chemin est dominée par l'inductance, donc par le flux --- donc par la surface de boucle. Le chemin qui minimise l'énergie magnétique $\frac{1}{2}LI^2$ est celui qui referme la boucle au plus près de l'aller : juste dessous. Le courant se distribue de lui-même sur ce minimum (répartition en $1/(1+(x/h)^2)$).}
+
+\textbf{Q2.} Un plan d'alimentation peut-il servir de plan de référence à un signal rapide ?
+
+\textit{Réponse : oui, à condition qu'il soit étroitement couplé à la masse (plans rapprochés, découplage abondant) : le courant de retour devra à un moment rejoindre la masse, et ce passage se fait par les condensateurs --- réels ou inter-plans. Si ce couplage est lointain ou inductif, la boucle de retour s'agrandit d'autant. Dans le doute, référencer les signaux critiques au plan de masse.}
+
+\textbf{Q3.} Pourquoi dix condensateurs de $\SI{100}{nF}$ identiques valent-ils souvent mieux que le panachage 100 nF / 10 nF / 1 nF ?
+
+\textit{Réponse : en parallèle, des condensateurs identiques abaissent l'impédance sans créer de nouvelles anti-résonances entre eux (mêmes fréquences propres) ; le panachage crée des couples L--C parallèles entre valeurs voisines, donc des pics d'impédance intermédiaires. Et au-dessus des résonances, seule compte l'inductance de montage --- identique quelle que soit la valeur. L'étagement des valeurs reste pertinent entre familles (bulk / céramique / plans).}
+
+\textbf{Q4.} En quoi le n\oe ud SW d'un convertisseur et la boucle chaude appellent-ils deux traitements géométriques opposés ?
+
+\textit{Réponse : le n\oe ud SW est une source de champ \emph{électrique} (fort $\mathrm{d}V/\mathrm{d}t$) : son agressivité croît avec sa \textbf{surface de cuivre} (capacités parasites vers tout ce qui l'entoure) --- on le compacte. La boucle chaude est une source \emph{magnétique} (fort $\mathrm{d}I/\mathrm{d}t$) : son agressivité croît avec sa \textbf{surface de boucle} --- on la referme au plus court. Deux mécanismes du chapitre 35, deux gestes de placement.}
+
+% ============================================================================
+\section*{Résumé du chapitre}
+\addcontentsline{toc}{section}{Résumé du chapitre}
+
+\begin{bases}[title={\color{white} Résumé --- Les Bases}]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{4.3cm}p{8.7cm}}
+\toprule
+Le PCB est un composant & $R_\square \approx \SI{0.5}{m\ohm}$/carré (1~oz), $L' \approx \SI{1}{nH/mm}$, $C' \approx \SI{15}{}$--$\SI{20}{pF/cm^2}$ face à un plan \\
+La question & \emph{Où revient le courant ?} --- BF : chemin le plus court ; HF : sous la piste (moindre inductance) \\
+Règles d'or & Plan continu, découplage au plus près, signaux rapides courts, largeurs calculées \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{bases}
+
+\begin{approfondissement}[title={\color{white} Résumé --- Approfondissement}]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{4.3cm}p{8.7cm}}
+\toprule
+Empilage & 4 couches : plan de référence adjacent ($\approx \SI{0.2}{mm}$) = boucles minimales par construction + condensateur inter-plans \\
+Retour quantifié & $J(x) \propto 1/(1+(x/h)^2)$ : $80\,\%$ dans $\pm 3h$ --- rapprocher le plan resserre tout \\
+Fente dans le plan & Boucle ajoutée : inductance série + rayonnement $f^2A$ + impédance commune --- jamais de signal rapide au-dessus d'une coupure \\
+Découplage & $Z \approx 2\pi f L_{\text{tot}}$ en HF : on route des nanohenrys ; vias au ras des pastilles \\
+Largeur de piste & Échauffement (IPC : $\sim\SI{0.8}{mm}$/2~A externe 1~oz), chute ($R_\square$), isolement (tension) \\
+Mixte & Un seul plan ; partition par le \textbf{placement} ; découpe seulement si isolement réel \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{approfondissement}
+
+\begin{ingenieur}[title={\color{white} Résumé --- Niveau Ingénieur}]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{4.3cm}p{8.7cm}}
+\toprule
+PDN & $Z_{\mathrm{PDN}} \le \Delta V_{\max}/\Delta I_{\max}$ sur toute la bande ; cascade régulateur $\to$ bulk $\to$ céramiques $\to$ plans \\
+Anti-résonances & L--C parallèles entre étages : pics à garder sous la cible ; l'ESR amortit \\
+Boucle chaude & Courant discontinu $C_{\mathrm{in}}$--$Q_1$--$D$ : surface minimale = geste le plus rentable ; n\oe ud SW compact (source E) \\
+Thermique & FR-4 isolant : vias thermiques en réseau ($9 \Rightarrow \sim\SI{15}{K/W}$) ; arbitrage cuivre thermique / CEM n\oe ud par n\oe ud \\
+Revue & Empilage $\to$ retours $\to$ découplage $\to$ PDN $\to$ puissance $\to$ interfaces $\to$ thermique --- l'outil ne vérifie pas la physique \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{ingenieur}
+
+\vspace{0.4cm}
+
+\begin{retenir}
+Ce chapitre a traité le routage tant que la piste reste « petite » : ses parasites se résument à des R, L, C localisés. Quand la longueur de la piste devient comparable à la longueur d'onde des fronts qu'elle transporte, ce modèle s'effondre : la piste devient une \textbf{ligne de transmission}, avec impédance caractéristique, réflexions et terminaisons. C'est l'objet du chapitre 37 --- l'intégrité du signal.
+\end{retenir}
+
 \end{document}

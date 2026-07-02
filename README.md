@@ -29,7 +29,7 @@ traçable de bout en bout, liens inter-chapitres systématiques.
 | VI   | 20–29 | Électronique numérique    | ✅ |
 | VII  | 30–32 | Alimentations             | ✅ |
 | VIII | 33–34 | Asservissement            | ✅ |
-| IX   | 35–37 | CEM / PCB                 | 🚧 Ch.35 ✅ |
+| IX   | 35–37 | CEM / PCB                 | 🚧 Ch.35–36 ✅ |
 
 **Phase V0.5** (à venir) — passe de correction + visuels sur l'ensemble.
 **Ne pas mélanger V0.1 et V0.5.**
