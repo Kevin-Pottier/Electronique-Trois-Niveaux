@@ -18682,4 +18682,756 @@ Démarche & Modéliser $G$, choisir P/PI/PID, régler (pôles ou marges), proté
 \end{center}
 \end{ingenieur}
 
+
+
+% ============================================================================
+\part{CEM et Conception de Cartes}
+% ============================================================================
+
+% ============================================================================
+% CHAPITRE 35 : COMPATIBILITÉ ÉLECTROMAGNÉTIQUE — SOURCES, COUPLAGES, REMÈDES
+% VERSION PEER-REVIEW
+% Fichier autonome à intégrer dans Bible_Elec.tex
+% Ouvre la PARTIE IX : CEM ET CONCEPTION DE CARTES
+% ============================================================================
+
+\chapter{Compatibilité électromagnétique : sources, couplages et remèdes}
+
+\begin{center}
+\textit{Tout circuit qui commute émet. Tout circuit qui mesure reçoit.\\
+La CEM est la discipline qui fait cohabiter les deux :\\
+comprendre comment l'énergie parasite naît, voyage et perturbe,\\
+pour la bloquer à la source, sur le chemin, ou à l'arrivée.}
+\end{center}
+
+\vspace{0.5cm}
+
+Le chapitre 29 a montré que le numérique moderne vit de fronts raides ; les chapitres 30 à 32 ont ajouté des convertisseurs qui commutent des ampères en dizaines de nanosecondes. Chacun de ces $\mathrm{d}V/\mathrm{d}t$ et $\mathrm{d}I/\mathrm{d}t$ est une \textbf{source électromagnétique}. Ce chapitre pose la discipline qui gère les conséquences : la \textbf{compatibilité électromagnétique} (CEM, ou EMC en anglais). On y construit le modèle source--couplage--victime, les quatre chemins de couplage, la distinction capitale mode différentiel / mode commun, le cadre normatif, puis les trois grandes familles de remèdes : filtrage, blindage, stratégie de masse. Le chapitre 36 (conception PCB) et le chapitre 37 (intégrité du signal) appliqueront ces principes au routage.
+
+% ============================================================================
+\section{Les Bases}
+
+\begin{bases}
+Ce que signifie « être compatible », le modèle source--couplage--victime, les quatre chemins de couplage et l'idée de mode commun --- avec des exemples vécus. Prérequis : chapitres 7--9 (condensateur, bobine), notion de spectre (chapitre 13).
+\end{bases}
+
+\subsection{Être compatible : ne pas polluer, ne pas être pollué}
+
+Un équipement électronique est \textbf{électromagnétiquement compatible} s'il satisfait deux conditions simultanées :
+
+\begin{enumerate}[itemsep=2pt]
+  \item \textbf{Émission} : il ne perturbe pas ses voisins. L'énergie parasite qu'il rejette (sur ses câbles ou dans l'air) reste sous des seuils définis.
+  \item \textbf{Immunité} (ou susceptibilité, vue du défaut) : il n'est pas perturbé par un environnement normal --- décharge électrostatique, émetteur radio proche, parasites du réseau électrique.
+\end{enumerate}
+
+\begin{analogie}
+\textbf{La vie en immeuble.} L'émission, c'est le volume de votre musique : il existe un règlement (la norme) qui fixe le niveau sonore à ne pas dépasser. L'immunité, c'est votre capacité à dormir malgré le bruit résiduel des voisins. Un bon voisin fait les deux : il ne hurle pas, et il ne se réveille pas au moindre craquement de parquet.
+\end{analogie}
+
+Ce n'est pas optionnel : en Europe, la directive CEM conditionne le \textbf{marquage CE}. Un produit qui échoue aux essais ne peut pas être mis sur le marché. La CEM découverte en fin de projet coûte très cher (re-routage, re-certification) ; anticipée dès la conception, elle coûte quelques composants et de bonnes habitudes de routage.
+
+\subsection{Le triptyque source -- couplage -- victime}
+
+Tout problème de CEM, sans exception, se décompose en trois blocs :
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+  bloc/.style={draw, very thick, rounded corners=2pt, minimum width=3.2cm, minimum height=1.3cm, align=center, font=\bfseries},
+  fleche/.style={-{Stealth[length=3mm]}, very thick}
+]
+  \node[bloc, fill=red!10, draw=red!70!black] (src) at (0,0) {Source\\ \footnotesize (perturbateur)};
+  \node[bloc, fill=orange!10, draw=orange!80!black] (cpl) at (5,0) {Couplage\\ \footnotesize (chemin)};
+  \node[bloc, fill=blue!10, draw=blue!60!black] (vic) at (10,0) {Victime\\ \footnotesize (perturbé)};
+  \draw[fleche] (src) -- (cpl);
+  \draw[fleche] (cpl) -- (vic);
+  \node[below=2pt of src, font=\footnotesize, align=center] {alim à découpage,\\ horloge, moteur, ESD\ldots};
+  \node[below=2pt of cpl, font=\footnotesize, align=center] {conduction, capacité,\\ induction, rayonnement};
+  \node[below=2pt of vic, font=\footnotesize, align=center] {entrée analogique,\\ reset, récepteur radio\ldots};
+\end{tikzpicture}
+\caption{Le modèle universel de la CEM : une source, un chemin de couplage, une victime. On peut agir sur chacun des trois blocs.}
+\end{figure}
+
+Ce découpage n'est pas qu'une classification : c'est une \textbf{méthode de travail}. Face à une perturbation, on cherche à identifier les trois blocs, puis on choisit où agir :
+
+\begin{itemize}[itemsep=1pt]
+  \item \textbf{à la source} : ralentir les fronts inutiles, snubber, routage compact --- c'est presque toujours l'action la plus efficace et la moins chère ;
+  \item \textbf{sur le chemin} : éloigner, blinder, filtrer, torsader ;
+  \item \textbf{à la victime} : filtrer ses entrées, la rendre moins sensible (hystérésis, bande passante limitée au nécessaire).
+\end{itemize}
+
+\subsection{Les quatre chemins de couplage}
+
+L'énergie parasite ne voyage que de quatre façons. Les reconnaître est le premier réflexe du diagnostic.
+
+\begin{enumerate}[itemsep=3pt]
+  \item \textbf{Par conduction} : source et victime partagent un conducteur (câble d'alimentation, piste, masse commune). Le parasite voyage \emph{dans les fils}.
+  \item \textbf{Par couplage capacitif} : deux conducteurs proches forment un condensateur parasite $C_p$ (chapitre 7). Une variation \emph{de tension} rapide ($\mathrm{d}V/\mathrm{d}t$) chez l'agresseur injecte un courant $i = C_p\,\mathrm{d}V/\mathrm{d}t$ chez la victime.
+  \item \textbf{Par couplage inductif} : deux boucles de courant proches forment un transformateur parasite de mutuelle $M$ (chapitre 8). Une variation \emph{de courant} rapide ($\mathrm{d}I/\mathrm{d}t$) chez l'agresseur induit une tension $v = M\,\mathrm{d}I/\mathrm{d}t$ chez la victime.
+  \item \textbf{Par rayonnement} : à distance grande devant la taille des circuits et la longueur d'onde réduite (section ingénieur), le champ se détache et se propage comme une onde. Les câbles et les boucles se comportent alors en \textbf{antennes}, à l'émission comme à la réception.
+\end{enumerate}
+
+\begin{intuition}
+Les couplages capacitif et inductif sont les deux visages d'une même proximité : le premier est piloté par les \textbf{tensions qui varient} (champ électrique entre conducteurs), le second par les \textbf{courants qui varient} (champ magnétique entre boucles). Réflexe de diagnostic : la perturbation suit-elle un n\oe ud à fort $\mathrm{d}V/\mathrm{d}t$ (couplage capacitif) ou une maille à fort $\mathrm{d}I/\mathrm{d}t$ (couplage inductif) ?
+\end{intuition}
+
+\subsection{Mode différentiel et mode commun : le concept central}
+
+Sur une liaison à deux fils (aller et retour), le courant peut circuler de deux manières fondamentalement différentes :
+
+\begin{itemize}[itemsep=2pt]
+  \item \textbf{Mode différentiel (MD)} : le courant \emph{utile}. Il part par un fil et revient par l'autre : $+I_{\mathrm{MD}}$ à l'aller, $-I_{\mathrm{MD}}$ au retour. C'est le fonctionnement normal de tout circuit.
+  \item \textbf{Mode commun (MC)} : un courant \emph{parasite} qui circule dans le \textbf{même sens sur les deux fils} et revient par un chemin extérieur au circuit --- la terre, le châssis, les capacités parasites. Le circuit ne l'a jamais demandé : il naît des imperfections.
+\end{itemize}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+  fleche/.style={decoration={markings, mark=at position 0.55 with {\arrow{Stealth[length=2.6mm]}}}, postaction={decorate}},
+  flecheR/.style={decoration={markings, mark=at position 0.55 with {\arrowreversed{Stealth[length=2.6mm]}}}, postaction={decorate}}
+]
+  % Equipements
+  \node[draw, very thick, minimum width=1.9cm, minimum height=2cm, align=center, fill=gray!8] (A) at (0,0.9) {Équip.\\ A};
+  \node[draw, very thick, minimum width=1.9cm, minimum height=2cm, align=center, fill=gray!8] (B) at (8,0.9) {Équip.\\ B};
+  % Plan de terre
+  \draw[very thick] (-1.2,-1.1) -- (9.2,-1.1);
+  \foreach \x in {-1.0,-0.6,...,9.0} \draw (\x,-1.1) -- (\x-0.22,-1.35);
+  \node[right] at (9.2,-1.1) {\footnotesize terre / châssis};
+  % Fil aller (haut)
+  \draw[very thick, fleche, blue!60!black] (A.east |- 0,1.45) -- node[above, pos=0.3, blue!60!black] {$I_{\mathrm{MD}} + I_{\mathrm{MC}}/2$} (B.west |- 0,1.45);
+  % Fil retour (bas)
+  \draw[very thick, flecheR, blue!60!black] (A.east |- 0,0.35) -- node[below, pos=0.3, blue!60!black] {$I_{\mathrm{MD}}$} (B.west |- 0,0.35);
+  \draw[very thick, fleche, red!70!black, dashed] (A.east |- 0,0.35) .. controls (4,0.6) .. node[above, pos=0.72, red!70!black] {$I_{\mathrm{MC}}/2$} (B.west |- 0,0.35);
+  % Retour MC par la terre
+  \draw[very thick, red!70!black, dashed, fleche]
+    (B.south) -- (B.south |- 0,-1.1) -- node[above=3pt, pos=0.5, red!70!black] {$I_{\mathrm{MC}}$ (retour par la terre)} (A.south |- 0,-1.1) -- (A.south);
+\end{tikzpicture}
+\caption{Mode différentiel (bleu, plein) : aller--retour dans la paire, champs qui se compensent. Mode commun (rouge, pointillé) : même sens sur les deux fils, retour par la terre --- la grande boucle rayonne.}
+\end{figure}
+
+Pourquoi cette distinction est-elle \emph{le} concept central de la CEM ?
+
+\begin{itemize}[itemsep=2pt]
+  \item En MD, les deux courants opposés créent des champs qui \textbf{se compensent} presque : la paire est discrète.
+  \item En MC, les champs des deux fils \textbf{s'ajoutent}, et la boucle de retour (par la terre) est immense : le câble devient une véritable antenne. À courant égal, le MC rayonne des ordres de grandeur de plus que le MD --- on le quantifiera en section ingénieur.
+\end{itemize}
+
+\begin{retenir}
+La quasi-totalité des échecs en émission rayonnée d'un produit vient de \textbf{courants de mode commun de quelques microampères} sur les câbles. Pas des signaux utiles : de leurs fuites.
+\end{retenir}
+
+\subsection{Trois scènes de la vie courante}
+
+\begin{itemize}[itemsep=2pt]
+  \item \textbf{Le chargeur qui brouille la radio AM} : l'alimentation à découpage (chapitre 32) injecte ses harmoniques de commutation sur le réseau (conduction) et son câble rayonne le mode commun --- la radio, victime à haute impédance d'entrée, capte tout.
+  \item \textbf{La poignée de porte qui redémarre un appareil} : décharge électrostatique (ESD), un front de plusieurs kilovolts en une nanoseconde. Couplage par conduction (dans le châssis) et par rayonnement du front.
+  \item \textbf{Le relais qui fait planter le microcontrôleur voisin} : l'ouverture d'une charge inductive (chapitre 8) crée une surtension et un arc, riches en hautes fréquences, couplés par induction et capacité aux pistes voisines.
+\end{itemize}
+
+% ============================================================================
+\section{Approfondissement}
+
+\begin{approfondissement}
+Les modèles quantitatifs des couplages, la naissance du mode commun, le paysage normatif (émission, immunité, moyens d'essai) et le filtre secteur. Prérequis : chapitres 10 (impédances complexes), 13 (spectre, Bode), 32 (découpage).
+\end{approfondissement}
+
+\subsection{Couplage capacitif : modèle et remèdes}
+
+Deux conducteurs voisins (pistes parallèles, fils dans un toron) forment une capacité parasite $C_p$ --- typiquement de l'ordre du picofarad pour quelques centimètres de pistes adjacentes. Si l'agresseur porte une tension $v_a(t)$ et la victime présente une impédance $Z_v$ vers sa masse, le diviseur $C_p$--$Z_v$ donne :
+
+\begin{formule}
+\[
+\underline{V}_v = \frac{Z_v}{Z_v + \dfrac{1}{j\omega C_p}}\ \underline{V}_a
+\;\;\xrightarrow[|Z_v| \ll \frac{1}{\omega C_p}]{\text{couplage faible}}\;\;
+\underline{V}_v \approx j\omega C_p Z_v\, \underline{V}_a
+\]
+\[
+\text{soit, en temporel : } v_v \approx R_v\, C_p\, \frac{\mathrm{d}v_a}{\mathrm{d}t}
+\quad\text{(si } Z_v = R_v \text{ et front lent devant } R_v C_p\text{).}
+\]
+\end{formule}
+
+Le message physique : la tension induite croît avec la \textbf{fréquence} (ou la raideur du front), avec la \textbf{proximité} (via $C_p$) et avec l'\textbf{impédance de la victime}. Un n\oe ud haute impédance (entrée d'AOP, chapitre 18) est une victime idéale.
+
+\textbf{Remèdes}, par ordre d'efficacité habituelle :
+\begin{enumerate}[itemsep=1pt]
+  \item réduire $\mathrm{d}v_a/\mathrm{d}t$ à la source si le front est plus raide que nécessaire (résistance série sur une horloge, snubber) ;
+  \item \textbf{écran électrostatique} : un conducteur relié à la masse interposé entre les deux --- le courant de $C_p$ est dérivé vers la masse au lieu d'atteindre la victime ;
+  \item éloigner ($C_p$ chute vite avec la distance), baisser $Z_v$ quand c'est possible.
+\end{enumerate}
+
+\begin{attention}
+Un écran \textbf{non relié} (ou relié par un long fil inductif) ne protège presque pas : il se contente de relayer le couplage. L'efficacité d'un écran électrostatique se joue dans la qualité de sa connexion à la masse --- courte et directe.
+\end{attention}
+
+\subsection{Couplage inductif : la surface de boucle est l'ennemie}
+
+Une boucle agresseur parcourue par $i_a(t)$ et une boucle victime partagent une mutuelle $M$ (chapitre 8). La tension induite en série dans la boucle victime vaut :
+
+\begin{formule}
+\[
+v_v(t) = M\,\frac{\mathrm{d}i_a}{\mathrm{d}t},
+\qquad M \propto \frac{\text{(surfaces des boucles)} \times \text{(proximité)}}{\text{distance}}
+\]
+\end{formule}
+
+$M$ n'a pas d'expression simple universelle, mais sa dépendance est claire : elle croît avec les \textbf{surfaces des deux boucles} et leur proximité, et décroît vite avec la distance et le désalignement. D'où les remèdes :
+
+\begin{enumerate}[itemsep=1pt]
+  \item \textbf{réduire les surfaces de boucle} --- côté agresseur comme côté victime : conducteur de retour plaqué contre l'aller, paires \textbf{torsadées} (chaque demi-torsade inverse le signe du flux capté : la somme s'annule presque) ;
+  \item éloigner, croiser à 90° (flux nul à l'orthogonale) ;
+  \item un \textbf{plan de masse} sous les pistes : le courant de retour circule juste sous l'aller (chapitre 36), la surface de boucle devient minuscule.
+\end{enumerate}
+
+\begin{intuition}
+En CEM, on ne raisonne pas en « fils » mais en \textbf{boucles} : tout courant décrit une boucle fermée, et c'est la \emph{surface} de cette boucle qui couple --- vers l'extérieur (émission) comme depuis l'extérieur (immunité). « Où revient ce courant ? » est \emph{la} question du chapitre 36.
+\end{intuition}
+
+\subsection{Couplage par impédance commune : la masse n'est pas équipotentielle}
+
+Quand deux circuits partagent un même conducteur de retour, celui-ci a une impédance $Z_g = R_g + j\omega L_g$ --- et l'inductance domine très vite : un fil ou une piste fine présente grossièrement $\SI{1}{nH}$ par millimètre (ordre de grandeur, géométrie-dépendant). Le courant du circuit 1 crée alors dans $Z_g$ une chute de tension que le circuit 2 voit \textbf{en série avec sa référence} :
+
+\[
+v_{\text{parasite}} = Z_g\,(i_1 + i_2)
+\quad\Rightarrow\quad
+\text{la référence du circuit 2 suit le courant du circuit 1.}
+\]
+
+Exemple numérique : $\SI{10}{cm}$ de retour partagé ($L_g \approx \SI{100}{nH}$), un étage numérique qui appelle $\Delta I = \SI{20}{mA}$ en $\SI{2}{ns}$ :
+\[
+v = L_g \frac{\mathrm{d}i}{\mathrm{d}t} \approx \SI{100e-9}{} \times \frac{\SI{20e-3}{}}{\SI{2e-9}{}} = \SI{1}{V}.
+\]
+Un volt de rebond de masse --- de quoi corrompre n'importe quel seuil logique ou entrée analogique. C'est le même mécanisme que le \emph{ground bounce} du chapitre 29, étendu à la carte entière.
+
+\textbf{Remèdes} : ne pas partager les retours sensibles et les retours violents (séparation des chemins de courant), raccourcir, élargir, et en haute fréquence utiliser un \textbf{plan} de masse (chapitre 36) dont l'impédance est des ordres de grandeur plus faible qu'une piste.
+
+\subsection{D'où vient le mode commun ?}
+
+Personne ne conçoit un courant de mode commun ; il naît des \textbf{dissymétries} :
+
+\begin{itemize}[itemsep=2pt]
+  \item \textbf{Dissymétrie des impédances parasites} : les deux fils d'une paire n'ont pas les mêmes capacités vers le châssis ou la terre ; un signal purement différentiel se convertit partiellement en MC (et réciproquement --- la conversion marche dans les deux sens).
+  \item \textbf{Tension de mode commun des alimentations à découpage} : le n\oe ud de commutation (chapitre 32) impose des centaines de volts de $\mathrm{d}V/\mathrm{d}t$ en quelques dizaines de nanosecondes ; à travers la capacité parasite primaire--secondaire du transformateur (dizaines de pF), un courant $i = C_{ps}\,\mathrm{d}V/\mathrm{d}t$ est injecté vers la sortie et revient par la terre : c'est un générateur de MC quasi idéal.
+  \item \textbf{Chute de tension sur la masse} (paragraphe précédent) : le potentiel de la « masse » d'une carte oscille par rapport au châssis, et chaque câble qui part de cette carte est excité comme une \textbf{antenne monopole} contre la terre.
+\end{itemize}
+
+Cette dernière image est la bonne : \textbf{le câble est le brin rayonnant, la carte est l'excitateur}. On comprend alors pourquoi le remède universel aux échecs en rayonné consiste à traiter les câbles (ferrites de mode commun, blindage, filtrage à la traversée du châssis) et la référence de masse --- pas le signal utile.
+
+\subsection{Le paysage normatif : que mesure-t-on, et comment ?}
+
+Les exigences se répartissent en deux familles, chacune scindée en conduit / rayonné selon le chemin :
+
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{p{3.3cm}p{4.6cm}p{5.3cm}}
+\toprule
+ & \textbf{Émission} & \textbf{Immunité} \\
+\midrule
+\textbf{Conduit} (via les câbles) & Perturbations réinjectées sur le réseau, $\SI{150}{kHz}$--$\SI{30}{MHz}$, mesurées sur un RSIL & Transitoires rapides en salves (EFT), ondes de choc (foudre), RF conduite, creux de tension \\
+\textbf{Rayonné} (via l'air) & Champ électrique émis, $\SI{30}{MHz}$--$\SI{1}{GHz}$ (au-delà si horloges internes rapides), en chambre semi-anéchoïque & Champ RF imposé (émetteurs, radars), décharges électrostatiques (ESD) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Quelques repères pour se situer dans la jungle des références :
+\begin{itemize}[itemsep=1pt]
+  \item \textbf{Émission} : famille CISPR, déclinée en normes européennes EN~550xx (par exemple CISPR~32 / EN~55032 pour les équipements multimédia). Deux classes : \textbf{A} (environnement industriel/commercial, limites plus permissives) et \textbf{B} (résidentiel, plus sévère).
+  \item \textbf{Immunité} : série CEI~61000-4-x, chaque essai ayant sa norme : 4-2 (ESD), 4-3 (champ RF), 4-4 (transitoires rapides EFT), 4-5 (ondes de choc), 4-6 (RF conduite)\ldots
+  \item Le produit est couvert soit par une \textbf{norme produit} dédiée, soit par les \textbf{normes génériques} (EN~61000-6-1/-2 immunité, -3/-4 émission, selon environnement résidentiel ou industriel).
+\end{itemize}
+
+\begin{attention}
+Les valeurs chiffrées données dans ce chapitre (gabarits, niveaux d'essai) sont des \textbf{ordres de grandeur typiques} destinés à la conception. Pour une certification, seule fait foi la version en vigueur de la norme applicable au produit --- les limites dépendent de la classe, de la distance de mesure et de l'édition.
+\end{attention}
+
+\textbf{Émission conduite --- le RSIL.} On mesure entre $\SI{150}{kHz}$ et $\SI{30}{MHz}$ à travers un \textbf{RSIL} (réseau stabilisateur d'impédance de ligne, LISN en anglais) : un filtre normalisé qui isole l'équipement des parasites du réseau réel et lui présente une impédance reproductible ($\SI{50}{\ohm}$ en HF), sur laquelle on prélève la tension parasite. Ordre de grandeur des limites classe B (quasi-crête) : environ 66~dB\textmu V à $\SI{150}{kHz}$, décroissant vers 56~dB\textmu V à $\SI{500}{kHz}$, puis 56 à 60~dB\textmu V jusqu'à $\SI{30}{MHz}$ --- soit quelques centaines de microvolts à peine sur $\SI{50}{\ohm}$.
+
+\textbf{Émission rayonnée --- la chambre.} De $\SI{30}{MHz}$ à $\SI{1}{GHz}$ (et au-delà pour les produits à horloges rapides), on mesure le champ électrique à distance normalisée (3 ou $\SI{10}{m}$) en chambre semi-anéchoïque, antenne balayée en hauteur et en polarisation.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[xscale=1.0, yscale=0.85]
+  % Axes
+  \draw[-{Stealth}] (0,0) -- (10.6,0) node[right=2pt] {\footnotesize $f$ (log)};
+  \draw[-{Stealth}] (0,0) -- (0,4.6) node[above=2pt] {\footnotesize $E$ (dB\textmu V/m)};
+  % Frequency ticks (log positions): 30M at 1, 230M at ~5.4, 1000M at 9.5
+  \foreach \x/\lab in {1/30~MHz, 5.4/230~MHz, 9.5/1~GHz}
+    {\draw (\x,0) -- (\x,-0.12) node[below] {\footnotesize \lab};}
+  % dB ticks : 40 dB at y=2, 47 dB at y=2.9
+  \foreach \y/\lab in {2/40, 2.9/47}
+    {\draw (0,\y) -- (-0.12,\y) node[left] {\footnotesize \lab};}
+  % Class B template
+  \draw[very thick, red!75!black] (1,2) -- (5.4,2);
+  \draw[very thick, red!75!black, dashed] (5.4,2) -- (5.4,2.9);
+  \draw[very thick, red!75!black] (5.4,2.9) -- (9.5,2.9);
+  \node[red!75!black, above, font=\footnotesize\bfseries] at (1.8,2) {limite classe B};
+  % A typical spectrum below
+  \draw[thick, blue!60!black]
+    (1,1.1) -- (1.5,1.5) -- (1.8,0.9) -- (2.3,1.7) -- (2.6,1.2) -- (3.1,2.25) -- (3.4,1.3)
+    -- (4.0,1.0) -- (4.6,1.55) -- (5.2,0.9) -- (6.0,1.6) -- (6.6,1.1) -- (7.4,1.9) -- (8.2,1.2) -- (9.5,0.8);
+  \node[blue!60!black, font=\footnotesize, align=left] at (7.9,3.6) {spectre mesuré\\ (harmoniques d'horloges,\\ raies de découpage\ldots)};
+  \draw[blue!60!black, -{Stealth}] (7.0,3.3) -- (6.3,1.75);
+  % Violation marker
+  \draw[red!75!black, -{Stealth}, thick] (3.1,3.3) node[above, font=\footnotesize\bfseries, align=center] {dépassement\\ = échec} -- (3.1,2.35);
+\end{tikzpicture}
+\caption{Principe d'un gabarit d'émission rayonnée (allure type classe B, détecteur quasi-crête, à \SI{3}{m}). Le spectre mesuré doit rester sous la limite sur toute la bande ; une seule raie au-dessus suffit à l'échec.}
+\end{figure}
+
+\textbf{Quasi-crête et valeur moyenne.} Le récepteur de mesure normalisé n'utilise pas un simple détecteur crête : le détecteur \textbf{quasi-crête} (QP) pondère les événements selon leur taux de répétition --- héritage de l'époque où le critère était la gêne \emph{audible} sur un récepteur radio : un claquement rare gêne moins qu'un bourdonnement continu, à crête égale. Une perturbation impulsionnelle rare lit donc plus bas en QP qu'en crête ; une raie continue lit pareil. Les limites sont généralement données en QP et en valeur moyenne (AV).
+
+\textbf{Immunité --- niveaux d'essai typiques} (environnement résidentiel, ordres de grandeur) :
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{3.4cm}p{2.6cm}p{6.9cm}}
+\toprule
+\textbf{Essai} & \textbf{Norme} & \textbf{Sévérité typique (résidentiel)} \\
+\midrule
+Décharge électrostatique & CEI 61000-4-2 & $\pm\SI{4}{kV}$ contact, $\pm\SI{8}{kV}$ air \\
+Champ RF rayonné & CEI 61000-4-3 & $\SI{3}{V/m}$, $\SI{80}{MHz}$--$\SI{1}{GHz}$, modulé AM $80\,\%$ \\
+Transitoires rapides (EFT) & CEI 61000-4-4 & $\pm\SI{1}{kV}$ sur l'alimentation, salves $5/\SI{50}{ns}$ \\
+Ondes de choc (foudre) & CEI 61000-4-5 & $\pm\SI{1}{kV}$ différentiel, $\pm\SI{2}{kV}$ vers la terre, $1{,}2/\SI{50}{\micro s}$ \\
+RF conduite & CEI 61000-4-6 & $\SI{3}{V}$, $\SI{150}{kHz}$--$\SI{80}{MHz}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Le critère de réussite est gradué : fonctionnement normal pendant l'essai (critère A), dégradation temporaire auto-récupérée (B), ou perte de fonction nécessitant une intervention (C) --- le niveau exigé dépend de la fonction (un airbag n'a pas droit au critère C).
+
+\begin{pratique}
+\textbf{Le détail qui piège : la modulation AM de l'essai RF.} Le champ de l'essai 61000-4-3 est modulé en amplitude à $\SI{1}{kHz}$. Toute jonction semi-conductrice non linéaire (entrée d'AOP, jonction base-émetteur --- chapitres 16, 18) peut \textbf{démoduler} cette enveloppe : la perturbation à $\SI{900}{MHz}$ ressort\ldots{} en signal parfaitement audible à $\SI{1}{kHz}$ dans la chaîne audio ou la mesure. C'est le mécanisme du grésillement des anciens amplis près d'un téléphone GSM. Remède : filtrer la RF \emph{avant} la jonction (petit RC ou ferrite directement sur l'entrée).
+\end{pratique}
+
+\subsection{Le filtre secteur : l'anatomie d'un classique}
+
+À l'interface entre le réseau et une alimentation à découpage, un filtre traite \emph{séparément} les deux modes :
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.95, transform shape]
+  % Rails phase et neutre
+  \draw (0,3) node[left] {Ph} to[short] (1.4,3)
+        to[L, l_=$L_{\mathrm{MC}}$] (3.4,3)
+        to[short] (8.6,3);
+  \draw (0,0) node[left] {N} to[short] (1.4,0)
+        to[L, l^=$L_{\mathrm{MC}}$] (3.4,0)
+        to[short] (8.6,0);
+  % Noyau commun (deux barres) + points de polarité (sens de bobinage)
+  \draw[very thick] (1.9,1.32) -- (2.9,1.32);
+  \draw[very thick] (1.9,1.68) -- (2.9,1.68);
+  \fill (1.55,2.62) circle (1.7pt);
+  \fill (1.55,0.38) circle (1.7pt);
+  % Cx entre phase et neutre
+  \draw (0.9,3) node[circ]{} to[C, l=$C_X$] (0.9,0) node[circ]{};
+  % Condensateurs Y vers PE
+  \draw (5.6,3) node[circ]{} to[C, l=$C_{Y1}$] (5.6,1.5);
+  \draw (5.6,0) node[circ]{} to[C, l=$C_{Y2}$] (5.6,1.5);
+  \draw (5.6,1.5) node[circ]{} to[short] (6.8,1.5) -- (6.8,1.18);
+  \draw[very thick] (6.52,1.18) -- (7.08,1.18);
+  \draw[very thick] (6.61,1.05) -- (6.99,1.05);
+  \draw[very thick] (6.70,0.92) -- (6.90,0.92);
+  \node at (7.42,1.02) {\footnotesize PE};
+  % Charge
+  \node[draw, very thick, minimum width=1.5cm, minimum height=3.6cm, anchor=west, align=center, fill=gray!8] at (8.6,1.5) {Alim.\\ découpage};
+\end{tikzpicture}
+\caption{Filtre secteur type. $C_X$ (entre phase et neutre) court-circuite le mode différentiel ; la self de mode commun $L_{\mathrm{MC}}$ (deux enroulements sur un même noyau, points de polarité) bloque le MC ; les condensateurs $C_Y$ renvoient le courant de MC vers la terre de protection PE.}
+\end{figure}
+
+\begin{itemize}[itemsep=2pt]
+  \item \textbf{$C_X$} (classe de sécurité X, entre phase et neutre) : basse impédance pour le \textbf{mode différentiel} --- il court-circuite les harmoniques de découpage avant qu'elles ne sortent. Valeurs typiques : $\SI{100}{nF}$ à quelques \si{\micro F}.
+  \item \textbf{Self de mode commun $L_{\mathrm{MC}}$} : deux enroulements sur le même noyau, bobinés de sorte que les flux du courant \emph{différentiel} s'annulent (le noyau ne le voit pas : pas de saturation par le courant utile) tandis que les flux du courant de \emph{mode commun} s'ajoutent --- le MC voit une forte inductance (du \si{mH} typiquement). L'imperfection du couplage laisse une \textbf{inductance de fuite} de quelques \si{\micro H}\ldots{} qui sert opportunément de filtre MD.
+  \item \textbf{$C_Y$} (classe Y, vers la terre) : offrent au courant de MC un chemin de retour court vers PE, avant le câble. Leur valeur est \textbf{plafonnée par la sécurité} : ils injectent en permanence un courant de fuite $I = \omega C_Y U_{\text{secteur}}$ dans le conducteur de protection, limité par les normes produit (typiquement quelques centaines de \si{\micro A} à quelques \si{mA} ; bien plus sévère en médical). D'où des $C_Y$ de l'ordre du nanofarad seulement --- et la classe Y garantit qu'une défaillance ne met pas la phase sur la carcasse.
+\end{itemize}
+
+\begin{attention}
+L'atténuation d'un filtre du commerce est spécifiée entre source et charge de $\SI{50}{\ohm}$ --- des impédances que ni le réseau ni votre alimentation ne présentent. Un filtre peut même \textbf{amplifier} par résonance autour de sa fréquence propre si les impédances réelles s'y prêtent (chapitre 12) et si rien ne l'amortit. Les décibels du catalogue sont un point de comparaison, pas une garantie d'installation.
+\end{attention}
+
+% ============================================================================
+\section{Niveau Ingénieur}
+
+\begin{ingenieur}
+La physique du rayonnement (pourquoi les microampères de MC dominent), champ proche et champ lointain, la théorie du blindage et sa vraie limite (les ouvertures), les stratégies de masse, l'ESD et le débogage. Prérequis : chapitres 8--9, 13, 29, 32.
+\end{ingenieur}
+
+\subsection{Physique du rayonnement : la boucle et le fil}
+
+\textbf{Hypothèses.} Structures petites devant la longueur d'onde ($\ell \ll \lambda$), courant supposé uniforme, observation en champ lointain, orientation la plus défavorable. Ce sont les modèles élémentaires du \emph{petit dipôle magnétique} (boucle) et du \emph{petit dipôle électrique} (fil), suffisants pour prédire des ordres de grandeur remarquablement fiables.
+
+\textbf{Le courant différentiel rayonne par sa boucle.} Une boucle de surface $A$ parcourue par $I_{\mathrm{MD}}$ à la fréquence $f$ crée à la distance $r$, en espace libre, un champ électrique maximal :
+
+\begin{formule}
+\[
+E_{\mathrm{MD}} \approx \num{1.32e-14}\;\frac{f^2\, A\, I_{\mathrm{MD}}}{r}
+\qquad
+\left[\si{V/m}\right],\ f\ \text{en Hz},\ A\ \text{en } \si{m^2},\ I\ \text{en A},\ r\ \text{en m}
+\]
+\end{formule}
+
+La dépendance en $f^2$ vient de deux dérivations successives : le rayonnement est piloté par la \emph{variation} du moment magnétique, lui-même proportionnel à la fréquence dans le passage au champ lointain. Conséquence pratique : ce sont les \textbf{harmoniques élevées} des fronts (chapitre 29) qui rayonnent, pas le fondamental.
+
+\textbf{Le courant de mode commun rayonne par son câble.} Un conducteur de longueur $L$ (le câble) parcouru par $I_{\mathrm{MC}}$ se comporte en petit dipôle électrique :
+
+\begin{formule}
+\[
+E_{\mathrm{MC}} \approx \num{6.3e-7}\;\frac{f\, L\, I_{\mathrm{MC}}}{r}
+\qquad
+\left[\si{V/m}\right],\ \text{mêmes unités.}
+\]
+\end{formule}
+
+(Les essais normalisés se déroulant au-dessus d'un plan de sol réfléchissant, le pire cas mesuré peut atteindre le double de ces valeurs d'espace libre ; l'ordre de grandeur reste le même. Ces deux expressions cessent d'être valables quand $L$ ou $\sqrt{A}$ approchent $\lambda/4$ : la structure devient une antenne résonante et rayonne encore mieux.)
+
+\begin{pratique}
+\textbf{Cas réel complet --- combien de courant pour échouer ?} Limite d'allure classe B à $\SI{3}{m}$ : $40$~dB\textmu V/m $= \SI{100}{\micro V/m}$ à $f = \SI{50}{MHz}$.
+
+\textbf{Mode commun}, câble de $L = \SI{1}{m}$ :
+\[
+I_{\mathrm{MC}} = \frac{E\,r}{\num{6.3e-7}\,f\,L}
+= \frac{\num{1e-4} \times 3}{\num{6.3e-7} \times \num{5e7} \times 1}
+\approx \SI{10}{\micro A}
+\]
+(à diviser par $\sim 2$ au-dessus du plan de sol de l'essai : $\approx \SI{5}{\micro A}$).
+
+\textbf{Mode différentiel}, boucle de $A = \SI{10}{cm^2} = \SI{1e-3}{m^2}$ :
+\[
+I_{\mathrm{MD}} = \frac{E\,r}{\num{1.32e-14}\,f^2\,A}
+= \frac{\num{3e-4}}{\num{1.32e-14} \times \num{2.5e15} \times \num{1e-3}}
+\approx \SI{9}{mA}.
+\]
+
+\textbf{Trois ordres de grandeur d'écart.} Cinq à dix microampères de mode commun sur un câble suffisent à faire échouer un essai que dix milliampères de courant différentiel bien routé passeraient. C'est la justification quantitative du réflexe « en rayonné, traiter d'abord les câbles et le mode commun ».
+\end{pratique}
+
+\subsection{Champ proche, champ lointain : quelle est la nature du champ ?}
+
+Autour d'une source, la structure du champ change avec la distance. La frontière se situe vers :
+
+\begin{formule}
+\[
+r_{\text{transition}} \approx \frac{\lambda}{2\pi}
+\qquad\text{(soit } \approx \SI{48}{cm} \text{ à } \SI{100}{MHz},\ \approx \SI{4.8}{m} \text{ à } \SI{10}{MHz}).
+\]
+\end{formule}
+
+\begin{itemize}[itemsep=2pt]
+  \item \textbf{Champ lointain} ($r \gg \lambda/2\pi$) : onde plane locale, $E$ et $H$ liés par l'impédance d'onde du vide $Z_w = E/H = \eta_0 \approx \SI{377}{\ohm}$, décroissance en $1/r$.
+  \item \textbf{Champ proche} ($r \ll \lambda/2\pi$) : le champ garde la personnalité de sa source. Une source à \textbf{haute impédance} (dipôle, n\oe ud à fort $\mathrm{d}V/\mathrm{d}t$) impose un champ dominé par $E$ : $Z_w \gg \SI{377}{\ohm}$. Une source à \textbf{basse impédance} (boucle, maille à fort $\mathrm{d}I/\mathrm{d}t$) impose un champ dominé par $H$ : $Z_w \ll \SI{377}{\ohm}$. Les composantes réactives décroissent vite ($1/r^2$, $1/r^3$) : c'est le régime des couplages capacitif et inductif des sections précédentes, qui apparaissent ainsi comme le \emph{cas limite proche} du rayonnement.
+\end{itemize}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[xscale=1.05, yscale=0.9]
+  % axes
+  \draw[-{Stealth}] (0,0) -- (9.8,0) node[right=2pt] {\footnotesize $r$ (log)};
+  \draw[-{Stealth}] (0,0) -- (0,4.6) node[above=2pt] {\footnotesize $Z_w = E/H$ (log)};
+  % 377 ohm line
+  \draw[dashed, thick] (0,2.2) -- (9.5,2.2) node[pos=0.1, below, font=\footnotesize] {$\eta_0 = \SI{377}{\ohm}$};
+  % transition vertical
+  \draw[dashed, thick] (5.4,0) -- (5.4,4.3);
+  \node[below, font=\footnotesize] at (5.4,0) {$\lambda/2\pi$};
+  % E-source curve (high Z, decreasing to 377)
+  \draw[very thick, red!75!black] (0.7,3.75) .. controls (3.4,3.2) and (4.6,2.5) .. (5.4,2.28)
+        .. controls (6.2,2.16) and (7.0,2.2) .. (9.3,2.2);
+  \node[red!75!black, font=\footnotesize, align=center] at (2.7,4.15) {source « électrique »\\ (fort $\mathrm{d}V/\mathrm{d}t$) : $Z_w$ élevée};
+  % H-source curve (low Z, rising to 377)
+  \draw[very thick, blue!60!black] (0.7,0.75) .. controls (3.4,1.2) and (4.6,1.9) .. (5.4,2.12)
+        .. controls (6.2,2.24) and (7.0,2.2) .. (9.3,2.2);
+  \node[blue!60!black, font=\footnotesize, align=center] at (3.4,0.42) {source « magnétique »\\ (fort $\mathrm{d}I/\mathrm{d}t$) : $Z_w$ faible};
+  % regions
+  \node[font=\footnotesize\itshape] at (2.7,2.55) {champ proche};
+  \node[font=\footnotesize\itshape] at (7.6,2.55) {champ lointain};
+\end{tikzpicture}
+\caption{Impédance d'onde en fonction de la distance à la source (échelles log). En champ proche, la nature du champ ($E$ ou $H$ dominant) dépend de la source ; au-delà de $\lambda/2\pi$, tout converge vers l'onde plane à $\SI{377}{\ohm}$.}
+\end{figure}
+
+Cette classification n'est pas académique : elle détermine \textbf{quel remède fonctionne}. Un champ proche magnétique basse fréquence (transformateur $\SI{50}{Hz}$) traverse une feuille de cuivre comme si elle n'existait pas ; un champ électrique haute impédance est arrêté par le moindre écran relié. Voyons pourquoi.
+
+\subsection{Le blindage : théorie\ldots}
+
+\textbf{Hypothèses.} Écran conducteur plan, infini, homogène, d'épaisseur $t$, onde incidente normale --- le modèle de Schelkunoff, transposition directe des lignes de transmission (l'écran est un tronçon de « ligne » désadaptée). L'efficacité de blindage (SE, \emph{shielding effectiveness}) en décibels se décompose :
+
+\begin{formule}
+\[
+\mathrm{SE} = R + A + B \quad [\si{dB}]
+\]
+$R$ : pertes par \textbf{réflexion} (désadaptation d'impédance onde/métal) ; $A$ : pertes par \textbf{absorption} dans l'épaisseur ; $B$ : correction de réflexions multiples internes (négligeable dès que $A \gtrsim \SI{10}{dB}$).
+\end{formule}
+
+\textbf{Absorption.} L'onde décroît dans le métal en $e^{-t/\delta}$, où $\delta$ est l'épaisseur de peau (chapitre 9) :
+\[
+\delta = \frac{1}{\sqrt{\pi f \mu \sigma}}
+\quad\Rightarrow\quad
+A = 8{,}69\,\frac{t}{\delta}\ [\si{dB}]
+\qquad
+\delta_{\mathrm{Cu}} \approx \frac{\SI{66}{\micro m}}{\sqrt{f\,[\si{MHz}]}}
+\ \ (\SI{9.3}{mm}\ \text{à}\ \SI{50}{Hz},\ \SI{66}{\micro m}\ \text{à}\ \SI{1}{MHz}).
+\]
+
+\textbf{Réflexion.} $R$ croît avec la désadaptation entre l'impédance d'onde incidente $Z_w$ et l'impédance intrinsèque du métal $Z_m = \sqrt{\pi f \mu / \sigma}$ (quelques centaines de \si{\micro\ohm} pour le cuivre en HF). Pour une onde plane sur du cuivre : $R \approx \SI{108}{dB}$ à $\SI{1}{MHz}$, encore $\approx \SI{88}{dB}$ à $\SI{100}{MHz}$. Trois conséquences structurantes :
+
+\begin{itemize}[itemsep=2pt]
+  \item \textbf{Champ E, haute impédance} : désadaptation énorme avec le métal $\Rightarrow$ $R$ colossal. Le plus mince des écrans reliés suffit (c'est l'écran électrostatique de la section précédente).
+  \item \textbf{Champ H basse fréquence, basse impédance} : $R$ faible \emph{et} $\delta$ centimétrique $\Rightarrow$ ni la réflexion ni l'absorption ne fonctionnent. On ne « bloque » pas un champ magnétique à $\SI{50}{Hz}$ : on le \textbf{détourne} dans un matériau à haute perméabilité (mu-métal, $\mu_r \sim 10^4$--$10^5$) qui offre au flux un chemin préférentiel, ou on éloigne/réduit la boucle source.
+  \item \textbf{Au-dessus du mégahertz}, n'importe quelle tôle conductrice donne un SE théorique supérieur à $\SI{100}{dB}$ --- très au-delà des besoins. \textbf{Le matériau n'est donc jamais le facteur limitant d'un blindage HF réel.}
+\end{itemize}
+
+\subsection{\ldots et sa vraie limite : les ouvertures}
+
+Un boîtier réel a des fentes (couvercle, connecteurs, aération), et c'est par elles que tout fuit. Le résultat contre-intuitif essentiel :
+
+\begin{retenir}
+La fuite d'une fente dépend de sa \textbf{plus grande dimension}, pas de sa surface. Une fente fine et longue (jointure de capot mal contactée) fuit comme une ouverture béante de même longueur : les courants de peau qui devaient circuler sur l'écran sont interrompus \emph{sur toute la longueur} de la fente, qui se comporte en \textbf{antenne à fente} --- résonante (SE $\to$ 0) quand $L = \lambda/2$.
+\end{retenir}
+
+Pour une fente de longueur $L \le \lambda/2$, l'ordre de grandeur classique :
+\[
+\mathrm{SE}_{\text{fente}} \approx 20\log_{10}\!\left(\frac{\lambda}{2L}\right)\ [\si{dB}]
+\]
+et pour $n$ ouvertures identiques proches (espacement $\ll \lambda$), le SE diminue d'environ $10\log_{10} n$.
+
+Exemple : jointure de $\SI{15}{cm}$ sans contact intermédiaire, à $\SI{600}{MHz}$ ($\lambda = \SI{50}{cm}$) : $\mathrm{SE} \approx 20\log(50/30) \approx \SI{4}{dB}$. Le boîtier « métallique » est pratiquement transparent --- quel que soit son matériau. D'où les règles de construction :
+
+\begin{itemize}[itemsep=2pt]
+  \item \textbf{fractionner} : points de contact (vis, clips, joint conducteur) à intervalle $\ll \lambda_{\min}/2$ de la fréquence la plus haute à contenir --- viser $\lambda/20$ à $\lambda/50$ pour un SE utile ;
+  \item \textbf{aération en guide sous coupure} : un trou profond ($t$) et étroit ($d$) est un guide d'onde utilisé sous sa fréquence de coupure ($f_c \approx 176/d\,[\si{mm}]$ en \si{GHz} pour un trou rond) : atténuation $\approx 32\,t/d$~dB, indépendante de la fréquence tant que $f \ll f_c$. C'est le principe des grilles nid-d'abeilles : beaucoup de petits trous profonds plutôt qu'une grande ouverture ;
+  \item \textbf{traiter les câbles à la traversée} : un câble qui traverse l'écran sans précaution est la pire des ouvertures --- il ramène l'antenne \emph{à travers} le blindage. Blindage du câble repris à $360°$ sur le châssis (presse-étoupe CEM), ou filtrage traversant (condensateurs \emph{feedthrough}) au passage de paroi.
+\end{itemize}
+
+\begin{attention}
+\textbf{Le « pigtail » ruine le blindage.} Reprendre la tresse d'un câble blindé par un petit fil queue-de-cochon de quelques centimètres insère $\sim$ dizaines de \si{nH} en série : à $\SI{100}{MHz}$, plusieurs dizaines d'ohms, alors que l'efficacité du blindage repose sur une reprise de quelques milliohms. La qualité d'un câble blindé se caractérise d'ailleurs par son \textbf{impédance de transfert} $Z_t$ (tension induite à l'intérieur par ampère de courant de gaine, par mètre) : une reprise en pigtail multiplie le $Z_t$ effectif par des ordres de grandeur. La règle : reprise périphérique $360°$, directement sur le châssis, à l'entrée du boîtier.
+\end{attention}
+
+\begin{pratique}
+\textbf{Perspective : le blindage sélectif.} Un écran n'est pas condamné à tout bloquer : en structurant sa surface en motifs conducteurs périodiques (\emph{surfaces sélectives en fréquence}, et plus généralement \textbf{métasurfaces}), on réalise des parois qui réfléchissent certaines bandes et en laissent passer --- voire en \emph{récupèrent} --- d'autres. C'est un axe de recherche actif : radômes filtrants, fenêtres blindées, et écrans qui convertissent l'énergie RF incidente au lieu de la dissiper.
+\end{pratique}
+
+\subsection{Stratégies de masse : basse fréquence contre haute fréquence}
+
+D'abord distinguer trois notions que le langage courant confond :
+
+\begin{itemize}[itemsep=1pt]
+  \item la \textbf{masse signal} (0~V) : référence de potentiel des circuits ;
+  \item le \textbf{châssis} : l'enveloppe conductrice mécanique (et l'écran, quand il y en a un) ;
+  \item la \textbf{terre de protection} (PE) : conducteur de sécurité électrique --- son rôle premier est de protéger les personnes, pas les signaux.
+\end{itemize}
+
+Leur interconnexion est un choix de conception, et le bon choix dépend de la fréquence, parce que l'impédance des liaisons est inductive ($\sim\SI{1}{nH/mm}$) :
+
+\begin{itemize}[itemsep=3pt]
+  \item \textbf{Basse fréquence (audio, instrumentation, $\lesssim$ centaines de kHz)} : masse en \textbf{point unique} (étoile). On maîtrise le chemin de chaque courant de retour, et surtout on évite les \textbf{boucles de masse} : deux équipements reliés à la terre en deux points distants, plus une liaison signal entre eux, forment une boucle géante ; le flux à $\SI{50}{Hz}$ qui la traverse et les courants vagabonds de terre y injectent une tension \emph{en série avec le signal} (couplage par impédance commune à l'échelle de l'installation). C'est le ronflement des chaînes audio.
+  \item \textbf{Haute fréquence ($\gtrsim$ MHz)} : le point unique devient une fiction --- l'inductance du moindre fil de retour isole les masses ($\SI{10}{cm} \Rightarrow \sim\SI{100}{nH} \Rightarrow \SI{63}{\ohm}$ à $\SI{100}{MHz}$), et les capacités parasites referment de toute façon les boucles qu'on croyait avoir ouvertes. On passe en \textbf{multipoint} : toutes les masses au châssis/plan, par des liaisons courtes ($\ll \lambda/20$), le plan de masse faisant équipotentielle.
+  \item \textbf{Systèmes mixtes} : masse \textbf{hybride} --- liaison directe là où il le faut, condensateurs (transparents en HF, ouverts en BF) ou selfs/ferrites (l'inverse) pour offrir à chaque bande le schéma qui lui convient.
+\end{itemize}
+
+Quand une boucle de masse est inévitable (deux bâtiments, deux racks), on la \textbf{rompt pour le signal} sans la rompre pour la sécurité : transformateur d'isolement, optocoupleur, liaison différentielle à forte réjection de mode commun (RS-485, chapitre 28), ou self de mode commun sur la liaison.
+
+\subsection{Immunité : l'ESD, le front le plus raide du système}
+
+La décharge électrostatique est l'agression de référence : un corps humain chargé à plusieurs kilovolts se décharge dans le produit. La forme d'onde normalisée (CEI 61000-4-2, décharge contact) monte en \textbf{moins d'une nanoseconde} --- environ $3{,}75\,\si{A}$ de premier pic par kilovolt de charge, soit $\SI{30}{A}$ à $\SI{8}{kV}$ --- puis s'éteint en quelques dizaines de nanosecondes.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[xscale=0.105, yscale=0.115]
+  % axes
+  \draw[-{Stealth}] (0,0) -- (92,0) node[right=2pt] {\footnotesize $t$ (ns)};
+  \draw[-{Stealth}] (0,0) -- (0,36) node[above=2pt] {\footnotesize $i(t)$ (A)};
+  \foreach \x in {20,40,60,80} \draw (\x,0) -- (\x,-0.9) node[below] {\footnotesize \x};
+  \foreach \y/\lab in {15/15, 30/30} \draw (0,\y) -- (-1.2,\y) node[left] {\footnotesize \lab};
+  % waveform: sharp 1ns rise to 30, fast fall to ~14, hump ~16 at 30 ns, decay to ~7 at 60
+  \draw[very thick, red!75!black]
+    (0,0) -- (1,30)
+    .. controls (3,24) and (6,15) .. (10,13.5)
+    .. controls (18,14.5) and (25,16) .. (30,15.5)
+    .. controls (42,13) and (55,9) .. (65,7)
+    .. controls (75,5.5) and (85,4.5) .. (90,4);
+  \draw[dashed] (0,30) -- (1,30);
+  \node[red!75!black, font=\footnotesize, align=left] at (32,28) {premier pic : $\approx \SI{30}{A}$ à $\SI{8}{kV}$,\\ front $< \SI{1}{ns}$};
+  \draw[red!75!black, -{Stealth}] (14,26.5) -- (2.2,29);
+\end{tikzpicture}
+\caption{Allure du courant de décharge ESD normalisé (contact, $\SI{8}{kV}$). Le front subnanoseconde porte un contenu spectral significatif jusqu'au gigahertz : l'ESD est à la fois un problème de conduction et de rayonnement.}
+\end{figure}
+
+Un front de $t_r \approx \SI{1}{ns}$ a un contenu spectral significatif jusqu'à $f \approx 1/(\pi t_r) \approx \SI{300}{MHz}$ et au-delà (chapitre 29) : pendant la décharge, chaque piste est une antenne réceptrice et chaque centimètre d'inductance compte ($\SI{30}{A}$ dans $\SI{10}{nH}$ en $\SI{1}{ns}$ : $\SI{300}{V}$). La stratégie de protection est toujours la même :
+
+\begin{enumerate}[itemsep=2pt]
+  \item \textbf{Dériver le courant vers le châssis} par le chemin le plus court, \emph{sans} qu'il traverse l'électronique : c'est un problème de routage avant d'être un problème de composant (anneau de garde périphérique, connecteurs au châssis --- chapitre 36).
+  \item \textbf{Écrêter} au plus près du point d'entrée : diode TVS (une diode de puissance conçue pour l'avalanche répétitive, chapitre 15) choisie pour une tension de veille au-dessus du signal et une tension d'écrêtage sous la limite du circuit protégé --- en tenant compte de l'inductance série qui s'ajoute à l'écrêtage ($V = V_{\text{clamp}} + L\,\mathrm{d}i/\mathrm{d}t$ : quelques centimètres de piste ruinent la meilleure TVS).
+  \item \textbf{Ralentir et dissiper} ce qui reste : ferrite ou résistance série + condensateur vers la masse, formant un passe-bas pour le front résiduel.
+\end{enumerate}
+
+\subsection{Mesurer et déboguer : la CEM au quotidien}
+
+Attendre le laboratoire accrédité pour découvrir un échec est la pire stratégie. La \textbf{pré-conformité} au bureau d'études repose sur trois outils :
+
+\begin{itemize}[itemsep=2pt]
+  \item \textbf{Analyseur de spectre + RSIL} : reproduire la mesure d'émission conduite sur table --- valeurs absolues approximatives, mais parfaites pour comparer avant/après une modification.
+  \item \textbf{Sondes de champ proche} (petites boucles pour $H$, pointes pour $E$) : promener la sonde sur la carte pour \emph{localiser} les sources et les fuites --- qualitatif mais redoutablement efficace, car en champ proche l'amplitude chute vite avec la distance : ce que la sonde voit fort est dessous.
+  \item \textbf{Pince de courant RF} sur les câbles : mesurer directement $I_{\mathrm{MC}}$. C'est le meilleur prédicteur d'un essai rayonné : la règle d'or dérivée du calcul de la section précédente --- \textbf{quelques microampères par câble au maximum} sur les fréquences critiques --- se vérifie à la pince avant de payer la chambre.
+\end{itemize}
+
+La démarche de débogage suit le triptyque : identifier la fréquence en défaut (elle signe la source : harmonique d'horloge ? raie de découpage ?), localiser à la sonde, identifier le chemin (couper/débrancher les câbles un à un est le test le plus informatif qui soit), puis traiter --- source, chemin ou victime.
+
+% ============================================================================
+\section*{Exercices}
+\addcontentsline{toc}{section}{Exercices}
+
+\subsection*{Niveau débutant}
+
+\textbf{Exercice 35.1 ---} Pour chaque situation, identifiez le chemin de couplage dominant : (a) un variateur de vitesse fait apparaître des parasites sur un capteur dont le câble chemine dans la même goulotte, parallèle sur $\SI{2}{m}$ ; (b) une perceuse fait grésiller un poste de radio FM situé dans une autre pièce ; (c) deux circuits d'une même carte partagent $\SI{8}{cm}$ de piste de masse, et le premier fait osciller la référence du second.
+
+\begin{pratique}
+\textbf{Solution :}
+
+(a) \textbf{Couplage réactif de proximité} (capacitif et/ou inductif) : longueur parallèle importante, faible distance. Les forts $\mathrm{d}V/\mathrm{d}t$ du variateur privilégient le capacitif ; ses forts $\mathrm{d}I/\mathrm{d}t$ l'inductif --- torsader le câble capteur et l'éloigner traite les deux.
+
+(b) \textbf{Rayonnement} : pas de liaison ni de proximité ; les arcs des balais du moteur émettent un spectre large capté par l'antenne du récepteur.
+
+(c) \textbf{Impédance commune} : le courant du premier circuit crée une chute de tension dans la piste de masse partagée, vue en série par la référence du second.
+\end{pratique}
+
+\textbf{Exercice 35.2 ---} Calculez la distance de transition champ proche / champ lointain $\lambda/2\pi$ à $\SI{10}{MHz}$ et à $\SI{1}{GHz}$. Une sonde placée à $\SI{1}{m}$ d'une carte est-elle en champ proche ou lointain à ces deux fréquences ?
+
+\begin{pratique}
+\textbf{Solution :}
+
+À $\SI{10}{MHz}$ : $\lambda = c/f = \SI{30}{m}$, donc $\lambda/2\pi \approx \SI{4.8}{m}$. À $\SI{1}{GHz}$ : $\lambda = \SI{30}{cm}$, donc $\lambda/2\pi \approx \SI{4.8}{cm}$.
+
+À $\SI{1}{m}$ : \textbf{champ proche} à $\SI{10}{MHz}$ ($1 < 4{,}8\,\si{m}$) --- le champ dépend de la nature de la source ; \textbf{champ lointain} à $\SI{1}{GHz}$ ($1 \gg 0{,}048\,\si{m}$) --- onde plane locale, $Z_w \approx \SI{377}{\ohm}$.
+\end{pratique}
+
+\subsection*{Niveau intermédiaire}
+
+\textbf{Exercice 35.3 ---} Une piste d'horloge ($\SI{3.3}{V}$, fronts de $\SI{2}{ns}$) court parallèlement à une piste analogique sur quelques centimètres : $C_p = \SI{2}{pF}$. La piste victime présente $R_v = \SI{100}{\ohm}$ vers la masse. (a) Vérifiez que l'approximation « couplage faible » est licite, puis estimez la tension parasite crête. (b) Un écran (piste de garde reliée à la masse) réduit $C_p$ à $\SI{0.2}{pF}$ : nouvelle amplitude ? (c) Concluez vis-à-vis d'une marge de bruit logique de $\SI{0.4}{V}$.
+
+\begin{pratique}
+\textbf{Solution :}
+
+(a) Constante de couplage : $R_v C_p = 100 \times \SI{2e-12}{} = \SI{0.2}{ns} \ll t_r = \SI{2}{ns}$ : l'approximation dérivateur est licite.
+\[
+v_v \approx R_v\,C_p\,\frac{\mathrm{d}v_a}{\mathrm{d}t} = 100 \times \SI{2e-12}{} \times \frac{3{,}3}{\SI{2e-9}{}} \approx \SI{0.33}{V}.
+\]
+
+(b) $C_p$ divisé par 10 $\Rightarrow$ $v_v \approx \SI{33}{mV}$ (la relation est linéaire en $C_p$).
+
+(c) Sans garde, $\SI{0.33}{V}$ consomme l'essentiel d'une marge de $\SI{0.4}{V}$ : tout bruit additionnel (rebond de masse\ldots) fait franchir le seuil. Avec la garde, un ordre de grandeur de sécurité. Et l'action \emph{à la source} reste disponible : si l'horloge tolère des fronts de $\SI{10}{ns}$, une résistance série divise encore le couplage par 5.
+\end{pratique}
+
+\textbf{Exercice 35.4 ---} Un filtre secteur utilise deux condensateurs $C_Y = \SI{2.2}{nF}$ entre chaque conducteur et la terre. Réseau : $\SI{230}{V}$ / $\SI{50}{Hz}$. (a) Calculez le courant de fuite permanent dans le conducteur de protection (cas défavorable : les deux contributions s'ajoutent). (b) La norme produit limite la fuite à $\SI{0.5}{mA}$ : le choix est-il acceptable ? (c) Même question pour un dispositif médical limité à $\SI{100}{\micro A}$ --- que proposez-vous ?
+
+\begin{pratique}
+\textbf{Solution :}
+
+(a) $I = \omega\,(2 C_Y)\, U = 2\pi \times 50 \times \SI{4.4e-9}{} \times 230 \approx \SI{0.32}{mA}$.
+
+(b) $0{,}32 < \SI{0.5}{mA}$ : acceptable, mais marge faible ($36\,\%$) --- les tolérances des condensateurs ($\pm 20\,\%$) et la tension réseau haute ($253\,\si{V}$) la consomment presque : à vérifier au pire cas ($\approx \SI{0.42}{mA}$ : passe encore, de justesse).
+
+(c) $\SI{0.32}{mA} \gg \SI{100}{\micro A}$ : refusé. Réduire à $C_Y = \SI{470}{pF}$ ($I \approx \SI{68}{\micro A}$ au nominal) et \textbf{compenser le filtrage MC perdu autrement} : self de mode commun plus grosse, voire second étage --- l'arbitrage sécurité/CEM est structurel en médical.
+\end{pratique}
+
+\subsection*{Niveau ingénieur}
+
+\textbf{Exercice 35.5 ---} Un produit doit tenir une limite d'allure classe B de $40$~dB\textmu V/m à $\SI{3}{m}$, à $f = \SI{100}{MHz}$. (a) Quel courant de mode commun maximal admet un câble de $L = \SI{1}{m}$ (formule espace libre) ? (b) Quel courant différentiel admettrait une boucle de $\SI{5}{cm^2}$ ? (c) Le produit échoue de $\SI{10}{dB}$ à cette fréquence, et la pince RF mesure $\SI{8}{\micro A}$ sur le câble d'alimentation : le câble suffit-il à expliquer l'échec, et de quel facteur faut-il réduire $I_{\mathrm{MC}}$ ?
+
+\begin{pratique}
+\textbf{Solution :}
+
+(a) $E = \SI{100}{\micro V/m}$, d'où
+$I_{\mathrm{MC}} = \dfrac{E\,r}{\num{6.3e-7}\,f\,L} = \dfrac{\num{3e-4}}{\num{6.3e-7} \times \num{1e8} \times 1} \approx \SI{4.8}{\micro A}.$
+
+(b) $I_{\mathrm{MD}} = \dfrac{E\,r}{\num{1.32e-14}\,f^2\,A} = \dfrac{\num{3e-4}}{\num{1.32e-14} \times \num{1e16} \times \num{5e-4}} \approx \SI{4.5}{mA}$ --- trois ordres de grandeur au-dessus.
+
+(c) $\SI{8}{\micro A}$ mesurés contre $\approx \SI{4.8}{\micro A}$ admissibles : le champ attendu du seul câble dépasse la limite d'environ $20\log(8/4{,}8) \approx \SI{4.4}{dB}$ --- le câble est un contributeur majeur mais n'explique pas les $\SI{10}{dB}$ à lui seul (autre câble ? fente ?). Pour revenir $\SI{10}{dB}$ sous la mesure actuelle, il faut diviser le courant total rayonnant par $10^{10/20} \approx 3{,}2$ --- soit viser $\lesssim \SI{2.5}{\micro A}$ par câble : typiquement une ferrite de mode commun ($Z \gtrsim$ quelques centaines d'ohms à $\SI{100}{MHz}$) au plus près de la sortie, et vérification à la pince des autres câbles.
+\end{pratique}
+
+\textbf{Exercice 35.6 ---} Le capot d'un boîtier n'est vissé qu'à ses quatre coins : la jointure laisse une fente continue de $L = \SI{15}{cm}$ par côté. Le produit contient une horloge dont l'harmonique gênante est à $\SI{600}{MHz}$. (a) Estimez l'efficacité de blindage d'une fente à cette fréquence, et la fréquence de résonance de la fente. (b) On ajoute des points de contact tous les $\SI{2.5}{cm}$ (6 fentes de $\SI{2.5}{cm}$ par côté) : nouveau SE d'un côté ? (c) Quelle longueur de fente maximale garantirait $\mathrm{SE} \ge \SI{40}{dB}$ à $\SI{600}{MHz}$, et comment l'obtenir en pratique ? (d) Un câble non filtré traverse la paroi : que reste-t-il du blindage ?
+
+\begin{pratique}
+\textbf{Solution :}
+
+(a) $\lambda = c/f = \SI{50}{cm}$. $\mathrm{SE} \approx 20\log\!\big(\lambda/(2L)\big) = 20\log(50/30) \approx \SI{4.4}{dB}$ : quasi transparent. Résonance ($L = \lambda/2$) : $f = c/(2L) = \SI{1}{GHz}$ --- où le SE tend vers zéro : le pire est à venir dans le spectre.
+
+(b) Une fente de $\SI{2.5}{cm}$ : $\mathrm{SE}_1 = 20\log(50/5) = \SI{20}{dB}$. Six fentes proches : $-10\log 6 \approx \SI{-7.8}{dB}$, soit $\mathrm{SE} \approx \SI{12}{dB}$ par côté. Mieux ($+\SI{8}{dB}$), mais loin d'un vrai blindage : le fractionnement seul plafonne vite.
+
+(c) $\mathrm{SE} \ge \SI{40}{dB} \Rightarrow \lambda/(2L) \ge 100 \Rightarrow L \le \lambda/200 = \SI{2.5}{mm}$. Aucun vissage raisonnable n'y parvient : il faut un \textbf{joint conducteur continu} (tresse, élastomère chargé, doigts de contact) sur le périmètre. C'est la conclusion générale : au-delà de quelques centaines de MHz, un blindage se joue dans la connectique mécanique, pas dans la tôle.
+
+(d) À peu près rien à ses fréquences de résonance : le câble ré-émet à l'extérieur ce qu'il capte à l'intérieur --- il \emph{traverse} l'écran. D'où le traitement systématique des traversées : filtrage traversant ou reprise de blindage $360°$ à la paroi.
+\end{pratique}
+
+\subsection*{Questions de compréhension}
+
+\textbf{Q1.} Pourquoi les normes d'émission utilisent-elles un détecteur quasi-crête plutôt qu'un simple détecteur de crête ?
+
+\textit{Réponse : le QP pondère les événements par leur taux de répétition, héritage du critère historique de gêne sur les récepteurs radio : une impulsion rare, même de forte crête, gêne moins qu'une perturbation continue. Une perturbation impulsionnelle lit donc plus bas en QP qu'en crête, une raie continue lit identique.}
+
+\textbf{Q2.} À courant égal, pourquoi le mode commun rayonne-t-il tellement plus que le mode différentiel ?
+
+\textit{Réponse : en MD, les courants aller et retour sont opposés et très proches : leurs champs se compensent presque (rayonnement résiduel $\propto f^2 A$, avec $A$ minuscule). En MC, les courants des deux fils s'ajoutent et la boucle de retour --- par la terre --- est immense : le câble entier rayonne comme un dipôle ($\propto f L$). Les formules de la section ingénieur chiffrent l'écart à environ trois ordres de grandeur dans les cas usuels.}
+
+\textbf{Q3.} Faut-il raccorder le blindage d'un câble à une seule extrémité ou aux deux ?
+
+\textit{Réponse : cela dépend de la bande à traiter. En BF (instrumentation), une seule extrémité évite qu'un courant de boucle de masse circule dans la tresse et s'ajoute au signal. En HF, la reprise aux deux extrémités (à $360°$) est indispensable à l'efficacité --- et les capacités parasites referment de toute façon la boucle. Le compromis classique en environnement mixte : liaison directe d'un côté, condensateur de l'autre (raccord hybride) --- ouvert à $\SI{50}{Hz}$, fermé en HF.}
+
+\textbf{Q4.} Pourquoi la fuite d'une fente de blindage dépend-elle de sa longueur et non de sa surface ?
+
+\textit{Réponse : l'efficacité d'un écran repose sur la libre circulation des courants induits à sa surface. Une fente les interrompt sur toute sa longueur, quelle que soit sa largeur : les charges s'accumulent sur ses bords et la fente rayonne comme une antenne à fente --- le complément d'un dipôle de même longueur (résonance à $\lambda/2$). Réduire la largeur d'une fente ne la répare pas ; la fractionner en tronçons courts, si.}
+
+% ============================================================================
+\section*{Résumé du chapitre}
+\addcontentsline{toc}{section}{Résumé du chapitre}
+
+\begin{bases}[title={\color{white} Résumé --- Les Bases}]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{4.3cm}p{8.7cm}}
+\toprule
+CEM & Ne pas polluer (émission) et ne pas être pollué (immunité) --- obligation légale (marquage CE) \\
+Triptyque & Source $\to$ couplage $\to$ victime : on peut agir sur les trois ; la source d'abord \\
+4 couplages & Conduction, capacitif ($\mathrm{d}V/\mathrm{d}t$), inductif ($\mathrm{d}I/\mathrm{d}t$), rayonnement \\
+Mode différentiel & Courant utile, aller--retour : champs compensés, discret \\
+Mode commun & Courant parasite, même sens sur les fils, retour par la terre : le câble devient antenne \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{bases}
+
+\begin{approfondissement}[title={\color{white} Résumé --- Approfondissement}]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{4.3cm}p{8.7cm}}
+\toprule
+Couplage capacitif & $v_v \approx R_v C_p\,\mathrm{d}v_a/\mathrm{d}t$ --- remèdes : source plus lente, écran relié, distance \\
+Couplage inductif & $v_v = M\,\mathrm{d}i_a/\mathrm{d}t$ --- réduire les \textbf{surfaces de boucle}, torsader, plan de masse \\
+Impédance commune & $\sim\SI{1}{nH/mm}$ : la masse partagée bouge ($L\,\mathrm{d}i/\mathrm{d}t$) --- séparer les retours \\
+Naissance du MC & Dissymétries, $\mathrm{d}V/\mathrm{d}t$ de découpage via capacités parasites, rebond de la masse excitant les câbles \\
+Normes & Émission : CISPR/EN 550xx (classes A/B, RSIL, chambre, détecteur QP). Immunité : CEI 61000-4-x (ESD, RF, EFT, choc) \\
+Filtre secteur & $C_X$ (MD), self de MC (flux MD annulés), $C_Y$ vers PE (plafonnés par le courant de fuite) \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{approfondissement}
+
+\begin{ingenieur}[title={\color{white} Résumé --- Niveau Ingénieur}]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{4.3cm}p{8.7cm}}
+\toprule
+Rayonnement & Boucle (MD) : $E \propto f^2 A I/r$ ; câble (MC) : $E \propto f L I/r$ --- \textbf{µA de MC $\approx$ mA de MD} \\
+Champ proche/lointain & Frontière $\lambda/2\pi$ ; proche : $Z_w$ selon la source (E ou H) ; lointain : $\SI{377}{\ohm}$ \\
+Blindage & $\mathrm{SE} = R + A + B$ ; $A = 8{,}69\,t/\delta$ ; champ H BF : détourner ($\mu_r$), pas réfléchir \\
+Ouvertures & $\mathrm{SE} \approx 20\log(\lambda/2L)$, résonance à $\lambda/2$ ; compte la \textbf{longueur}, pas la surface ; guide sous coupure $\approx 32\,t/d$ dB \\
+Masse & BF : point unique (éviter les boucles) ; HF : multipoint sur plan ($\lambda/20$) ; hybride sinon \\
+ESD & Front $<\SI{1}{ns}$, $\sim\SI{30}{A}$ à $\SI{8}{kV}$ : dériver au châssis, TVS au point d'entrée, inductances série fatales \\
+Débogage & Spectre (signer la source), sonde champ proche (localiser), pince RF ($I_{\mathrm{MC}} \lesssim$ qq \si{\micro A}/câble) \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{ingenieur}
+
+\vspace{0.4cm}
+
+\begin{retenir}
+Ce chapitre a donné les lois et les remèdes ; mais la CEM se gagne ou se perd \textbf{au routage} : c'est la géométrie des courants de retour, des plans et des boucles qui fixe $C_p$, $M$, $Z_g$ et les surfaces rayonnantes. C'est précisément l'objet du chapitre 36 --- concevoir le PCB pour que les problèmes de ce chapitre n'existent pas.
+\end{retenir}
+
 \end{document}
