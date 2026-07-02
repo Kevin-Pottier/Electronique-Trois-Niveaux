@@ -20067,4 +20067,524 @@ Revue & Empilage $\to$ retours $\to$ découplage $\to$ PDN $\to$ puissance $\to$
 Ce chapitre a traité le routage tant que la piste reste « petite » : ses parasites se résument à des R, L, C localisés. Quand la longueur de la piste devient comparable à la longueur d'onde des fronts qu'elle transporte, ce modèle s'effondre : la piste devient une \textbf{ligne de transmission}, avec impédance caractéristique, réflexions et terminaisons. C'est l'objet du chapitre 37 --- l'intégrité du signal.
 \end{retenir}
 
+
+
+% ============================================================================
+% CHAPITRE 37 : INTÉGRITÉ DU SIGNAL — QUAND LA PISTE DEVIENT UNE LIGNE
+% VERSION PEER-REVIEW
+% Fichier autonome à intégrer dans Bible_Elec.tex
+% ============================================================================
+
+\chapter{Intégrité du signal : quand la piste devient une ligne}
+
+\begin{center}
+\textit{Un front de 100 picosecondes ne demande pas la permission :\\
+il se propage, se réfléchit, et revient hanter le signal.\\
+L'intégrité du signal est l'art de faire arriver un front\\
+propre au bout d'un morceau de cuivre.}
+\end{center}
+
+\vspace{0.5cm}
+
+Le chapitre 36 a modélisé la piste par des éléments R--L--C \emph{localisés} --- valable tant que le signal « remplit » la piste instantanément. Quand le temps de montée devient comparable au temps de propagation, cette hypothèse s'effondre : le front occupe physiquement une portion de la piste, l'énergie \textbf{se propage}, et la piste devient une \textbf{ligne de transmission}, avec une impédance caractéristique, des réflexions et des règles de terminaison. Ce chapitre --- le dernier de l'ouvrage --- donne les outils pour prédire et maîtriser ce régime : critère de bascule, impédance $Z_0$, diagramme des réflexions, terminaisons, diaphonie, paires différentielles et pertes.
+
+% ============================================================================
+\section{Les Bases}
+
+\begin{bases}
+Pourquoi et quand une piste cesse d'être un simple fil : vitesse de propagation, critère de longueur critique, et les deux idées neuves --- impédance caractéristique et réflexion. Prérequis : chapitres 8--9 (L, C), 29 (fronts numériques), 36 (parasites de piste).
+\end{bases}
+
+\subsection{Le signal met du temps à voyager}
+
+Rien ne se propage instantanément. Sur un PCB, l'onde électromagnétique guidée par la piste avance à la vitesse $v = c/\sqrt{\varepsilon_{r,\text{eff}}}$, où $\varepsilon_{r,\text{eff}}$ est la permittivité \emph{effective} vue par le champ. Sur FR-4 :
+
+\begin{formule}
+\[
+v = \frac{c}{\sqrt{\varepsilon_{r,\text{eff}}}}
+\qquad\Longrightarrow\qquad
+\begin{cases}
+\text{microruban (surface)} : v \approx \SI{17}{cm/ns} & (\approx \SI{59}{ps/cm})\\[2pt]
+\text{stripline (enterrée)} : v \approx \SI{14.5}{cm/ns} & (\approx \SI{69}{ps/cm})
+\end{cases}
+\]
+Ordre de grandeur à retenir : \textbf{$\sim\SI{15}{cm/ns}$}, soit la moitié de la vitesse de la lumière. En microruban, une partie du champ voyage dans l'air ($\varepsilon_{r,\text{eff}} < \varepsilon_r$) : c'est pour cela qu'elle est plus rapide que la stripline, entièrement noyée dans le FR-4.
+\end{formule}
+
+Dix centimètres de piste, c'est donc $\SI{0.6}{}$ à $\SI{0.7}{ns}$ de trajet. Face à un front de $\SI{100}{ps}$, ce n'est plus un détail : pendant que le front franchit la sortie du driver, le début de la piste est déjà à un potentiel différent de sa fin.
+
+\subsection{Le critère : ligne courte ou ligne longue ?}
+
+Tant que le temps de propagation $t_p$ est petit devant le temps de montée $t_r$, tous les points de la piste évoluent « ensemble » : le modèle localisé du chapitre 36 suffit. Sinon, il faut le modèle propagatif.
+
+\begin{formule}
+Critère usuel : la piste doit être traitée en \textbf{ligne de transmission} dès que
+\[
+t_p > \frac{t_r}{6}
+\qquad\Longleftrightarrow\qquad
+l > l_{\text{crit}} \approx \frac{t_r}{6\,t_p'}
+\qquad (t_p' : \text{délai par unité de longueur})
+\]
+Le facteur 6 est une convention d'ingénierie (certaines équipes prennent 4, les prudentes 10) : ce n'est pas une frontière physique mais un seuil de \emph{risque}, à annoncer comme telle.
+\end{formule}
+
+Application numérique sur microruban FR-4 ($t_p' \approx \SI{59}{ps/cm}$) :
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lll}
+\toprule
+$t_r$ du driver & $l_{\text{crit}}$ & Verdict \\
+\midrule
+$\SI{10}{ns}$ (logique lente, 74HC) & $\approx \SI{28}{cm}$ & presque jamais concerné \\
+$\SI{1}{ns}$ (microcontrôleur moderne) & $\approx \SI{2.8}{cm}$ & la plupart des pistes ! \\
+$\SI{100}{ps}$ (SerDes, DDR, horloges rapides) & $\approx \SI{3}{mm}$ & tout est ligne \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{attention}
+C'est le \textbf{temps de montée} qui décide, pas la fréquence d'horloge (chapitre 29 : le spectre d'un front s'étend jusqu'à $\sim 1/\pi t_r$). Un signal à $\SI{1}{kHz}$ piloté par un driver à fronts de $\SI{500}{ps}$ est un signal \emph{rapide} --- et une source de problèmes d'intégrité sur $\SI{5}{cm}$ de piste. Les drivers modernes sont rapides même quand on ne leur demande rien.
+\end{attention}
+
+\subsection{L'impédance caractéristique : ce que « voit » le front}
+
+Idée neuve numéro un. Pendant qu'un front se propage, il ne « sait » pas ce qui l'attend au bout : il charge la capacité linéique $C'$ de la piste à travers son inductance linéique $L'$, tronçon après tronçon. Le rapport tension/courant de cette onde en marche ne dépend que de la géométrie locale :
+
+\begin{formule}
+\[
+\boxed{\,Z_0 = \sqrt{\frac{L'}{C'}}\,}
+\qquad\qquad
+t_p' = \sqrt{L'C'}
+\]
+$Z_0$ est l'\textbf{impédance caractéristique} : le rapport $v/i$ de l'onde qui se propage. Ce n'est \emph{pas} une résistance --- rien n'y est dissipé --- c'est le « prix en courant » d'un volt qui avance. Valeurs usuelles sur PCB : $\SI{40}{}$ à $\SI{90}{\ohm}$, avec $\SI{50}{\ohm}$ en standard de fait.
+\end{formule}
+
+Concrètement : un driver qui impose un front de $\SI{1}{V}$ sur une piste de $\SI{50}{\ohm}$ doit fournir $\SI{20}{mA}$ pendant \emph{tout le trajet de l'onde}, quelle que soit la charge au bout. La géométrie (largeur, hauteur au-dessus du plan --- chapitre 36) fixe $L'$ et $C'$, donc $Z_0$ : élargir la piste ou rapprocher le plan augmente $C'$, diminue $L'$, et \emph{abaisse} $Z_0$.
+
+\subsection{La réflexion : l'écho électrique}
+
+Idée neuve numéro deux. Quand l'onde arrive au bout, la charge impose sa propre loi $v/i$. Si $Z_L \ne Z_0$, les deux lois sont incompatibles : la différence repart en sens inverse --- une \textbf{onde réfléchie}. L'analogie mécanique est fidèle : une vague dans un canal qui frappe un mur (circuit ouvert) repart en s'ajoutant ; un canal qui débouche sur l'océan (court-circuit) renvoie une vague inversée ; un canal qui se prolonge à l'identique (charge adaptée) n'a pas d'écho.
+
+\begin{retenir}
+Trois situations à mémoriser :
+\begin{itemize}[itemsep=1pt]
+  \item $Z_L = Z_0$ (\textbf{adapté}) : toute l'énergie est absorbée, pas d'écho ;
+  \item $Z_L = \infty$ (\textbf{ouvert}, entrée CMOS) : l'onde repart telle quelle, la tension au bout \emph{double} ;
+  \item $Z_L = 0$ (\textbf{court-circuit}) : l'onde repart inversée, la tension au bout est nulle.
+\end{itemize}
+Les allers-retours successifs de l'écho, c'est exactement le \emph{ringing} observé au chapitre 29 --- il a maintenant une explication et un remède.
+\end{retenir}
+
+% ============================================================================
+\section{Approfondissement}
+
+\begin{approfondissement}
+Le modèle de la ligne, le coefficient de réflexion, le diagramme des rebonds sur un cas chiffré complet, les stratégies de terminaison et la diaphonie. Prérequis : chapitres 8--9, 13, 29, 36.
+\end{approfondissement}
+
+\subsection{Le modèle : une échelle infinie de cellules L--C}
+
+Découpons la ligne en tronçons de longueur $\mathrm{d}x$ : chacun apporte une inductance série $L'\,\mathrm{d}x$ et une capacité vers le plan $C'\,\mathrm{d}x$. La ligne sans pertes est la mise en cascade de ces cellules :
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.9, transform shape]
+  \draw (0,2.4) node[left] {entrée} to[short] (0.8,2.4);
+  \draw (0.8,2.4) to[L, l=$L'\,\mathrm{d}x$] (2.6,2.4) node[circ]{};
+  \draw (2.6,2.4) to[C, l=$C'\,\mathrm{d}x$] (2.6,0) node[circ]{};
+  \draw (2.6,2.4) to[L, l=$L'\,\mathrm{d}x$] (4.4,2.4) node[circ]{};
+  \draw (4.4,2.4) to[C, l=$C'\,\mathrm{d}x$] (4.4,0) node[circ]{};
+  \draw (4.4,2.4) to[L, l=$L'\,\mathrm{d}x$] (6.2,2.4) node[circ]{};
+  \draw (6.2,2.4) to[C, l=$C'\,\mathrm{d}x$] (6.2,0) node[circ]{};
+  \draw (6.2,2.4) to[short] (7.0,2.4);
+  \node at (7.6,2.4) {$\cdots$};
+  \node at (7.6,0) {$\cdots$};
+  \draw (0,0) to[short] (7.0,0);
+  \draw[{Stealth}-{Stealth}] (0.8,3.15) -- node[above, font=\footnotesize] {$\mathrm{d}x$} (2.6,3.15);
+\end{tikzpicture}
+\caption{Modèle de la ligne sans pertes : une échelle L'--C' répétée. Chaque cellule retarde le front de $\sqrt{L'C'}\,\mathrm{d}x$ et lui présente localement $Z_0 = \sqrt{L'/C'}$ --- indépendant de $\mathrm{d}x$ : c'est bien une propriété de la géométrie, pas du découpage.}
+\end{figure}
+
+Ce modèle mène aux équations des télégraphistes, dont on retient les deux résultats déjà énoncés : une onde de vitesse $1/\sqrt{L'C'}$ et de rapport $v/i = Z_0$. Il justifie aussi la sensibilité aux \textbf{discontinuités} : chaque changement local de géométrie (via, connecteur, changement de largeur, absence de plan --- chapitre 36) modifie $L'$ ou $C'$, donc crée une mini-rupture de $Z_0$ et sa mini-réflexion.
+
+\subsection{Le coefficient de réflexion}
+
+L'incompatibilité entre l'onde ($v/i = Z_0$) et la charge ($v/i = Z_L$) se résout en superposant une onde réfléchie. Le bilan aux bornes de la charge donne :
+
+\begin{formule}
+\[
+\Gamma_L = \frac{V_{\text{réfléchi}}}{V_{\text{incident}}} = \frac{Z_L - Z_0}{Z_L + Z_0}
+\qquad\qquad
+V_{\text{charge}} = V_{\text{incident}}\,(1 + \Gamma_L)
+\]
+$\Gamma = 0$ si adapté ; $\Gamma = +1$ en circuit ouvert (tension doublée) ; $\Gamma = -1$ en court-circuit. La même formule s'applique côté source avec $Z_S$ : l'écho qui revient s'y réfléchit à nouveau ($\Gamma_S$), et ainsi de suite.
+\end{formule}
+
+\subsection{Le diagramme des rebonds : un cas complet}
+
+Cas réaliste et volontairement vicieux : un driver CMOS $\SI{3.3}{V}$ de résistance de sortie $R_S = \SI{10}{\ohm}$ attaque, sans précaution, $\SI{10}{cm}$ de microruban $Z_0 = \SI{50}{\ohm}$ ($t_p \approx \SI{0.6}{ns}$) terminé sur une entrée CMOS --- quasi ouverte (quelques picofarads, négligés ici : hypothèse à retenir).
+
+\begin{enumerate}[itemsep=2pt]
+  \item \textbf{Lancement} ($t=0$) : le driver ne voit que $Z_0$. Diviseur de tension :
+  $V_1^+ = 3{,}3 \times \dfrac{50}{10+50} = \SI{2.75}{V}$.
+  \item \textbf{Arrivée} ($t = t_p$) : $\Gamma_L = +1$, la tension au bout \emph{double} : $V_{\text{charge}} = \SI{5.5}{V}$ --- sur une entrée $\SI{3.3}{V}$ ! Les diodes de protection de l'entrée conduisent (chapitre 15).
+  \item \textbf{Retour à la source} ($t = 2t_p$) : $\Gamma_S = \dfrac{10-50}{10+50} = -\dfrac{2}{3}$. Nouvelle onde : $V_2^+ = -\frac{2}{3} \times 2{,}75 = \SI{-1.83}{V}$.
+  \item \textbf{Deuxième arrivée} ($t = 3t_p$) : $V_{\text{charge}} = 5{,}5 + (-1{,}83)(1+1) = \SI{1.83}{V}$ --- le signal \emph{redescend sous} le seuil haut $V_{IH} \approx \SI{2}{V}$ : sur une horloge, c'est un double front garanti.
+  \item Et ainsi de suite : chaque aller-retour multiplie l'écart à $\SI{3.3}{V}$ par $\Gamma_S\Gamma_L = -2/3$ : $5{,}50 \to 1{,}83 \to 4{,}28 \to 2{,}65 \to 3{,}74 \to \cdots$ Convergence oscillante vers $\SI{3.3}{V}$ en plusieurs dizaines de nanosecondes.
+\end{enumerate}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[xscale=0.78, yscale=0.88]
+  % Deux verticales : source (x=0) et charge (x=8)
+  \draw[very thick] (0,5.6) -- (0,0.2);
+  \draw[very thick] (8,5.6) -- (8,0.2);
+  \node[above, font=\footnotesize\bfseries] at (0,5.65) {source ($\Gamma_S = -2/3$)};
+  \node[above, font=\footnotesize\bfseries] at (8,5.65) {charge ($\Gamma_L = +1$)};
+  % axe temps
+  \draw[-{Stealth}] (-1.6,5.4) -- (-1.6,0.6) node[below=2pt] {\footnotesize $t$};
+  % zigzag des ondes
+  \draw[very thick, blue!65!black, -{Stealth}] (0,5.2) -- node[above, sloped, font=\footnotesize] {$V_1^+ = +\SI{2.75}{V}$} (8,4.2);
+  \draw[very thick, blue!65!black, -{Stealth}] (8,4.2) -- node[above, sloped, font=\footnotesize] {$+\SI{2.75}{V}$} (0,3.2);
+  \draw[very thick, red!70!black, -{Stealth}] (0,3.2) -- node[above, sloped, font=\footnotesize] {$V_2^+ = -\SI{1.83}{V}$} (8,2.2);
+  \draw[very thick, red!70!black, -{Stealth}] (8,2.2) -- node[above, sloped, font=\footnotesize] {$-\SI{1.83}{V}$} (0,1.2);
+  \draw[very thick, blue!65!black, -{Stealth}] (0,1.2) -- node[above, sloped, font=\footnotesize] {$V_3^+ = +\SI{1.22}{V}$} (8,0.2);
+  % annotations temps + tension charge
+  \node[right, font=\footnotesize] at (8.15,4.2) {$t_p$ : $V = \SI{5.5}{V}$};
+  \node[right, font=\footnotesize] at (8.15,2.2) {$3t_p$ : $V = \SI{1.83}{V}$};
+  \node[right, font=\footnotesize] at (8.15,0.2) {$5t_p$ : $V = \SI{4.28}{V}$};
+  \node[left, font=\footnotesize] at (-0.15,3.2) {$2t_p$};
+  \node[left, font=\footnotesize] at (-0.15,1.2) {$4t_p$};
+\end{tikzpicture}
+\caption{Diagramme des rebonds du cas non terminé ($R_S = \SI{10}{\ohm}$, $Z_0 = \SI{50}{\ohm}$, bout ouvert). Chaque diagonale est une onde ; à chaque extrémité, elle est multipliée par le $\Gamma$ local. La tension en un point est la \emph{somme} de toutes les ondes déjà passées.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[xscale=1.05, yscale=0.62]
+  % axes
+  \draw[-{Stealth}] (0,0) -- (10.0,0) node[right=2pt] {\footnotesize $t$};
+  \draw[-{Stealth}] (0,0) -- (0,6.6) node[above=2pt] {\footnotesize $V_{\text{charge}}$ (V)};
+  \foreach \y in {1,2,3,4,5} \draw (0,\y) -- (-0.12,\y) node[left, font=\footnotesize] {\y};
+  \foreach \x/\lab in {1.5/$t_p$, 3.0/$3t_p$, 4.5/$5t_p$, 6.0/$7t_p$, 7.5/$9t_p$}
+    \draw (\x,0) -- (\x,-0.15) node[below, font=\footnotesize] {\lab};
+  % niveau final 3.3
+  \draw[dashed, thick] (0,3.3) -- (9.6,3.3) node[pos=0.97, above, font=\footnotesize] {$3{,}3$};
+  % seuil VIH
+  \draw[densely dotted, thick, red!70!black] (0,2.0) -- (9.6,2.0) node[pos=0.97, below, font=\footnotesize] {$V_{IH}$};
+  % escalier : 0 jusqu'à tp, 5.5, 1.83, 4.28, 2.65, 3.74...
+  \draw[very thick, blue!65!black]
+    (0,0) -- (1.5,0) -- (1.5,5.5) -- (3.0,5.5) -- (3.0,1.83) -- (4.5,1.83)
+    -- (4.5,4.28) -- (6.0,4.28) -- (6.0,2.65) -- (7.5,2.65) -- (7.5,3.74) -- (9.0,3.74);
+  % annotation double front
+  \node[red!70!black, font=\footnotesize, align=center] at (6.9,0.85) {repasse sous $V_{IH}$ :\\ double front possible};
+  \draw[red!70!black, -{Stealth}] (5.35,0.95) -- (3.75,1.75);
+\end{tikzpicture}
+\caption{Tension à la charge : le \emph{ringing} en marches d'escalier. Surtension à $\SI{5.5}{V}$ (diodes de protection sollicitées), puis retraversée de $V_{IH}$ --- exactement les symptômes constatés au chapitre 29, maintenant prédits quantitativement.}
+\end{figure}
+
+\subsection{Les terminaisons : imposer $\Gamma = 0$ quelque part}
+
+Le remède est d'absorber l'écho --- à l'une ou l'autre extrémité :
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.82, transform shape]
+  % --- (a) série ---
+  \node[font=\footnotesize\bfseries] at (2.4,3.3) {(a) série (source)};
+  \draw (0,2.4) node[ocirc]{} to[R, l=$R_T$] (2.2,2.4);
+  \draw[fill=orange!15] (2.2,2.05) rectangle node[font=\footnotesize] {$Z_0$} (4.4,2.75);
+  \draw (4.4,2.4) to[short] (5.0,2.4) node[ocirc]{};
+  \node[below, font=\footnotesize, align=center] at (2.4,1.6) {$R_T + R_S = Z_0$\\ bout ouvert};
+  % --- (b) parallèle ---
+  \node[font=\footnotesize\bfseries] at (8.6,3.3) {(b) parallèle (charge)};
+  \draw (6.4,2.4) node[ocirc]{} to[short] (7.0,2.4);
+  \draw[fill=orange!15] (7.0,2.05) rectangle node[font=\footnotesize] {$Z_0$} (9.2,2.75);
+  \draw (9.2,2.4) to[short] (10.2,2.4) node[ocirc]{};
+  \draw (9.7,2.4) node[circ]{} to[R, l=$Z_0$] (9.7,0.5);
+  \draw (9.7,0.5) -- (9.7,0.35);
+  \draw[very thick] (9.42,0.35) -- (9.98,0.35);
+  \draw[very thick] (9.51,0.22) -- (9.89,0.22);
+  \draw[very thick] (9.60,0.09) -- (9.80,0.09);
+  \node[below, font=\footnotesize, align=center] at (8.4,-0.35) {absorbe tout, mais\\ consomme en statique};
+  % --- (c) Thévenin ---
+  \node[font=\footnotesize\bfseries] at (13.3,3.3) {(c) Thévenin};
+  \draw (11.7,2.4) node[ocirc]{} to[short] (12.3,2.4);
+  \draw[fill=orange!15] (12.3,2.05) rectangle node[font=\footnotesize] {$Z_0$} (14.5,2.75);
+  \draw (14.5,2.4) to[short] (15.5,2.4);
+  \draw (15.0,2.4) node[circ]{} to[R, l_=$R_1$] (15.0,4.3) node[above] {\footnotesize $V_{CC}$};
+  \draw (15.0,2.4) to[R, l=$R_2$] (15.0,0.5);
+  \draw (15.0,0.5) -- (15.0,0.35);
+  \draw[very thick] (14.72,0.35) -- (15.28,0.35);
+  \draw[very thick] (14.81,0.22) -- (15.19,0.22);
+  \draw[very thick] (14.90,0.09) -- (15.10,0.09);
+  \node[below, font=\footnotesize, align=center] at (13.7,-0.35) {$R_1 \parallel R_2 = Z_0$\\ polarise + termine};
+\end{tikzpicture}
+\caption{Les trois terminaisons de base. En numérique point-à-point, la \textbf{série} domine : un seul composant, zéro consommation statique.}
+\end{figure}
+
+\textbf{La terminaison série}, la plus utilisée en numérique : une résistance $R_T$ près du driver telle que $R_S + R_T = Z_0$. Mécanisme élégant : le lancement se fait à \emph{demi}-amplitude ($V^+ = V_{CC}/2$), le bout ouvert \emph{double} ($\Gamma_L = +1$) --- pleine amplitude, propre, du premier coup --- et l'écho qui revient trouve une source adaptée ($\Gamma_S = 0$) : absorbé. Un seul transit, pas de statique. Limite : la mi-tension existe \emph{le long} de la ligne pendant l'aller-retour --- réservée au point-à-point, charge en bout.
+
+\textbf{La parallèle} ($Z_0$ à la charge) absorbe l'onde incidente elle-même : front propre partout, plusieurs charges possibles en ligne --- au prix d'une consommation statique ($\SI{66}{mA}$ sous $\SI{3.3}{V}$ dans $\SI{50}{\ohm}$ !), d'où ses variantes : \textbf{Thévenin} (partage la dissipation, polarise) et \textbf{RC} (condensateur en série avec la résistance : termine les fronts, bloque le continu --- au prix d'un compromis sur $C$).
+
+\begin{intuition}
+Une seule adaptation suffit : il faut que l'écho meure \emph{quelque part}. Source adaptée (série) : l'écho fait un aller-retour puis disparaît. Charge adaptée (parallèle) : il ne naît jamais. Les deux à la fois (adaptation double, standard en RF, chapitre 35 pour les mesures $\SI{50}{\ohm}$) : robustesse maximale, mais demi-amplitude reçue --- les liaisons série rapides (SerDes) l'acceptent et amplifient à la réception.
+\end{intuition}
+
+\subsection{La diaphonie : la ligne d'à côté écoute}
+
+Deux pistes voisines partagent leurs champs : capacité mutuelle (couplage en $\mathrm{d}V/\mathrm{d}t$) et inductance mutuelle (couplage en $\mathrm{d}I/\mathrm{d}t$) --- les deux mécanismes du chapitre 35, ici entre pistes. Le front qui passe sur l'\emph{agresseur} induit sur la \emph{victime} deux ondes : l'une vers l'avant (FEXT, \emph{far-end}), l'autre vers l'arrière (NEXT, \emph{near-end}). Ce qu'il faut savoir pour router :
+
+\begin{itemize}[itemsep=2pt]
+  \item le couplage décroît très vite avec l'\textbf{écartement} : la règle empirique « \textbf{3W} » (entraxe $\ge 3$ largeurs de piste) ramène la diaphonie à quelques pour cent pour les signaux ordinaires --- les bandes de retour ($\pm 3h$, chapitre 36) ne se recouvrent plus ;
+  \item \textbf{rapprocher le plan} (réduire $h$) réduit la diaphonie à écartement donné : chaque piste tient son champ ;
+  \item la diaphonie croît avec la \textbf{longueur parallèle} et la raideur des fronts : les longs parallélismes avec une horloge sont interdits ;
+  \item une \textbf{piste de garde} reliée au plan par des vias rapprochés aide --- mais un écartement 3W fait souvent aussi bien, plus simplement. Une garde \emph{sans} vias peut empirer (résonateur flottant).
+\end{itemize}
+
+% ============================================================================
+\section{Niveau Ingénieur}
+
+\begin{ingenieur}
+Le calcul de $Z_0$ (microruban, stripline) avec les limites des formules, les paires différentielles, les discontinuités (vias, stubs), les pertes et la fermeture de l'\oe il, la mesure TDR. Prérequis : chapitres 13, 28, 35, 36.
+\end{ingenieur}
+
+\subsection{Calculer $Z_0$ : formules et honnêteté}
+
+Pour une \textbf{microruban} (piste de largeur $w$, épaisseur $t$, à hauteur $h$ d'un plan, diélectrique $\varepsilon_r$), la formule fermée classique (famille IPC-2141) :
+
+\begin{formule}
+\[
+Z_0 \approx \frac{87}{\sqrt{\varepsilon_r + 1{,}41}}\,
+\ln\!\left(\frac{5{,}98\,h}{0{,}8\,w + t}\right)
+\qquad
+\text{domaine : } 0{,}1 < w/h < 2{,}0
+\]
+Pour une \textbf{stripline} (piste enterrée entre deux plans), même logique avec $\varepsilon_{r,\text{eff}} = \varepsilon_r$ : à géométrie comparable, $Z_0$ est plus faible et la propagation plus lente.
+\end{formule}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[xscale=1.0, yscale=1.0]
+  % ---- microruban ----
+  \node[font=\footnotesize\bfseries] at (2.6,3.2) {microruban};
+  \fill[green!25] (0.2,0.8) rectangle (5.0,2.0);
+  \fill[orange!75!black] (0.2,0.62) rectangle (5.0,0.8);
+  \fill[orange!75!black] (2.1,2.0) rectangle (3.1,2.22);
+  \node[font=\footnotesize] at (2.6,1.4) {$\varepsilon_r$};
+  \draw[{Stealth}-{Stealth}] (2.1,2.5) -- node[above, font=\footnotesize] {$w$} (3.1,2.5);
+  \draw[{Stealth}-{Stealth}] (5.35,0.8) -- node[right, font=\footnotesize] {$h$} (5.35,2.0);
+  \node[right, font=\footnotesize] at (3.2,2.11) {$t$};
+  \node[below, font=\footnotesize] at (2.6,0.5) {plan};
+  % ---- stripline ----
+  \node[font=\footnotesize\bfseries] at (9.6,3.2) {stripline};
+  \fill[green!25] (7.2,0.8) rectangle (12.0,2.6);
+  \fill[orange!75!black] (7.2,0.62) rectangle (12.0,0.8);
+  \fill[orange!75!black] (7.2,2.6) rectangle (12.0,2.78);
+  \fill[orange!75!black] (9.1,1.6) rectangle (10.1,1.8);
+  \node[font=\footnotesize] at (8.1,1.25) {$\varepsilon_r$};
+  \draw[{Stealth}-{Stealth}] (12.35,0.8) -- node[right, font=\footnotesize] {$b$} (12.35,2.6);
+  \node[below, font=\footnotesize] at (9.6,0.5) {deux plans};
+\end{tikzpicture}
+\caption{Les deux géométries maîtresses. Microruban : champ partagé air/diélectrique ($\varepsilon_{r,\text{eff}} < \varepsilon_r$, plus rapide, rayonne un peu). Stripline : champ confiné entre les plans (plus lente, mieux blindée --- couche interne, chapitre 36).}
+\end{figure}
+
+\textbf{Honnêteté d'ingénieur :} ces formules fermées valent $\pm 5\,\%$ dans leur domaine, et $\varepsilon_r$ du FR-4 varie avec la fréquence et le lot ($4{,}0$ à $4{,}6$). Un solveur de champ (intégré aux outils de routage) fait mieux ; le fabricant, qui connaît \emph{ses} matériaux, fait mieux encore --- c'est lui qui ajuste $w$ pour tenir le « $Z_0$ contrôlé » commandé, typiquement à $\pm 10\,\%$. La formule sert à \textbf{pré-dimensionner et à comprendre les sensibilités} : $Z_0$ monte si $h$ monte, descend si $w$ ou $\varepsilon_r$ montent.
+
+\subsection{Paires différentielles}
+
+Les liaisons rapides modernes (USB, Ethernet, LVDS, PCIe --- chapitre 28) sont \textbf{différentielles} : l'information est portée par $v_+ - v_-$, sur deux pistes routées ensemble. Les bénéfices se lisent avec les outils du chapitre 35 :
+
+\begin{itemize}[itemsep=2pt]
+  \item le récepteur rejette le \textbf{mode commun} : ce que le couplage (diaphonie, parasite rayonné) induit \emph{pareillement} sur les deux fils disparaît à la soustraction --- d'où l'exigence de \textbf{symétrie} (même longueur, même environnement, même $Z_0$) : toute asymétrie convertit du MC en différentiel, et réciproquement ;
+  \item les courants opposés font des champs qui se compensent : \textbf{émission réduite} (le MD d'une paire serrée rayonne peu --- chapitre 35) ;
+  \item le retour est majoritairement porté par \emph{l'autre piste} : la paire transporte sa référence avec elle, robustesse accrue aux imperfections du plan.
+\end{itemize}
+
+L'impédance qui compte est l'impédance \textbf{différentielle} $Z_{\text{diff}}$ (typ. $\SI{90}{}$--$\SI{120}{\ohm}$ selon le standard). Pour deux microrubans couplées en bord, espacées de $s$ :
+
+\begin{formule}
+\[
+Z_{\text{diff}} \approx 2\,Z_0\left(1 - 0{,}48\,e^{-0{,}96\,s/h}\right)
+\]
+Formule empirique (microruban, couplage en bord) : si les pistes sont loin ($s \gg h$), $Z_{\text{diff}} \to 2Z_0$ ; en les rapprochant, le couplage \emph{abaisse} $Z_{\text{diff}}$ --- il faut alors affiner $w$ pour retomber sur la cible. Même remarque d'honnêteté que ci-dessus : pré-dimensionnement, puis solveur.
+\end{formule}
+
+Règles de routage : \textbf{appariement des longueurs} (l'écart intra-paire, ou \emph{skew}, convertit en MC : à tenir très en dessous de $t_r$, compensé par petits serpentins près de la source du désappariement) ; symétrie d'environnement (pas de via sur une seule piste, pas de plan découpé sous une seule) ; espacement inter-paires $\ge$ 3W pour la diaphonie.
+
+\subsection{Discontinuités : vias, stubs et connecteurs}
+
+À l'échelle des fronts rapides, chaque accident de géométrie est une rupture locale de $Z_0$ :
+
+\begin{itemize}[itemsep=2pt]
+  \item un \textbf{via} traversant standard ($\SI{1.6}{mm}$) présente $\sim\SI{0.5}{nH}$ et quelques dixièmes de picofarad : invisible à $\SI{100}{MHz}$, réflexion mesurable au gigahertz --- on dégage l'anti-pastille, on rapproche le via de retour (chapitre 36) ;
+  \item le \textbf{tronçon mort} (\emph{stub}) est pire : la portion de via non utilisée (signal entrant en L1 et sortant en L2 d'une carte épaisse laisse un fût mort vers L$n$) est une ligne ouverte qui résonne au quart d'onde, $f_{\text{stub}} \approx v/(4\,l_{\text{stub}})$ : un stub de $\SI{2.5}{mm}$ creuse le canal vers $\SI{14}{GHz}$, un fond de panier épais dès quelques gigahertz --- d'où le \textbf{reperçage} (\emph{back-drilling}) des liaisons très rapides ;
+  \item même logique pour les stubs de routage (branche en T vers une charge non terminée) : en régime ligne, on route en \textbf{chaînage} (\emph{daisy chain}), pas en étoile improvisée.
+\end{itemize}
+
+\subsection{Les pertes : quand le front s'émousse}
+
+Jusqu'ici la ligne était sans pertes. Deux mécanismes s'y opposent, tous deux croissants en fréquence :
+
+\begin{itemize}[itemsep=2pt]
+  \item \textbf{effet de peau} (chapitre 8) : le courant se confine sur $\delta = \sqrt{\rho/(\pi f \mu)}$ ($\approx \SI{2.1}{\micro m}$ à $\SI{1}{GHz}$ dans le cuivre) : la résistance série croît en $\sqrt{f}$ ;
+  \item \textbf{pertes diélectriques} : le FR-4 dissipe une fraction $\tan\delta \approx 0{,}02$ de l'énergie stockée à chaque cycle : atténuation $\propto f$.
+\end{itemize}
+
+Ordre de grandeur : $\SI{0.05}{}$ à $\SI{0.1}{dB/cm}$ à $\SI{1}{GHz}$ sur FR-4, dominé par le diélectrique au-delà de quelques gigahertz --- c'est là que les matériaux à faible $\tan\delta$ (Rogers, Megtron) se justifient. La conséquence \emph{système} : l'atténuation sélective des hautes fréquences \textbf{allonge les fronts} et fait déborder chaque bit sur ses voisins (interférence entre symboles). Sur le diagramme de l'\textbf{\oe il} (superposition de tous les bits reçus, chapitre 28), l'ouverture se ferme : le récepteur perd sa marge de décision --- d'où les égaliseurs des SerDes modernes, qui rehaussent les aigus pour rouvrir l'\oe il.
+
+\subsection{Mesurer : la réflectométrie temporelle (TDR)}
+
+Le diagramme des rebonds se lit aussi à l'envers : envoyer un front \emph{connu} et chronométrer les échos. C'est la \textbf{TDR} (\emph{time-domain reflectometry}) : chaque écho date ($t = 2t_p$ jusqu'au défaut) et dimensionne ($\Gamma$ donne $Z$ local) une discontinuité. On lit $Z_0(x)$ le long de la piste comme un profil : creux capacitif d'un via, bosse inductive d'une fente franchie (chapitre 36), rupture d'un connecteur. C'est l'outil de vérification des impédances contrôlées --- et un remarquable détecteur de la position d'un défaut sur un câble.
+
+\begin{pratique}
+\textbf{La démarche intégrité du signal, en trois étages.} (1) \emph{Règles} : critère $t_p > t_r/6$, $Z_0$ contrôlé, terminaisons, 3W, retours propres --- élimine 90\,\% des problèmes gratuitement. (2) \emph{Simulation} : modèles IBIS des drivers + lignes extraites du routage, pour les liaisons critiques (DDR, SerDes) --- \emph{avant} fabrication. (3) \emph{Mesure} : TDR pour les impédances, oscilloscope à sonde adaptée pour les formes d'ondes (chapitre 35 : la sonde fait partie du circuit). Simuler sans règles, c'est chercher ses clés sous le lampadaire ; appliquer les règles sans mesurer, c'est croire ses hypothèses sur parole.
+\end{pratique}
+
+% ============================================================================
+\section*{Exercices}
+\addcontentsline{toc}{section}{Exercices}
+
+\subsection*{Niveau débutant}
+
+\textbf{Exercice 37.1 ---} Un microcontrôleur a des sorties à $t_r = \SI{2}{ns}$ ; un FPGA moderne, $t_r = \SI{200}{ps}$. Sur microruban FR-4 ($t_p' \approx \SI{59}{ps/cm}$), calculez la longueur critique ($t_p > t_r/6$) dans les deux cas. Que concluez-vous pour une carte de $\SI{10}{cm}$ ?
+
+\begin{pratique}
+\textbf{Solution :}
+
+$l_{\text{crit}} = \dfrac{t_r}{6\,t_p'}$. Microcontrôleur : $l_{\text{crit}} = \dfrac{2000}{6 \times 59} \approx \SI{5.6}{cm}$. FPGA : $l_{\text{crit}} \approx \SI{5.6}{mm}$.
+
+Sur une carte de $\SI{10}{cm}$ : avec le microcontrôleur, seules les traversées complètes sont concernées ; avec le FPGA, \textbf{pratiquement toute piste} est une ligne de transmission. C'est la technologie du driver qui décide, pas l'application --- un FPGA qui clignote une LED a les mêmes fronts qu'un FPGA qui calcule.
+\end{pratique}
+
+\textbf{Exercice 37.2 ---} Une onde incidente de $\SI{1.65}{V}$ arrive au bout d'une ligne $Z_0 = \SI{50}{\ohm}$ chargée par $R_L = \SI{100}{\ohm}$. Calculez $\Gamma_L$, l'amplitude réfléchie et la tension aux bornes de la charge.
+
+\begin{pratique}
+\textbf{Solution :}
+
+$\Gamma_L = \dfrac{100-50}{100+50} = +\dfrac{1}{3}$. Réfléchi : $1{,}65 \times \frac{1}{3} = \SI{0.55}{V}$. À la charge : $V = V^+(1+\Gamma_L) = 1{,}65 \times \frac{4}{3} = \SI{2.2}{V}$.
+
+Vérification physique : $\SI{2.2}{V}$ dans $\SI{100}{\ohm}$ donne $\SI{22}{mA}$ ; l'onde incidente apportait $1{,}65/50 = \SI{33}{mA}$ et l'onde réfléchie remporte $0{,}55/50 = \SI{11}{mA}$ : $33 - 11 = \SI{22}{mA}$ --- les bilans tension \emph{et} courant bouclent.
+\end{pratique}
+
+\subsection*{Niveau intermédiaire}
+
+\textbf{Exercice 37.3 ---} Reprenez le cas du cours ($V_{CC} = \SI{3.3}{V}$, $R_S = \SI{10}{\ohm}$, $Z_0 = \SI{50}{\ohm}$, bout ouvert, $t_p = \SI{0.6}{ns}$). (a) Montrez que l'écart à $\SI{3.3}{V}$ à la charge est multiplié par $\Gamma_S\Gamma_L$ à chaque aller-retour, et donnez les cinq premières valeurs de $V_{\text{charge}}$. (b) Au bout de combien de temps la tension reste-t-elle dans $\pm 5\,\%$ de $\SI{3.3}{V}$ ?
+
+\begin{pratique}
+\textbf{Solution :}
+
+(a) Après chaque aller-retour, l'onde revenant à la charge vaut la précédente $\times\,\Gamma_S\Gamma_L = -2/3$, et la charge (ouverte) en ajoute $2\times$ à sa tension : l'écart $\varepsilon_n = V_n - 3{,}3$ suit $\varepsilon_{n+1} = -\frac{2}{3}\varepsilon_n$. Valeurs : $\SI{5.50}{V}$ ; $\SI{1.83}{V}$ ; $\SI{4.28}{V}$ ; $\SI{2.65}{V}$ ; $\SI{3.74}{V}$ (aux instants $t_p, 3t_p, 5t_p, 7t_p, 9t_p$).
+
+(b) $|\varepsilon_1| = \SI{2.2}{V}$ ; il faut $|\varepsilon| \le 0{,}165$ : $(2/3)^{n-1} \le 0{,}075 \Rightarrow n-1 \ge \ln(0{,}075)/\ln(2/3) \approx 6{,}4 \Rightarrow n = 8$, soit $t \approx 15\,t_p \approx \SI{9}{ns}$. \textbf{Neuf nanosecondes de ringing} pour $\SI{10}{cm}$ de piste non terminée --- à comparer à la période d'une horloge à $\SI{100}{MHz}$ : $\SI{10}{ns}$. Le signal n'est jamais établi.
+\end{pratique}
+
+\textbf{Exercice 37.4 ---} Le driver précédent ($R_S = \SI{10}{\ohm}$) doit attaquer proprement la même ligne. (a) Dimensionnez la terminaison série (valeur normalisée E24). (b) Décrivez la forme d'onde à la source et à la charge. (c) Pourquoi cette solution est-elle réservée au point-à-point ?
+
+\begin{pratique}
+\textbf{Solution :}
+
+(a) $R_T = Z_0 - R_S = \SI{40}{m\ohm}$\ldots{} non : $= 50 - 10 = \SI{40}{\ohm}$ ; E24 : $\boxed{R_T = \SI{39}{\ohm}}$ (l'écart de $\SI{1}{\ohm}$ donne $\Gamma_S = (49-50)/(49+50) \approx -0{,}01$ : négligeable).
+
+(b) Lancement à $V_{CC} \times \frac{50}{99} \approx \SI{1.67}{V}$ : la \emph{source} reste à mi-tension pendant $2t_p$ ($\SI{1.2}{ns}$), puis monte à $\SI{3.3}{V}$ au retour de l'écho. La \emph{charge} voit un front unique et propre à $\SI{3.3}{V}$ dès $t_p$ (doublement sur l'ouvert). Un seul transit, aucune oscillation.
+
+(c) Toute charge connectée \emph{en cours de ligne} verrait le palier à mi-tension pendant l'aller-retour --- zone interdite entre $V_{IL}$ et $V_{IH}$, commutations parasites. La série exige la charge \textbf{en bout de ligne} ; pour du multipoint, terminaison parallèle/Thévenin à l'extrémité, ou topologie revue.
+\end{pratique}
+
+\subsection*{Niveau ingénieur}
+
+\textbf{Exercice 37.5 ---} Dimensionnez une microruban $\SI{50}{\ohm}$ sur préimprégné $h = \SI{0.2}{mm}$, $\varepsilon_r = 4{,}3$, cuivre $t = \SI{35}{\micro m}$, avec la formule IPC. Vérifiez le domaine de validité. Un solveur de champ donne $w \approx \SI{0.36}{mm}$ : commentez l'écart.
+
+\begin{pratique}
+\textbf{Solution :}
+
+$\dfrac{87}{\sqrt{4{,}3+1{,}41}} = \SI{36.4}{\ohm}$ ; il faut $\ln\!\left(\dfrac{5{,}98 \times 0{,}2}{0{,}8w+0{,}035}\right) = \dfrac{50}{36{,}4} = 1{,}374$, soit $\dfrac{1{,}196}{0{,}8w+0{,}035} = e^{1{,}374} = 3{,}95$, d'où $0{,}8w = 0{,}303 - 0{,}035$ et $\boxed{w \approx \SI{0.33}{mm}}$. Domaine : $w/h = 1{,}67 \in [0{,}1\,;\,2]$ --- validé.
+
+Écart au solveur $\approx 8\,\%$ : dans l'ordre de grandeur annoncé pour une formule fermée ($\pm 5\,\%$) cumulé à l'incertitude sur $\varepsilon_r$. Conclusion pratique : la formule cadre le design (et dit \emph{dans quel sens} corriger) ; la valeur envoyée en fabrication vient du solveur --- puis le fabricant l'ajuste à ses matériaux réels et la garantit par coupon de test mesuré en TDR.
+\end{pratique}
+
+\textbf{Exercice 37.6 ---} Une liaison LVDS ($Z_{\text{diff}} = \SI{100}{\ohm}$, $t_r = \SI{300}{ps}$) est routée en microruban couplée, $Z_0 = \SI{60}{\ohm}$ par piste, $h = \SI{0.2}{mm}$. (a) Quel espacement $s$ vise $\SI{100}{\ohm}$ différentiels (formule empirique du cours) ? (b) On tolère un skew intra-paire de $10\,\%$ de $t_r$ : quel désappariement de longueur maximal ($v \approx \SI{17}{cm/ns}$) ? (c) Pourquoi corriger le skew \emph{près de sa cause} plutôt qu'en bout de ligne ?
+
+\begin{pratique}
+\textbf{Solution :}
+
+(a) $100 = 120\,(1 - 0{,}48\,e^{-0{,}96 s/h}) \Rightarrow e^{-0{,}96 s/h} = \dfrac{1 - 100/120}{0{,}48} = 0{,}347 \Rightarrow s = \dfrac{h \ln(1/0{,}347)}{0{,}96} \approx 1{,}10\,h \approx \SI{0.22}{mm}$. Couplage serré : il faudra réduire légèrement $w$ pour maintenir la cible (le couplage abaisse $Z_{\text{diff}}$ à $w$ donné).
+
+(b) $\Delta t \le \SI{30}{ps} \Rightarrow \Delta l \le v\,\Delta t = 17 \times 0{,}03 \approx \boxed{\SI{5}{mm}}$ --- vite consommé par un coude ou une sortie de boîtier dissymétrique.
+
+(c) Entre la cause du skew (broches, coude) et sa compensation, la paire circule \emph{désappariée} : sur ce tronçon, une partie du signal existe en mode commun --- qui rayonne (chapitre 35) et ne sera pas rejetée par les discontinuités rencontrées entre-temps. Compenser au plus près confine la zone « sale » ; compenser en bout laisse tout le trajet convertir et émettre.
+\end{pratique}
+
+\subsection*{Questions de compréhension}
+
+\textbf{Q1.} $Z_0 = \SI{50}{\ohm}$ : où passent les watts fournis par le driver pendant la propagation, puisque la ligne ne dissipe rien ?
+
+\textit{Réponse : ils ne sont pas dissipés mais \emph{stockés} au fur et à mesure : l'onde charge la capacité linéique ($\frac{1}{2}C'v^2$) et magnétise l'inductance linéique ($\frac{1}{2}L'i^2$) des tronçons qu'elle envahit. $Z_0$ est le rapport $v/i$ de ce remplissage, pas une résistance --- l'énergie est restituée (à la charge, ou renvoyée par la réflexion).}
+
+\textbf{Q2.} Pourquoi la terminaison série se place-t-elle \emph{contre} le driver et non au milieu de la ligne ?
+
+\textit{Réponse : son rôle est d'adapter la \emph{source} pour absorber l'écho au retour : elle doit faire corps avec $R_S$, sans tronçon de ligne entre les deux. Déportée, le segment driver--résistance devient une ligne désadaptée des deux côtés : les échos y rebondissent en boucle courte --- on recrée en miniature le problème qu'on voulait résoudre.}
+
+\textbf{Q3.} Un via traversant ne gêne pas une liaison à $\SI{100}{MHz}$ mais dégrade la même liaison à $\SI{10}{Gbit/s}$. Quels sont les \emph{deux} mécanismes ?
+
+\textit{Réponse : (1) la discontinuité localisée (excès de $C$ et de $L$ du fût et des pastilles) : négligeable quand le front est long devant le via, réflexion nette quand le front fait quelques millimètres ; (2) le stub --- la portion de fût inutilisée --- qui résonne en quart d'onde ($f \approx v/4l_{\text{stub}}$) et creuse le spectre du signal dans la bande utile du débit rapide. D'où anti-pastilles dégagées, via de retour adjacent, et reperçage sur les liaisons les plus rapides.}
+
+\textbf{Q4.} En quoi une paire différentielle bien routée est-elle un remède \emph{de conception} aux deux problèmes du chapitre 35 (émission et susceptibilité) ?
+
+\textit{Réponse : à l'émission, les deux courants opposés et adjacents forment une boucle minuscule dont les champs se compensent (rayonnement MD faible) ; en susceptibilité, un parasite couplé touche les deux fils presque également --- c'est du mode commun, que le récepteur différentiel soustrait. Les deux bénéfices reposent sur la \emph{symétrie} : c'est elle, pas la différentialité en soi, qui fait le blindage.}
+
+% ============================================================================
+\section*{Résumé du chapitre}
+\addcontentsline{toc}{section}{Résumé du chapitre}
+
+\begin{bases}[title={\color{white} Résumé --- Les Bases}]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{4.3cm}p{8.7cm}}
+\toprule
+Propagation & $v = c/\sqrt{\varepsilon_{r,\text{eff}}} \approx \SI{15}{cm/ns}$ sur FR-4 ($\approx \SI{60}{}$--$\SI{70}{ps/cm}$) \\
+Critère de ligne & $t_p > t_r/6$ : c'est le \emph{temps de montée} qui décide, pas la fréquence \\
+$Z_0 = \sqrt{L'/C'}$ & Ce que voit le front en marche ; une propriété de géométrie, pas une résistance \\
+Réflexion & $Z_L \ne Z_0 \Rightarrow$ écho ; ouvert : tension doublée ; le ringing du ch.~29 expliqué \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{bases}
+
+\begin{approfondissement}[title={\color{white} Résumé --- Approfondissement}]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{4.3cm}p{8.7cm}}
+\toprule
+Coefficient $\Gamma$ & $\Gamma = \dfrac{Z-Z_0}{Z+Z_0}$ ; à la charge \emph{et} à la source ; rebonds en $(\Gamma_S\Gamma_L)^n$ \\
+Cas non terminé & $R_S = \SI{10}{\ohm}$, bout ouvert : $\SI{5.5}{V}$ sur du $\SI{3.3}{V}$, retraversée de $V_{IH}$, $\sim\SI{9}{ns}$ d'établissement \\
+Terminaisons & Série ($R_S{+}R_T = Z_0$) : le standard point-à-point, zéro statique ; parallèle/Thévenin : multipoint, consomme \\
+Diaphonie & NEXT/FEXT ; règle 3W ; plan proche = champs tenus ; garde seulement si cousue de vias \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{approfondissement}
+
+\begin{ingenieur}[title={\color{white} Résumé --- Niveau Ingénieur}]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{4.3cm}p{8.7cm}}
+\toprule
+Calcul de $Z_0$ & Formules IPC $\pm 5\,\%$ dans leur domaine : pré-dimensionner ; solveur + coupon TDR pour garantir \\
+Paires différentielles & Rejet du MC et faible émission \emph{par symétrie} ; $Z_{\text{diff}}$, skew $\ll t_r$, compensation près de la cause \\
+Discontinuités & Via $\sim\SI{0.5}{nH}$ ; stub en $\lambda/4$ ($f \approx v/4l$) $\Rightarrow$ reperçage ; chaînage plutôt qu'étoile \\
+Pertes & Peau en $\sqrt{f}$, diélectrique en $f$ ($\tan\delta \approx 0{,}02$) : fronts émoussés, \oe il qui se ferme, égalisation \\
+Démarche & Règles $\to$ simulation (IBIS) $\to$ mesure (TDR, sonde) --- dans cet ordre \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{ingenieur}
+
+\vspace{0.4cm}
+
+\begin{retenir}
+Ce chapitre referme la boucle ouverte au chapitre 1. Le trajet complet est désormais traçable : la physique du semi-conducteur fixe les fronts (chapitres 15--16), les fronts fixent le spectre (chapitre 29), le spectre rencontre la géométrie du cuivre --- boucles, plans, lignes (chapitres 35--37) --- et cette rencontre décide de ce qui marche, rayonne ou échoue. Concevoir un système électronique, c'est tenir cette chaîne causale d'un bout à l'autre : il n'y a pas de « détail de routage », il n'y a que de la physique appliquée à des géométries. Le reste --- normes, outils, abaques --- n'est que l'intendance de cette idée.
+\end{retenir}
+
 \end{document}
