@@ -244,7 +244,7 @@ En réalité, les électrons se déplacent dans le sens inverse : du $-$ vers le
 Le \textbf{sens conventionnel} du courant (du + vers le $-$) est celui utilisé dans \textit{tous} les schémas et calculs en électronique. C'est une convention universelle. Ne la confondez jamais avec le sens réel des électrons.
 \end{attention}
 
-Un point capital, si évident qu'on l'oublie : le courant circule en \textbf{boucle fermée}. Les charges ne sont ni créées ni consommées en route --- ce qui sort d'une borne du générateur revient intégralement à l'autre. Ouvrez la boucle n'importe où (interrupteur) : le courant s'annule \emph{partout}. Cette évidence est le fondement de la loi des n\oe uds (chapitre 2) et deviendra, aux chapitres 35--36, la question centrale du concepteur : \emph{par où revient le courant ?}
+Un point capital, si évident qu'on l'oublie : le courant circule en \textbf{boucle fermée}. Les charges ne sont ni créées ni consommées en route --- ce qui sort d'une borne du générateur revient intégralement à l'autre. Ouvrez la boucle n'importe où (interrupteur) : le courant s'annule \emph{partout}. Cette évidence est le fondement de la loi des n\oe uds (chapitre 5) et deviendra, aux chapitres 35--36, la question centrale du concepteur : \emph{par où revient le courant ?}
 
 \begin{figure}[h]
 \centering
@@ -510,7 +510,7 @@ La conservation de la charge est un principe fondamental de la physique. Elle se
 Cette équation dit que si de la charge disparaît d'un volume, c'est qu'un courant l'a emportée. Aucune charge ne se crée ni ne disparaît.
 \end{formule}
 
-En régime stationnaire ($\partial \rho / \partial t = 0$), on obtient $\nabla \cdot \vec{J} = 0$ : la densité de courant est à \textbf{divergence nulle}, ce qui traduit que le flux de courant se conserve — c'est la justification profonde de la \textbf{loi des n\oe uds de Kirchhoff} (chapitre 2).
+En régime stationnaire ($\partial \rho / \partial t = 0$), on obtient $\nabla \cdot \vec{J} = 0$ : la densité de courant est à \textbf{divergence nulle}, ce qui traduit que le flux de courant se conserve — c'est la justification profonde de la \textbf{loi des n\oe uds de Kirchhoff} (chapitre 5).
 
 \begin{attention}
 Précision de vocabulaire : c'est la \textbf{charge} qui est conservée (principe fondamental). Le courant, lui, est à \textit{flux conservé} (divergence nulle) en régime stationnaire. Ne pas confondre avec un champ ``conservatif'' (dont la circulation sur un contour fermé est nulle), terme réservé au champ $\vec{E}$ en électrostatique.
@@ -764,8 +764,9 @@ Le courant est le \emph{mouvement} ; il ne dit rien de sa \emph{cause}. Pourquoi
 \chapter{La Tension Électrique}
 
 \begin{center}
-\textit{La tension est ce qui met les charges en mouvement dans un circuit résistif.\\
-C'est la ``pression'' électrique qui pousse le courant à travers les composants.}
+\textit{Le courant est l'effet ; la tension est la cause.\\
+C'est la différence de potentiel qui met les charges en mouvement\\
+et qui fixe l'énergie que chacune transporte.}
 \end{center}
 
 \vspace{0.5cm}
@@ -776,7 +777,7 @@ C'est la ``pression'' électrique qui pousse le courant à travers les composant
 \section{Les Bases}
 
 \begin{bases}
-Cette section ne suppose aucune connaissance préalable. On repart de zéro.
+La tension comme différence de potentiel, la masse (et ce qu'elle n'est pas : la terre), les ordres de grandeur et le danger, le lien énergie--charge ($W = qU$), le fléchage et les deux conventions, la mesure au voltmètre. On repart de zéro.
 \end{bases}
 
 \subsection{Qu'est-ce que la tension ?}
@@ -837,6 +838,41 @@ Une fois la masse choisie, on peut parler du ``potentiel d'un point'' ou de la `
 \end{itemize}
 \end{pratique}
 
+\textbf{Masse n'est pas terre.} La \emph{masse} est le zéro de référence \emph{choisi} du circuit --- un choix de calcul, qui peut se poser sur n'importe quel n\oe ud. La \emph{terre} (PE, \emph{protective earth}) est un conducteur physique relié au sol via l'installation électrique : son rôle est la \textbf{sécurité des personnes}, pas la référence des signaux. Un circuit sur batterie a une masse et aucune terre ; un châssis métallique peut être relié à l'une, à l'autre, aux deux --- ou à aucune. Confondre les deux est une source classique d'erreurs de conception ; le chapitre 35 consacre une section entière aux stratégies de masse.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % masse (référence)
+  \draw (0,0.9) -- (0,0);
+  \draw[very thick] (-0.42,0) -- (0.42,0);
+  \draw[very thick] (-0.28,-0.16) -- (0.28,-0.16);
+  \draw[very thick] (-0.14,-0.32) -- (0.14,-0.32);
+  \node[below, font=\footnotesize, align=center] at (0,-0.62) {masse (\SI{0}{V})\\ référence des signaux};
+  % châssis
+  \begin{scope}[shift={(4.2,0)}]
+    \draw (0,0.9) -- (0,0);
+    \draw[very thick] (-0.42,0) -- (0.42,0);
+    \draw (-0.42,0) -- (-0.62,-0.25);
+    \draw (-0.14,0) -- (-0.34,-0.25);
+    \draw (0.14,0) -- (-0.06,-0.25);
+    \draw (0.42,0) -- (0.22,-0.25);
+    \node[below, font=\footnotesize, align=center] at (0,-0.62) {châssis\\ carcasse métallique};
+  \end{scope}
+  % terre de protection
+  \begin{scope}[shift={(8.4,0)}]
+    \draw (0,0.9) -- (0,0.48);
+    \draw (0,0.48) circle (0.48);
+    \draw (0,0.32) -- (0,0.16);
+    \draw[very thick] (-0.34,0.16) -- (0.34,0.16);
+    \draw[very thick] (-0.22,0.02) -- (0.22,0.02);
+    \draw[very thick] (-0.11,-0.12) -- (0.11,-0.12);
+    \node[below, font=\footnotesize, align=center] at (0,-0.62) {terre de protection (PE)\\ sécurité, via l'installation};
+  \end{scope}
+\end{tikzpicture}
+\caption{Trois symboles, trois rôles. La masse est une référence de calcul \emph{choisie} ; le châssis est un objet physique ; la terre est un conducteur de sécurité. Les relier entre eux --- ou non --- est une décision de conception (chapitre 35).}
+\end{figure}
+
 \subsection{Ordres de grandeur}
 
 \begin{center}
@@ -884,88 +920,66 @@ Sur un schéma, la tension est représentée par une \textbf{flèche} entre deux
 
 Mnémotechnique : \textbf{la flèche de $U_{AB}$ pointe vers le ``$+$'', c'est-à-dire vers A.}
 
-\begin{center}
-\begin{tikzpicture}[scale=1.3]
-  % Dipôle (rectangle résistance)
-  \draw[thick] (0,0) -- (0.5,0);
-  \draw[thick, fill=gray!15, rounded corners=2pt] (0.5,-0.3) rectangle (2.5,0.3);
-  \node at (1.5,0) {$R$};
-  \draw[thick] (2.5,0) -- (3,0);
-  
-  % Points A et B
-  \filldraw[blue!70!black] (0,0) circle (2pt);
-  \node[above=5pt, font=\bfseries] at (0,0) {A};
-  \node[above=14pt, red!70!black, font=\small] at (0,0) {$+$};
-  \filldraw[blue!70!black] (3,0) circle (2pt);
-  \node[above=5pt, font=\bfseries] at (3,0) {B};
-  \node[above=14pt, red!70!black, font=\small] at (3,0) {$-$};
-  
-  % Courant i (au-dessus, de A vers B)
-  \draw[line width=1.5pt, blue!70!black, -{Stealth[length=3mm, width=2mm]}] (0.6,0.55) -- (2.4,0.55);
-  \node[blue!70!black, above] at (1.5,0.6) {$i$};
-  
-  % Flèche de tension U_AB (en dessous, DE B VERS A = de droite vers gauche)
-  \draw[line width=1.5pt, red!70!black, -{Stealth[length=3mm, width=2mm]}] (2.9,-0.65) -- (0.1,-0.65);
-  \node[red!70!black, below=3pt] at (1.5,-0.65) {$U_{AB} = V_A - V_B$};
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.1]
+  \draw (0,0) node[circ]{} to[short, i=$i$] (1.3,0) to[R, l=$R$] (3.2,0) to[short] (4.5,0) node[circ]{};
+  \node[above=4pt, font=\bfseries] at (0,0) {A};
+  \node[above=15pt, red!70!black, font=\small] at (0,0) {$+$};
+  \node[above=4pt, font=\bfseries] at (4.5,0) {B};
+  \node[above=15pt, red!70!black, font=\small] at (4.5,0) {$-$};
+  % Flèche de tension : de B vers A, sous le dipôle
+  \draw[line width=1.2pt, red!70!black, -{Stealth[length=3mm]}] (4.3,-0.7) -- (0.2,-0.7);
+  \node[red!70!black, below=2pt] at (2.25,-0.75) {$U_{AB} = V_A - V_B$};
 \end{tikzpicture}
-\end{center}
+\caption{Fléchage de la tension : la flèche de $U_{AB}$ va de B vers A --- elle pointe vers le premier indice, donc vers le potentiel le plus élevé quand $U_{AB} > 0$. Le courant $i$, lui, est porté par le fil.}
+\end{figure}
 
 \vspace{0.3cm}
 \textbf{Conventions récepteur et générateur :}
 
 Le choix d'orientation de $i$ et $U$ sur un dipôle définit la convention utilisée :
 
-\begin{center}
-\begin{tikzpicture}[scale=1.1]
-  % === Convention récepteur (gauche) ===
-  \begin{scope}[shift={(0,0)}]
-    \draw[thick] (0,0) -- (0.5,0);
-    \draw[thick, fill=green!10, rounded corners=2pt] (0.5,-0.3) rectangle (2.5,0.3);
-    \node at (1.5,0) {\small Dipôle};
-    \draw[thick] (2.5,0) -- (3,0);
-    
-    \filldraw (0,0) circle (1.5pt) node[above=3pt]{\small A};
-    \filldraw (3,0) circle (1.5pt) node[above=3pt]{\small B};
-    
-    % i de A vers B
-    \draw[line width=1.2pt, blue!70!black, -{Stealth[length=2.5mm]}] (0.6,0.5) -- (2.4,0.5);
-    \node[blue!70!black, above] at (1.5,0.5) {\small $i$};
-    
-    % U de B vers A (sens opposé à i)
-    \draw[line width=1.2pt, red!70!black, -{Stealth[length=2.5mm]}] (2.9,-0.55) -- (0.1,-0.55);
-    \node[red!70!black, below=1pt] at (1.5,-0.55) {\small $U_{AB}$};
-    
-    \node[below, font=\bfseries\small] at (1.5,-1.3) {Convention récepteur};
-    \node[below, font=\footnotesize\itshape, text width=3.5cm, align=center] at (1.5,-1.7) {$i$ et $U$ en sens opposés\\$P = U_{AB} \cdot i$ = puissance reçue};
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.95, transform shape]
+  % === Convention récepteur ===
+  \begin{scope}
+    \draw (0,0) node[circ]{} to[short, i=$i$] (1.2,0) to[generic, l=\small Dipôle] (2.8,0) to[short] (4,0) node[circ]{};
+    \node[above=3pt, font=\small] at (0,0) {A};
+    \node[above=3pt, font=\small] at (4,0) {B};
+    \draw[line width=1.1pt, red!70!black, -{Stealth[length=2.6mm]}] (3.8,-0.65) -- (0.2,-0.65);
+    \node[red!70!black, below=1pt, font=\small] at (2,-0.68) {$U_{AB}$};
+    \node[below, font=\bfseries\small] at (2,-1.4) {Convention récepteur};
+    \node[below, font=\footnotesize\itshape, align=center] at (2,-1.8) {$i$ et $U$ en sens opposés\\ $P = U_{AB}\,i$ : puissance reçue};
   \end{scope}
-  
-  % === Convention générateur (droite) ===
-  \begin{scope}[shift={(5.5,0)}]
-    \draw[thick] (0,0) -- (0.5,0);
-    \draw[thick, fill=orange!10, rounded corners=2pt] (0.5,-0.3) rectangle (2.5,0.3);
-    \node at (1.5,0) {\small Dipôle};
-    \draw[thick] (2.5,0) -- (3,0);
-    
-    \filldraw (0,0) circle (1.5pt) node[above=3pt]{\small A};
-    \filldraw (3,0) circle (1.5pt) node[above=3pt]{\small B};
-    
-    % i de A vers B
-    \draw[line width=1.2pt, blue!70!black, -{Stealth[length=2.5mm]}] (0.6,0.5) -- (2.4,0.5);
-    \node[blue!70!black, above] at (1.5,0.5) {\small $i$};
-    
-    % U de A vers B (même sens que i)
-    \draw[line width=1.2pt, red!70!black, -{Stealth[length=2.5mm]}] (0.1,-0.55) -- (2.9,-0.55);
-    \node[red!70!black, below=1pt] at (1.5,-0.55) {\small $U_{BA}$};
-    
-    \node[below, font=\bfseries\small] at (1.5,-1.3) {Convention générateur};
-    \node[below, font=\footnotesize\itshape, text width=3.5cm, align=center] at (1.5,-1.7) {$i$ et $U$ dans le même sens\\$P = U_{BA} \cdot i$ = puissance fournie};
+  % === Convention générateur ===
+  \begin{scope}[shift={(6.4,0)}]
+    \draw (0,0) node[circ]{} to[short, i=$i$] (1.2,0) to[generic, l=\small Dipôle] (2.8,0) to[short] (4,0) node[circ]{};
+    \node[above=3pt, font=\small] at (0,0) {A};
+    \node[above=3pt, font=\small] at (4,0) {B};
+    \draw[line width=1.1pt, red!70!black, -{Stealth[length=2.6mm]}] (0.2,-0.65) -- (3.8,-0.65);
+    \node[red!70!black, below=1pt, font=\small] at (2,-0.68) {$U_{BA}$};
+    \node[below, font=\bfseries\small] at (2,-1.4) {Convention générateur};
+    \node[below, font=\footnotesize\itshape, align=center] at (2,-1.8) {$i$ et $U$ dans le même sens\\ $P = U_{BA}\,i$ : puissance fournie};
   \end{scope}
 \end{tikzpicture}
-\end{center}
+\caption{Les deux conventions d'orientation. Le choix est libre et ne change rien à la physique : le \emph{signe} du résultat dit ensuite qui reçoit et qui fournit.}
+\end{figure}
 
 \begin{attention}
 Le fléchage est \textbf{arbitraire} : on choisit un sens, on calcule, et le \textit{signe} du résultat tranche. Si $U_{AB} < 0$, c'est que B est en réalité à un potentiel plus élevé que A. Si $i < 0$, le courant réel va en sens inverse de la flèche. Ce n'est jamais une erreur : c'est la puissance du calcul algébrique.
 \end{attention}
+
+\subsection{Mesurer une tension}
+
+Mesurer une tension, c'est comparer deux potentiels \emph{sans perturber le circuit} : le voltmètre se branche \textbf{en parallèle}, entre les deux points à comparer --- on n'ouvre rien. Pour ne pas détourner de courant, sa résistance interne est très grande (typiquement $\SI{10}{M\ohm}$ pour un multimètre ; idéalement infinie).
+
+\begin{attention}
+Symétrie parfaite avec le courant (chapitre 1) : l'\textbf{ampèremètre} s'insère \textbf{en série} (résistance quasi nulle), le \textbf{voltmètre} se pose \textbf{en parallèle} (résistance quasi infinie). Inversés : le voltmètre en série bloque le circuit ; l'ampèremètre en parallèle fait un court-circuit.
+\end{attention}
+
+Aucun voltmètre n'est parfait : ses $\SI{10}{M\ohm}$ prélèvent un peu de courant et faussent la mesure sur les circuits à forte impédance --- l'\emph{effet de charge}, quantifiable dès le chapitre 3 (diviseur de tension). L'oscilloscope est un voltmètre rapide : il trace $u(t)$ --- avec ses propres pièges de masse, qui attendront le chapitre 35.
 
 \begin{retenir}
 \textbf{Les 3 idées essentielles sur la tension :}
@@ -982,7 +996,7 @@ Le fléchage est \textbf{arbitraire} : on choisit un sens, on calcule, et le \te
 \section{Approfondissement}
 
 \begin{approfondissement}
-On formalise ici le lien entre tension, champ électrique et énergie. Prérequis : intégrale de ligne.
+Le lien champ--potentiel ($\vec{E} = -\vec{\nabla}V$), la f.é.m.\ et le générateur réel ($U = E - rI$), travail et puissance, et l'additivité des tensions. Prérequis : intégrale de ligne, gradient.
 \end{approfondissement}
 
 \subsection{Potentiel électrique et champ électrique}
@@ -1045,15 +1059,29 @@ Malgré son nom, la f.é.m.\ n'est \textit{pas} une force (elle s'exprime en vol
 \end{itemize}
 \end{formule}
 
-\begin{center}
-\begin{circuitikz}[scale=1.0]
-  \draw (0,0) to[battery1, l=$E$, invert] (0,2)
-        to[R, l=$r$] (2,2)
-        -- (2,2) node[right]{A};
-  \draw (0,0) -- (2,0) node[right]{B};
-  \draw[<->, >=Stealth, blue!70!black] (2.5,0) -- (2.5,2) node[midway, right]{$U = E - rI$};
-\end{circuitikz}
-\end{center}
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % f.é.m. : pile, trait long = +
+  \draw[very thick] (0,0) -- (0,1.32);
+  \draw[very thick] (-0.28,1.32) -- (0.28,1.32);
+  \draw[very thick] (-0.5,1.68) -- (0.5,1.68);
+  \draw[very thick] (0,1.68) -- (0,3);
+  \node[left, font=\small] at (-0.6,1.5) {$E$};
+  % r en série puis bornes
+  \draw (0,3) to[R, l=$r$] (2.4,3) to[short, i=$i$] (4.1,3) node[circ]{};
+  \node[right=3pt, font=\small] at (4.1,3) {A};
+  \draw (0,0) to[short] (4.1,0) node[circ]{};
+  \node[right=3pt, font=\small] at (4.1,0) {B};
+  % Tension aux bornes : flèche simple vers A (+)
+  \draw[line width=1.1pt, red!70!black, -{Stealth[length=2.8mm]}] (5.0,0.25) -- (5.0,2.75);
+  \node[right, red!70!black, font=\small] at (5.15,1.5) {$U = E - r\,i$};
+  % Cadre du générateur réel
+  \draw[dashed, gray] (-0.95,-0.5) rectangle (3.0,3.65);
+  \node[gray, font=\footnotesize, anchor=south west] at (-0.9,3.7) {générateur réel};
+\end{tikzpicture}
+\caption{Générateur réel : une f.é.m.\ $E$ en série avec sa résistance interne $r$. À vide ($i = 0$), $U = E$ ; en débit, la tension disponible chute de $r\,i$.}
+\end{figure}
 
 \subsection{Travail et puissance électrique}
 
@@ -1070,6 +1098,8 @@ Lorsqu'une charge $q$ traverse un dipôle soumis à une tension $U$ :
 \]
 $P$ en watts (W), $U$ en volts, $I$ en ampères.
 \end{formule}
+
+Le chapitre 4 est entièrement consacré à la puissance et à l'énergie ; on ne fait ici que poser la définition, indispensable pour parler de générateurs et de récepteurs.
 
 En convention récepteur :
 \begin{itemize}[nosep]
@@ -1100,7 +1130,7 @@ Si vous faites un tour complet en montagne et revenez à votre point de départ,
 \section{Niveau Ingénieur}
 
 \begin{ingenieur}
-Fondements électromagnétiques de la tension, limites du concept de potentiel, et pièges en haute fréquence.
+Ce que Maxwell--Faraday fait au concept de tension (le piège de Lewin), la décomposition du champ en régime variable, le plancher de bruit thermique de toute résistance, et le claquage diélectrique. Prérequis : rotationnel, flux d'un champ.
 \end{ingenieur}
 
 \subsection{La tension et les équations de Maxwell}
@@ -1257,7 +1287,7 @@ $v_{n} = \sqrt{4 k_B T R \Delta f}$
 \item $R = \SI{100}{\ohm}$ : $v_n = \sqrt{4 \times 1{,}38\times10^{-23} \times 300 \times 100 \times 10^3} = \sqrt{1{,}66\times10^{-15}} \approx \SI{41}{nV}$
 \end{itemize}
 
-Le bruit est 100 fois plus élevé pour la résistance 10\,000 fois plus grande (car $v_n \propto \sqrt{R}$). En entrée d'amplificateur, on préfère donc des résistances \textbf{faibles} pour minimiser le bruit thermique. C'est un compromis classique : une forte résistance donne un gain élevé mais un plancher de bruit plus haut.
+Le bruit est 100 fois plus élevé pour la résistance 10\,000 fois plus grande (car $v_n \propto \sqrt{R}$). Le choix d'une résistance d'entrée est donc un compromis : une valeur élevée charge peu la source et donne une conversion courant--tension importante, mais elle relève le plancher de bruit en $\sqrt{R}$. On dimensionne par le rapport signal/bruit visé, pas par habitude.
 \end{pratique}
 
 \textbf{Exercice 2.6 —} Sur un PCB, deux pistes espacées de \SI{0.2}{mm} sont soumises à une différence de potentiel de \SI{100}{V}. Le diélectrique est du FR-4 (rigidité $\approx \SI{20}{MV/m}$). Y a-t-il risque de claquage ? Quel espacement minimal recommanderiez-vous avec un facteur de sécurité de 2 ?
@@ -1278,12 +1308,21 @@ Avec facteur de sécurité 2 : $d = 2 \times \SI{5}{\micro m} = \SI{10}{\micro m
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Pourquoi dit-on que ``c'est le courant qui tue, pas la tension'' alors que sans tension suffisante, aucun courant dangereux ne peut traverser le corps ?
-\item Un voltmètre mesure-t-il une différence de potentiel ou une f.é.m. ? Dans quels cas la distinction importe-t-elle ?
-\item Une pile AA neuve a une f.é.m.\ de \SI{1.6}{V}. Quand elle vieillit, sa tension à vide reste proche de \SI{1.5}{V} mais sa tension en charge chute fortement. Quel paramètre physique a changé ?
-\item Expliquez pourquoi les composants CMOS sont sensibles aux décharges électrostatiques de quelques volts seulement.
-\end{enumerate}
+\textbf{Q1.} Pourquoi dit-on que « c'est le courant qui tue, pas la tension », alors que sans tension suffisante aucun courant dangereux ne traverse le corps ?
+
+\textit{Réponse : les deux affirmations sont vraies à des niveaux différents. Le dommage physiologique est causé par le courant qui traverse (fibrillation dès $\sim\SI{30}{mA}$). Mais le corps est une résistance ($\sim\SI{1}{k\ohm}$ peau humide, $\sim\SI{100}{k\ohm}$ peau sèche) : seule une tension suffisante y force ce courant (loi d'Ohm, chapitre 3). La tension est la cause, le courant est l'agent --- d'où des seuils normatifs exprimés en volts ($\SI{50}{V}$ AC).}
+
+\textbf{Q2.} Un voltmètre mesure-t-il une différence de potentiel ou une f.é.m.\ ? Dans quels cas la distinction importe-t-elle ?
+
+\textit{Réponse : il mesure la circulation de $\vec{E}$ le long de ses propres cordons et de l'objet. En régime quasi stationnaire, champ conservatif : cette circulation est la différence de potentiel, indépendante du chemin --- la question ne se pose pas. En présence d'induction ($\mathrm{d}\Phi_B/\mathrm{d}t \neq 0$), la lecture dépend du trajet des cordons (expérience de Lewin) : la distinction devient essentielle autour des transformateurs, des bobines et en CEM (chapitre 35).}
+
+\textbf{Q3.} Une pile AA neuve a une f.é.m.\ de \SI{1.6}{V}. Quand elle vieillit, sa tension à vide reste proche de \SI{1.5}{V} mais sa tension en charge chute fortement. Quel paramètre physique a changé ?
+
+\textit{Réponse : la résistance interne $r$. La f.é.m.\ $E$, fixée par l'électrochimie du couple, change peu ; le vieillissement dégrade électrodes et électrolyte, et $r$ monte. À vide, $U = E$ : rien ne paraît. En débit, $U = E - rI$ s'effondre. C'est pourquoi une pile se teste \emph{en charge}, jamais à vide.}
+
+\textbf{Q4.} Expliquez pourquoi les composants CMOS sont sensibles aux décharges électrostatiques de quelques volts seulement.
+
+\textit{Réponse : l'oxyde de grille fait quelques nanomètres ; à $\sim\SI{500}{MV/m}$ de rigidité, quelques volts suffisent à le percer ($\SI{5}{nm} \Rightarrow \sim\SI{2.5}{V}$) --- et le perçage est irréversible. Les broches embarquent des structures de protection (diodes, chapitre 15) qui dérivent la décharge, mais leur tenue est finie face aux kilovolts d'une ESD réelle (chapitre 35) : d'où bracelet, tapis et précautions de manipulation.}
 
 % === RÉSUMÉ DU CHAPITRE 2 ===
 \section*{Résumé du chapitre}
@@ -1295,9 +1334,10 @@ Avec facteur de sécurité 2 : $d = 2 \times \SI{5}{\micro m} = \SI{10}{\micro m
 \begin{tabular}{p{4cm}p{9cm}}
 \toprule
 Tension & Différence de potentiel entre deux points : $U_{AB} = V_A - V_B$ (V) \\
-Masse & Point de référence choisi à \SI{0}{V} \\
+Masse $\neq$ terre & Masse : référence choisie (\SI{0}{V}) ; terre (PE) : conducteur de sécurité \\
 Énergie & $W = q \cdot U$ --- 1 volt = 1 joule par coulomb \\
-Fléchage & Flèche de $U_{AB}$ pointe de B vers A (vers le $+$) \\
+Fléchage & La flèche de $U_{AB}$ pointe de B vers A (vers le $+$) ; deux conventions, le signe tranche \\
+Mesure & Voltmètre \textbf{en parallèle}, résistance interne très grande ($\sim\SI{10}{M\ohm}$) \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -1308,10 +1348,11 @@ Fléchage & Flèche de $U_{AB}$ pointe de B vers A (vers le $+$) \\
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{p{4cm}p{9cm}}
 \toprule
-$\vec{E}$ et $V$ & $\vec{E} = -\vec{\nabla}V$ --- le champ dérive du potentiel \\
+$\vec{E}$ et $V$ & $\vec{E} = -\vec{\nabla}V$ --- le champ pointe vers les potentiels décroissants \\
 f.é.m. & Énergie fournie par le générateur par unité de charge (V) \\
-Générateur réel & $U = E - rI$ --- la tension chute avec le courant \\
-Puissance & $P = UI$ en convention récepteur \\
+Générateur réel & $U = E - rI$ --- la tension chute avec le courant débité \\
+Puissance & $P = UI$ en convention récepteur (chapitre 4) \\
+Additivité & En série, les tensions s'ajoutent ; $\sum_{\text{maille}} u = 0$ (détail au chapitre 5) \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -1322,13 +1363,19 @@ Puissance & $P = UI$ en convention récepteur \\
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{p{4cm}p{9cm}}
 \toprule
-Maxwell-Faraday & $\oint\vec{E}\cdot\mathrm{d}\vec{\ell} = -\mathrm{d}\Phi_B/\mathrm{d}t$ --- la tension perd son sens si $\vec{B}$ varie \\
-Johnson-Nyquist & $\overline{v_n^2} = 4k_BTR\Delta f$ --- plancher de bruit thermique \\
-Claquage & Tout isolant a une rigidité diélectrique finie \\
+Maxwell--Faraday & $\oint\vec{E}\cdot\mathrm{d}\vec{\ell} = -\mathrm{d}\Phi_B/\mathrm{d}t$ --- la « tension » dépend du chemin si $\vec{B}$ varie (Lewin) \\
+Johnson--Nyquist & $v_n = \sqrt{4k_BTR\Delta f}$ --- plancher irréductible, $\propto \sqrt{R}$ \\
+Claquage & Air $\sim\SI{3}{MV/m}$, SiO$_2$ $\sim\SI{500}{MV/m}$ --- en pratique, le cheminement de surface dimensionne \\
 \bottomrule
 \end{tabular}
 \end{center}
 \end{ingenieur}
+
+\vspace{0.4cm}
+
+\begin{retenir}
+Le courant (chapitre 1) est l'effet ; la tension en est la cause et fixe l'énergie transportée par coulomb. Reste à relier quantitativement les deux dans la matière : c'est la loi d'Ohm --- chapitre 3.
+\end{retenir}
 
 % ============================================================================
 % CHAPITRE 3 : LA RÉSISTANCE ET LA LOI D'OHM
