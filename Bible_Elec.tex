@@ -2118,7 +2118,7 @@ C'est elle qui dimensionne les composants, les alimentations et les systèmes de
 \section{Les Bases}
 
 \begin{bases}
-Cette section reprend les notions de puissance et d'énergie avec un regard global. Prérequis : chapitres 1 à 3 (courant, tension, résistance).
+$P = UI$ et l'effet Joule, l'énergie et le kWh, les ordres de grandeur, le bilan de puissance d'un circuit, la mesure au wattmètre. Prérequis : chapitres 1 à 3.
 \end{bases}
 
 \subsection{Puissance : définition intuitive}
@@ -2237,12 +2237,21 @@ Courant : $I = E/(R+r) = 9/9 = \SI{1}{A}$.
 \item Vérification : $P_E = P_R + P_r = 8 + 1 = \SI{9}{W}$. \checkmark
 \end{itemize}
 
+\subsection{Mesurer une puissance}
+
+Un wattmètre calcule la \textbf{moyenne du produit} $u(t)\cdot i(t)$ : une voie tension (en parallèle, chapitre 2), une voie courant (en série ou par shunt, chapitres 1 et 3), et un multiplieur. En continu, mesurer $U$ et $I$ séparément et multiplier suffit.
+
+\begin{attention}
+En alternatif, $U_{\text{eff}} \times I_{\text{eff}}$ mesurés séparément donne la puissance \textbf{apparente} $S$, pas la puissance active $P$ : dès que tension et courant sont déphasés ou déformés, $P < S$ (section Ingénieur). Seule la moyenne du \emph{produit instantané} donne $P$ --- c'est toute la différence entre deux multimètres et un wattmètre.
+\end{attention}
+
 \begin{retenir}
-\textbf{Les 3 idées essentielles sur la puissance :}
+\textbf{Les 4 idées essentielles sur la puissance :}
 \begin{enumerate}[nosep]
 \item $P = UI$ : la puissance est le produit tension $\times$ courant.
 \item L'effet Joule ($P = RI^2$) est une perte irréversible en chaleur.
 \item L'énergie, c'est la puissance accumulée dans le temps : $W = Pt$.
+\item La puissance se mesure comme moyenne du \emph{produit} $u \cdot i$ --- pas comme produit des moyennes.
 \end{enumerate}
 \end{retenir}
 
@@ -2252,7 +2261,7 @@ Courant : $I = E/(R+r) = 9/9 = \SI{1}{A}$.
 \section{Approfondissement}
 
 \begin{approfondissement}
-Puissance en régime variable, rendement, et adaptation d'impédance. Prérequis : notions de fonctions sinusoïdales.
+Puissance instantanée et moyenne, valeur efficace (RMS), rendement, adaptation d'impédance et ses deux philosophies. Prérequis : intégrales, fonctions sinusoïdales.
 \end{approfondissement}
 
 \subsection{Énergie en régime variable}
@@ -2278,6 +2287,26 @@ Elle fluctue à chaque instant. La grandeur utile en pratique est la \textbf{pui
 \]
 $T$ : période du signal. $P$ est la puissance effectivement convertie en travail ou en chaleur.
 \end{formule}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[xscale=0.62, yscale=0.85]
+  \draw[-{Stealth}] (0,0) -- (10.7,0) node[right=2pt] {\footnotesize $t$};
+  \draw[-{Stealth}] (0,-1.5) -- (0,3.3);
+  % u et i en phase
+  \draw[thick, blue!65!black, domain=0:10, samples=160] plot(\x,{1.1*sin(72*\x)});
+  \draw[thick, green!45!black, densely dashed, domain=0:10, samples=160] plot(\x,{0.7*sin(72*\x)});
+  % p(t) = 2 omega, entre 0 et UI
+  \draw[very thick, red!70!black, domain=0:10, samples=220] plot(\x,{2.75*sin(72*\x)*sin(72*\x)});
+  \draw[dashed] (0,1.375) -- (10.3,1.375);
+  \node[left, font=\footnotesize] at (-0.1,1.375) {$\dfrac{\hat U \hat I}{2}$};
+  % légende à droite
+  \node[right, red!70!black, font=\footnotesize] at (10.35,2.4) {$p(t)$};
+  \node[right, blue!65!black, font=\footnotesize] at (10.35,1.0) {$u(t)$};
+  \node[right, green!45!black, font=\footnotesize] at (10.35,0.35) {$i(t)$};
+\end{tikzpicture}
+\caption{Charge résistive : $u$ et $i$ en phase, la puissance instantanée $p(t) = u\,i$ oscille à $2\omega$ entre $0$ et $\hat{U}\hat{I}$, toujours positive. Sa moyenne vaut $\hat{U}\hat{I}/2 = U_{\text{eff}}\,I_{\text{eff}}$ : c'est l'origine du $\sqrt{2}$ de la section suivante.}
+\end{figure}
 
 \subsection{Valeur efficace (RMS)}
 
@@ -2324,8 +2353,8 @@ $\eta$ est sans dimension, compris entre 0 et 1 (souvent exprimé en \%).
 \textbf{Système} & \textbf{Rendement typique} \\
 \midrule
 Moteur électrique (industriel) & $85\%$ à $97\%$ \\
-Alimentation à découpage (SMPS)\footnote{Les régulateurs linéaires (LDO) et les convertisseurs à découpage (buck, boost, SMPS) seront détaillés dans le chapitre consacré aux alimentations.} & $80\%$ à $95\%$ \\
-Régulateur linéaire (LDO)$^\text{1}$ & $\eta = V_{\text{out}}/V_{\text{in}}$ (souvent $30\%$--$70\%$) \\
+Alimentation à découpage (SMPS, chapitres 30--32) & $80\%$ à $95\%$ \\
+Régulateur linéaire (LDO, chapitre 30) & $\eta = V_{\text{out}}/V_{\text{in}}$ (souvent $30\%$--$70\%$) \\
 Panneau solaire & $15\%$ à $25\%$ \\
 Ampoule incandescente & $\sim 5\%$ (éclairage) \\
 LED & $30\%$ à $50\%$ (éclairage) \\
@@ -2369,8 +2398,8 @@ C'est un \textbf{compromis} :
 \begin{pratique}
 \textbf{Deux philosophies selon le domaine :}
 \begin{itemize}[nosep]
-\item \textbf{RF / audio / télécoms :} on adapte ($R_L = R_s = \SI{50}{\ohm}$ ou \SI{75}{\ohm}) pour maximiser le \textit{transfert de puissance} et minimiser les réflexions. Le rendement de 50\% est acceptable car les puissances sont faibles.
-\item \textbf{Énergie / alimentations :} on veut $R_L \gg R_s$ pour maximiser le \textit{rendement}. On ne cherche pas le transfert maximal, mais les pertes minimales. Le rendement approche $100\%$ quand $R_L/R_s \to \infty$.
+\item \textbf{RF / télécoms :} on adapte ($R_L = R_s$, typiquement \SI{50}{\ohm}) --- d'abord pour supprimer les \emph{réflexions} sur les lignes (chapitre 37) ; le transfert maximal en découle. Le rendement de 50\,\% est le prix accepté de signaux propres à faible puissance.
+\item \textbf{Énergie / alimentations / audio :} on veut $R_L \gg R_s$ pour le \emph{rendement} --- les pertes tendent vers zéro. Un amplificateur audio moderne ($R_s < \SI{0.1}{\ohm}$) sur un haut-parleur de \SI{8}{\ohm} travaille en pont d'impédance, pas en adaptation : l'idée reçue « adapter l'ampli au haut-parleur » date des tubes et de leurs transformateurs de sortie.
 \end{itemize}
 \end{pratique}
 
@@ -2378,7 +2407,8 @@ C'est un \textbf{compromis} :
 
 La puissance aux bornes de la charge $R_L$ en fonction de $R_L$ :
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{tikzpicture}[scale=0.85]
   \draw[->] (0,0) -- (7,0) node[right]{$R_L$};
   \draw[->] (0,0) -- (0,4) node[above]{$P_L$};
@@ -2396,10 +2426,11 @@ La puissance aux bornes de la charge $R_L$ en fonction de $R_L$ :
   \node[above right, red!70!black, font=\small] at (1.2,3.5/4) {max};
   
   % Annotations
-  \node[below, font=\footnotesize, text width=2cm, align=center] at (0.4,-0.6) {$R_L \ll R_s$\\faible $P_L$};
-  \node[below, font=\footnotesize, text width=2cm, align=center] at (5,-0.6) {$R_L \gg R_s$\\faible $P_L$};
+  \node[below, font=\footnotesize, text width=2cm, align=center] at (0.4,-0.75) {$R_L \ll R_s$\\faible $P_L$};
+  \node[below, font=\footnotesize, text width=2cm, align=center] at (5,-0.75) {$R_L \gg R_s$\\faible $P_L$};
 \end{tikzpicture}
-\end{center}
+\caption{Puissance transférée à la charge : maximum à $R_L = R_s$ (adaptation), mais rendement de 50\,\% seulement --- les deux philosophies du texte se lisent sur les deux flancs de la courbe.}
+\end{figure}
 
 % ----------------------------------------------------------------------------
 % SECTION 3 : NIVEAU INGÉNIEUR
@@ -2407,7 +2438,7 @@ La puissance aux bornes de la charge $R_L$ en fonction de $R_L$ :
 \section{Niveau Ingénieur}
 
 \begin{ingenieur}
-Puissance en régime sinusoïdal complexe, facteur de puissance, et gestion thermique.
+Puissance en sinusoïdal ($P$, $Q$, $S$, $\cos\varphi$), la gestion thermique par résistances thermiques --- et son extension impulsionnelle ---, la densité spectrale de bruit. Prérequis : chapitre 2 (bruit), trigonométrie.
 \end{ingenieur}
 
 \subsection{Puissance en régime sinusoïdal (aperçu)}
@@ -2437,15 +2468,30 @@ On définit également :
 \item Relation : $S^2 = P^2 + Q^2$.
 \end{itemize}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[xscale=0.62, yscale=0.95]
+  \draw[-{Stealth}] (0,0) -- (10.7,0) node[right=2pt] {\footnotesize $t$};
+  \draw[-{Stealth}] (0,-1.9) -- (0,2.5);
+  \draw[very thick, red!70!black, domain=0:10, samples=260] plot(\x,{2.2*sin(72*\x)*sin(72*\x-50)});
+  \draw[dashed] (0,0.707) -- (10.3,0.707);
+  \node[left, font=\footnotesize] at (-0.1,0.707) {$P$};
+  \node[right, red!70!black, font=\footnotesize] at (10.35,1.4) {$p(t)$};
+  \node[font=\footnotesize, align=center] at (7.7,-1.45) {$p < 0$ : l'énergie repart\\ vers la source (réactif)};
+  \draw[-{Stealth}, thin] (6.5,-1.15) -- (5.45,-0.3);
+\end{tikzpicture}
+\caption{Charge déphasée ($\varphi = 50°$) : $p(t)$ passe périodiquement sous zéro --- la charge \emph{rend} de l'énergie pendant ces intervalles. La moyenne $P = U_{\text{eff}}I_{\text{eff}}\cos\varphi$ est d'autant plus faible que ces allers-retours (puissance réactive $Q$) sont importants : le réseau, lui, transporte tout le courant.}
+\end{figure}
+
 \begin{attention}
 Le facteur de puissance $\cos\varphi$ a des conséquences économiques et techniques majeures :
 \begin{itemize}[nosep]
 \item Un $\cos\varphi$ faible (charge inductive : moteurs, transformateurs) signifie que le réseau transporte un courant plus élevé que nécessaire pour la même puissance utile.
 \item Le surdimensionnement des câbles, transformateurs et protections coûte cher.
 \item Les industriels paient des \textbf{pénalités} si $\cos\varphi < 0{,}9$ (environ).
-\item On corrige le $\cos\varphi$ en ajoutant des \textbf{condensateurs} (compensation réactive) ou via des correcteurs actifs (PFC).
+\item On corrige le $\cos\varphi$ en ajoutant des \textbf{condensateurs} (compensation réactive) ou via des correcteurs actifs (PFC, chapitre 32).
 \end{itemize}
-Ce sujet sera développé en détail au chapitre sur la puissance en alternatif.
+Ce sujet sera développé en détail au chapitre 11 (puissance en régime sinusoïdal).
 \end{attention}
 
 \subsection{Gestion thermique : du composant au système}
@@ -2475,6 +2521,34 @@ R_{\text{th,total}} = R_{\text{th,jc}} + R_{\text{th,cs}} + R_{\text{th,sa}}
 \item $R_{\text{th,sa}}$ : radiateur $\to$ air (\textit{sink-to-ambient}), dépend du radiateur choisi
 \end{itemize}
 
+\begin{figure}[h]
+\centering
+\begin{circuitikz}[scale=0.95]
+  % Source de chaleur P (dessinée explicitement, flèche vers Tj)
+  \draw (0,0) -- (0,0.7);
+  \draw (0,1.1) circle (0.4);
+  \draw[-{Stealth[length=2.4mm]}] (0,0.78) -- (0,1.42);
+  \node[left, font=\small] at (-0.5,1.1) {$P$};
+  \draw (0,1.5) -- (0,2.2);
+  % Chaîne des résistances thermiques
+  \draw (0,2.2) to[short] (1.1,2.2) node[circ]{}
+        to[R, l=$R_{\text{th,jc}}$] (3.3,2.2) node[circ]{}
+        to[R, l=$R_{\text{th,cs}}$] (5.5,2.2) node[circ]{}
+        to[R, l=$R_{\text{th,sa}}$] (7.7,2.2) to[short] (8.7,2.2);
+  \node[above=3pt, font=\small] at (1.1,2.2) {$T_j$};
+  \node[above=3pt, font=\small] at (3.3,2.2) {$T_c$};
+  \node[above=3pt, font=\small] at (5.5,2.2) {$T_s$};
+  % Retour à l'ambiante
+  \draw (8.7,2.2) -- (8.7,0) -- (0,0);
+  \draw (4.35,0) node[circ]{} -- (4.35,-0.35);
+  \draw[very thick] (4.07,-0.35) -- (4.63,-0.35);
+  \draw[very thick] (4.16,-0.48) -- (4.54,-0.48);
+  \draw[very thick] (4.25,-0.61) -- (4.45,-0.61);
+  \node[below, font=\small] at (4.35,-0.72) {$T_a$ (ambiante)};
+\end{circuitikz}
+\caption{L'analogie électrique--thermique : la puissance dissipée est un « courant » de chaleur, les températures des « potentiels », et $\Delta T = R_{\text{th}}P$ une loi d'Ohm. La chaîne jonction--boîtier--radiateur--air se calcule comme un circuit série : le maillon dominant est celui qu'il faut traiter.}
+\end{figure}
+
 \begin{pratique}
 \textbf{Exemple de dimensionnement :} un régulateur linéaire (LDO) en boîtier TO-220 dissipe \SI{5}{W}. Sa température de jonction maximale est $T_{j,\max} = \SI{150}{°C}$. Température ambiante : $T_a = \SI{40}{°C}$. $R_{\text{th,jc}} = \SI{3}{°C/W}$, $R_{\text{th,cs}} = \SI{0.5}{°C/W}$ (avec pâte thermique).
 
@@ -2484,6 +2558,10 @@ R_{\text{th,sa}} = \frac{T_{j,\max} - T_a}{P} - R_{\text{th,jc}} - R_{\text{th,c
 \]
 
 Un petit radiateur à ailettes en aluminium ($\sim\SI{10}{°C/W}$) suffira largement.
+\end{pratique}
+
+\begin{pratique}
+\textbf{Crête vs moyenne : l'impédance thermique $Z_{\text{th}}(t)$.} La chaleur met du temps à diffuser : sur une impulsion brève, seule la capacité thermique proche de la jonction absorbe l'énergie, et l'échauffement est bien moindre que $R_{\text{th}} \cdot P$. Les datasheets donnent la courbe $Z_{\text{th}}(t) < R_{\text{th}}$ (\emph{single pulse}) : un MOSFET limité à \SI{50}{W} continus encaisse des kilowatts pendant quelques microsecondes. C'est ce qui rend possible le découpage (chapitre 32) --- et c'est l'aire de sécurité (SOA, chapitre 16) qui en fixe les limites.
 \end{pratique}
 
 \subsection{Densité spectrale de puissance et bruit (lien avec Ch.\ 2 et 3)}
@@ -2581,12 +2659,21 @@ Le courant passe de \SI{17.9}{A} à $I' = P/(U\cos\varphi') = 5000/(400\times0{,
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Un régulateur linéaire \SI{12}{V} $\to$ \SI{5}{V} a un rendement de $42\%$. Un convertisseur buck fait la même conversion à $92\%$. Pour un courant de \SI{2}{A}, calculez les pertes dans chaque cas. Pourquoi utilise-t-on encore des LDO malgré leur faible rendement ?
-\item Pourquoi le transfert maximal de puissance ($R_L = R_s$) n'est-il \textit{pas} souhaitable pour alimenter un moteur de voiture électrique ?
-\item Une résistance de \SI{10}{\ohm} / \SI{0.5}{W} est traversée par un courant de \SI{300}{mA}. Risque-t-elle de griller ? Justifiez.
-\item Expliquez pourquoi un câble électrique qui chauffe de manière anormale est un signe de danger.
-\end{enumerate}
+\textbf{Q1.} Un régulateur linéaire \SI{12}{V} $\to$ \SI{5}{V} a un rendement de $42\%$. Un convertisseur buck fait la même conversion à $92\%$. Pour un courant de \SI{2}{A}, calculez les pertes dans chaque cas. Pourquoi utilise-t-on encore des LDO malgré leur faible rendement ?
+
+\textit{Réponse : linéaire — $P_{\text{pertes}} = (12-5)\times 2 = \SI{14}{W}$ (radiateur obligatoire). Buck — $P_{\text{out}} = \SI{10}{W}$, $P_{\text{in}} = 10/0{,}92 = \SI{10.9}{W}$, pertes $\approx \SI{0.9}{W}$. On garde les LDO pour leur sortie propre (pas de découpage : ni ondulation ni rayonnement), leur simplicité et leur réponse rapide — typiquement en post-régulation derrière un buck pour l'analogique sensible (chapitre 30).}
+
+\textbf{Q2.} Pourquoi le transfert maximal de puissance ($R_L = R_s$) n'est-il \textit{pas} souhaitable pour alimenter un moteur de voiture électrique ?
+
+\textit{Réponse : à l'adaptation, $\eta = 50\,\%$ — la moitié de l'énergie de la batterie chaufferait la source. En traction, on minimise $R_s$ (batterie, câblage, semi-conducteurs) et on pilote la charge : le critère est le rendement et la thermique, jamais le transfert maximal. L'adaptation n'a de sens que lorsque la source est imposée et le signal précieux (RF, chapitre 37).}
+
+\textbf{Q3.} Une résistance de \SI{10}{\ohm} / \SI{0.5}{W} est traversée par un courant de \SI{300}{mA}. Risque-t-elle de griller ? Justifiez.
+
+\textit{Réponse : $P = RI^2 = 10 \times 0{,}09 = \SI{0.9}{W} > \SI{0.5}{W}$ — destruction à terme (dérive, puis ouverture). S'ajoute le \emph{derating} : la puissance admissible chute avec la température ambiante. Règle saine : dimensionner à 50\,\% du calibre — ici, une résistance de \SI{2}{W}.}
+
+\textbf{Q4.} Expliquez pourquoi un câble électrique qui chauffe de manière anormale est un signe de danger.
+
+\textit{Réponse : la chauffe traduit un $RI^2$ anormal — surintensité, ou résistance locale excessive (connexion desserrée, oxydée). Le point chaud s'auto-aggrave : l'oxydation augmente $R$, donc la chauffe, et le coefficient de température positif du cuivre (chapitre 1) en rajoute — emballement, risque d'incendie. C'est le mode de défaillance classique des connexions mal serrées.}
 
 % === RÉSUMÉ DU CHAPITRE 4 ===
 \section*{Résumé du chapitre}
@@ -2601,6 +2688,7 @@ Puissance & $P = UI$ --- débit d'énergie (W) \\
 Effet Joule & $P = RI^2$ --- perte irréversible en chaleur \\
 Énergie & $W = Pt$ --- en joules (J) ou kilowattheures (kWh) \\
 Bilan de puissance & $\sum P_{\text{fournie}} = \sum P_{\text{consommée}}$ \\
+Mesure & Wattmètre : moyenne de $u \cdot i$ --- pas le produit des efficaces \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -2611,9 +2699,10 @@ Bilan de puissance & $\sum P_{\text{fournie}} = \sum P_{\text{consommée}}$ \\
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{p{4cm}p{9cm}}
 \toprule
-Valeur efficace & $U_{\text{eff}} = \hat{U}/\sqrt{2}$ (sinusoïdal) --- ``équivalent continu'' \\
-Rendement & $\eta = P_{\text{utile}}/P_{\text{entrée}}$ \\
-Adaptation & $P_{L,\max}$ quand $R_L = R_s$ --- rendement 50\% \\
+Puissance moyenne & $P = \frac{1}{T}\int_0^T u\,i\,\mathrm{d}t$ --- charge résistive : $p(t)$ oscille à $2\omega$ \\
+Valeur efficace & $U_{\text{eff}} = \hat{U}/\sqrt{2}$ (sinusoïdal) --- « équivalent continu » \\
+Rendement & $\eta = P_{\text{utile}}/P_{\text{entrée}}$ --- LDO $\eta = V_{\text{out}}/V_{\text{in}}$, buck $> 90\,\%$ \\
+Adaptation & $P_{L,\max}$ à $R_L = R_s$, $\eta = 50\,\%$ --- RF : réflexions (ch.~37) ; énergie/audio : $R_L \gg R_s$ \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -2624,13 +2713,19 @@ Adaptation & $P_{L,\max}$ quand $R_L = R_s$ --- rendement 50\% \\
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{p{4cm}p{9cm}}
 \toprule
-Facteur de puissance & $P = UI\cos\varphi$ --- $\cos\varphi < 1$ = courant gaspillé \\
-Thermique & $\Delta T = R_{\text{th}} \cdot P$ --- analogie Ohm pour la chaleur \\
-DSP de bruit & Blanc $4k_BTR$ + 1/f --- fréquence de corner $f_c$ \\
+Triangle des puissances & $P = UI\cos\varphi$ ; $S^2 = P^2 + Q^2$ --- $\cos\varphi$ faible = courant (et pénalités) en trop \\
+Thermique & $\Delta T = R_{\text{th}}P$, chaîne série $R_{jc}+R_{cs}+R_{sa}$ --- impulsionnel : $Z_{\text{th}}(t) < R_{\text{th}}$ \\
+DSP de bruit & Blanc $4k_BTR$ + $1/f$ --- fréquence de corner $f_c$ \\
 \bottomrule
 \end{tabular}
 \end{center}
 \end{ingenieur}
+
+\vspace{0.4cm}
+
+\begin{retenir}
+Courant, tension, résistance, puissance : les quatre grandeurs sont posées, reliées et mesurables. Il manque l'outil pour organiser leur circulation dans un circuit à plusieurs branches : les lois de Kirchhoff --- chapitre 5.
+\end{retenir}
 
 % ============================================================================
 % CHAPITRE 5 : LES LOIS DE KIRCHHOFF
@@ -20029,7 +20124,7 @@ Sous quelques watts, le PCB \emph{est} le dissipateur. Les ordres de grandeur à
 \begin{itemize}[itemsep=2pt]
   \item une surface de cuivre extérieure de $\SI{10}{cm^2}$ (recto, convection naturelle) évacue grossièrement $\SI{1}{W}$ pour $\SI{40}{}$ à $\SI{50}{\celsius}$ d'échauffement --- l'étalement au-delà de quelques centimètres carrés rapporte de moins en moins (la chaleur ne s'étale plus dans le cuivre mince) ;
   \item le FR-4 est un isolant thermique ($\lambda \approx \SI{0.3}{W/(m.K)}$, contre $\approx \SI{390}{}$ pour le cuivre) : pour traverser la carte, il faut des \textbf{vias thermiques}. Un via standard (perçage \SI{0.3}{mm}, fût \SI{25}{\micro m}) présente de l'ordre de $\SI{100}{}$ à $\SI{150}{K/W}$ : on les met en réseau --- neuf vias sous une pastille thermique ramènent la traversée à $\sim\SI{15}{K/W}$ ;
-  \item la chaîne thermique se raisonne comme un circuit (chapitre 2, analogie électrique--thermique) : jonction $\to$ boîtier $\to$ pastille $\to$ vias $\to$ plan $\to$ air, en série --- le maillon dominant est celui qu'il faut traiter.
+  \item la chaîne thermique se raisonne comme un circuit (chapitre 4, analogie électrique--thermique) : jonction $\to$ boîtier $\to$ pastille $\to$ vias $\to$ plan $\to$ air, en série --- le maillon dominant est celui qu'il faut traiter.
 \end{itemize}
 
 \begin{attention}
