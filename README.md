@@ -31,7 +31,7 @@ traçable de bout en bout, liens inter-chapitres systématiques.
 | VIII | 33–34 | Asservissement            | ✅ |
 | IX   | 35–37 | CEM / PCB                 | ✅ |
 
-**Phase V0.5** (peer-review, visuels, homogénéisation) — en cours : francisation ✅ · ch.1 ✅ · ch.2 ✅
+**Phase V0.5** (peer-review, visuels, homogénéisation) — en cours : francisation ✅ · ch.1 ✅ · ch.2 ✅ · ch.3 ✅
 **Ne pas mélanger V0.1 et V0.5.**
 
 ## Compilation

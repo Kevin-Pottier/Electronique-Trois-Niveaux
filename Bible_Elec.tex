@@ -1397,7 +1397,7 @@ Au chapitre 1, nous avons vu \textit{ce que} sont les charges en mouvement (le c
 \section{Les Bases}
 
 \begin{bases}
-Cette section ne suppose aucune connaissance préalable hormis les notions de courant et de tension (chapitres 1 et 2).
+La loi d'Ohm et sa condition de validité, les ordres de grandeur, la puissance dissipée, les associations série/parallèle, le diviseur de tension et son piège, le shunt. Prérequis : chapitres 1 et 2.
 \end{bases}
 
 \subsection{Qu'est-ce qu'une résistance ?}
@@ -1445,25 +1445,17 @@ En convention récepteur : la tension $U$ et le courant $I$ sont fléchés en se
 \textbf{Conditions de validité :} cette loi s'applique aux \textbf{conducteurs ohmiques} (ou ``linéaires''), c'est-à-dire les matériaux pour lesquels $R$ est constant quel que soit le courant. C'est le cas des résistances, des fils métalliques, des pistes de PCB\ldots{} \textit{à température constante}. Les diodes, transistors et ampoules à filament ne sont \textit{pas} ohmiques.
 \end{formule}
 
-\begin{center}
-\begin{tikzpicture}[scale=1.3]
-  \draw[thick] (0,0) -- (0.5,0);
-  \draw[thick, fill=gray!15, rounded corners=2pt] (0.5,-0.3) rectangle (2.5,0.3);
-  \node at (1.5,0) {$R$};
-  \draw[thick] (2.5,0) -- (3,0);
-  
-  \filldraw[blue!70!black] (0,0) circle (2pt) node[above=5pt, font=\bfseries]{A};
-  \filldraw[blue!70!black] (3,0) circle (2pt) node[above=5pt, font=\bfseries]{B};
-  
-  % Courant
-  \draw[line width=1.5pt, blue!70!black, -{Stealth[length=3mm, width=2mm]}] (0.5,0.55) -- (2.5,0.55);
-  \node[blue!70!black, above] at (1.5,0.6) {$i$};
-  
-  % Tension (convention récepteur : B vers A)
-  \draw[line width=1.5pt, red!70!black, -{Stealth[length=3mm, width=2mm]}] (2.9,-0.65) -- (0.1,-0.65);
-  \node[red!70!black, below=3pt] at (1.5,-0.65) {$U = Ri$};
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.1]
+  \draw (0,0) node[circ]{} to[short, i=$i$] (1.3,0) to[R, l=$R$] (3.2,0) to[short] (4.5,0) node[circ]{};
+  \node[above=4pt, font=\bfseries] at (0,0) {A};
+  \node[above=4pt, font=\bfseries] at (4.5,0) {B};
+  \draw[line width=1.2pt, red!70!black, -{Stealth[length=2.8mm]}] (4.3,-0.7) -- (0.2,-0.7);
+  \node[red!70!black, below=2pt] at (2.25,-0.75) {$U = R\,i$};
 \end{tikzpicture}
-\end{center}
+\caption{La loi d'Ohm en convention récepteur : $U$ et $i$ fléchés en sens opposés.}
+\end{figure}
 
 \begin{intuition}
 La loi d'Ohm dit simplement : \textbf{plus on ``pousse'' fort (tension), plus il passe de courant}, et la résistance fixe la proportionnalité. Doubler la tension $\Rightarrow$ doubler le courant. Doubler la résistance $\Rightarrow$ diviser le courant par deux (à tension constante).
@@ -1475,6 +1467,10 @@ U = RI \qquad \Longleftrightarrow \qquad I = \frac{U}{R} \qquad \Longleftrightar
 \]
 
 \textbf{Exemple :} une résistance de \SI{1}{k\ohm} est soumise à \SI{5}{V}. Le courant vaut $I = 5/1000 = \SI{5}{mA}$.
+
+\begin{pratique}
+\textbf{Le shunt : mesurer un courant avec la loi d'Ohm.} On insère dans la boucle une résistance faible et connue (\SI{10}{m\ohm} à \SI{1}{\ohm}) et on mesure la tension à ses bornes : $I = U/R_{\text{shunt}}$. C'est le principe de la plupart des ampèremètres (chapitre 1) et de toutes les mesures de courant embarquées. Valeur faible = perturbation faible, mais signal faible : le compromis se règle par amplification. Le câblage quatre fils (Kelvin), qui protège cette mesure, reviendra au chapitre 36.
+\end{pratique}
 
 \subsection{Ordres de grandeur}
 
@@ -1520,6 +1516,8 @@ Argent & — & $\times 0{,}01$ (tolérance $\pm 10\%$) \\
 
 \textbf{Exemple (4 bandes) :} Marron -- Noir -- Rouge -- Or = 1 -- 0 -- $\times100$ -- $\pm5\%$ = \SI{1}{k\ohm} $\pm 5\%$.
 
+\textbf{Exemple (5 bandes, séries de précision) :} Marron -- Noir -- Noir -- Rouge -- Marron = 1 -- 0 -- 0 -- $\times100$ -- $\pm1\%$ = \SI{10}{k\ohm} $\pm 1\%$. Trois chiffres significatifs au lieu de deux : indispensable pour coder la série E96.
+
 \begin{pratique}
 Mnémotechnique classique : \textit{``Ne Manger Rien Ou Jeûner, Voilà Bien Votre Grande Bêtise''} (Noir, Marron, Rouge, Orange, Jaune, Vert, Bleu, Violet, Gris, Blanc). Il en existe d'autres, à vous de choisir celle qui vous convient !
 \end{pratique}
@@ -1554,13 +1552,13 @@ Valeurs typiques : \SI{0.125}{W} (1/8 W, CMS 0805), \SI{0.25}{W} (1/4 W, travers
 En série, la résistance équivalente est toujours \textbf{plus grande} que chaque résistance individuelle.
 \end{formule}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=0.9]
-  \draw (0,0) to[R, l=$R_1$] (2.5,0) to[R, l=$R_2$] (5,0) to[R, l=$R_3$] (7.5,0);
-  \draw[line width=1.2pt, blue!70!black, -{Stealth[length=2.5mm]}] (3,0.8) -- (4.5,0.8);
-  \node[blue!70!black, above] at (3.75,0.85) {\small $i$};
+  \draw (0,0) to[short, i=$i$] (1.2,0) to[R, l=$R_1$] (3.2,0) to[R, l=$R_2$] (5.2,0) to[R, l=$R_3$] (7.2,0) to[short] (8,0);
 \end{circuitikz}
-\end{center}
+\caption{Association série : le même courant $i$ traverse toutes les résistances.}
+\end{figure}
 
 \textbf{Association parallèle :} les résistances sont soumises à la \textbf{même tension}. Les courants s'additionnent.
 
@@ -1576,12 +1574,14 @@ R_{\text{éq}} = \frac{R_1 \cdot R_2}{R_1 + R_2} \qquad \text{(``produit sur som
 \]
 \end{formule}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=0.9]
-  \draw (0,0) -- (1,0) -- (1,1) to[R, l=$R_1$] (4,1) -- (4,0) -- (5,0);
-  \draw (1,0) -- (1,-1) to[R, l_=$R_2$] (4,-1) -- (4,0);
+  \draw (0,0) to[short, i=$i$] (1,0) node[circ]{} -- (1,1) to[R, l=$R_1$, i=$i_1$] (4,1) -- (4,0) node[circ]{} to[short] (5,0);
+  \draw (1,0) -- (1,-1) to[R, l_=$R_2$, i=$i_2$] (4,-1) -- (4,0);
 \end{circuitikz}
-\end{center}
+\caption{Association parallèle : même tension aux bornes, les courants s'additionnent ($i = i_1 + i_2$).}
+\end{figure}
 
 \begin{intuition}
 \textbf{Série} = on allonge le tuyau $\Rightarrow$ plus de résistance au passage.
@@ -1593,40 +1593,32 @@ R_{\text{éq}} = \frac{R_1 \cdot R_2}{R_1 + R_2} \qquad \text{(``produit sur som
 
 C'est le circuit le plus fondamental de l'électronique. Deux résistances en série, alimentées par une tension $E$ :
 
-\begin{center}
-\begin{tikzpicture}[scale=1.1]
-  % Source
-  \draw[thick] (0,4) node[above]{$+$} -- (0,4.2);
-  \draw[thick] (0,4.2) -- (2,4.2) -- (2,4);
-  \node[above] at (1,4.3) {$E$};
-  
-  % R1
-  \draw[thick] (0,4) to[R, l=$R_1$] (0,2);
-  
-  % Noeud Vout
-  \filldraw[red!70!black] (0,2) circle (2.5pt);
-  \draw[thick, red!70!black] (0,2) -- (1.5,2);
-  \node[right, red!70!black, font=\bfseries] at (1.5,2) {$V_{\text{out}}$};
-  
-  % R2
-  \draw[thick] (0,2) to[R, l=$R_2$] (0,0);
-  
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Source : pile, trait long = +
+  \draw[very thick] (0,0) -- (0,1.7);
+  \draw[very thick] (-0.28,1.7) -- (0.28,1.7);
+  \draw[very thick] (-0.5,2.05) -- (0.5,2.05);
+  \draw[very thick] (0,2.05) -- (0,4);
+  \node[left, font=\small] at (-0.6,1.87) {$E$};
+  % Boucle : R1, noeud Vout, R2
+  \draw (0,4) to[short] (2,4) to[R, l=$R_1$, i=$i$] (2,2) node[circ]{} to[R, l=$R_2$] (2,0) to[short] (0,0);
+  \draw (2,2) to[short] (3.6,2) node[ocirc]{};
+  \node[right=3pt, red!70!black, font=\bfseries] at (3.75,2) {$V_{\text{out}}$};
   % Masse
-  \draw[thick] (0,0) -- (2,0);
-  \draw[thick] (2,0) -- (2,0.2);
-  \node[ground] at (1,0) {};
-  
-  % Courant
-  \draw[line width=1.2pt, blue!70!black, -{Stealth[length=2.5mm]}] (-0.6,3.8) -- (-0.6,2.3);
-  \node[blue!70!black, left] at (-0.6,3.05) {\small $i$};
-  
-  % Tensions annotées
-  \draw[line width=1pt, red!70!black, -{Stealth[length=2mm]}] (2.3,2) -- (2.3,4);
-  \node[red!70!black, right, font=\small] at (2.3,3) {$U_1 = R_1 i$};
-  \draw[line width=1pt, red!70!black, -{Stealth[length=2mm]}] (2.3,0) -- (2.3,2);
-  \node[red!70!black, right, font=\small] at (2.3,1) {$U_2 = R_2 i$};
+  \draw (1,0) node[circ]{} -- (1,-0.35);
+  \draw[very thick] (0.72,-0.35) -- (1.28,-0.35);
+  \draw[very thick] (0.81,-0.48) -- (1.19,-0.48);
+  \draw[very thick] (0.90,-0.61) -- (1.10,-0.61);
+  % Tensions
+  \draw[line width=1pt, red!70!black, -{Stealth[length=2mm]}] (5.4,2.15) -- (5.4,3.85);
+  \node[red!70!black, right, font=\small] at (5.5,3) {$U_1 = R_1 i$};
+  \draw[line width=1pt, red!70!black, -{Stealth[length=2mm]}] (5.4,0.15) -- (5.4,1.85);
+  \node[red!70!black, right, font=\small] at (5.5,1) {$U_2 = R_2 i$};
 \end{tikzpicture}
-\end{center}
+\caption{Le diviseur de tension : la boucle $E$--$R_1$--$R_2$ est fermée, et $V_{\text{out}}$ est prélevée au n\oe ud milieu, référencée à la masse.}
+\end{figure}
 
 \begin{formule}
 \[
@@ -1640,7 +1632,7 @@ Pourquoi la tension se ``divise''-t-elle ? Le même courant $i = E/(R_1+R_2)$ tr
 \end{intuition}
 
 \begin{attention}
-Le diviseur de tension n'est valable \textbf{que si la charge en sortie ne tire pas de courant} (ou un courant négligeable devant $E/(R_1+R_2)$). Si l'on branche une charge $R_L$ en parallèle de $R_2$, la formule change : $R_2$ est remplacée par $R_2 \parallel R_L$. C'est un piège classique.
+Le diviseur de tension n'est valable \textbf{que si la charge en sortie ne tire pas de courant} (ou un courant négligeable devant $E/(R_1+R_2)$). Si l'on branche une charge $R_L$ en parallèle de $R_2$, la formule change : $R_2$ est remplacée par $R_2 \parallel R_L$. C'est l'\textbf{effet de charge} annoncé au chapitre 2 --- quantifié à l'exercice 3.4.
 \end{attention}
 
 \begin{retenir}
@@ -1649,7 +1641,7 @@ Le diviseur de tension n'est valable \textbf{que si la charge en sortie ne tire 
 \item La résistance s'oppose au passage du courant et dissipe de l'énergie sous forme de chaleur.
 \item Loi d'Ohm : $U = RI$ — relation linéaire entre tension et courant pour un conducteur ohmique.
 \item Série : $R_{\text{éq}} = R_1 + R_2$. Parallèle : $R_{\text{éq}} = R_1 R_2 / (R_1 + R_2)$.
-\item Diviseur de tension : $V_{\text{out}} = E \cdot R_2/(R_1+R_2)$ — valide uniquement à vide.
+\item Diviseur de tension : $V_{\text{out}} = E \cdot R_2/(R_1+R_2)$ — à vide seulement (effet de charge).
 \end{enumerate}
 \end{retenir}
 
@@ -1659,7 +1651,7 @@ Le diviseur de tension n'est valable \textbf{que si la charge en sortie ne tire 
 \section{Approfondissement}
 
 \begin{approfondissement}
-On formalise les liens entre résistance, résistivité et géométrie, et on explore les dipôles non-linéaires.
+Résistivité et géométrie ($R = \rho L/S$, résistance par carré), effet de la température (Pt100, CTN/CTP), conductance, dipôles non-linéaires et résistance dynamique, pont de Wheatstone. Prérequis : chapitres 1--2.
 \end{approfondissement}
 
 \subsection{Résistivité et loi de Pouillet}
@@ -1687,7 +1679,7 @@ Argent & $\SI{1.59e-8}{}$ & Conducteur \\
 Cuivre & $\SI{1.68e-8}{}$ & Conducteur \\
 Aluminium & $\SI{2.65e-8}{}$ & Conducteur \\
 Fer & $\SI{9.7e-8}{}$ & Conducteur \\
-Carbone & $\sim \SI{3.5e-5}{}$ & Semi-conducteur \\
+Carbone (graphite) & $\sim \SI{3.5e-5}{}$ & Conducteur médiocre \\
 Silicium (pur) & $\sim \SI{640}{}$ & Semi-conducteur \\
 Verre & $\sim 10^{10}$ à $10^{14}$ & Isolant \\
 \bottomrule
@@ -1701,6 +1693,14 @@ R = \frac{1{,}68\times10^{-8} \times 100}{1{,}5\times10^{-6}} = \SI{1.12}{\ohm}
 \]
 Ce n'est pas négligeable ! Dans une installation domestique, cela représente une chute de tension de $U = RI = 1{,}12 \times 10 = \SI{11.2}{V}$ pour un appareil tirant \SI{10}{A}. C'est pourquoi la norme NF C 15-100 limite la chute de tension à $3\%$ ($\sim \SI{6.9}{V}$ sur \SI{230}{V}).
 \end{pratique}
+
+\textbf{La résistance par carré.} Sur un PCB, l'épaisseur $t$ du cuivre est fixée (\SI{35}{\micro m} en 1~oz) : la loi de Pouillet se réécrit
+\[
+R = \frac{\rho}{t}\cdot\frac{L}{w} = R_\square \cdot \frac{L}{w}
+\qquad\text{avec}\qquad
+R_\square = \frac{\rho}{t} \approx \SI{0.5}{m\ohm}\ \text{par carré (1 oz)}.
+\]
+La résistance d'une piste ne dépend que du \emph{nombre de carrés} $L/w$ mis bout à bout --- un carré de \SI{1}{mm} de côté et un carré de \SI{1}{cm} ont la même résistance. C'est l'outil de chiffrage express du routage (chapitre 36).
 
 \subsection{Effet de la température}
 
@@ -1786,8 +1786,10 @@ Le pont de Wheatstone est un circuit classique de mesure de précision. Il est c
         to[R, l=$R_2$] (4,2)
         to[R, l_=$R_4$] (2,0)
         to[R, l_=$R_3$] (0,2);
-  \draw (2,4) -- (2,4.8) node[above]{$E$};
+  \draw (2,4) -- (2,4.8) node[above]{$+E$};
   \draw (2,0) -- (2,-0.5) node[below, ground]{};
+  \filldraw (2,4) circle (2pt);
+  \filldraw (2,0) circle (2pt);
   % Points A et B
   \filldraw[blue!70!black] (0,2) circle (2pt);
   \node[left=4pt, font=\bfseries] at (0,2) {A};
@@ -1818,7 +1820,7 @@ Le pont est \textbf{équilibré} (le voltmètre indique $U_{AB} = 0$) lorsque :
 \section{Niveau Ingénieur}
 
 \begin{ingenieur}
-Loi d'Ohm locale, modèles haute fréquence, bruit, et considérations de conception réelle.
+De la loi d'Ohm locale ($\vec{J} = \sigma\vec{E}$, chapitre 1) à $U = RI$, le modèle haute fréquence d'une résistance réelle, les deux bruits (thermique, $1/f$), et les séries normalisées E12/E24/E96. Prérequis : chapitre 1 (Drude), chapitre 2 (Johnson--Nyquist).
 \end{ingenieur}
 
 \subsection{Loi d'Ohm locale et résistivité tensorielle}
@@ -1841,15 +1843,14 @@ Dans un matériau \textbf{anisotrope} (comme certains cristaux ou composites), l
 
 En basse fréquence, une résistance se comporte comme une simple résistance $R$. En haute fréquence, tout composant réel possède des \textbf{éléments parasites} :
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=0.9]
-  \draw (0,0) to[L, l=$L_s$] (2,0) to[R, l=$R$] (4.5,0) to[short] (5.5,0);
-  \draw (2.5,0) to[C, l_=$C_p$, *-*] (2.5,-1.5) -| (4,0);
-  \draw (0,0) -- (-0.5,0);
-  \draw (5.5,0) -- (6,0);
-  \node[below] at (3,-2) {\small Modèle HF d'une résistance};
+  \draw (0,0) node[ocirc]{} to[short] (0.7,0) to[L, l=$L_s$] (2.5,0) to[R, l=$R$] (4.6,0) to[short] (5.4,0) node[ocirc]{};
+  \draw (0.35,0) node[circ]{} -- (0.35,-1.3) to[C, l_=$C_p$] (5.05,-1.3) -- (5.05,0) node[circ]{};
 \end{circuitikz}
-\end{center}
+\caption{Modèle haute fréquence d'une résistance réelle : inductance des connexions $L_s$ en série, capacité entre terminaisons $C_p$ en parallèle du composant.}
+\end{figure}
 
 \begin{itemize}[nosep]
 \item $L_s$ : \textbf{inductance série} (fils de connexion, enroulement). Typiquement quelques nH.
@@ -1994,18 +1995,21 @@ C'est au-dessus de la limite normative de $3\%$ ! Il faut augmenter la section (
 \textbf{Exercice 3.6 —} Une sonde Pt100 a une résistance de \SI{100}{\ohm} à \SI{0}{°C} ($\alpha = \SI{3.85e-3}{/°C}$). Elle est insérée dans un pont de Wheatstone avec trois résistances de \SI{100}{\ohm} et alimentée par \SI{5}{V}. Calculez la tension de déséquilibre $U_{AB}$ lorsque la température est de \SI{50}{°C}. Quelle sensibilité (en mV/°C) obtient-on ?
 
 \begin{pratique}
-\textbf{Solution :} Résistance de la sonde à \SI{50}{°C} :
+\textbf{Solution :} \textit{Hypothèses : sonde placée en $R_2$ (branche $E \to B$), les trois autres bras à \SI{100}{\ohm}, voltmètre idéal.}
 
-$R_{\text{Pt}} = 100[1 + 3{,}85\times10^{-3} \times 50] = 100 \times 1{,}1925 = \SI{119.25}{\ohm}$.
+Résistance de la sonde à \SI{50}{°C} : $R_{\text{Pt}} = 100(1 + 3{,}85\times10^{-3} \times 50) = \SI{119.25}{\ohm}$.
 
-Dans le pont, avec $R_1 = R_3 = R_4 = \SI{100}{\ohm}$ et $R_2 = R_{\text{Pt}} = \SI{119.25}{\ohm}$ :
+Chaque demi-pont est un diviseur de tension (figure) :
 \[
-U_{AB} = E\left(\frac{R_2}{R_1 + R_2} - \frac{R_4}{R_3 + R_4}\right) = 5\left(\frac{119{,}25}{219{,}25} - \frac{100}{200}\right) = 5(0{,}5439 - 0{,}5) = \SI{21.9}{mV}
+V_A = E\,\frac{R_3}{R_1+R_3} = \SI{2.500}{V}
+\qquad
+V_B = E\,\frac{R_4}{R_2+R_4} = 5 \times \frac{100}{219{,}25} = \SI{2.281}{V}
+\]
+\[
+U_{AB} = V_A - V_B = \boxed{\SI{219}{mV}} \qquad \text{soit en moyenne } \approx \SI{4.4}{mV/°C}.
 \]
 
-Sensibilité : $21{,}9 / 50 \approx \SI{0.44}{mV/°C}$.
-
-C'est un signal faible mais mesurable avec un amplificateur d'instrumentation. C'est l'architecture standard des capteurs à pont en industrie.
+\textbf{Interprétation :} la réponse du pont n'est \emph{pas} linéaire en $\Delta R$ (le diviseur sature) : la sensibilité locale décroît quand l'écart grandit. Pour de petites variations, $U_{AB} \approx \dfrac{E}{4}\dfrac{\Delta R}{R_0}$ ; ici $\Delta R/R_0 = 19{,}25\,\%$ est déjà « grand ». Signal directement exploitable par un amplificateur d'instrumentation : c'est l'architecture standard des capteurs à pont.
 \end{pratique}
 
 \textbf{Exercice 3.7 —} Une résistance CMS 0402 a une inductance parasite de \SI{0.3}{nH} et une capacité parasite de \SI{0.05}{pF}. Calculez sa fréquence de résonance. À \SI{100}{MHz}, une résistance de \SI{1}{k\ohm} se comporte-t-elle encore comme une résistance ? Justifiez.
@@ -2019,17 +2023,26 @@ $= \dfrac{1}{2\pi \times 3{,}87\times10^{-12}} = \dfrac{1}{2{,}43\times10^{-11}}
 
 Impédance de $C_p$ = $1/(\omega C_p) = 1/(2\pi \times 10^8 \times 0{,}05\times10^{-12}) = \SI{31.8}{k\ohm}$ (en parallèle de $R$ : effet faible).
 
-$\Rightarrow$ À \SI{100}{MHz}, la résistance CMS 0402 se comporte encore essentiellement comme une résistance de \SI{1}{k\ohm}. Les parasites ne deviennent gênants qu'au-delà de quelques GHz.
+$\Rightarrow$ À \SI{100}{MHz}, le 0402 de \SI{1}{k\ohm} reste une résistance à mieux que $3\,\%$. Attention à la généralisation : $f_r = \SI{41}{GHz}$ n'est \emph{pas} le bon critère. Pour une valeur élevée, c'est $C_p$ qui domine bien avant : $|Z_{C_p}| = \SI{3.2}{k\ohm}$ à \SI{1}{GHz}, soit déjà $-24\,\%$ en parallèle de \SI{1}{k\ohm}. Le critère utile : comparer $\omega L_s$ à $R$ (petites valeurs) et $1/(\omega C_p)$ à $R$ (grandes valeurs) --- pas seulement la fréquence de résonance.
 \end{pratique}
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Pourquoi ne peut-on pas utiliser la loi d'Ohm $U = RI$ pour une diode ?
-\item Un diviseur de tension $R_1/R_2$ fournit \SI{3.3}{V} à vide. On branche un microcontrôleur qui consomme \SI{100}{mA}. Quelles sont les conséquences ? Comment dimensionner correctement ?
-\item Pourquoi une résistance bobinée est-elle déconseillée en haute fréquence, malgré son faible bruit ?
-\item Expliquez physiquement pourquoi la résistance d'un métal \textit{augmente} avec la température, tandis que celle d'un semi-conducteur \textit{diminue}.
-\end{enumerate}
+\textbf{Q1.} Pourquoi ne peut-on pas utiliser la loi d'Ohm $U = RI$ pour une diode ?
+
+\textit{Réponse : sa caractéristique $I(U)$ est exponentielle, pas proportionnelle — le rapport $U/I$ dépend du point de fonctionnement, il n'existe pas de $R$ constant. On travaille alors avec la résistance dynamique $r_d = \mathrm{d}U/\mathrm{d}I$ autour d'un point de repos, valable en petits signaux seulement (physique de la jonction au chapitre 15).}
+
+\textbf{Q2.} Un diviseur de tension $R_1/R_2$ fournit \SI{3.3}{V} à vide. On branche un microcontrôleur qui consomme \SI{100}{mA}. Quelles sont les conséquences ? Comment dimensionner correctement ?
+
+\textit{Réponse : pour que la sortie reste raide, il faudrait un courant de pont très supérieur à \SI{100}{mA} — soit des résistances de quelques ohms dissipant plusieurs watts : absurde. Un diviseur fixe une \emph{référence}, pas une alimentation : dès qu'une charge tire un courant significatif, on utilise un régulateur (chapitres 30--32). Le diviseur se réserve aux charges à haute impédance (entrée d'ADC, chapitre 27 ; entrée d'AOP, chapitre 17).}
+
+\textbf{Q3.} Pourquoi une résistance bobinée est-elle déconseillée en haute fréquence, malgré son faible bruit ?
+
+\textit{Réponse : c'est un solénoïde — son inductance série se compte en microhenrys, mille fois celle d'un CMS. L'impédance $R + j\omega L_s$ dérive dès quelques dizaines de kilohertz pour les faibles valeurs. Il existe des bobinées « non inductives » (bobinage bifilaire Ayrton--Perry) pour concilier puissance et HF.}
+
+\textbf{Q4.} Expliquez physiquement pourquoi la résistance d'un métal \textit{augmente} avec la température, tandis que celle d'un semi-conducteur \textit{diminue}.
+
+\textit{Réponse : dans un métal, la densité de porteurs $n$ est fixe ; la température augmente les vibrations du réseau (phonons), le temps entre collisions $\tau$ chute, donc $\sigma = ne^2\tau/m_e$ chute (modèle de Drude, chapitre 1). Dans un semi-conducteur, la température \emph{génère} des porteurs : $n$ croît exponentiellement et écrase la baisse de mobilité — la résistivité s'effondre (chapitre 15).}
 
 % === RÉSUMÉ DU CHAPITRE 3 ===
 \section*{Résumé du chapitre}
@@ -2044,7 +2057,8 @@ Loi d'Ohm & $U = RI$ --- relation linéaire (conducteurs ohmiques) \\
 Puissance (Joule) & $P = RI^2 = U^2/R$ --- dissipée en chaleur \\
 Série & $R_{\text{éq}} = R_1 + R_2 + \cdots$ \\
 Parallèle & $R_{\text{éq}} = R_1 R_2 / (R_1 + R_2)$ (cas 2 résistances) \\
-Diviseur de tension & $V_{\text{out}} = E \cdot R_2/(R_1+R_2)$ --- valide à vide \\
+Diviseur de tension & $V_{\text{out}} = E \cdot R_2/(R_1+R_2)$ --- à vide ; chargé : effet de charge \\
+Shunt & Mesurer $I$ par $U = R_{\text{shunt}} I$, $R$ faible et connue \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -2055,10 +2069,12 @@ Diviseur de tension & $V_{\text{out}} = E \cdot R_2/(R_1+R_2)$ --- valide à vid
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{p{4cm}p{9cm}}
 \toprule
-Résistivité & $R = \rho L / S$ --- dépend du matériau et de la géométrie \\
+Résistivité & $R = \rho L / S$ --- matériau et géométrie \\
+R par carré & $R_\square = \rho/t \approx \SI{0.5}{m\ohm}/\square$ (1 oz) --- chiffrage des pistes (ch.~36) \\
 Température & $R(T) = R_0[1+\alpha(T-T_0)]$ --- Pt100, CTN, CTP \\
-Résistance dynamique & $r_d = \mathrm{d}U/\mathrm{d}I$ --- pour les dipôles non-linéaires \\
-Pont de Wheatstone & Équilibre si $R_1/R_3 = R_2/R_4$ \\
+Conductance & $G = 1/R$ (siemens) --- en parallèle, les $G$ s'additionnent \\
+Résistance dynamique & $r_d = \mathrm{d}U/\mathrm{d}I$ --- dipôles non-linéaires, petits signaux \\
+Pont de Wheatstone & Équilibre si $R_1/R_3 = R_2/R_4$ --- indépendant de $E$ \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -2070,13 +2086,19 @@ Pont de Wheatstone & Équilibre si $R_1/R_3 = R_2/R_4$ \\
 \begin{tabular}{p{4cm}p{9cm}}
 \toprule
 Ohm locale & $\vec{J} = \sigma\vec{E}$ --- démonstration $U = RI$ depuis le microscopique \\
-Modèle HF & $R + L_s$ série $+ C_p$ parallèle --- fréquence de résonance \\
-Bruit & Thermique ($4k_BTR\Delta f$) + 1/f (empirique, dépend techno) \\
+Modèle HF & $L_s$ série, $C_p$ parallèle --- comparer chaque parasite à $R$, pas seulement $f_r$ \\
+Bruit & Thermique ($4k_BTR\Delta f$) + $1/f$ (empirique, dépend de la technologie) \\
 Séries normalisées & E12/E24/E96 --- progression géométrique par décade \\
 \bottomrule
 \end{tabular}
 \end{center}
 \end{ingenieur}
+
+\vspace{0.4cm}
+
+\begin{retenir}
+$U = RI$ ferme le triangle courant--tension--matière. La grandeur qui en découle immédiatement --- la puissance $P = RI^2$ dissipée en chaleur --- mérite son propre chapitre : énergie, rendement, et ce que « dissiper » veut dire physiquement. Chapitre 4.
+\end{retenir}
 
 % ============================================================================
 % CHAPITRE 4 : LA PUISSANCE ET L'ÉNERGIE ÉLECTRIQUE
