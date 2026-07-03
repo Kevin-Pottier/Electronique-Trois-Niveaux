@@ -204,7 +204,7 @@ C'est la première grandeur que l'on manipule en électronique.}
 \section{Les Bases}
 
 \begin{bases}
-Cette section ne suppose aucune connaissance préalable. On part de zéro.
+Ce qu'est le courant, comment on le quantifie ($I = Q/t$), son sens conventionnel, le principe de la boucle fermée, la distinction DC/AC et la façon de le mesurer. Aucune connaissance préalable n'est requise : on part de zéro.
 \end{bases}
 
 \subsection{Qu'est-ce que le courant électrique ?}
@@ -244,29 +244,26 @@ En réalité, les électrons se déplacent dans le sens inverse : du $-$ vers le
 Le \textbf{sens conventionnel} du courant (du + vers le $-$) est celui utilisé dans \textit{tous} les schémas et calculs en électronique. C'est une convention universelle. Ne la confondez jamais avec le sens réel des électrons.
 \end{attention}
 
-\begin{center}
-\begin{tikzpicture}[>=Stealth, scale=1.0]
-  % Pile
-  \draw[very thick] (0,0) -- (0,2);
-  \draw[very thick] (-0.5,2) -- (0.5,2); % trait long = +
-  \draw[very thick] (-0.25,2.3) -- (0.25,2.3); % trait court = -
-  \node[left] at (-0.6,2) {$+$};
-  \node[left] at (-0.4,2.3) {$-$};
-  
-  % Circuit
-  \draw[very thick] (0,2) -- (0,3) -- (4,3) -- (4,0) -- (0,0);
-  \draw[fill=gray!30] (3.5,2.5) rectangle (4.5,3.5);
-  \node at (4,3) {R};
-  
-  % Sens conventionnel
-  \draw[->, very thick, blue!70!black] (1.5,3.3) -- (2.5,3.3);
-  \node[above, blue!70!black] at (2,3.5) {\textbf{Sens conventionnel $i$}};
-  
-  % Sens réel des électrons
-  \draw[->, very thick, red!70!black, dashed] (2.5,2.7) -- (1.5,2.7);
-  \node[below, red!70!black] at (2,2.5) {\small sens réel des $e^-$};
+Un point capital, si évident qu'on l'oublie : le courant circule en \textbf{boucle fermée}. Les charges ne sont ni créées ni consommées en route --- ce qui sort d'une borne du générateur revient intégralement à l'autre. Ouvrez la boucle n'importe où (interrupteur) : le courant s'annule \emph{partout}. Cette évidence est le fondement de la loi des n\oe uds (chapitre 2) et deviendra, aux chapitres 35--36, la question centrale du concepteur : \emph{par où revient le courant ?}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Pile : trait long = +, trait court = -
+  \draw[very thick] (0,0) -- (0,1.32);
+  \draw[very thick] (-0.28,1.32) -- (0.28,1.32);
+  \draw[very thick] (-0.5,1.68) -- (0.5,1.68);
+  \draw[very thick] (0,1.68) -- (0,3);
+  \node[left, font=\small] at (-0.55,1.76) {$+$};
+  \node[left, font=\small] at (-0.38,1.22) {$-$};
+  % Boucle : courant conventionnel intégré au fil, résistance
+  \draw (0,3) to[short, i=$i$] (5,3) to[R, l=$R$] (5,0) to[short] (0,0);
+  % Sens réel des électrons : flèche colinéaire au fil bas
+  \draw[red!70!black, dashed, -{Stealth[length=2.6mm]}] (1.7,0) -- (3.3,0);
+  \node[below, red!70!black, font=\footnotesize] at (2.5,-0.15) {sens réel des $e^-$};
 \end{tikzpicture}
-\end{center}
+\caption{Le circuit minimal : un générateur, un récepteur, et la boucle qui les relie. Le courant conventionnel $i$ sort du $+$, traverse $R$ et revient au $-$ : ce qui sort revient, rien ne se perd en route. Les électrons, eux, circulent en sens inverse.}
+\end{figure}
 
 \subsection{Intensité du courant}
 
@@ -314,7 +311,8 @@ Foudre & $\sim \SI{30}{kA}$ & $10^{4}$ A \\
 \item \textbf{Courant alternatif (AC)} : l'intensité varie périodiquement (typiquement de manière sinusoïdale). C'est le cas de la prise murale (\SI{230}{V}, \SI{50}{Hz} en Europe). Le courant change de sens 100 fois par seconde.
 \end{itemize}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{tikzpicture}[scale=0.8]
   % DC
   \begin{scope}[shift={(0,0)}]
@@ -328,19 +326,39 @@ Foudre & $\sim \SI{30}{kA}$ & $10^{4}$ A \\
   \begin{scope}[shift={(7,0)}]
     \draw[->] (0,0) -- (5,0) node[right]{\small $t$};
     \draw[->] (0,-1.5) -- (0,2.5) node[above]{\small $i$};
+    \draw[dashed] (0,1.5) -- (4.6,1.5);
+    \draw[dashed] (0,-1.5) -- (4.6,-1.5);
+    \node[left] at (0,1.5) {\small $+\hat{I}$};
+    \node[left] at (0,-1.5) {\small $-\hat{I}$};
     \draw[very thick, red!70!black, domain=0:4.5, samples=100] plot(\x, {1.5*sin(180*\x)});
+    \draw[dashed] (0.5,1.5) -- (0.5,1.85);
+    \draw[dashed] (2.5,1.5) -- (2.5,1.85);
+    \draw[{Stealth}-{Stealth}] (0.5,1.85) -- node[above, font=\small] {$T$} (2.5,1.85);
     \node[below] at (2.5,-1.8) {\textbf{Courant alternatif (AC)}};
   \end{scope}
 \end{tikzpicture}
-\end{center}
+\caption{Courant continu (intensité constante $I$) et alternatif (sinusoïde d'amplitude $\hat{I}$, de période $T$). Le secteur européen : $f = 1/T = \SI{50}{Hz}$.}
+\end{figure}
+
+\subsection{Mesurer un courant}
+
+Mesurer un courant, c'est compter ce qui \emph{traverse} : l'instrument se place donc \textbf{en série} dans la boucle --- on ouvre le circuit et l'ampèremètre en devient un maillon. Pour perturber le moins possible ce qu'il mesure, sa résistance interne est très faible (idéalement nulle).
+
+\begin{attention}
+Un ampèremètre ne se branche \textbf{jamais en parallèle} d'un composant : sa faible résistance interne créerait un quasi-court-circuit --- courant intense, fusible de l'appareil sacrifié dans le meilleur cas. En parallèle, c'est le voltmètre (chapitre 2).
+\end{attention}
+
+En pratique, deux principes dominent : le \textbf{shunt} --- une résistance faible et connue insérée dans la boucle, dont on mesure la tension aux bornes (loi d'Ohm, chapitre 3) --- et la \textbf{pince ampèremétrique}, qui mesure sans ouvrir le circuit, via le champ magnétique créé par le courant (chapitre 8). Le câblage fin du shunt (mesure Kelvin) reviendra au chapitre 36.
 
 \begin{retenir}
 \textbf{Ce qu'il faut retenir sur le courant :}
 \begin{enumerate}[nosep]
 \item Le courant est un \textbf{déplacement ordonné de charges} dans un conducteur.
+\item Il circule en \textbf{boucle fermée} : ce qui sort du générateur y revient.
 \item Son intensité se mesure en \textbf{ampères} (A) : $I = Q/t$.
 \item Le sens conventionnel va du $+$ au $-$ (inverse des électrons).
 \item \textbf{DC} = constant, \textbf{AC} = variable (sinusoïdal en général).
+\item Il se mesure \textbf{en série} : ampèremètre, shunt ou pince.
 \end{enumerate}
 \end{retenir}
 
@@ -350,7 +368,7 @@ Foudre & $\sim \SI{30}{kA}$ & $10^{4}$ A \\
 \section{Approfondissement}
 
 \begin{approfondissement}
-On formalise ici les notions avec les outils mathématiques adaptés. Prérequis : dérivation de base.
+La définition instantanée $i(t) = \mathrm{d}q/\mathrm{d}t$, la vision microscopique du courant ($I = nqv_dS$, densité de courant $\vec{J}$) et le tour des milieux conducteurs. Prérequis : dérivées et intégrales de base.
 \end{approfondissement}
 
 \subsection{Définition instantanée du courant}
@@ -380,8 +398,30 @@ e = \SI{1.602e-19}{C}
 
 En l'absence de champ électrique, les électrons se déplacent de manière chaotique (agitation thermique) avec une vitesse moyenne nulle. Quand on applique un champ $\vec{E}$, il se superpose un mouvement de dérive à vitesse $\vec{v}_d$ (très lente : de l'ordre du mm/s !).
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.85]
+  % (a) agitation seule
+  \node[font=\footnotesize\bfseries] at (2.2,3.05) {(a) sans champ appliqué};
+  \draw[thick] (0,0) rectangle (4.4,2.6);
+  \draw[blue!65!black, thick] (0.6,1.3) -- (1.2,2.15) -- (1.8,0.65) -- (2.4,1.95) -- (3.0,0.5) -- (3.5,1.7) -- (2.9,2.25) -- (2.3,1.05) -- (2.6,0.95);
+  \fill[blue!65!black] (2.6,0.95) circle (2pt);
+  \node[font=\footnotesize] at (2.2,-0.45) {$\langle \vec{v} \rangle = \vec{0}$ : aucun courant};
+  % (b) agitation + dérive
+  \node[font=\footnotesize\bfseries] at (8.9,3.05) {(b) champ $\vec{E}$ appliqué};
+  \draw[thick] (6.7,0) rectangle (11.1,2.6);
+  \draw[-{Stealth}, very thick] (7.6,3.6) -- (10.2,3.6);
+  \node[right, font=\footnotesize] at (10.3,3.6) {$\vec{E}$};
+  \draw[blue!65!black, thick] (10.5,1.35) -- (10.0,2.2) -- (9.4,0.7) -- (8.9,2.0) -- (8.3,0.55) -- (7.9,1.75) -- (7.4,1.0);
+  \fill[blue!65!black] (7.4,1.0) circle (2pt);
+  \draw[-{Stealth}, thick, red!70!black] (10.5,-0.45) -- (7.4,-0.45);
+  \node[below, font=\footnotesize, red!70!black] at (8.95,-0.55) {dérive nette $\vec{v}_d$ (sens opposé à $\vec{E}$ pour l'électron)};
+\end{tikzpicture}
+\caption{Trajectoire d'un électron de conduction. Sans champ, le mouvement thermique ($\sim\SI{e5}{m/s}$ !) est aléatoire et ne transporte rien en moyenne. Le champ y superpose une dérive minuscule ($v_d \sim \si{mm/s}$) --- c'est elle, et elle seule, qui constitue le courant.}
+\end{figure}
+
 \begin{attention}
-La vitesse de dérive des électrons est extrêmement faible ($\sim \SI{0.07}{mm/s}$ pour \SI{1}{A} dans du cuivre de section $\SI{1}{mm^2}$). Ce qui se propage quasi-instantanément ($\sim 2/3$ de $c$, soit $\sim \SI{2e8}{m/s}$), c'est le \textbf{champ électromagnétique} guidé par le conducteur, pas les électrons eux-mêmes. C'est comme une file de dominos : chaque domino bouge peu, mais l'information se propage vite.
+La vitesse de dérive des électrons est extrêmement faible ($\sim \SI{0.07}{mm/s}$ pour \SI{1}{A} dans du cuivre de section $\SI{1}{mm^2}$). Ce qui se propage quasi-instantanément ($\sim 2/3$ de $c$, soit $\sim \SI{2e8}{m/s}$), c'est le \textbf{champ électromagnétique} guidé par le conducteur (chapitre 37), pas les électrons eux-mêmes. C'est comme une file de dominos : chaque domino bouge peu, mais l'information se propage vite.
 \end{attention}
 
 \subsection{Densité de courant}
@@ -423,7 +463,7 @@ Le cuivre a une densité de porteurs $n \approx \SI{8.5e28}{m^{-3}}$.
 v_d = \frac{I}{n \cdot e \cdot S} = \frac{1}{8{,}5 \times 10^{28} \times 1{,}6 \times 10^{-19} \times 10^{-6}} \approx \SI{7.4e-5}{m/s} \approx \SI{0.074}{mm/s}
 \]
 
-\textbf{Conclusion :} pour \SI{1}{A}, un électron avance de $\sim \SI{0.07}{mm}$ par seconde. C'est la \textbf{propagation du champ électromagnétique} le long du conducteur ($\sim \SI{2e8}{m/s}$ dans un câble typique — cette vitesse dépend du diélectrique environnant, pas du cuivre lui-même) qui fait que la lampe s'allume quasi-instantanément quand on appuie sur l'interrupteur.
+\textbf{Conclusion :} pour \SI{1}{A}, un électron avance de $\sim \SI{0.07}{mm}$ par seconde. C'est la \textbf{propagation du champ électromagnétique} le long du conducteur ($\sim \SI{2e8}{m/s}$ dans un câble typique — cette vitesse dépend du diélectrique environnant, pas du cuivre lui-même ; chapitre 37) qui fait que la lampe s'allume quasi-instantanément quand on appuie sur l'interrupteur.
 \end{pratique}
 
 \subsection{Courant dans différents milieux}
@@ -444,13 +484,15 @@ Vide & Électrons & Tube cathodique \\
 \end{tabular}
 \end{center}
 
+Les semi-conducteurs, c\oe ur de l'électronique moderne, auront leur chapitre dédié (chapitre 15).
+
 % ----------------------------------------------------------------------------
 % SECTION 3 : NIVEAU INGÉNIEUR
 % ----------------------------------------------------------------------------
 \section{Niveau Ingénieur}
 
 \begin{ingenieur}
-On fait ici le lien avec l'électromagnétisme (Maxwell), les limites des modèles, et les subtilités que l'on rencontre en conception réelle.
+L'équation de continuité (le fondement de la loi des n\oe uds), le modèle de Drude (d'où sort la loi d'Ohm locale), le courant de déplacement de Maxwell, le domaine de validité de Kirchhoff (ARQS), et trois effets bien réels : peau, électromigration, bruit de grenaille. Prérequis : opérateurs vectoriels (divergence, rotationnel).
 \end{ingenieur}
 
 \subsection{Lien avec les équations de Maxwell : l'équation de continuité}
@@ -468,7 +510,7 @@ La conservation de la charge est un principe fondamental de la physique. Elle se
 Cette équation dit que si de la charge disparaît d'un volume, c'est qu'un courant l'a emportée. Aucune charge ne se crée ni ne disparaît.
 \end{formule}
 
-En régime stationnaire ($\partial \rho / \partial t = 0$), on obtient $\nabla \cdot \vec{J} = 0$ : la densité de courant est à \textbf{divergence nulle}, ce qui traduit que le flux de courant se conserve — c'est la justification profonde de la \textbf{loi des n\oe uds de Kirchhoff}.
+En régime stationnaire ($\partial \rho / \partial t = 0$), on obtient $\nabla \cdot \vec{J} = 0$ : la densité de courant est à \textbf{divergence nulle}, ce qui traduit que le flux de courant se conserve — c'est la justification profonde de la \textbf{loi des n\oe uds de Kirchhoff} (chapitre 2).
 
 \begin{attention}
 Précision de vocabulaire : c'est la \textbf{charge} qui est conservée (principe fondamental). Le courant, lui, est à \textit{flux conservé} (divergence nulle) en régime stationnaire. Ne pas confondre avec un champ ``conservatif'' (dont la circulation sur un contour fermé est nulle), terme réservé au champ $\vec{E}$ en électrostatique.
@@ -552,7 +594,7 @@ Les lois de Kirchhoff (loi des n\oe uds, loi des mailles) reposent sur l'\textbf
 \end{tabular}
 \end{center}
 
-Au-delà de cette limite, il faut passer aux \textbf{lignes de transmission} et aux \textbf{équations de Maxwell complètes}.
+Au-delà de cette limite, il faut passer aux \textbf{lignes de transmission} (chapitre 37) et aux \textbf{équations de Maxwell complètes}.
 
 \subsection{Effets réels à considérer en conception}
 
@@ -563,7 +605,7 @@ En conception électronique réelle, le courant n'est pas aussi ``idéal'' que d
 \[
 \delta = \sqrt{\frac{2}{\omega \mu \sigma}} = \sqrt{\frac{1}{\pi f \mu \sigma}}
 \]
-Pour le cuivre à \SI{1}{MHz} : $\delta \approx \SI{66}{\micro m}$. À \SI{1}{GHz} : $\delta \approx \SI{2}{\micro m}$. Cela augmente la résistance effective du conducteur et les pertes.
+Pour le cuivre à \SI{1}{MHz} : $\delta \approx \SI{66}{\micro m}$. À \SI{1}{GHz} : $\delta \approx \SI{2}{\micro m}$. Cela augmente la résistance effective du conducteur et les pertes (mécanisme établi au chapitre 8 ; conséquences sur les lignes au chapitre 37).
 
 \textbf{2. Électromigration} — À très forte densité de courant ($> \SI{e6}{A/cm^2}$, typique des interconnexions en microélectronique), les électrons ``poussent'' physiquement les atomes du conducteur, créant des vides et éventuellement une coupure du fil. C'est un mécanisme de défaillance majeur dans les circuits intégrés.
 
@@ -622,7 +664,7 @@ Vitesse de dérive : $v_d = \dfrac{I}{n \cdot e \cdot S} = \dfrac{10}{8{,}5\time
 
 Le PCB mesure $d = \SI{10}{cm} > \lambda/10 = \SI{0.83}{cm}$, et même $d > \lambda$ ! L'ARQS n'est \textbf{absolument pas valide}.
 
-Il faut utiliser le modèle des \textbf{lignes de transmission} (impédance caractéristique, réflexions, adaptation).
+Il faut utiliser le modèle des \textbf{lignes de transmission} (impédance caractéristique, réflexions, adaptation — chapitre 37).
 \end{pratique}
 
 \textbf{Exercice 1.6 —} Calculez l'épaisseur de peau dans le cuivre ($\sigma = \SI{5.8e7}{S/m}$, $\mu = \mu_0$) à \SI{50}{Hz}, \SI{1}{MHz} et \SI{1}{GHz}. Quelles conséquences pratiques pour le dimensionnement des conducteurs dans chaque cas ?
@@ -647,12 +689,21 @@ $\Rightarrow$ Le courant circule dans une couche infime. La \textbf{rugosité de
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Le courant conventionnel va du $+$ vers le $-$. Que se passe-t-il physiquement dans un électrolyte où les porteurs sont des ions positifs \textit{et} négatifs ?
-\item Si l'on double la section d'un fil (à courant constant), que devient la densité de courant $J$ ? Et la vitesse de dérive ?
-\item Pourquoi la lampe s'allume-t-elle instantanément alors que les électrons se déplacent à $\sim\SI{0.07}{mm/s}$ ?
-\item Le bruit de grenaille existe-t-il dans un fil de cuivre parcouru par un courant continu ? Justifiez.
-\end{enumerate}
+\textbf{Q1.} Le courant conventionnel va du $+$ vers le $-$. Que se passe-t-il physiquement dans un électrolyte, où les porteurs sont des ions positifs \textit{et} négatifs ?
+
+\textit{Réponse : les deux populations dérivent en sens opposés --- les ions $+$ dans le sens du courant conventionnel, les ions $-$ à contresens --- mais leurs contributions s'ajoutent : dans $\vec{J} = \sum_k n_k q_k \vec{v}_k$, charge et vitesse changent de signe ensemble. Le courant total est la somme des deux, et le sens conventionnel garde tout son sens.}
+
+\textbf{Q2.} À courant constant, on double la section du fil : que deviennent la densité de courant $J$ et la vitesse de dérive $v_d$ ?
+
+\textit{Réponse : $J = I/S$ est divisée par deux, et $v_d = J/(nq)$ aussi --- $n$ et $q$ sont des propriétés du matériau, pas de la géométrie. C'est une des raisons de sur-dimensionner les conducteurs de puissance : moins de densité de courant, moins d'échauffement (chapitre 36).}
+
+\textbf{Q3.} Pourquoi la lampe s'allume-t-elle quasi instantanément alors que les électrons avancent à $\sim\SI{0.07}{mm/s}$ ?
+
+\textit{Réponse : l'information « le circuit est fermé » est portée par le champ électromagnétique guidé par les conducteurs ($\sim\SI{2e8}{m/s}$, chapitre 37), qui met en mouvement tous les électrons de la boucle presque simultanément --- comme une canalisation déjà pleine : ouvrir le robinet fait couler l'eau au bout immédiatement, sans attendre que la première goutte traverse.}
+
+\textbf{Q4.} Le bruit de grenaille existe-t-il dans un fil de cuivre parcouru par un courant continu ?
+
+\textit{Réponse : non, pas au niveau $S_I = 2eI$ : il n'y a pas de barrière de potentiel franchie par des charges indépendantes. Dans un métal, la répulsion coulombienne et le principe de Pauli corrèlent fortement les électrons, ce qui supprime ce bruit. Il domine en revanche dès qu'une jonction s'en mêle (diode, transistor --- chapitre 15).}
 
 % === RÉSUMÉ DU CHAPITRE 1 ===
 \section*{Résumé du chapitre}
@@ -677,9 +728,10 @@ DC / AC & Continu (constant) / Alternatif (variable, souvent sinusoïdal) \\
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{p{4cm}p{9cm}}
 \toprule
-Courant instantané & $i(t) = \mathrm{d}q/\mathrm{d}t$ \\
-Densité de courant & $\vec{J} = nq\vec{v}_d$ --- $I = \iint \vec{J}\cdot\mathrm{d}\vec{S}$ \\
-Vitesse de dérive & $\sim\SI{0.07}{mm/s}$ dans le cuivre pour \SI{1}{A} \\
+Courant instantané & $i(t) = \mathrm{d}q/\mathrm{d}t$ ; charge : $q = \int i\,\mathrm{d}t$ \\
+Micro $\to$ macro & $I = n\,q\,v_d\,S$ --- $\vec{J} = nq\vec{v}_d$, $I = \iint \vec{J}\cdot\mathrm{d}\vec{S}$ \\
+Vitesse de dérive & $\sim\SI{0.07}{mm/s}$ dans le cuivre pour \SI{1}{A} --- l'information, elle, voyage par le champ \\
+Milieux & Électrons (métaux), $e^-$/trous (semi-conducteurs), ions (électrolytes, plasmas) \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -690,13 +742,21 @@ Vitesse de dérive & $\sim\SI{0.07}{mm/s}$ dans le cuivre pour \SI{1}{A} \\
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{p{4cm}p{9cm}}
 \toprule
-Loi d'Ohm locale & $\vec{J} = \sigma \vec{E}$ --- pont entre micro et macro \\
-Conservation (charge) & $\partial\rho/\partial t + \nabla\cdot\vec{J} = 0$ --- fondement de la loi des n\oe uds \\
-ARQS & Kirchhoff valide si $d \ll c/f$ \\
+Continuité & $\partial\rho/\partial t + \nabla\cdot\vec{J} = 0$ --- fondement de la loi des n\oe uds \\
+Drude & $\vec{J} = \sigma \vec{E}$, $\sigma = ne^2\tau/m_e$ --- la loi d'Ohm sort du microscopique \\
+Courant de déplacement & $\varepsilon_0\,\partial\vec{E}/\partial t$ --- prolonge la loi des n\oe uds aux régimes variables \\
+ARQS & Kirchhoff valide si $d < \lambda/10$ --- au-delà : lignes de transmission (chapitre 37) \\
+Effets réels & Peau ($\delta \propto 1/\sqrt{f}$), électromigration ($J \gtrsim \SI{e6}{A/cm^2}$), grenaille ($S_I = 2eI$, aux barrières seulement) \\
 \bottomrule
 \end{tabular}
 \end{center}
 \end{ingenieur}
+
+\vspace{0.4cm}
+
+\begin{retenir}
+Le courant est le \emph{mouvement} ; il ne dit rien de sa \emph{cause}. Pourquoi les charges se mettent-elles en marche, et quelle énergie transportent-elles ? C'est l'objet du chapitre 2 : la tension électrique.
+\end{retenir}
 
 % ============================================================================
 % CHAPITRE 2 : LA TENSION ÉLECTRIQUE
