@@ -2746,7 +2746,7 @@ Combinées à la loi d'Ohm, elles permettent de résoudre tout circuit.}
 \section{Les Bases}
 
 \begin{bases}
-Cette section introduit les deux lois de Kirchhoff de manière intuitive, sans formalisme avancé. Prérequis : courant, tension, résistance (chapitres 1 à 3).
+Vocabulaire (n\oe ud, branche, maille), les deux lois, la méthode de résolution et ses pièges de signes, le diviseur de courant, et le premier circuit où Kirchhoff devient indispensable. Prérequis : chapitres 1 à 3.
 \end{bases}
 
 \subsection{Vocabulaire des circuits}
@@ -2759,37 +2759,31 @@ Avant d'énoncer les lois, il faut maîtriser le vocabulaire :
 \item \textbf{Maille :} tout parcours fermé dans le circuit, en suivant des branches bout à bout, qui revient au point de départ sans passer deux fois par la même branche.
 \end{itemize}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{tikzpicture}[scale=1.0]
-  % Circuit exemple
-  \draw[thick] (0,0) -- (0,3) -- (3,3) -- (3,0) -- (0,0);
-  \draw[thick] (3,3) -- (6,3) -- (6,0) -- (3,0);
-  
-  % Composants
-  \draw[thick, fill=gray!15, rounded corners=2pt] (-0.3,1.2) rectangle (0.3,1.8);
-  \node[font=\small] at (0,1.5) {$E$};
-  \draw[thick, fill=gray!15, rounded corners=2pt] (1.2,2.7) rectangle (1.8,3.3);
-  \node[font=\small] at (1.5,3) {$R_1$};
-  \draw[thick, fill=gray!15, rounded corners=2pt] (2.7,1.2) rectangle (3.3,1.8);
-  \node[font=\small] at (3,1.5) {$R_2$};
-  \draw[thick, fill=gray!15, rounded corners=2pt] (4.2,2.7) rectangle (4.8,3.3);
-  \node[font=\small] at (4.5,3) {$R_3$};
-  \draw[thick, fill=gray!15, rounded corners=2pt] (5.7,1.2) rectangle (6.3,1.8);
-  \node[font=\small] at (6,1.5) {$R_4$};
-  
-  % Noeuds
-  \filldraw[red!70!black] (0,0) circle (3pt);
-  \filldraw[red!70!black] (3,0) circle (3pt);
-  \filldraw[red!70!black] (3,3) circle (3pt);
-  \filldraw[red!70!black] (6,0) circle (3pt);
-  
+  % Pile : trait long = +
+  \draw[very thick] (0,0) -- (0,1.32);
+  \draw[very thick] (-0.28,1.32) -- (0.28,1.32);
+  \draw[very thick] (-0.5,1.68) -- (0.5,1.68);
+  \draw[very thick] (0,1.68) -- (0,3);
+  \node[left, font=\small] at (-0.6,1.5) {$E$};
+  % Deux mailles
+  \draw (0,3) to[R, l=$R_1$] (3,3) node[circ]{} to[R, l=$R_2$] (3,0) node[circ]{} to[short] (0,0);
+  \draw (3,3) to[R, l=$R_3$] (6,3) to[R, l=$R_4$] (6,0) to[short] (3,0);
+  \node[above=4pt, red!70!black, font=\bfseries\small] at (3,3) {A};
+  \node[below=4pt, red!70!black, font=\bfseries\small] at (3,0) {B};
   % Mailles
-  \draw[-{Stealth[length=2.5mm]}, blue!60!black, thick] (1.5,1.5) arc[start angle=180, end angle=-90, radius=0.4];
-  \node[blue!60!black, font=\small] at (1.5,1.5) {$\mathcal{M}_1$};
-  \draw[-{Stealth[length=2.5mm]}, green!60!black, thick] (4.5,1.5) arc[start angle=180, end angle=-90, radius=0.4];
-  \node[green!60!black, font=\small] at (4.5,1.5) {$\mathcal{M}_2$};
+  \draw[-{Stealth[length=2.5mm]}, blue!60!black, thick] (1.5,1.25) arc[start angle=180, end angle=-90, radius=0.45];
+  \node[blue!60!black, font=\small] at (1.5,1.55) {$\mathcal{M}_1$};
+  \draw[-{Stealth[length=2.5mm]}, green!55!black, thick] (4.5,1.25) arc[start angle=180, end angle=-90, radius=0.45];
+  \node[green!55!black, font=\small] at (4.5,1.55) {$\mathcal{M}_2$};
+  % Une branche identifiée
+  \node[font=\footnotesize, align=center] at (8.35,2.2) {une \textbf{branche} :\\ A $\to$ B via $R_3$, $R_4$};
+  \draw[-{Stealth}, thin] (7.25,2.05) -- (6.15,1.7);
 \end{tikzpicture}
-\end{center}
+\caption{Le vocabulaire sur un circuit à deux mailles. A et B sont les \emph{seuls} n\oe uds (trois branches s'y rejoignent) --- les coins n'en sont pas. Trois branches relient A à B : par $R_2$, par $R_3$--$R_4$, et par $R_1$--$E$.}
+\end{figure}
 
 \subsection{Loi des n\oe uds (KCL)}
 
@@ -2801,26 +2795,27 @@ Avant d'énoncer les lois, il faut maîtriser le vocabulaire :
 Forme algébrique (entrants $+$, sortants $-$) : $\displaystyle\sum_{k} i_k = 0$.
 \end{formule}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{tikzpicture}[scale=1.1]
   \filldraw[red!70!black] (0,0) circle (4pt);
   \draw[thick] (-2,1) -- (0,0);
   \draw[thick] (-2,-1) -- (0,0);
   \draw[thick] (2,0.5) -- (0,0);
   \draw[thick] (2,-0.8) -- (0,0);
-  
-  \draw[line width=1.5pt, blue!70!black, -{Stealth[length=3mm]}] (-1.8,0.9) -- (-0.4,0.15);
-  \node[blue!70!black, above] at (-1.1,0.7) {$i_1$};
-  \draw[line width=1.5pt, blue!70!black, -{Stealth[length=3mm]}] (-1.8,-0.9) -- (-0.4,-0.15);
-  \node[blue!70!black, below] at (-1.1,-0.7) {$i_2$};
-  \draw[line width=1.5pt, blue!70!black, -{Stealth[length=3mm]}] (0.4,0.1) -- (1.8,0.45);
-  \node[blue!70!black, above] at (1.1,0.5) {$i_3$};
-  \draw[line width=1.5pt, blue!70!black, -{Stealth[length=3mm]}] (0.4,-0.13) -- (1.8,-0.72);
-  \node[blue!70!black, below] at (1.1,-0.6) {$i_4$};
-  
-  \node[below=1cm, font=\large] at (0,-0.5) {$i_1 + i_2 = i_3 + i_4$};
+  % Flèches colinéaires aux fils
+  \draw[line width=1.5pt, blue!70!black, -{Stealth[length=3mm]}] (-1.7,0.85) -- (-0.5,0.25);
+  \node[blue!70!black, above=2pt] at (-1.1,0.6) {$i_1$};
+  \draw[line width=1.5pt, blue!70!black, -{Stealth[length=3mm]}] (-1.7,-0.85) -- (-0.5,-0.25);
+  \node[blue!70!black, below=2pt] at (-1.1,-0.6) {$i_2$};
+  \draw[line width=1.5pt, blue!70!black, -{Stealth[length=3mm]}] (0.5,0.125) -- (1.7,0.425);
+  \node[blue!70!black, above=2pt] at (1.1,0.3) {$i_3$};
+  \draw[line width=1.5pt, blue!70!black, -{Stealth[length=3mm]}] (0.5,-0.2) -- (1.7,-0.68);
+  \node[blue!70!black, below=2pt] at (1.1,-0.5) {$i_4$};
+  \node[font=\large] at (0,-1.7) {$i_1 + i_2 = i_3 + i_4$};
 \end{tikzpicture}
-\end{center}
+\caption{La loi des n\oe uds : la charge ne s'accumule pas, ce qui entre repart.}
+\end{figure}
 
 \begin{analogie}
 \textbf{Le carrefour hydraulique.} À un embranchement de tuyaux, l'eau qui arrive doit repartir intégralement : il n'y a pas d'accumulation au carrefour. De même, en régime permanent, la charge électrique ne s'accumule pas aux n\oe uds.
@@ -2872,27 +2867,19 @@ Le signe dépend du \textit{sens de parcours choisi}, pas du sens réel du coura
 
 \textbf{Énoncé :} $E = \SI{12}{V}$ alimente $R_1 = \SI{4}{\ohm}$ et $R_2 = \SI{6}{\ohm}$ en parallèle. Trouver tous les courants.
 
-\begin{center}
-\begin{tikzpicture}[scale=1.0]
-  \draw[thick] (0,0) -- (0,3) -- (4,3);
-  \draw[thick, fill=gray!10, rounded corners] (-0.3,1.2) rectangle (0.3,1.8);
-  \node[font=\small] at (0,1.5) {$E$};
-  \draw[thick] (2,3) -- (2,0);
-  \draw[thick, fill=gray!10, rounded corners] (1.7,1.2) rectangle (2.3,1.8);
-  \node[font=\small] at (2,1.5) {$R_1$};
-  \draw[thick] (4,3) -- (4,0);
-  \draw[thick, fill=gray!10, rounded corners] (3.7,1.2) rectangle (4.3,1.8);
-  \node[font=\small] at (4,1.5) {$R_2$};
-  \draw[thick] (0,0) -- (4,0);
-  
-  \draw[line width=1.3pt, blue!70!black, -{Stealth[length=2.5mm]}] (0.3,3.3) -- (1.5,3.3);
-  \node[blue!70!black, above, font=\small] at (0.9,3.3) {$i$};
-  \draw[line width=1.3pt, blue!70!black, -{Stealth[length=2.5mm]}] (2,2.8) -- (2,2.1);
-  \node[blue!70!black, right, font=\small] at (2.15,2.5) {$i_1$};
-  \draw[line width=1.3pt, blue!70!black, -{Stealth[length=2.5mm]}] (4,2.8) -- (4,2.1);
-  \node[blue!70!black, right, font=\small] at (4.15,2.5) {$i_2$};
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.95]
+  \draw[very thick] (0,0) -- (0,1.32);
+  \draw[very thick] (-0.28,1.32) -- (0.28,1.32);
+  \draw[very thick] (-0.5,1.68) -- (0.5,1.68);
+  \draw[very thick] (0,1.68) -- (0,3);
+  \node[left, font=\small] at (-0.6,1.5) {$E$};
+  \draw (0,3) to[short, i=$i$] (2,3) node[circ]{} to[R, l=$R_1$, i=$i_1$] (2,0) node[circ]{} to[short] (0,0);
+  \draw (2,3) to[short] (4,3) to[R, l=$R_2$, i=$i_2$] (4,0) to[short] (2,0);
 \end{tikzpicture}
-\end{center}
+\caption{$R_1$ et $R_2$ en parallèle : au n\oe ud haut, $i$ se partage en $i_1 + i_2$ ; les deux branches voient la même tension $E$.}
+\end{figure}
 
 \textbf{Résolution :}
 
@@ -2928,21 +2915,28 @@ Ce cas est le premier où Kirchhoff devient \textit{vraiment indispensable} : de
 
 \textbf{Énoncé :} $E_1 = \SI{12}{V}$, $E_2 = \SI{8}{V}$, $R_1 = \SI{2}{\ohm}$, $R_2 = \SI{4}{\ohm}$, $R_3 = \SI{6}{\ohm}$.
 
-\begin{center}
-\begin{circuitikz}[scale=0.85]
-  \draw (0,0) to[battery1, l=$E_1$, invert] (0,3)
-        to[R, l=$R_1$] (3,3)
-        to[R, l=$R_3$] (3,0) -- (0,0);
-  \draw (3,3) to[R, l=$R_2$] (6,3)
-        to[battery1, l=$E_2$] (6,0) -- (3,0);
-  \draw[line width=1.2pt, blue!70!black, -{Stealth[length=2.5mm]}] (0.3,2.7) -- (1.2,2.7);
-  \node[blue!70!black, above, font=\small] at (0.75,2.7) {$i_1$};
-  \draw[line width=1.2pt, blue!70!black, -{Stealth[length=2.5mm]}] (3,2.7) -- (3,1.9);
-  \node[blue!70!black, right, font=\small] at (3.1,2.3) {$i_3$};
-  \draw[line width=1.2pt, blue!70!black, -{Stealth[length=2.5mm]}] (3.5,2.7) -- (4.5,2.7);
-  \node[blue!70!black, above, font=\small] at (4,2.7) {$i_2$};
-\end{circuitikz}
-\end{center}
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.9]
+  % E1 gauche, + en haut
+  \draw[very thick] (0,0) -- (0,1.32);
+  \draw[very thick] (-0.28,1.32) -- (0.28,1.32);
+  \draw[very thick] (-0.5,1.68) -- (0.5,1.68);
+  \draw[very thick] (0,1.68) -- (0,3);
+  \node[left, font=\small] at (-0.6,1.5) {$E_1$};
+  % E2 droite, + en haut
+  \draw[very thick] (6,0) -- (6,1.32);
+  \draw[very thick] (5.72,1.32) -- (6.28,1.32);
+  \draw[very thick] (5.5,1.68) -- (6.5,1.68);
+  \draw[very thick] (6,1.68) -- (6,3);
+  \node[right, font=\small] at (6.6,1.5) {$E_2$};
+  % Branches
+  \draw (0,3) to[R, l=$R_1$, i=$i_1$] (3,3) node[circ]{} to[R, l=$R_3$, i=$i_3$] (3,0) node[circ]{} to[short] (0,0);
+  \draw (3,3) to[R, l=$R_2$, i=$i_2$] (6,3);
+  \draw (3,0) to[short] (6,0);
+\end{tikzpicture}
+\caption{Deux sources qui se « combattent ». Les sens de $i_1$, $i_2$, $i_3$ sont \emph{choisis} avant tout calcul --- les signes des résultats diront la réalité.}
+\end{figure}
 
 \textbf{Résolution (Kirchhoff direct) :}
 
@@ -3008,7 +3002,7 @@ Ces deux lois + la loi d'Ohm suffisent à résoudre tout circuit linéaire.
 \section{Approfondissement}
 
 \begin{approfondissement}
-Méthodes systématiques de résolution : courants de maille et potentiels de n\oe uds. Prérequis : systèmes d'équations linéaires.
+Compter les équations ($n-1$ KCL, $b-n+1$ KVL), les deux méthodes systématiques (courants de maille, potentiels de n\oe uds), l'écriture matricielle, et l'extension au régime variable. Prérequis : systèmes d'équations linéaires.
 \end{approfondissement}
 
 \subsection{Combien d'équations écrire ?}
@@ -3028,18 +3022,23 @@ On définit un \textbf{courant fictif} circulant dans chaque maille indépendant
 
 \textbf{Exemple :} $E = \SI{10}{V}$, $R_1 = \SI{2}{\ohm}$, $R_2 = \SI{3}{\ohm}$ (branche commune), $R_3 = \SI{5}{\ohm}$.
 
-\begin{center}
-\begin{circuitikz}[scale=0.85]
-  \draw (0,0) to[battery1, l=$E$, invert] (0,3)
-        to[R, l=$R_1$] (3,3)
-        to[R, l=$R_2$] (3,0) -- (0,0);
-  \draw (3,3) to[R, l=$R_3$] (6,3) -- (6,0) -- (3,0);
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.9]
+  \draw[very thick] (0,0) -- (0,1.32);
+  \draw[very thick] (-0.28,1.32) -- (0.28,1.32);
+  \draw[very thick] (-0.5,1.68) -- (0.5,1.68);
+  \draw[very thick] (0,1.68) -- (0,3);
+  \node[left, font=\small] at (-0.6,1.5) {$E$};
+  \draw (0,3) to[R, l=$R_1$] (3,3) node[circ]{} to[R, l=$R_2$] (3,0) node[circ]{} to[short] (0,0);
+  \draw (3,3) to[R, l=$R_3$] (6,3) to[short] (6,0) to[short] (3,0);
   \draw[-{Stealth[length=2.5mm]}, blue!60!black, thick] (1.5,1.2) arc[start angle=180, end angle=-120, radius=0.5];
-  \node[blue!60!black] at (1.5,1.5) {$I_a$};
-  \draw[-{Stealth[length=2.5mm]}, green!60!black, thick] (4.5,1.2) arc[start angle=180, end angle=-120, radius=0.5];
-  \node[green!60!black] at (4.5,1.5) {$I_b$};
-\end{circuitikz}
-\end{center}
+  \node[blue!60!black, font=\small] at (1.5,1.5) {$I_a$};
+  \draw[-{Stealth[length=2.5mm]}, green!55!black, thick] (4.5,1.2) arc[start angle=180, end angle=-120, radius=0.5];
+  \node[green!55!black, font=\small] at (4.5,1.5) {$I_b$};
+\end{tikzpicture}
+\caption{Courants de maille : $I_a$ et $I_b$ sont des courants \emph{fictifs} de calcul ; le courant réel dans la branche commune vaut $I_a - I_b$.}
+\end{figure}
 
 Maille $a$ : $(R_1 + R_2)I_a - R_2 I_b = E \Rightarrow 5I_a - 3I_b = 10$ \quad (1)
 
@@ -3060,11 +3059,7 @@ On choisit un n\oe ud de référence (masse, $V = 0$), et on écrit les potentie
 \begin{enumerate}[nosep]
 \item \textbf{Choix de la masse :} n\oe ud du bas.
 \item \textbf{Inconnues :} 2 n\oe uds (haut-gauche = A, haut-droite = B). $V_A$ est imposé par la source : $V_A = E = \SI{10}{V}$. Il reste une seule inconnue : $V_B$.
-\item \textbf{KCL au n\oe ud B :} le courant arrivant par $R_1$ + le courant arrivant par $R_3$ = le courant partant par $R_2$ :
-\[
-\frac{V_A - V_B}{R_1} + \frac{0 - V_B}{R_3} = \frac{V_B - 0}{R_2} \quad \text{(attention : ici } R_3 \text{ va de B à la masse)}
-\]
-Attendons --- vérifions la topologie sur le schéma : $E$ alimente $R_1$, puis au n\oe ud B on a $R_2$ et $R_3$ qui vont chacune vers la masse (c'est $R_1$ en série avec $R_2 \parallel R_3$). Donc :
+\item \textbf{KCL au n\oe ud B :} sur le schéma, $R_2$ et $R_3$ relient toutes deux B à la masse ($R_1$ est en série avec $R_2 \parallel R_3$). Le courant qui arrive par $R_1$ se partage entre elles :
 \[
 \frac{V_A - V_B}{R_1} = \frac{V_B}{R_2} + \frac{V_B}{R_3}
 \]
@@ -3128,7 +3123,7 @@ On n'a pas besoin de réapprendre Kirchhoff pour l'alternatif. Il suffit de remp
 \section{Niveau Ingénieur}
 
 \begin{ingenieur}
-Fondements électromagnétiques des lois de Kirchhoff, domaine de validité exact, et conséquences en conception réelle.
+D'où viennent les lois (Maxwell $\to$ ARQS), quand la KVL échoue et comment on la sauve, ce que fait réellement SPICE (MNA), et les pièges de la masse réelle. Prérequis : chapitres 1--2 (continuité, Maxwell--Faraday).
 \end{ingenieur}
 
 \subsection{Fondement électromagnétique : d'où viennent les lois de Kirchhoff ?}
@@ -3158,7 +3153,7 @@ En ARQS, si le flux magnétique intercepté par la maille est négligeable : $\o
 \end{attention}
 
 \begin{attention}
-\textbf{Piège fondamental :} les lois de Kirchhoff sont si naturelles et si systématiquement enseignées que beaucoup d'ingénieurs oublient qu'elles ont un \textbf{domaine de validité limité}. En haute fréquence ou sur des circuits de grande dimension, il faut passer aux \textbf{lignes de transmission} (équations des télégraphistes) ou aux \textbf{équations de Maxwell complètes}. Règle pratique : si $d > \lambda/10$, Kirchhoff est suspect.
+\textbf{Piège fondamental :} les lois de Kirchhoff sont si naturelles et si systématiquement enseignées que beaucoup d'ingénieurs oublient qu'elles ont un \textbf{domaine de validité limité}. En haute fréquence ou sur des circuits de grande dimension, il faut passer aux \textbf{lignes de transmission} (équations des télégraphistes, chapitre 37) ou aux \textbf{équations de Maxwell complètes}. Règle pratique : si $d > \lambda/10$, Kirchhoff est suspect.
 \end{attention}
 
 \subsection{SPICE et la Modified Nodal Analysis (MNA)}
@@ -3177,16 +3172,16 @@ Comprendre Kirchhoff et la méthode des potentiels de n\oe uds, c'est comprendre
 \subsection{Pièges en conception réelle}
 
 \begin{pratique}
-\textbf{1. Les fils ne sont pas idéaux.} Chaque piste, via ou bonding wire a une résistance et une inductance parasites. La chute de tension $V = L\,\mathrm{d}i/\mathrm{d}t$ dans une piste de masse est une source majeure de problèmes (\textit{ground bounce}).
+\textbf{1. Les fils ne sont pas idéaux.} Chaque piste, via ou bonding wire a une résistance et une inductance parasites. La chute de tension $V = L\,\mathrm{d}i/\mathrm{d}t$ dans une piste de masse est une source majeure de problèmes (\textit{ground bounce}, chapitre 36).
 
-\textbf{2. La masse n'est pas un point.} ``GND'' sur un PCB est un plan de cuivre avec une impédance distribuée. Si deux circuits partagent un chemin de retour, leurs courants créent des chutes de tension parasites (problème des \textit{ground loops}).
+\textbf{2. La masse n'est pas un point.} ``GND'' sur un PCB est un plan de cuivre avec une impédance distribuée. Si deux circuits partagent un chemin de retour, leurs courants créent des chutes de tension parasites (couplage par impédance commune, boucles de masse --- chapitre 35).
 
 \textbf{3. Règles de conception :}
 \begin{itemize}[nosep]
-\item Plans de masse continus et ininterrompus.
-\item Condensateurs de découplage (\SI{100}{nF}) au plus près de chaque CI.
-\item Séparation des retours de courant (analogique / numérique / puissance).
-\item Si nécessaire : connexion en étoile (\textit{star ground}).
+\item Plans de masse continus et ininterrompus (chapitre 36).
+\item Condensateurs de découplage au plus près de chaque CI --- boucle minimale (chapitre 36).
+\item Retours de courant maîtrisés : partition par le placement, pas par découpe du plan (chapitre 36).
+\item Point de masse unique (étoile) en basse fréquence seulement ; en haute fréquence, plan continu et connexions multipoint (chapitre 35).
 \end{itemize}
 \end{pratique}
 
@@ -3243,27 +3238,36 @@ Potentiels de n\oe uds : $n-1 = 3$ inconnues (les 3 potentiels des n\oe uds non 
 \begin{pratique}
 \textbf{Solution :} $V = L\,\mathrm{d}i/\mathrm{d}t = 5\times10^{-9} \times 10^{9} = \SI{5}{V}$.
 
-\textbf{5 V de bruit sur la masse !} Catastrophique pour un circuit analogique voisin travaillant au mV. Solutions : plans de masse continus, découplage \SI{100}{nF} au plus près, séparation des retours de courant.
+\textbf{5 V de bruit sur la masse !} Catastrophique pour un circuit analogique voisin travaillant au mV. Solutions : plans de masse continus, découplage au plus près (boucle minimale), retours de courant maîtrisés --- tout le chapitre 36.
 \end{pratique}
 
 \textbf{Exercice 5.6 ---} Un signal à \SI{500}{MHz} circule sur un PCB de \SI{15}{cm}. Vitesse de propagation dans le FR-4 : $\sim\SI{1.5e8}{m/s}$. Kirchhoff est-il applicable ?
 
 \begin{pratique}
-\textbf{Solution :} $\lambda = c/f = 1{,}5\times10^8 / 5\times10^8 = \SI{0.30}{m} = \SI{30}{cm}$.
+\textbf{Solution :} $\lambda = v/f = 1{,}5\times10^8 / (5\times10^8) = \SI{0.30}{m} = \SI{30}{cm}$.
 
 $d/\lambda = 15/30 = 0{,}5$. Or la limite est $d < \lambda/10 = \SI{3}{cm}$.
 
-Kirchhoff est \textbf{totalement inapplicable}. Il faut utiliser les \textbf{lignes de transmission} (impédance caractéristique, adaptation, réflexions).
+Kirchhoff est \textbf{totalement inapplicable}. Il faut utiliser les \textbf{lignes de transmission} (impédance caractéristique, réflexions, adaptation --- chapitre 37).
 \end{pratique}
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Pourquoi dit-on que les lois de Kirchhoff ``contiennent'' implicitement la loi d'Ohm ?
-\item Un circuit série $R$-$L$ est alimenté par une tension sinusoïdale. La KVL est-elle applicable ? Comment inclut-on la tension de la bobine ?
-\item Expliquez pourquoi un condensateur de découplage de \SI{100}{nF} placé au plus près d'un CI réduit le \textit{ground bounce}.
-\item Si un voltmètre mesure une tension différente selon la position de ses fils de mesure (alors qu'il est branché entre les deux mêmes points), que peut-on en conclure sur la validité de la KVL dans cette situation ?
-\end{enumerate}
+\textbf{Q1.} Les lois de Kirchhoff suffisent-elles, à elles seules, à résoudre un circuit ?
+
+\textit{Réponse : non. Elles fournissent $b$ équations de \emph{topologie} — comment le circuit est câblé — mais ne disent rien du comportement des composants. Il faut leur adjoindre les lois de comportement des dipôles : $u = Ri$, $i = C\,\mathrm{d}u/\mathrm{d}t$, $u = L\,\mathrm{d}i/\mathrm{d}t$\ldots{} Kirchhoff organise, les caractéristiques ferment le système. Deux niveaux logiquement indépendants — c'est d'ailleurs pour cela que SPICE sépare netlist (topologie) et modèles (comportement).}
+
+\textbf{Q2.} Un circuit série $R$-$L$ est alimenté par une tension sinusoïdale. La KVL est-elle applicable ? Comment inclut-on la tension de la bobine ?
+
+\textit{Réponse : oui, en ARQS, avec les grandeurs instantanées : $E(t) = Ri(t) + u_L(t)$, où $u_L = L\,\mathrm{d}i/\mathrm{d}t$ est incluse comme tension de dipôle — le flux « dangereux » pour la KVL est confiné dans le composant et modélisé par lui. On obtient une équation différentielle (chapitre 9), que la notation complexe transformera en algèbre (chapitres 10--11).}
+
+\textbf{Q3.} Expliquez pourquoi un condensateur de découplage de \SI{100}{nF} placé au plus près d'un CI réduit le \textit{ground bounce}.
+
+\textit{Réponse : il fournit localement les appels de courant impulsionnels : la boucle à fort $\mathrm{d}i/\mathrm{d}t$ se referme sur quelques millimètres (CI--condensateur--CI) au lieu de traverser toute l'inductance de la piste de masse. $V = L\,\mathrm{d}i/\mathrm{d}t$ s'effondre parce que $L$ (de boucle) s'effondre — c'est un problème de géométrie avant d'être un problème de capacité (chapitre 36).}
+
+\textbf{Q4.} Si un voltmètre mesure une tension différente selon la position de ses fils de mesure (alors qu'il est branché entre les deux mêmes points), que peut-on en conclure sur la validité de la KVL dans cette situation ?
+
+\textit{Réponse : un flux magnétique variable traverse la zone : le champ n'est plus conservatif et la « tension » dépend du chemin (expérience de Lewin, chapitre 2). La KVL nue est invalide ; on la sauve en incluant la f.é.m.\ induite $-\mathrm{d}\Phi_B/\mathrm{d}t$ de \emph{chaque} contour considéré — cordons de mesure compris. C'est un artefact classique des mesures près des convertisseurs (chapitre 35).}
 
 % === RÉSUMÉ DU CHAPITRE 5 ===
 \section*{Résumé du chapitre}
@@ -3275,8 +3279,9 @@ Kirchhoff est \textbf{totalement inapplicable}. Il faut utiliser les \textbf{lig
 \begin{tabular}{p{4.5cm}p{8.5cm}}
 \toprule
 KCL (loi des n\oe uds) & $\sum i_k = 0$ en tout n\oe ud --- conservation de la charge \\
-KVL (loi des mailles) & $\sum U_k = 0$ sur toute maille --- conservation de l'énergie \\
+KVL (loi des mailles) & $\sum U_k = 0$ sur toute maille --- le potentiel est une fonction d'état \\
 Diviseur de courant & $i_1 = i \cdot R_2/(R_1+R_2)$ --- dual du diviseur de tension \\
+Vérification & Le bilan de puissance : la seule qui ne pardonne pas \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -3287,10 +3292,10 @@ Diviseur de courant & $i_1 = i \cdot R_2/(R_1+R_2)$ --- dual du diviseur de tens
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{p{4.5cm}p{8.5cm}}
 \toprule
-Nombre d'équations & $b$ branches, $n$ n\oe uds $\Rightarrow$ $b$ équations indépendantes \\
-Courants de maille & Méthode systématique, KCL automatique \\
-Potentiels de n\oe uds & Méthode systématique, KVL automatique, base de SPICE \\
-Impédances (aperçu) & $\underline{Z}_R = R$, $\underline{Z}_C = 1/j\omega C$, $\underline{Z}_L = j\omega L$ \\
+Nombre d'équations & $b$ branches, $n$ n\oe uds $\Rightarrow$ $n-1$ KCL $+$ $(b-n+1)$ KVL $= b$ \\
+Courants de maille & KCL automatique --- sources de tension, peu de mailles \\
+Potentiels de n\oe uds & KVL automatique --- peu de n\oe uds, base de SPICE \\
+Impédances (aperçu) & $\underline{Z}_R = R$, $\underline{Z}_C = 1/j\omega C$, $\underline{Z}_L = j\omega L$ (chapitre 10) \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -3302,13 +3307,19 @@ Impédances (aperçu) & $\underline{Z}_R = R$, $\underline{Z}_C = 1/j\omega C$, 
 \begin{tabular}{p{4.5cm}p{8.5cm}}
 \toprule
 Fondement Maxwell & KCL $\leftarrow$ $\nabla\cdot\vec{J}=0$ ; KVL $\leftarrow$ $\oint\vec{E}\cdot\mathrm{d}\vec{\ell} \approx 0$ \\
-Validité (ARQS) & $d \ll \lambda/10$ ; au-delà $\to$ lignes de transmission \\
-En pratique & Fils $\neq$ idéaux, masse $\neq$ équipotentielle, ground bounce \\
+Validité (ARQS) & $d < \lambda/10$ ; au-delà $\to$ lignes de transmission (chapitre 37) \\
+KVL étendue & Flux variable $\Rightarrow$ inclure $e = -\mathrm{d}\Phi_B/\mathrm{d}t$ dans la maille \\
+En pratique & Fils $\neq$ idéaux, masse $\neq$ équipotentielle --- chapitres 35--36 \\
 \bottomrule
 \end{tabular}
 \end{center}
 \end{ingenieur}
 
+\vspace{0.4cm}
+
+\begin{retenir}
+Kirchhoff résout tout circuit linéaire --- mais au prix du système complet à chaque question. Quand on ne veut qu'\emph{une} grandeur, ou remplacer tout un réseau par son équivalent, les théorèmes du chapitre 6 (superposition, Thévenin, Norton) sont les raccourcis dont l'ingénieur se sert tous les jours.
+\end{retenir}
 
 % ============================================================================
 % CHAPITRE 6 : THÉORÈMES FONDAMENTAUX
