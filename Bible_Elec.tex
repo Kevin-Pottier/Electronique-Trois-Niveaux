@@ -3350,11 +3350,11 @@ Cette section présente les quatre théorèmes de manière intuitive, avec des e
 Tous les théorèmes de ce chapitre ne s'appliquent qu'aux \textbf{circuits linéaires}. Un circuit est linéaire si tous ses composants obéissent à des relations linéaires entre tension et courant : résistances ($U = RI$), condensateurs ($i = C\,\mathrm{d}u/\mathrm{d}t$), inductances ($u = L\,\mathrm{d}i/\mathrm{d}t$), sources indépendantes et sources dépendantes linéaires.
 
 \begin{attention}
-Les diodes, transistors (en grand signal), et tout composant dont la relation entre tension et courant n'obéit pas au \textbf{principe de proportionnalité et d'additivité} ne sont pas linéaires. Les théorèmes de ce chapitre ne s'appliquent pas directement à ces composants. On peut cependant les utiliser sur le \textit{modèle petit signal} linéarisé autour d'un point de fonctionnement (cf.\ chapitres sur les semi-conducteurs).
+Les diodes, transistors (en grand signal), et tout composant dont la relation entre tension et courant n'obéit pas au \textbf{principe de proportionnalité et d'additivité} ne sont pas linéaires. Les théorèmes de ce chapitre ne s'appliquent pas directement à ces composants. On peut cependant les utiliser sur le \textit{modèle petit signal} linéarisé autour d'un point de fonctionnement (chapitres 15--16).
+\end{attention}
 
 \begin{attention}
-\textbf{Linéaire $\neq$ ``droite $I(U)$''.} Un condensateur ($i = C\,\mathrm{d}u/\mathrm{d}t$) et une inductance ($u = L\,\mathrm{d}i/\mathrm{d}t$) \textit{sont} des composants linéaires, même si leur relation $I(U)$ n'est pas une simple droite. Ce qui compte, c'est que la relation entre entrée et sortie vérifie : si l'on double la tension, le courant double. C'est la définition mathématique de la linéarité (opérateur linéaire), pas la forme géométrique de la caractéristique statique.
-\end{attention}
+\textbf{Linéaire $\neq$ ``droite $I(U)$''.} Un condensateur ($i = C\,\mathrm{d}u/\mathrm{d}t$) et une inductance ($u = L\,\mathrm{d}i/\mathrm{d}t$) \textit{sont} des composants linéaires, même si leur relation $I(U)$ n'est pas une simple droite. Ce qui compte, c'est que l'opérateur reliant entrée et sortie vérifie proportionnalité et additivité : doubler l'excitation double la réponse. C'est la définition mathématique de la linéarité, pas la forme géométrique de la caractéristique statique.
 \end{attention}
 
 \subsection{Théorème de superposition}
@@ -3373,22 +3373,28 @@ L'idée est simple : dans un circuit linéaire, chaque source ``pousse'' indépe
 
 \textbf{Exemple :} circuit avec $E_1 = \SI{12}{V}$, $E_2 = \SI{6}{V}$, $R_1 = \SI{4}{\ohm}$, $R_2 = \SI{2}{\ohm}$. On cherche le courant dans $R_2$.
 
-\begin{center}
-\begin{circuitikz}[scale=0.8]
-  \draw (0,0) to[battery1, l=$E_1$, invert] (0,3) to[R, l=$R_1$] (3,3) to[R, l=$R_2$] (3,0) -- (0,0);
-  \draw (3,3) -- (5,3) to[battery1, l=$E_2$] (5,0) -- (3,0);
-\end{circuitikz}
-\end{center}
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.9]
+  % E1 gauche, + haut
+  \draw[very thick] (0,0) -- (0,1.32); \draw[very thick] (-0.28,1.32) -- (0.28,1.32);
+  \draw[very thick] (-0.5,1.68) -- (0.5,1.68); \draw[very thick] (0,1.68) -- (0,3);
+  \node[left, font=\small] at (-0.6,1.5) {$E_1$};
+  % E2 droite, + haut
+  \draw[very thick] (5,0) -- (5,1.32); \draw[very thick] (4.72,1.32) -- (5.28,1.32);
+  \draw[very thick] (4.5,1.68) -- (5.5,1.68); \draw[very thick] (5,1.68) -- (5,3);
+  \node[right, font=\small] at (5.6,1.5) {$E_2$};
+  \draw (0,3) to[R, l=$R_1$] (3,3) node[circ]{} to[R, l=$R_2$, i=$i_{R_2}$] (3,0) node[circ]{} to[short] (0,0);
+  \draw (3,3) to[short] (5,3); \draw (3,0) to[short] (5,0);
+\end{tikzpicture}
+\caption{Deux sources alimentant $R_2$. On applique la superposition pour trouver $i_{R_2}$.}
+\end{figure}
 
-\textit{Étape 1 :} $E_1$ seule ($E_2$ court-circuitée). $R_1$ et $R_2$ sont en série, $R_2$ est en parallèle avec le court-circuit de $E_2$... Non : $E_2$ court-circuitée met les bornes de $R_2$ en parallèle avec le fil. Donc $R_2$ est court-circuitée aussi !
+\textit{Étape 1 --- $E_1$ seule ($E_2$ court-circuitée).} Le court-circuit de $E_2$ relie le n\oe ud haut-droit au bas : $R_2$ se retrouve en parallèle avec un fil, donc court-circuitée. $i'_{R_2} = 0$.
 
-$i'_{R_2} = 0$ (tout le courant passe par le court-circuit de $E_2$, pas par $R_2$).
+\textit{Étape 2 --- $E_2$ seule ($E_1$ court-circuitée).} Par symétrie, $R_1$ est court-circuitée. Tout $E_2$ se retrouve aux bornes de $R_2$ : $i''_{R_2} = E_2/R_2 = 6/2 = \SI{3}{A}$.
 
-Reprenons : en fait, $R_2$ est entre le n\oe ud haut et le bas. $E_2$ court-circuitée = fil entre le n\oe ud haut-droit et le bas. Donc $R_2$ est en parallèle avec un fil $\Rightarrow$ court-circuit $\Rightarrow i'_{R_2} = 0$.
-
-\textit{Étape 2 :} $E_2$ seule ($E_1$ court-circuitée). Même raisonnement : $R_1$ est court-circuitée par le fil de $E_1$. Le courant dans $R_2$ vaut $i''_{R_2} = E_2/R_2 = 6/2 = \SI{3}{A}$.
-
-\textit{Résultat :} $i_{R_2} = i'_{R_2} + i''_{R_2} = 0 + 3 = \SI{3}{A}$.
+\textit{Résultat :} $\boxed{i_{R_2} = i'_{R_2} + i''_{R_2} = \SI{3}{A}}$.
 
 \begin{attention}
 \textbf{Piège classique :} la superposition s'applique aux \textbf{courants et tensions}, mais \textit{pas} à la puissance ! La puissance dépend du carré du courant ($P = RI^2$), ce qui n'est pas une opération linéaire. On ne peut pas additionner les puissances partielles.
@@ -3406,15 +3412,21 @@ C'est probablement le théorème \textbf{le plus utile} de toute l'électronique
 \item une source de tension $E_{\text{th}}$ (tension à vide entre A et B),
 \item en série avec une résistance $R_{\text{th}}$ (résistance vue entre A et B quand toutes les sources indépendantes sont éteintes).
 \end{itemize}
-
-\begin{center}
-\begin{circuitikz}[scale=0.9]
-  \draw (0,0) to[battery1, l=$E_{\text{th}}$, invert] (0,2)
-        to[R, l=$R_{\text{th}}$] (3,2) node[right]{A};
-  \draw (0,0) -- (3,0) node[right]{B};
-\end{circuitikz}
-\end{center}
 \end{formule}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.9]
+  \draw[very thick] (0,0) -- (0,0.82); \draw[very thick] (-0.28,0.82) -- (0.28,0.82);
+  \draw[very thick] (-0.5,1.18) -- (0.5,1.18); \draw[very thick] (0,1.18) -- (0,2);
+  \node[left, font=\small] at (-0.6,1) {$E_{\text{th}}$};
+  \draw (0,2) to[R, l=$R_{\text{th}}$] (3,2) node[circ]{};
+  \node[right=3pt, font=\bfseries] at (3,2) {A};
+  \draw (0,0) to[short] (3,0) node[circ]{};
+  \node[right=3pt, font=\bfseries] at (3,0) {B};
+\end{tikzpicture}
+\caption{Générateur de Thévenin : une source de tension $E_{\text{th}}$ en série avec une résistance $R_{\text{th}}$.}
+\end{figure}
 
 \begin{intuition}
 Imaginez un appareil électronique complexe (un amplificateur, une alimentation, un capteur\ldots) avec deux fils de sortie. Vu de l'extérieur, peu importe ce qu'il y a dedans : tout ce que la charge ``voit'', c'est une tension à vide $E_{\text{th}}$ qui chute quand on tire du courant, à cause d'une résistance interne $R_{\text{th}}$. C'est exactement le modèle du générateur réel du chapitre 2 !
@@ -3431,18 +3443,20 @@ Imaginez un appareil électronique complexe (un amplificateur, une alimentation,
 
 \textbf{Exemple :} trouver l'équivalent de Thévenin vu de A-B.
 
-\begin{center}
-\begin{circuitikz}[scale=0.85]
-  \draw (0,0) to[battery1, l=$E{=}\SI{12}{V}$, invert] (0,3)
-        to[R, l=$R_1{=}\SI{6}{\ohm}$] (3,3);
-  \draw (3,3) -- (3,2) to[R, l=$R_2{=}\SI{3}{\ohm}$] (3,0);
-  \draw (0,0) -- (3,0);
-  \filldraw[blue!70!black] (3,3) circle (2pt);
-  \node[right, font=\bfseries] at (3.2,3) {A};
-  \filldraw[blue!70!black] (3,0) circle (2pt);
-  \node[right, font=\bfseries] at (3.2,0) {B};
-\end{circuitikz}
-\end{center}
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.9]
+  \draw[very thick] (0,0) -- (0,1.32); \draw[very thick] (-0.28,1.32) -- (0.28,1.32);
+  \draw[very thick] (-0.5,1.68) -- (0.5,1.68); \draw[very thick] (0,1.68) -- (0,3);
+  \node[left, font=\small] at (-0.75,1.5) {$E=\SI{12}{V}$};
+  \draw (0,3) to[R, l=$R_1{=}\SI{6}{\ohm}$] (3,3) node[circ]{};
+  \draw (3,3) to[R, l=$R_2{=}\SI{3}{\ohm}$] (3,0) node[circ]{};
+  \draw (0,0) to[short] (3,0);
+  \node[right=3pt, font=\bfseries] at (3,3) {A};
+  \node[right=3pt, font=\bfseries] at (3,0) {B};
+\end{tikzpicture}
+\caption{Circuit à réduire : équivalent de Thévenin vu de A--B.}
+\end{figure}
 
 \textit{$E_{\text{th}}$} : à vide, pas de courant dans $R_1$ (car rien n'est branché entre A et B, et $R_2$ est en parallèle avec la sortie). En fait, $R_1$ et $R_2$ forment un diviseur de tension :
 \[
@@ -3469,18 +3483,21 @@ Norton est le \textbf{dual} de Thévenin.
 \item une source de courant $I_N$ (courant de court-circuit entre A et B),
 \item en parallèle avec une résistance $R_N = R_{\text{th}}$.
 \end{itemize}
-
-\begin{center}
-\begin{circuitikz}[scale=0.9]
-  \draw (0,0) -- (0,2) -- (1.5,2);
-  \draw (0,0) -- (1.5,0);
-  \draw (0.75,0) to[isource, l=$I_N$] (0.75,2);
-  \draw (1.5,0) to[R, l_=$R_N$] (1.5,2);
-  \draw (1.5,2) -- (2.5,2) node[right]{A};
-  \draw (1.5,0) -- (2.5,0) node[right]{B};
-\end{circuitikz}
-\end{center}
 \end{formule}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.9]
+  \draw (0.75,0) to[isource, l=$I_N$] (0.75,2);
+  \draw (0.75,2) -- (0.75,2) node[circ]{};
+  \draw (2,0) to[R, l_=$R_N$] (2,2);
+  \draw (0.75,2) to[short] (2,2) node[circ]{} to[short] (3,2);
+  \node[right=3pt, font=\bfseries] at (3,2) {A};
+  \draw (0.75,0) to[short] (2,0) node[circ]{} to[short] (3,0);
+  \node[right=3pt, font=\bfseries] at (3,0) {B};
+\end{tikzpicture}
+\caption{Générateur de Norton : une source de courant $I_N$ en parallèle avec $R_N = R_{\text{th}}$.}
+\end{figure}
 
 \textbf{Comment trouver $I_N$ :} on court-circuite A et B et on calcule le courant qui circule dans le court-circuit.
 
@@ -3594,7 +3611,7 @@ Millman n'est \textit{pas} un théorème supplémentaire : c'est un raccourci de
 \section{Approfondissement}
 
 \begin{approfondissement}
-Démonstrations, cas avec sources dépendantes, et applications pratiques. Prérequis : chapitre 5 (Kirchhoff, méthodes de résolution).
+Fondement des théorèmes (linéarité), démonstration de Thévenin, traitement rigoureux des sources dépendantes, et modélisation d'un composant réel vu de ses bornes. Prérequis : chapitre 5.
 \end{approfondissement}
 
 \subsection{Pourquoi la superposition fonctionne : la linéarité}
@@ -3606,7 +3623,7 @@ La superposition est une conséquence directe de la \textbf{linéarité} des éq
 
 Ceci n'est vrai que si $f$ est \textbf{linéaire} : $f(\alpha s_1 + \beta s_2) = \alpha f(s_1) + \beta f(s_2)$.
 
-C'est le cas pour les résistances ($U = RI$), les condensateurs et inductances (relations linéaires en $\mathrm{d}/\mathrm{d}t$). Ce n'est \textit{pas} le cas pour les diodes ($I = I_S e^{U/nV_T}$).
+C'est le cas pour les résistances ($U = RI$), les condensateurs et inductances (relations linéaires en $\mathrm{d}/\mathrm{d}t$). Ce n'est \textit{pas} le cas pour les diodes ($I = I_S e^{U/nV_T}$, chapitre 15).
 
 \subsection{Démonstration de Thévenin}
 
@@ -3672,7 +3689,7 @@ C'est la puissance de Thévenin/Norton : on peut remplacer un circuit complexe p
 \section{Niveau Ingénieur}
 
 \begin{ingenieur}
-Extension au domaine fréquentiel, impédance de sortie, lien avec l'analyse petit signal, et limites en RF.
+Généralisation complexe ($\underline{Z}_{\text{th}}(\omega)$), impédance de sortie, rôle central de Thévenin/Norton en analyse petit signal, limites du modèle (grand signal, RF, dépendance en fréquence) et superposition du bruit. Prérequis : chapitres 2 (bruit), 10 (impédances).
 \end{ingenieur}
 
 \subsection{Thévenin et Norton en régime sinusoïdal}
@@ -3708,7 +3725,7 @@ L'analyse petit signal des circuits à transistors (bipolaire, MOSFET) repose \t
 \item Le circuit linéarisé est résolu par Thévenin/Norton.
 \end{enumerate}
 
-\textbf{Exemple :} un étage amplificateur à émetteur commun vu de sa sortie est un \textbf{générateur de Norton} : $I_N = g_m v_{be}$ en parallèle avec $R_N = r_o \parallel R_C$.
+\textbf{Exemple :} un étage amplificateur à émetteur commun (chapitre 16) vu de sa sortie est un \textbf{générateur de Norton} : $I_N = g_m v_{be}$ en parallèle avec $R_N = r_o \parallel R_C$.
 
 Le gain en tension de l'étage est alors :
 \[
@@ -3722,9 +3739,9 @@ C'est un résultat fondamental de l'électronique analogique, et il est directem
 \begin{attention}
 \textbf{1. Circuits non-linéaires en grand signal :} Thévenin/Norton supposent la linéarité. Un amplificateur en saturation, un convertisseur à découpage ou un oscillateur ne peuvent pas être modélisés par un simple $E_{\text{th}} + R_{\text{th}}$.
 
-\textbf{2. Haute fréquence (RF) :} au-delà de quelques centaines de MHz, le concept d'impédance ``vue de 2 bornes'' devient problématique car les effets de propagation ne sont plus négligeables. On remplace Thévenin par les \textbf{paramètres S} (scattering parameters), qui décrivent le comportement en termes d'ondes incidentes et réfléchies. C'est le formalisme standard en RF et micro-ondes.
+\textbf{2. Haute fréquence (RF) :} au-delà de quelques centaines de MHz, le concept d'impédance ``vue de 2 bornes'' devient problématique car les effets de propagation ne sont plus négligeables. On remplace Thévenin par les \textbf{paramètres S} (scattering parameters), qui décrivent le comportement en termes d'ondes incidentes et réfléchies. C'est le formalisme standard en RF et micro-ondes (chapitre 37).
 
-\textbf{3. Dépendance en fréquence :} $\underline{Z}_{\text{th}}(\omega)$ peut varier fortement avec la fréquence. Une alimentation peut avoir $Z_{\text{out}} = \SI{1}{m\ohm}$ à DC mais $Z_{\text{out}} = \SI{10}{\ohm}$ à \SI{1}{MHz} (à cause des inductances parasites des câbles). C'est pourquoi on met des \textbf{condensateurs de découplage} partout : ils maintiennent $Z_{\text{out}}$ faible en haute fréquence.
+\textbf{3. Dépendance en fréquence :} $\underline{Z}_{\text{th}}(\omega)$ peut varier fortement avec la fréquence. Une alimentation peut avoir $Z_{\text{out}} = \SI{1}{m\ohm}$ à DC mais $Z_{\text{out}} = \SI{10}{\ohm}$ à \SI{1}{MHz} (à cause des inductances parasites des câbles). C'est pourquoi on met des \textbf{condensateurs de découplage} partout : ils maintiennent $Z_{\text{out}}$ faible en haute fréquence (chapitre 36).
 \end{attention}
 
 \subsection{Superposition et bruit}
@@ -3768,9 +3785,19 @@ $U_L = R_L \cdot I = \SI{5}{V}$. (La tension a chuté de \SI{10}{V} à vide à \
 
 \begin{pratique}
 \textbf{Solution (Millman) :}
-$V = \dfrac{15/3 + 10/6 + 5/2}{1/3 + 1/6 + 1/2} = \dfrac{5 + 1{,}667 + 2{,}5}{0{,}333 + 0{,}167 + 0{,}5} = \dfrac{9{,}167}{1} = \SI{9.17}{V}$.
+\[
+V = \frac{15/3 + 10/6 + 5/2}{1/3 + 1/6 + 1/2} = \frac{5 + 1{,}667 + 2{,}5}{1} = \SI{9.17}{V}
+\]
 
-(Vérification par superposition : le lecteur est invité à vérifier en traitant chaque source séparément et en sommant.)
+\textbf{Vérification (superposition).} La tension au n\oe ud due à $E_k$ seule (les deux autres sources court-circuitées) est celle d'un diviseur : $E_k$ voit $R_k$ en série avec $R_i \parallel R_j$. Avec $R_1\parallel R_2\parallel R_3 = \SI{1}{\ohm}$ :
+\[
+V_k = E_k \cdot \frac{R_i \parallel R_j}{R_k + R_i \parallel R_j}
+\]
+$R_2\parallel R_3 = \SI{1.5}{\ohm}$, $R_1\parallel R_3 = \SI{1.2}{\ohm}$, $R_1\parallel R_2 = \SI{2}{\ohm}$, d'où :
+\[
+V_1 = 15\cdot\tfrac{1{,}5}{4{,}5}=5 \quad V_2 = 10\cdot\tfrac{1{,}2}{7{,}2}=1{,}667 \quad V_3 = 5\cdot\tfrac{2}{4}=2{,}5
+\]
+$V = 5 + 1{,}667 + 2{,}5 = \SI{9.17}{V}$ : \textbf{identique}. Millman \emph{est} la superposition, écrite en une ligne.
 \end{pratique}
 
 \textbf{Exercice 6.4 ---} Un capteur (modèle Thévenin : $E_{\text{th}} = \SI{50}{mV}$, $R_{\text{th}} = \SI{350}{\ohm}$) est connecté à un amplificateur d'impédance d'entrée $R_{\text{in}} = \SI{10}{k\ohm}$. Quelle fraction du signal est perdue dans $R_{\text{th}}$ ? Même question si $R_{\text{in}} = \SI{100}{\ohm}$.
@@ -3800,23 +3827,36 @@ Erreur : $(10 - 9{,}52)/10 = 4{,}8\%$. Pour une précision de $1\%$, il faudrait
 \textbf{Exercice 6.6 ---} Un circuit comporte une source dépendante : $E = \SI{10}{V}$, $R_1 = \SI{2}{\ohm}$, et une source de tension commandée $V_x = 3i_1$ (où $i_1$ est le courant dans $R_1$). Trouvez $R_{\text{th}}$ vu des bornes de sortie par la méthode du générateur de test.
 
 \begin{pratique}
-\textbf{Solution :} On éteint $E$ (court-circuit). On applique un courant de test $I_t$ entre A et B.
+\textbf{Solution :} Hypothèse : $E$ éteinte (court-circuit), générateur de test $I_t$ injecté entre A et B.
 
-Le courant $i_1$ dans $R_1$ est lié à $I_t$ et à $V_x$. En écrivant la KVL : $V_t = R_1 i_1 + V_x = R_1 i_1 + 3i_1 = (R_1 + 3)i_1 = 5i_1$.
+Topologie : une fois $E$ court-circuitée, $R_1$ est la \emph{seule} branche offerte au courant de test --- donc $i_1 = I_t$. La KVL sur la maille de sortie donne :
+\[
+V_t = R_1 i_1 + V_x = R_1 i_1 + 3 i_1 = (R_1 + 3)\,i_1 = 5\,I_t
+\]
+\[
+\boxed{R_{\text{th}} = V_t / I_t = \SI{5}{\ohm}}
+\]
 
-Si $i_1 = I_t$ : $R_{\text{th}} = V_t / I_t = \SI{5}{\ohm}$.
-
-La source dépendante a augmenté la résistance de Thévenin de \SI{2}{\ohm} à \SI{5}{\ohm}.
+\textit{Interprétation :} la source dépendante ajoute \SI{3}{\ohm} de résistance « active » aux \SI{2}{\ohm} physiques. Éteindre les sources indépendantes n'aurait donné que $R_1 = \SI{2}{\ohm}$ --- d'où l'obligation du générateur de test dès qu'une source commandée est présente.
 \end{pratique}
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Peut-on appliquer le théorème de superposition à un circuit contenant une diode ? Pourquoi ?
-\item Un amplificateur a une impédance de sortie de \SI{100}{\ohm}. Il doit alimenter un haut-parleur de \SI{8}{\ohm}. Quel pourcentage de la puissance est effectivement transférée au haut-parleur ? Comment améliorer la situation ?
-\item Pourquoi met-on des condensateurs de découplage sur les broches d'alimentation des circuits intégrés ? Répondez en termes d'impédance de Thévenin.
-\item En RF, on parle de ``paramètres S'' plutôt que d'impédance de Thévenin. Pourquoi le modèle de Thévenin est-il insuffisant à très haute fréquence ?
-\end{enumerate}
+\textbf{Q1.} Peut-on appliquer la superposition à un circuit contenant une diode ?
+
+\textit{Réponse : pas en grand signal --- la diode est non-linéaire ($I = I_S e^{U/nV_T}$), la superposition suppose additivité. Deux échappatoires : (a) linéariser autour d'un point de repos ($r_d = nV_T/I$) et superposer les \emph{petits} signaux ; (b) traiter les non-linéarités séparément et n'appliquer les théorèmes qu'à la partie linéaire du circuit. C'est exactement la démarche de l'analyse petit signal (chapitre 15).}
+
+\textbf{Q2.} Un amplificateur de $Z_{\text{out}} = \SI{100}{\ohm}$ attaque un haut-parleur de \SI{8}{\ohm}. Quelle fraction de puissance est transférée ? Comment améliorer ?
+
+\textit{Réponse : $P_L \propto R_L/(R_{\text{out}}+R_L)^2$. Le transfert relatif à l'optimum ($R_L=R_{\text{out}}$) vaut $\frac{4 R_{\text{out}} R_L}{(R_{\text{out}}+R_L)^2} = \frac{4\cdot100\cdot8}{108^2} \approx \mathbf{27\%}$ du max ; et surtout, seulement $R_L/(R_{\text{out}}+R_L) = 8/108 \approx 7{,}4\%$ de la puissance fournie va au HP. \textbf{On n'adapte pas} (à $R_{\text{out}}=R_L$, le rendement plafonne à 50\% et l'ampli chaufferait autant que le HP) : on \emph{abaisse} $R_{\text{out}}$ par contre-réaction, jusqu'à $<\SI{0.1}{\ohm}$ (chapitre 4). Un facteur d'amortissement élevé contrôle en prime la résonance du HP.}
+
+\textbf{Q3.} Pourquoi des condensateurs de découplage sur les broches d'alimentation ? Répondez en impédance de Thévenin.
+
+\textit{Réponse : le réseau d'alim vu par le CI est un Thévenin dont $Z_{\text{out}}(f)$ croît avec la fréquence (inductance des pistes/câbles). Le condensateur place un chemin de faible impédance en parallèle : il maintient $Z_{\text{out}}$ basse dans la bande des appels de courant, en refermant la boucle localement. C'est un problème de $Z_{\text{th}}(f)$ et de géométrie de boucle, pas de « réservoir de charge » (chapitre 36).}
+
+\textbf{Q4.} En RF on parle de paramètres S plutôt que de Thévenin. Pourquoi le modèle est-il insuffisant ?
+
+\textit{Réponse : Thévenin suppose une tension et un courant \emph{définis et uniformes} aux bornes --- vrai en ARQS. Quand la taille du circuit approche $\lambda$, la tension dépend de la position (ondes stationnaires) : « la » tension aux bornes n'existe plus. Les paramètres S décrivent alors ce qui a un sens physique à ces fréquences --- les ondes incidente et réfléchie sur une impédance de référence (chapitre 37).}
 
 % === RÉSUMÉ DU CHAPITRE 6 ===
 \section*{Résumé du chapitre}
@@ -3857,12 +3897,19 @@ Adaptation & $P_{\max}$ quand $R_L = R_{\text{th}}$ (rappel Ch.\ 4) \\
 $\underline{Z}_{\text{th}}(\omega)$ & Impédance de Thévenin complexe, dépend de $f$ \\
 $Z_{\text{out}}$ & Impédance de sortie = $R_{\text{th}}$ --- critique pour source/charge \\
 Petit signal & Transistors modélisés par Norton : $I_N = g_m v$, $R_N = r_o$ \\
+Millman généralisé & Sources de courant ajoutées au numérateur (conductance nulle) \\
 Limites & Non-linéaire (grand signal), RF (paramètres S), $Z_{\text{th}}(f)$ variable \\
 Bruit & Superposition quadratique : $\overline{v_n^2} = \sum \overline{v_{n,k}^2}$ \\
 \bottomrule
 \end{tabular}
 \end{center}
 \end{ingenieur}
+
+\vspace{0.4cm}
+
+\begin{retenir}
+Superposition, Thévenin, Norton, Millman : la boîte à outils du circuit \emph{résistif} linéaire est complète. Reste que ces circuits ne savent ni retarder, ni filtrer, ni stocker d'énergie --- tout y est instantané. Le premier composant qui brise cette immédiateté, en opposant au courant non plus une résistance mais une \emph{mémoire}, est le condensateur : il ouvre la Partie II et le chapitre 7.
+\end{retenir}
 
 
 % ============================================================================
