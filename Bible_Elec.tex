@@ -3933,7 +3933,7 @@ Il est omniprésent : filtrage, découplage, temporisation, mémoire analogique\
 \section{Les Bases}
 
 \begin{bases}
-Le condensateur est le premier composant qui introduit la notion de \textbf{temps} en électronique. Prérequis : courant, tension, résistance (chapitres 1 à 3).
+Ce qu'est un condensateur, la capacité ($q = Cu$), la relation $i = C\,\mathrm{d}u/\mathrm{d}t$ et ses conséquences (tension continue, rampe sous courant constant), le circuit RC, l'énergie stockée, les associations. Prérequis : chapitres 1 à 3.
 \end{bases}
 
 \subsection{Qu'est-ce qu'un condensateur ?}
@@ -3956,6 +3956,40 @@ Quand on applique une tension entre les deux armatures, des charges s'accumulent
 \end{itemize}
 \textit{Limite :} les électrons ne traversent \textit{jamais} le diélectrique (en fonctionnement normal). Le courant circule dans le circuit extérieur pendant la charge et la décharge.
 \end{analogie}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % --- Constitution ---
+  \fill[gray!25] (0.55,-0.8) rectangle (0.95,0.8);
+  \draw[very thick] (0.55,-0.8) -- (0.55,0.8);
+  \draw[very thick] (0.95,-0.8) -- (0.95,0.8);
+  \draw (0,0) -- (0.55,0);
+  \draw (0.95,0) -- (1.5,0);
+  \node[left, font=\footnotesize] at (0.48,1.0) {$+q$};
+  \node[right, font=\footnotesize] at (1.02,1.0) {$-q$};
+  \foreach \y in {-0.45,0,0.45} \draw[-{Stealth[length=1.8mm]}, blue!65!black] (0.62,\y) -- (0.88,\y);
+  \node[font=\footnotesize, align=center] at (0.75,-1.35) {armatures +\\ diélectrique};
+  % --- Symbole non polarisé ---
+  \begin{scope}[shift={(4.4,0.15)}]
+    \draw (0,0) -- (0.85,0);
+    \draw[very thick] (0.85,-0.42) -- (0.85,0.42);
+    \draw[very thick] (1.12,-0.42) -- (1.12,0.42);
+    \draw (1.12,0) -- (2.0,0);
+    \node[font=\footnotesize, align=center] at (1.0,-1.5) {non polarisé\\ (céramique, film)};
+  \end{scope}
+  % --- Symbole polarisé ---
+  \begin{scope}[shift={(8.2,0.15)}]
+    \draw (0,0) -- (0.85,0);
+    \draw[very thick] (0.85,-0.42) -- (0.85,0.42);
+    \draw[very thick] (1.32,0.42) arc[start angle=60, end angle=-60, radius=0.485];
+    \draw (1.56,0) -- (2.4,0);
+    \node[font=\footnotesize] at (0.62,0.6) {$+$};
+    \node[font=\footnotesize, align=center] at (1.2,-1.5) {polarisé\\ (électrolytique, tantale)};
+  \end{scope}
+\end{tikzpicture}
+\caption{Constitution physique (le champ $\vec{E}$ vit entre les armatures) et les deux symboles. Le sens du symbole polarisé n'est pas décoratif : l'inverser détruit le composant.}
+\end{figure}
 
 \subsection{Capacité}
 
@@ -3991,6 +4025,8 @@ Le courant dans un condensateur est proportionnel à la \textbf{vitesse de varia
 \begin{intuition}
 Le condensateur ne ``laisse passer'' le courant que \textit{quand la tension change}. C'est fondamentalement différent d'une résistance, où le courant dépend de la tension elle-même.
 \end{intuition}
+
+\textbf{Cas dual : courant imposé.} Si l'on force un courant constant $I$ (source de courant), alors $\mathrm{d}u/\mathrm{d}t = I/C$ est constante : la tension monte en \textbf{rampe linéaire} $u(t) = It/C$. C'est le principe des générateurs de rampe, des convertisseurs à double rampe (ADC intégrateur, chapitre 27) et de la charge à courant constant des batteries.
 
 \begin{attention}
 \textbf{La tension aux bornes d'un condensateur ne peut pas varier instantanément.} Un saut de tension impliquerait un courant infini ($i = C \times \infty$), ce qui est impossible. \textbf{Règle :} au moment d'une commutation, la tension aux bornes du condensateur garde la valeur qu'elle avait juste avant.
@@ -4038,29 +4074,49 @@ Le circuit le plus fondamental avec un condensateur est le \textbf{circuit RC} s
 \]
 \end{formule}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{tikzpicture}[scale=0.8]
   \begin{scope}[shift={(0,0)}]
     \draw[->] (0,0) -- (6,0) node[right]{\small $t$};
-    \draw[->] (0,0) -- (0,3.5) node[above]{\small $u(t)$};
+    \draw[->] (0,0) -- (0,3.6) node[above]{\small $u_C(t)$};
     \draw[very thick, blue!70!black, domain=0:5.5, samples=100] plot(\x, {3*(1-exp(-\x/1.2))});
-    \draw[dashed, gray] (0,3) -- (5.5,3);
-    \node[left, font=\small] at (0,3) {$E$};
-    \draw[dashed, gray] (1.2,0) -- (1.2,1.9);
+    \draw[dashed, gray] (0,3) -- (5.5,3); \node[left, font=\small] at (0,3) {$E$};
+    % tangente à l'origine : pente E/tau, coupe E en t=tau
+    \draw[red!70!black, thick] (0,0) -- (1.2,3);
+    \draw[dashed, gray] (1.2,0) -- (1.2,3);
     \node[below, font=\small] at (1.2,0) {$\tau$};
-    \node[below] at (3,-0.8) {\textbf{Charge}};
+    \draw[dashed, gray] (0,1.9) -- (1.2,1.9); \node[left, font=\footnotesize] at (0,1.9) {$0{,}63E$};
+    \node[below] at (3,-0.75) {\textbf{Charge}};
   \end{scope}
   \begin{scope}[shift={(8,0)}]
     \draw[->] (0,0) -- (6,0) node[right]{\small $t$};
-    \draw[->] (0,0) -- (0,3.5) node[above]{\small $u(t)$};
+    \draw[->] (0,0) -- (0,3.6) node[above]{\small $u_C(t)$};
     \draw[very thick, red!70!black, domain=0:5.5, samples=100] plot(\x, {3*exp(-\x/1.2)});
     \node[left, font=\small] at (0,3) {$E$};
+    \draw[blue!70!black, thick] (0,3) -- (1.2,0);
     \draw[dashed, gray] (1.2,0) -- (1.2,1.1);
     \node[below, font=\small] at (1.2,0) {$\tau$};
-    \node[below] at (3,-0.8) {\textbf{Décharge}};
+    \draw[dashed, gray] (0,1.1) -- (1.2,1.1); \node[left, font=\footnotesize] at (0,1.1) {$0{,}37E$};
+    \node[below] at (3,-0.75) {\textbf{Décharge}};
   \end{scope}
 \end{tikzpicture}
-\end{center}
+\caption{Charge et décharge du condensateur. La tangente à l'origine (en couleur) coupe l'asymptote exactement en $t = \tau$ : construction graphique directe de la constante de temps.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.9]
+  \draw[very thick] (0,0) -- (0,1.32); \draw[very thick] (-0.28,1.32) -- (0.28,1.32);
+  \draw[very thick] (-0.5,1.68) -- (0.5,1.68); \draw[very thick] (0,1.68) -- (0,3);
+  \node[left, font=\small] at (-0.6,1.5) {$E$};
+  \draw (0,3) to[short] (0.9,3);
+  \draw (0.9,3.15) -- (1.7,3.35); \draw[fill=white] (0.9,3) circle (1.3pt); \draw[fill=white] (1.75,3.35) circle (1.3pt);
+  \node[font=\footnotesize] at (1.3,3.7) {$K$};
+  \draw (1.75,3.35) to[short] (2.4,3) to[R, l=$R$, i=$i$] (4.4,3) node[circ]{} to[C, l=$C$, v_=$u_C$] (4.4,0) node[circ]{} to[short] (0,0);
+\end{tikzpicture}
+\caption{Le circuit RC série : à la fermeture de $K$, le condensateur se charge à travers $R$.}
+\end{figure}
 
 \begin{pratique}
 \textbf{Application :} $R = \SI{10}{k\ohm}$, $C = \SI{100}{\micro F}$ $\Rightarrow$ $\tau = \SI{1}{s}$. Charge complète en $\sim\SI{5}{s}$.
@@ -4096,13 +4152,14 @@ C'est \textbf{l'inverse} des résistances. Parallèle = on agrandit les plaques 
 \end{intuition}
 
 \begin{retenir}
-\textbf{Les 5 idées essentielles sur le condensateur :}
+\textbf{Les 6 idées essentielles sur le condensateur :}
 \begin{enumerate}[nosep]
 \item $q = Cu$ : charge proportionnelle à la tension.
 \item $i = C\,\mathrm{d}u/\mathrm{d}t$ : le courant dépend de la \textit{variation} de tension.
-\item Circuit ouvert en DC, laisse passer l'AC.
+\item Tension continue $\Rightarrow$ courant nul (ouvert en DC) ; rampe sous courant constant.
+\item La tension ne peut pas sauter ; le courant, si.
 \item Circuit RC : $\tau = RC$, charge/décharge exponentielles.
-\item Énergie : $W = \frac{1}{2}CU^2$.
+\item Énergie : $W = \frac{1}{2}CU^2$ (stockée dans le champ, non dissipée).
 \end{enumerate}
 \end{retenir}
 
@@ -4110,7 +4167,7 @@ C'est \textbf{l'inverse} des résistances. Parallèle = on agrandit les plaques 
 \section{Approfondissement}
 
 \begin{approfondissement}
-Construction physique, technologies, et comportement fréquentiel. Prérequis : exponentielles, équations différentielles du 1er ordre.
+Capacité du condensateur plan, les technologies réelles et leurs compromis, la démonstration du RC, et l'impédance en régime sinusoïdal. Prérequis : exponentielles, équations différentielles du 1\textsuperscript{er} ordre.
 \end{approfondissement}
 
 \subsection{Capacité d'un condensateur plan}
@@ -4129,7 +4186,9 @@ Construction physique, technologies, et comportement fréquentiel. Prérequis : 
 \subsection{Technologies de condensateurs}
 
 \begin{center}
-\begin{tabular}{p{2.6cm}p{2.2cm}p{2cm}p{5.2cm}}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{p{2.75cm}p{2.9cm}p{1.7cm}p{4.2cm}}
 \toprule
 \textbf{Technologie} & \textbf{Gamme} & \textbf{Tension} & \textbf{Usage typique} \\
 \midrule
@@ -4137,13 +4196,20 @@ Céramique (MLCC) & pF--\SI{100}{\micro F} & \SI{6}{V}--\SI{1}{kV} & Découplage
 Film (PP, PET) & nF--\SI{10}{\micro F} & jusqu'à \SI{2}{kV} & Audio, puissance, snubber \\
 Électrolytique Al & \SI{1}{\micro F}--\SI{10}{mF} & \SI{6}{V}--\SI{450}{V} & Filtrage alimentation \\
 Tantale & \SI{0.1}{\micro F}--\SI{1}{mF} & \SI{2.5}{V}--\SI{50}{V} & Découplage, faible ESR \\
+Céramique classe X/Y & nF--\SI{1}{\micro F} & secteur & Filtrage secteur (ch.~35) \\
 Supercondensateur & \SI{0.1}{F}--\SI{3000}{F} & \SI{2.5}{V}--\SI{3}{V} & Stockage d'énergie \\
 \bottomrule
 \end{tabular}
 \end{center}
 
+\textbf{Tension nominale.} Chaque diélectrique a une rigidité finie (chapitre 2) : au-delà, il claque. La tension nominale intègre une marge, mais le \emph{derating} reste la règle --- travailler à 50\,\% de $V_{\text{nom}}$ pour les électrolytiques, et \textbf{jusqu'à 50\,\% aussi pour les tantales}, dont la défaillance est un \emph{court-circuit} franc (risque d'incendie sur rail d'alimentation).
+
 \begin{attention}
 \textbf{Condensateurs polarisés :} les électrolytiques et tantales ont un sens ($+$/$-$). Les brancher à l'envers peut provoquer une \textbf{destruction explosive}. Les céramiques et films ne sont pas polarisés.
+\end{attention}
+
+\begin{attention}
+\textbf{Vieillissement des électrolytiques.} L'électrolyte s'assèche avec le temps et la température : l'ESR augmente, la capacité chute. La durée de vie suit une loi d'Arrhenius --- elle \textbf{double environ tous les \SI{10}{\celsius} de moins}. Un « 2000 h à \SI{105}{\celsius} » tient $\sim$32 000 h à \SI{65}{\celsius}. C'est le mode de défaillance n\textsuperscript{o}1 des alimentations sur le terrain : ESR qui grimpe $\Rightarrow$ ondulation qui explose (chapitres 30--32).
 \end{attention}
 
 \subsection{Démonstration de la charge du circuit RC}
@@ -4155,9 +4221,9 @@ RC\frac{\mathrm{d}u}{\mathrm{d}t} + u = E
 
 Équation différentielle du 1er ordre. Solution homogène : $u_h = Ae^{-t/RC}$. Solution particulière : $u_p = E$.
 
-Avec $u(0) = 0$ : $u(t) = E(1 - e^{-t/RC})$. \checkmark
+Avec $u(0) = 0$ : $u(t) = E(1 - e^{-t/RC})$. \hfill$\blacksquare$
 
-Courant : $i(t) = \dfrac{E}{R}e^{-t/RC}$. Le courant initial est $E/R$ (le condensateur déchargé se comporte comme un court-circuit) et décroît exponentiellement.
+Courant : $i(t) = \dfrac{E}{R}e^{-t/RC}$. Le courant initial est $E/R$ (le condensateur déchargé se comporte comme un court-circuit) et décroît exponentiellement. Le traitement complet du 1\textsuperscript{er} ordre (avec conditions initiales quelconques et second membre variable) est repris au chapitre 9.
 
 \subsection{Condensateur en régime sinusoïdal (aperçu)}
 
@@ -4166,7 +4232,7 @@ En régime sinusoïdal permanent, le condensateur a une \textbf{impédance} :
 \underline{Z}_C = \frac{1}{j\omega C} \qquad |\underline{Z}_C| = \frac{1}{\omega C}
 \]
 
-Le module \textbf{diminue} avec la fréquence : le condensateur laisse d'autant mieux passer le courant que $f$ est élevée. C'est la base du filtrage (cf.\ chapitres 13--14).
+Le module \textbf{diminue} avec la fréquence : le condensateur laisse d'autant mieux passer le courant que $f$ est élevée. C'est la base du filtrage (chapitres 13--14) ; la notation complexe complète est introduite au chapitre 10.
 
 \begin{pratique}
 \textbf{Exemple :} $C = \SI{100}{nF}$ : $|Z| = \SI{31.8}{k\ohm}$ à \SI{50}{Hz} (quasi ouvert), $|Z| = \SI{1.6}{\ohm}$ à \SI{1}{MHz} (quasi court-circuit). C'est pourquoi le \SI{100}{nF} est le condensateur de découplage universel.
@@ -4176,24 +4242,24 @@ Le module \textbf{diminue} avec la fréquence : le condensateur laisse d'autant 
 \section{Niveau Ingénieur}
 
 \begin{ingenieur}
-Modèle réel, effets parasites, choix en conception, et lien avec le champ électrique.
+Le modèle réel (ESR, ESL, fuite) et sa signature en impédance, la résonance série, le piège du DC-bias des céramiques, l'échauffement par courant d'ondulation, et le choix raisonné selon l'application. Prérequis : chapitre 12 (résonance), chapitre 10 (impédance).
 \end{ingenieur}
 
 \subsection{Modèle réel d'un condensateur}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=0.9]
-  \draw (0,0) to[R, l=$\text{ESR}$] (2,0) to[L, l=$\text{ESL}$] (4,0) to[C, l=$C$] (6,0);
-  \draw (0,0) -- (-0.5,0);
-  \draw (6,0) -- (6.5,0);
-  \draw (4.5,0) to[R, l_=$R_{\text{leak}}$, *-*] (4.5,-1.5) -| (6,0);
+  \draw (0,0) node[ocirc]{} to[R, l=ESR] (2,0) to[L, l=ESL] (4,0) to[C, l=$C$] (6,0) node[ocirc]{};
+  \draw (4,0) node[circ]{} to[R, l_=$R_{\text{leak}}$] (4,-1.6) -- (6,-1.6) -- (6,0) node[circ]{};
 \end{circuitikz}
-\end{center}
+\caption{Modèle série d'un condensateur réel : ESR et ESL en série, résistance de fuite $R_{\text{leak}}$ en parallèle de la capacité.}
+\end{figure}
 
 \begin{itemize}[nosep]
-\item \textbf{ESR} : résistance série ($\SI{1}{m\ohm}$--$\SI{1}{\ohm}$). Dissipe de la puissance, limite le filtrage.
-\item \textbf{ESL} : inductance série (quelques nH). Crée la fréquence de résonance série (SRF).
-\item $R_{\text{leak}}$ : fuite du diélectrique ($> \SI{1}{G\ohm}$). Décharge lente sans charge externe.
+\item \textbf{ESR} : résistance série ($\SI{1}{m\ohm}$--$\SI{1}{\ohm}$). Dissipe la puissance du courant d'ondulation, limite l'efficacité du filtrage.
+\item \textbf{ESL} : inductance série (boîtier + connexions, $\sim$\SI{0.5}{}--\SI{2}{nH}). Fixe la fréquence de résonance série (SRF).
+\item $R_{\text{leak}}$ : traduit le courant de fuite. Très élevée pour les céramiques/film ($>\SI{10}{G\ohm}$), mais \textbf{beaucoup plus faible pour les électrolytiques} : la fuite y vaut typiquement $\sim 0{,}01\,CV$, soit des \textbf{microampères} --- un électrolytique chargé se décharge seul en heures à jours, pas en années.
 \end{itemize}
 
 \subsection{Fréquence de résonance série (SRF)}
@@ -4202,11 +4268,30 @@ Modèle réel, effets parasites, choix en conception, et lien avec le champ éle
 \[
 \boxed{f_{\text{SRF}} = \frac{1}{2\pi\sqrt{\text{ESL} \cdot C}}}
 \]
-Sous $f_{\text{SRF}}$ : capacitif. Au-dessus : \textbf{inductif} (le condensateur ne filtre plus !).
+Sous $f_{\text{SRF}}$ : capacitif. Au-dessus : \textbf{inductif} (le condensateur ne filtre plus !). C'est la résonance série d'un circuit RLC (chapitre 12), ESR fixant le minimum d'impédance.
 \end{formule}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[xscale=1.5, yscale=0.8]
+  \draw[-{Stealth}] (0,0) -- (5.2,0) node[right, font=\footnotesize] {$\log f$};
+  \draw[-{Stealth}] (0,0) -- (0,3.4) node[above, font=\footnotesize] {$\log|Z|$};
+  % branche capacitive -1
+  \draw[very thick, blue!70!black] (0.4,3.0) -- (2.3,0.55);
+  % plancher ESR
+  \draw[very thick, gray] (2.3,0.55) -- (2.9,0.55);
+  % branche inductive +1
+  \draw[very thick, red!70!black] (2.9,0.55) -- (4.8,3.0);
+  \node[blue!70!black, font=\footnotesize] at (0.95,2.4) {$1/\omega C$};
+  \node[red!70!black, font=\footnotesize] at (4.25,2.4) {$\omega\,$ESL};
+  \node[gray, font=\footnotesize, below] at (2.6,0.5) {ESR};
+  \draw[dashed, gray] (2.6,0) -- (2.6,0.55); \node[below, font=\footnotesize] at (2.6,0) {$f_{\text{SRF}}$};
+\end{tikzpicture}
+\caption{Impédance d'un condensateur réel (log-log) : capacitif en $1/\omega C$, minimum $=$ ESR à la SRF, puis inductif en $\omega\,$ESL. Au-delà de la SRF, ce n'est plus un condensateur.}
+\end{figure}
+
 \begin{pratique}
-Un \SI{100}{nF} en 0805 a typiquement $f_{\text{SRF}} \sim \SI{30}{MHz}$. Au-delà, il se comporte comme une inductance. C'est pourquoi on met \textbf{plusieurs condensateurs en parallèle} de valeurs différentes (\SI{100}{nF} + \SI{1}{nF} + \SI{100}{pF}) pour couvrir une large bande. Plus le boîtier est petit, plus la SRF est élevée.
+Un \SI{100}{nF} en 0805 a typiquement $f_{\text{SRF}} \sim \SI{20}{MHz}$. \textbf{Attention à l'idée reçue} du panachage 100n + 1n + 100p : mettre en parallèle des \emph{valeurs} différentes crée des anti-résonances entre elles, et au-dessus des SRF seule compte l'inductance de \emph{montage}. Le levier réel est géométrique : boîtier plus petit (0402), vias au ras des pastilles, boucle minimale --- développé au chapitre 36. Plusieurs condensateurs \emph{identiques} bien montés valent souvent mieux qu'un panachage de valeurs.
 \end{pratique}
 
 \subsection{Piège des céramiques haute capacité}
@@ -4216,6 +4301,10 @@ Les céramiques de classe II (X5R, X7R, Y5V) voient leur capacité \textbf{chute
 
 Les céramiques \textbf{NP0/C0G} (classe I) n'ont pas ce problème mais sont limitées à $\sim\SI{10}{nF}$.
 \end{attention}
+
+\subsection{Courant d'ondulation et échauffement}
+
+Dans une alimentation, le condensateur de filtrage encaisse un courant d'ondulation $I_{\text{ripple}}$ (efficace) qui dissipe dans l'ESR : $P = \text{ESR}\cdot I_{\text{ripple}}^2$. Cette puissance échauffe le composant ($\Delta T = R_{\text{th}}P$, chapitre 4), et la chaleur accélère le vieillissement (Arrhenius) --- boucle qui peut s'emballer. Les datasheets spécifient donc un $I_{\text{ripple}}$ maximal admissible, souvent \emph{plus} contraignant que la tension. Point de conception majeur des alimentations à découpage (chapitres 30--32) : on choisit un électrolytique autant pour sa tenue en ondulation que pour sa capacité, d'où le recours à des banques de condensateurs en parallèle (ESR divisée, courant réparti).
 
 \subsection{Choix d'un condensateur selon l'application}
 
@@ -4235,7 +4324,7 @@ L'énergie $W = \frac{1}{2}CU^2$ est stockée dans le \textbf{champ électrique}
 \[
 w = \frac{1}{2}\varepsilon_0\varepsilon_r E^2 \qquad (\si{J/m^3})
 \]
-Pour un condensateur plan ($E = U/d$) : $W = w \cdot Sd = \frac{1}{2}\varepsilon_0\varepsilon_r\frac{S}{d}U^2 = \frac{1}{2}CU^2$. \checkmark
+Pour un condensateur plan ($E = U/d$) : $W = w \cdot Sd = \frac{1}{2}\varepsilon_0\varepsilon_r\frac{S}{d}U^2 = \frac{1}{2}CU^2$. \hfill$\blacksquare$
 
 % === EXERCICES DU CHAPITRE 7 ===
 \section*{Exercices}
@@ -4266,7 +4355,7 @@ $p(t) = \SI{25}{mW} \cdot e^{-2t/\tau}$.
 
 $W_R = \int_0^\infty p\,\mathrm{d}t = \SI{25}{mW} \times \tau/2 = \SI{1.25}{\micro J}$.
 
-$W_C = \frac{1}{2}CU^2 = \SI{1.25}{\micro J}$. \checkmark
+$W_C = \frac{1}{2}CU^2 = \SI{1.25}{\micro J}$. \hfill$\blacksquare$
 \end{pratique}
 
 \textbf{Exercice 7.4 ---} Trois condensateurs : \SI{10}{\micro F}, \SI{22}{\micro F}, \SI{47}{\micro F}. $C_{\text{éq}}$ en parallèle et en série ?
@@ -4280,9 +4369,13 @@ $W_C = \frac{1}{2}CU^2 = \SI{1.25}{\micro J}$. \checkmark
 \textbf{Exercice 7.5 ---} Un MLCC \SI{100}{nF} / 0805 : ESR = \SI{50}{m\ohm}, ESL = \SI{1}{nH}. Calculez la SRF. Efficace à \SI{100}{MHz} ?
 
 \begin{pratique}
-\textbf{Solution :} $f_{\text{SRF}} = 1/(2\pi\sqrt{10^{-9}\times10^{-7}}) \approx \SI{16}{MHz}$.
+\textbf{Solution.} \textit{Hypothèse : au-dessus de la SRF, $|Z| \approx \omega\,$ESL (ESR négligée).}
 
-À \SI{100}{MHz} : $|Z| \approx \omega\,\text{ESL} = 2\pi\times10^8\times10^{-9} = \SI{0.63}{\ohm}$ (inductif, ne découple plus efficacement). Ajouter un \SI{1}{nF} en 0402.
+$f_{\text{SRF}} = 1/(2\pi\sqrt{10^{-9}\times10^{-7}}) \approx \SI{16}{MHz}$.
+
+À \SI{100}{MHz} : $|Z| \approx \omega\,\text{ESL} = 2\pi\times10^8\times10^{-9} \approx \SI{0.63}{\ohm}$, inductif : le composant ne découple plus.
+
+\textit{Interprétation :} pour abaisser $|Z|$ à \SI{100}{MHz}, l'action utile n'est pas d'« ajouter une autre valeur » mais de \textbf{réduire l'ESL de montage} --- boîtier 0402, vias collés aux pastilles (chapitre 36). La valeur en farads n'intervient même plus dans le résultat.
 \end{pratique}
 
 \textbf{Exercice 7.6 ---} Un céramique X5R ``\SI{10}{\micro F}'' chute à \SI{4}{\micro F} sous \SI{8}{V} DC. Filtre RC avec $R = \SI{100}{\ohm}$ conçu pour $f_c = \SI{160}{Hz}$. Quelle $f_c$ réelle ?
@@ -4297,12 +4390,21 @@ Solution : film PP ou céramique C0G, ou surdimensionner (prendre \SI{22}{\micro
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Pourquoi un condensateur bloque le DC mais laisse passer l'AC ?
-\item On charge un \SI{100}{\micro F} à \SI{10}{V}, on le connecte à un \SI{100}{\micro F} déchargé. Tension finale ? L'énergie est-elle conservée ?
-\item Pourquoi des condensateurs de valeurs différentes en parallèle pour le découplage ?
-\item Un \SI{1000}{\micro F}/\SI{400}{V} est-il dangereux après coupure de l'alimentation ?
-\end{enumerate}
+\textbf{Q1.} Pourquoi un condensateur bloque le continu mais laisse passer l'alternatif ?
+
+\textit{Réponse : $i = C\,\mathrm{d}u/\mathrm{d}t$. En continu établi, $\mathrm{d}u/\mathrm{d}t = 0 \Rightarrow i = 0$ (ouvert). En alternatif, la tension varie en permanence : le courant de (dé)charge circule sans cesse dans le circuit extérieur --- les charges ne traversent jamais le diélectrique, mais le va-et-vient sur les armatures \emph{est} le courant. En impédance : $|Z_C| = 1/\omega C \to \infty$ en DC, $\to 0$ en HF.}
+
+\textbf{Q2.} On charge un \SI{100}{\micro F} à \SI{10}{V}, puis on le connecte à un \SI{100}{\micro F} déchargé. Tension finale ? Énergie conservée ?
+
+\textit{Réponse : la charge se conserve, l'énergie non. $q_i = 100\,\mu\text{F}\times10\,\text{V} = \SI{1}{mC}$, répartie sur $\SI{200}{\micro F}$ : $U_f = q_i/C_{tot} = \SI{5}{V}$. Énergie : $W_i = \frac12(100\,\mu)(10^2) = \SI{5}{mJ}$ ; $W_f = \frac12(200\,\mu)(5^2) = \SI{2.5}{mJ}$. \textbf{La moitié est perdue}, quelle que soit la résistance de liaison --- même « idéale ». Physiquement : le transfert impose un courant dans une résistance non nulle (fil, ESR) qui dissipe exactement $\Delta W$ ; à résistance nulle, l'inductance résiduelle rayonne l'énergie (oscillation amortie). C'est le pendant capacitif du choc inélastique. Conséquence pratique : les pompes de charge et commutations de bancs de condensateurs ont un rendement plafonné.}
+
+\textbf{Q3.} Pourquoi mettre des condensateurs en parallèle pour le découplage, et selon quel critère les choisir ?
+
+\textit{Réponse : pour abaisser l'impédance du réseau d'alimentation sur la bande des appels de courant. Mais le bon critère n'est pas « des valeurs échelonnées » (source d'anti-résonances) : au-dessus des SRF, c'est l'inductance de \emph{montage} qui domine. On vise donc des boîtiers petits, une boucle minimale, et l'on complète par la capacité inter-plans (chapitre 36). Des condensateurs identiques bien placés $>$ un panachage de valeurs mal monté.}
+
+\textbf{Q4.} Un \SI{1000}{\micro F}/\SI{400}{V} est-il dangereux après coupure de l'alimentation ?
+
+\textit{Réponse : oui, et durablement. $W = \frac12(10^{-3})(400^2) = \SI{80}{J}$ --- largement de quoi tuer. La fuite interne le décharge en heures à jours seulement ; sans résistance de décharge (\emph{bleeder}), il reste chargé longtemps. Règle : toujours mesurer puis décharger via une résistance avant d'intervenir. Le \emph{bleeder} permanent est une bonne pratique de conception sur les rails haute tension.}
 
 % === RÉSUMÉ DU CHAPITRE 7 ===
 \section*{Résumé du chapitre}
@@ -4330,7 +4432,8 @@ Associations & Parallèle : $\sum C_k$ ; Série : $\sum 1/C_k$ \\
 \begin{tabular}{p{4cm}p{9cm}}
 \toprule
 Condensateur plan & $C = \varepsilon_0\varepsilon_r S/d$ \\
-Technologies & Céramique, film, électrolytique, tantale, supercap \\
+Technologies & Céramique (classe I stable / classe II dense), film, électrolytique, tantale, X/Y \\
+Polarisés & Électrolytique/tantale : sens imposé, derating 50\,\%, vieillissement Arrhenius \\
 Impédance AC & $|\underline{Z}_C| = 1/\omega C$ --- diminue avec $f$ \\
 \bottomrule
 \end{tabular}
@@ -4342,15 +4445,21 @@ Impédance AC & $|\underline{Z}_C| = 1/\omega C$ --- diminue avec $f$ \\
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{p{4cm}p{9cm}}
 \toprule
-Modèle réel & ESR + ESL + $R_{\text{leak}}$ \\
-SRF & $1/(2\pi\sqrt{\text{ESL}\cdot C})$ --- inductif au-dessus \\
-Piège X5R/X7R & $C$ chute avec $V_{\text{DC}}$ --- vérifier datasheet \\
+Modèle réel & ESR + ESL + fuite --- impédance en cuvette, minimum $=$ ESR \\
+SRF & $1/(2\pi\sqrt{\text{ESL}\cdot C})$ --- inductif au-dessus ; c'est l'ESL de montage qui compte (ch.~36) \\
+Piège classe II & $C$ chute avec $V_{\text{DC}}$ (DC-bias) --- vérifier la datasheet \\
+Courant d'ondulation & $P = \text{ESR}\cdot I_{\text{ripple}}^2$ --- échauffement, souvent dimensionnant \\
 Choix techno & Découplage, filtrage, audio, RF, puissance \\
 \bottomrule
 \end{tabular}
 \end{center}
 \end{ingenieur}
 
+\vspace{0.4cm}
+
+\begin{retenir}
+Le condensateur stocke l'énergie dans un champ \emph{électrique} et s'oppose aux variations de \emph{tension}. Il existe un composant rigoureusement dual, qui stocke l'énergie dans un champ \emph{magnétique} et s'oppose aux variations de \emph{courant} : la bobine. Tout ce chapitre a un miroir --- chapitre 8.
+\end{retenir}
 
 % ============================================================================
 % CHAPITRE 8 : LA BOBINE (INDUCTANCE)
