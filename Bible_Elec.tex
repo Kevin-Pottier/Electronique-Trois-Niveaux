@@ -4110,10 +4110,11 @@ Le circuit le plus fondamental avec un condensateur est le \textbf{circuit RC} s
   \draw[very thick] (0,0) -- (0,1.32); \draw[very thick] (-0.28,1.32) -- (0.28,1.32);
   \draw[very thick] (-0.5,1.68) -- (0.5,1.68); \draw[very thick] (0,1.68) -- (0,3);
   \node[left, font=\small] at (-0.6,1.5) {$E$};
-  \draw (0,3) to[short] (0.9,3);
-  \draw (0.9,3.15) -- (1.7,3.35); \draw[fill=white] (0.9,3) circle (1.3pt); \draw[fill=white] (1.75,3.35) circle (1.3pt);
-  \node[font=\footnotesize] at (1.3,3.7) {$K$};
-  \draw (1.75,3.35) to[short] (2.4,3) to[R, l=$R$, i=$i$] (4.4,3) node[circ]{} to[C, l=$C$, v_=$u_C$] (4.4,0) node[circ]{} to[short] (0,0);
+  \draw (0,3) to[short] (1.0,3);
+  \draw[fill=white] (1.0,3) circle (1.3pt); \draw[fill=white] (2.0,3) circle (1.3pt);
+  \draw (1.06,3.05) -- (1.9,3.5);
+  \node[font=\footnotesize] at (1.5,3.75) {$K$};
+  \draw (2.0,3) to[R, l=$R$, i=$i$] (4.4,3) node[circ]{} to[C, l=$C$, v_=$u_C$] (4.4,0) node[circ]{} to[short] (0,0);
 \end{tikzpicture}
 \caption{Le circuit RC série : à la fermeture de $K$, le condensateur se charge à travers $R$.}
 \end{figure}
