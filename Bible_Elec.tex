@@ -4486,6 +4486,28 @@ La bobine (ou inductance) est le second composant qui introduit la notion de tem
 
 Une bobine est un \textbf{enroulement de fil conducteur} autour d'un support (souvent un noyau magnétique). Quand un courant la traverse, elle crée un \textbf{champ magnétique} dans et autour d'elle. Ce champ magnétique stocke de l'énergie.
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Enroulement physique
+  \draw (0,0) -- (0.4,0);
+  \foreach \i in {0,1,2,3} \draw (0.4+\i*0.42,0) arc[start angle=180, end angle=-90, radius=0.21] arc[start angle=-90, end angle=0, radius=0.21];
+  \draw (2.08,0) -- (2.5,0);
+  \node[font=\footnotesize] at (1.25,-0.7) {enroulement (physique)};
+  % Noyau
+  \draw[very thick, gray] (0.4,0.32) -- (2.08,0.32);
+  \node[gray, font=\footnotesize] at (1.25,0.6) {noyau};
+  % Symbole
+  \begin{scope}[shift={(5.2,0)}]
+    \draw (0,0) -- (0.5,0);
+    \foreach \i in {0,1,2,3} \draw (0.5+\i*0.4,0) arc[start angle=180, end angle=0, radius=0.2];
+    \draw (2.1,0) -- (2.6,0);
+    \node[font=\footnotesize] at (1.3,-0.7) {symbole $L$};
+  \end{scope}
+\end{tikzpicture}
+\caption{Une bobine : $N$ spires enroulées, éventuellement autour d'un noyau magnétique qui canalise le flux.}
+\end{figure}
+
 \begin{analogie}
 \textbf{Le volant d'inertie.} Imaginez une roue lourde (un volant) montée sur un axe :
 \begin{itemize}[nosep]
@@ -4561,8 +4583,8 @@ Piste de PCB (parasite) & $\sim \SI{1}{nH/mm}$ & $10^{-9}$ H \\
 Inductance CMS RF & \SI{1}{nH} à \SI{100}{nH} & $10^{-9}$--$10^{-7}$ H \\
 Inductance de puissance (buck) & \SI{1}{\micro H} à \SI{100}{\micro H} & $10^{-6}$--$10^{-4}$ H \\
 Self de filtrage secteur & \SI{1}{mH} à \SI{100}{mH} & $10^{-3}$--$10^{-1}$ H \\
-Bobine de haut-parleur & $\sim \SI{1}{mH}$ & $10^{-3}$ H \\
-Transformateur (primaire) & \SI{1}{H} à \SI{100}{H} & $10^{0}$--$10^{2}$ H \\
+Bobine de haut-parleur & \SI{0.01}{mH} à \SI{1}{mH} & $10^{-5}$--$10^{-3}$ H \\
+Transformateur secteur (primaire) & \SI{1}{H} à \SI{10}{H} & $10^{0}$--$10^{1}$ H \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -4572,6 +4594,21 @@ Transformateur (primaire) & \SI{1}{H} à \SI{100}{H} & $10^{0}$--$10^{2}$ H \\
 Le circuit RL est le dual du circuit RC.
 
 \textbf{Établissement du courant :} on applique $E$ à un circuit $R$-$L$ série (courant initial nul) :
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.9]
+  \draw[very thick] (0,0) -- (0,1.32); \draw[very thick] (-0.28,1.32) -- (0.28,1.32);
+  \draw[very thick] (-0.5,1.68) -- (0.5,1.68); \draw[very thick] (0,1.68) -- (0,3);
+  \node[left, font=\small] at (-0.6,1.5) {$E$};
+  \draw (0,3) to[short] (1.0,3);
+  \draw[fill=white] (1.0,3) circle (1.3pt); \draw[fill=white] (2.0,3) circle (1.3pt);
+  \draw (1.06,3.05) -- (1.9,3.5);
+  \node[font=\footnotesize] at (1.5,3.75) {$K$};
+  \draw (2.0,3) to[R, l=$R$, i=$i$] (4.4,3) to[L, l=$L$, v_=$u_L$] (4.4,0) to[short] (0,0);
+\end{tikzpicture}
+\caption{Le circuit RL série : à la fermeture de $K$, le courant s'établit à travers $R$ et $L$.}
+\end{figure}
 
 \begin{formule}
 \[
@@ -4588,29 +4625,32 @@ Le courant monte exponentiellement vers sa valeur finale $E/R$ (loi d'Ohm en DC)
 \]
 \end{formule}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{tikzpicture}[scale=0.8]
   \begin{scope}[shift={(0,0)}]
     \draw[->] (0,0) -- (6,0) node[right]{\small $t$};
-    \draw[->] (0,0) -- (0,3.5) node[above]{\small $i(t)$};
+    \draw[->] (0,0) -- (0,3.6) node[above]{\small $i(t)$};
     \draw[very thick, blue!70!black, domain=0:5.5, samples=100] plot(\x, {3*(1-exp(-\x/1.2))});
-    \draw[dashed, gray] (0,3) -- (5.5,3);
-    \node[left, font=\small] at (0,3) {$E/R$};
-    \draw[dashed, gray] (1.2,0) -- (1.2,1.9);
-    \node[below, font=\small] at (1.2,0) {$\tau$};
-    \node[below] at (3,-0.8) {\textbf{Établissement}};
+    \draw[dashed, gray] (0,3) -- (5.5,3); \node[left, font=\small] at (0,3) {$E/R$};
+    \draw[red!70!black, thick] (0,0) -- (1.2,3);
+    \draw[dashed, gray] (1.2,0) -- (1.2,3); \node[below, font=\small] at (1.2,0) {$\tau$};
+    \draw[dashed, gray] (0,1.9) -- (1.2,1.9); \node[left, font=\footnotesize] at (0,1.9) {$0{,}63\frac{E}{R}$};
+    \node[below] at (3,-0.75) {\textbf{Établissement}};
   \end{scope}
   \begin{scope}[shift={(8,0)}]
     \draw[->] (0,0) -- (6,0) node[right]{\small $t$};
-    \draw[->] (0,0) -- (0,3.5) node[above]{\small $i(t)$};
+    \draw[->] (0,0) -- (0,3.6) node[above]{\small $i(t)$};
     \draw[very thick, red!70!black, domain=0:5.5, samples=100] plot(\x, {3*exp(-\x/1.2)});
     \node[left, font=\small] at (0,3) {$I_0$};
-    \draw[dashed, gray] (1.2,0) -- (1.2,1.1);
-    \node[below, font=\small] at (1.2,0) {$\tau$};
-    \node[below] at (3,-0.8) {\textbf{Décroissance}};
+    \draw[blue!70!black, thick] (0,3) -- (1.2,0);
+    \draw[dashed, gray] (1.2,0) -- (1.2,1.1); \node[below, font=\small] at (1.2,0) {$\tau$};
+    \draw[dashed, gray] (0,1.1) -- (1.2,1.1); \node[left, font=\footnotesize] at (0,1.1) {$0{,}37I_0$};
+    \node[below] at (3,-0.75) {\textbf{Décroissance}};
   \end{scope}
 \end{tikzpicture}
-\end{center}
+\caption{Établissement et décroissance du courant dans le circuit RL. La tangente à l'origine coupe l'asymptote en $t = \tau$ --- dual exact du circuit RC (chapitre 7).}
+\end{figure}
 
 \begin{intuition}
 \textbf{Que fait la tension pendant l'établissement ?} Au début ($t = 0$), le courant est nul : la bobine se comporte comme un circuit ouvert. Toute la tension $E$ est aux bornes de $L$ et rien aux bornes de $R$. Le courant commence à croître. Au fil du temps, le courant augmente, la tension aux bornes de $R$ ($= Ri$) augmente, donc celle aux bornes de $L$ ($= E - Ri$) diminue, et la croissance du courant ralentit. À $t \to \infty$ : $i = E/R$, $u_L = 0$. La bobine est devenue un simple fil.
@@ -4671,7 +4711,7 @@ Les inductances s'associent \textbf{comme les résistances} (et à l'inverse des
 \section{Approfondissement}
 
 \begin{approfondissement}
-Construction physique, technologies, saturation du noyau. Prérequis : exponentielles, équations différentielles du 1er ordre.
+Inductance du solénoïde, technologies et noyaux, saturation magnétique, résolution du RL et impédance sinusoïdale. Prérequis : exponentielles, équations différentielles du 1\textsuperscript{er} ordre.
 \end{approfondissement}
 
 \subsection{Inductance d'un solénoïde}
@@ -4731,7 +4771,7 @@ L\frac{\mathrm{d}i}{\mathrm{d}t} + Ri = E
 
 Même type d'équation que le RC. Avec $i(0) = 0$ :
 
-$i(t) = \dfrac{E}{R}(1 - e^{-Rt/L})$. Constante de temps : $\tau = L/R$. \checkmark
+$i(t) = \dfrac{E}{R}(1 - e^{-Rt/L})$. Constante de temps : $\tau = L/R$. \hfill$\blacksquare$
 
 La tension aux bornes de la bobine : $u_L(t) = E\,e^{-t/\tau}$.
 
@@ -4742,10 +4782,25 @@ En régime sinusoïdal, la bobine a une \textbf{impédance} :
 \underline{Z}_L = j\omega L \qquad |\underline{Z}_L| = \omega L
 \]
 
-Le module \textbf{augmente} avec la fréquence : la bobine laisse passer le DC mais bloque les signaux HF. C'est le comportement \textbf{inverse} du condensateur.
+Le module \textbf{augmente} avec la fréquence : la bobine laisse passer le DC mais bloque les signaux HF. C'est le comportement \textbf{inverse} du condensateur ; la notation complexe complète vient au chapitre 10.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[xscale=1.5, yscale=0.8]
+  \draw[-{Stealth}] (0,0) -- (5.2,0) node[right, font=\footnotesize] {$\log f$};
+  \draw[-{Stealth}] (0,0) -- (0,3.4) node[above, font=\footnotesize] {$\log|Z|$};
+  \draw[very thick, blue!70!black] (0.4,0.55) -- (2.9,3.0);
+  \node[blue!70!black, font=\footnotesize] at (1.6,2.4) {$\omega L$};
+  \node[gray, font=\footnotesize] at (0.9,0.3) {$R_{\text{DC}}$};
+  \draw[gray] (0.4,0.35) -- (1.0,0.35);
+\end{tikzpicture}
+\caption{Impédance d'une bobine (sous sa SRF) : $|Z| = \omega L$ croît avec $f$ --- exactement l'inverse du condensateur.}
+\end{figure}
 
 \begin{pratique}
-\textbf{Exemple :} $L = \SI{10}{\micro H}$ : $|Z| = \SI{3.1}{m\ohm}$ à \SI{50}{Hz} (quasi court-circuit), $|Z| = \SI{63}{\ohm}$ à \SI{1}{MHz} (bloque). C'est le principe des \textbf{selfs de filtrage} (ferrite beads, chokes) qui laissent passer le DC d'alimentation mais bloquent le bruit HF.
+\textbf{Exemple :} $L = \SI{10}{\micro H}$ : $|Z| = \SI{3.1}{m\ohm}$ à \SI{50}{Hz} (quasi court-circuit), $|Z| = \SI{63}{\ohm}$ à \SI{1}{MHz} (bloque).
+
+\textbf{Choke vs ferrite bead --- deux mécanismes distincts.} Un \emph{choke} (self de filtrage) reste \textbf{réactif} : il stocke et restitue, $Z \approx j\omega L$. Un \emph{ferrite bead} est spécifié en \textbf{impédance à \SI{100}{MHz}} (ex. \SI{600}{\ohm}), pas en henrys : au-delà de quelques dizaines de MHz sa perméabilité devient complexe, la partie \emph{résistive} $R(f)$ domine et il \textbf{dissipe} l'énergie parasite en chaleur plutôt que de la réfléchir. C'est pour ça qu'on l'emploie sur les lignes d'alimentation en CEM (chapitre 35) : amortir, pas résonner --- un choke pur créerait au contraire des résonances avec les capacités de découplage.
 \end{pratique}
 
 % ----------------------------------------------------------------------------
@@ -4755,16 +4810,20 @@ Le module \textbf{augmente} avec la fréquence : la bobine laisse passer le DC m
 Modèle réel, pertes dans le noyau, inductance mutuelle, et considérations de conception.
 \end{ingenieur}
 
+\begin{ingenieur}
+Modèle réel et résonance parallèle, pertes noyau (hystérésis, Foucault, Steinmetz), inductance mutuelle, et pourquoi l'énergie se stocke dans l'entrefer. Prérequis : chapitre 10 (impédance), notions de champ magnétique.
+\end{ingenieur}
+
 \subsection{Modèle réel d'une inductance}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=0.9]
-  \draw (0,0) to[R, l=$R_{\text{DC}}$] (2.5,0) to[L, l=$L$] (5,0) to[short] (6,0);
-  \draw (3,0) to[C, l_=$C_p$, *-*] (3,-1.5) -| (5.5,0);
-  \draw (0,0) -- (-0.5,0);
-  \draw (6,0) -- (6.5,0);
+  \draw (0,0) node[ocirc]{} to[R, l=$R_{\text{DC}}$] (2.3,0) to[L, l=$L$] (4.6,0) node[ocirc]{};
+  \draw (0,0) node[circ]{} -- (0,1.4) to[C, l=$C_p$] (4.6,1.4) -- (4.6,0) node[circ]{};
 \end{circuitikz}
-\end{center}
+\caption{Modèle réel d'une inductance : $R_{\text{DC}}$ (fil) en série avec $L$, capacité inter-spires $C_p$ en parallèle sur l'ensemble --- d'où une résonance \emph{parallèle}.}
+\end{figure}
 
 \begin{itemize}[nosep]
 \item $R_{\text{DC}}$ (\textit{DC Resistance}) : résistance du fil de cuivre. $\SI{1}{m\ohm}$ à quelques $\Omega$ selon la taille. Dissipe de la puissance ($P = R_{\text{DC}} I^2$) et limite le rendement.
@@ -4797,6 +4856,30 @@ Les noyaux magnétiques dissipent de l'énergie par deux mécanismes :
 
 \textbf{2. Pertes par courants de Foucault :} le champ magnétique variable induit des courants dans le noyau lui-même (qui est conducteur). Ces courants dissipent de la puissance par effet Joule. On les réduit en utilisant des noyaux \textit{laminés} (tôles isolées empilées) ou des matériaux à haute résistivité (ferrites).
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  \draw[->] (-3,0) -- (3,0) node[right, font=\footnotesize] {$H$};
+  \draw[->] (0,-2.2) -- (0,2.2) node[above, font=\footnotesize] {$B$};
+  % Boucle d'hystérésis
+  \draw[very thick, blue!70!black]
+    (-2.6,-1.85) .. controls (-1.2,-1.8) and (-0.3,-1.4) .. (0.4,0)
+    .. controls (0.9,1.15) and (1.6,1.72) .. (2.6,1.85)
+    .. controls (1.2,1.8) and (0.3,1.4) .. (-0.4,0)
+    .. controls (-0.9,-1.15) and (-1.6,-1.72) .. (-2.6,-1.85);
+  % Saturation
+  \draw[dashed, gray] (-3,1.85) -- (2.6,1.85); \node[left, font=\footnotesize] at (-2.6,1.85) {$B_{\text{sat}}$};
+  \draw[dashed, gray] (2.6,0) -- (2.6,1.85);
+  \node[font=\footnotesize, align=left] at (1.9,0.75) {coude de\\ saturation};
+  % Rémanence / coercitif
+  \node[below left, font=\footnotesize] at (0,0.55) {$B_r$}; \draw[fill=black] (0,0.42) circle (1pt);
+  \node[above, font=\footnotesize] at (-0.5,0.02) {$H_c$}; \draw[fill=black] (-0.42,0) circle (1pt);
+  % Aire = pertes
+  \node[blue!70!black, font=\footnotesize, align=center] at (-1.55,0.95) {aire $=$ énergie\\ perdue / cycle};
+\end{tikzpicture}
+\caption{Cycle d'hystérésis B-H. L'aire de la boucle est l'énergie dissipée par cycle (pertes par hystérésis) ; au-delà du coude, $B$ sature et $L \propto \mathrm{d}B/\mathrm{d}H$ s'effondre.}
+\end{figure}
+
 \begin{formule}
 Modèle empirique de Steinmetz (très utilisé en puissance) :
 \[
@@ -4822,7 +4905,7 @@ Le \textbf{coefficient de couplage} $k = M/\sqrt{L_1 L_2}$ varie de 0 (pas de co
 \item \textbf{Diaphonie entre pistes PCB :} $k \ll 1$ (couplage parasite non souhaité).
 \item \textbf{Charge sans fil (Qi) :} $k \approx 0{,}3$--$0{,}7$.
 \end{itemize}
-Le transformateur sera traité en détail dans un chapitre dédié.
+Le transformateur sera traité en détail au chapitre 33.
 \end{pratique}
 
 \subsection{Énergie et champ magnétique}
@@ -4869,7 +4952,7 @@ $N = \sqrt{10^{-3} \times 0{,}03 / (4\pi\times10^{-7} \times 2000 \times 0{,}5\t
 
 $= \sqrt{3\times10^{-5} / (1{,}257\times10^{-7})} = \sqrt{239} \approx 15{,}5$ spires. On prend $N = 16$.
 
-Vérification : $L = 4\pi\times10^{-7} \times 2000 \times 256 \times 0{,}5\times10^{-4} / 0{,}03 = \SI{1.07}{mH}$. \checkmark
+Vérification : $L = 4\pi\times10^{-7} \times 2000 \times 256 \times 0{,}5\times10^{-4} / 0{,}03 = \SI{1.07}{mH}$. \hfill$\blacksquare$
 \end{pratique}
 
 \textbf{Exercice 8.4 ---} Une bobine de relais ($L = \SI{50}{mH}$, $R_{\text{bobine}} = \SI{100}{\ohm}$) est alimentée par \SI{12}{V}. Calculez le courant en régime permanent, $\tau$, et la surtension si on coupe le courant sans diode de roue libre (temps de coupure $\sim\SI{1}{\micro s}$).
@@ -4910,12 +4993,21 @@ Le couplage peut \textbf{augmenter ou diminuer} l'inductance totale selon le sen
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Pourquoi une bobine se comporte-t-elle comme un court-circuit en DC mais comme un circuit ouvert en haute fréquence ? Comparez avec le condensateur.
-\item On ouvre brutalement un interrupteur dans un circuit inductif. Que se passe-t-il ? Pourquoi un arc électrique peut-il se former ?
-\item Pourquoi les inductances de puissance (convertisseurs DC-DC) ont-elles un entrefer dans leur noyau de ferrite ?
-\item Une piste de PCB de \SI{1}{cm} a une inductance d'environ \SI{10}{nH}. Si un circuit numérique commute \SI{1}{A} en \SI{1}{ns}, quelle tension parasite cette piste induit-elle ? Est-ce problématique ?
-\end{enumerate}
+\textbf{Q1.} Pourquoi une bobine est-elle un court-circuit en DC et un circuit ouvert en HF ? Comparez au condensateur.
+
+\textit{Réponse : $Z_L = j\omega L \to 0$ en DC ($\omega=0$, ce n'est qu'un fil de cuivre), $\to \infty$ en HF. Physiquement, en DC le flux est constant, aucune f.é.m.\ induite ne s'oppose au courant ; en HF le $\mathrm{d}i/\mathrm{d}t$ génère une contre-tension qui bloque. Le condensateur fait l'inverse ($Z_C = 1/j\omega C$) : ouvert en DC, passant en HF. Dualité $u \leftrightarrow i$, $L \leftrightarrow C$.}
+
+\textbf{Q2.} On ouvre brutalement un interrupteur dans un circuit inductif. Que se passe-t-il, et pourquoi un arc peut-il naître ?
+
+\textit{Réponse : le courant ne peut pas s'annuler instantanément ($u = L\,\mathrm{d}i/\mathrm{d}t \to \infty$). La tension aux bornes de l'interrupteur monte jusqu'à ce que l'énergie $\frac12 LI^2$ trouve une issue : elle claque l'air entre les contacts (rigidité $\sim\SI{3}{MV/m}$, chapitre 2) et un arc s'amorce, entretenu tant que le courant décroît. C'est pourquoi les contacts commutant de l'inductif s'érodent, et pourquoi la diode de roue libre est indispensable en électronique.}
+
+\textbf{Q3.} Pourquoi les inductances de puissance ont-elles un entrefer dans le noyau de ferrite ?
+
+\textit{Réponse : l'énergie se stocke où $\mu_r$ est faible : $w = \frac12 B^2/\mu_0\mu_r$. Dans la ferrite ($\mu_r \sim 2000$) la densité d'énergie est mille fois plus faible que dans l'air à même $B$. L'entrefer concentre donc le stockage et, surtout, il \emph{linéarise} : la réluctance devient dominée par l'air, $L$ chute mais $I_{\text{sat}}$ monte fortement. On échange de l'inductance contre de la tenue en courant --- exactement ce qu'il faut en SMPS (chapitres 30--32).}
+
+\textbf{Q4.} Une piste PCB de \SI{1}{cm} fait $\sim\SI{10}{nH}$. Un circuit numérique commute \SI{1}{A} en \SI{1}{ns} : quelle tension parasite ? Problématique ?
+
+\textit{Réponse : $u = L\,\mathrm{d}i/\mathrm{d}t = 10^{-8} \times 1/10^{-9} = \SI{10}{V}$. Massif --- sur un rail \SI{3.3}{V}, c'est rédhibitoire. C'est le \emph{ground bounce} : la piste de retour n'est pas idéale, son inductance transforme les appels de courant en bruit de masse. La parade est géométrique : minimiser la surface de boucle (plan de masse, découplage au ras des broches, chapitre 36). Confirme pourquoi $\SI{1}{nH/mm}$ n'est jamais négligeable en numérique rapide (chapitre 37).}
 
 % === RÉSUMÉ DU CHAPITRE 8 ===
 \section*{Résumé du chapitre}
@@ -4964,6 +5056,11 @@ Entrefer & Stocke l'énergie (pas la ferrite !) --- critique en puissance \\
 \end{center}
 \end{ingenieur}
 
+\vspace{0.4cm}
+
+\begin{retenir}
+Condensateur et bobine sont posés : deux composants réactifs, duaux, régis par une dérivée. Les associer entre eux et avec une résistance produit des équations différentielles du 1\textsuperscript{er} et du 2\textsuperscript{e} ordre --- régimes transitoires, oscillations, résonance. C'est l'objet du chapitre 9 : les circuits RC, RL et RLC.
+\end{retenir}
 
 % ============================================================================
 % CHAPITRE 9 : CIRCUITS RC, RL, RLC
