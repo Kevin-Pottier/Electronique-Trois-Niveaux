@@ -6262,7 +6262,7 @@ Le chapitre 4 a traité la puissance en DC et donné un premier aperçu du régi
 \section{Les Bases}
 
 \begin{bases}
-Cette section explique intuitivement pourquoi la puissance en alternatif est plus subtile qu'en continu, et pourquoi cela coûte cher. Prérequis : chapitres 4 et 10.
+Pourquoi le déphasage complique le bilan de puissance en AC, les trois puissances (P, Q, S), le facteur de puissance et son coût, la compensation. Prérequis : chapitres 4 et 10.
 \end{bases}
 
 \subsection{Rappel : puissance en continu}
@@ -6303,6 +6303,26 @@ La puissance instantanée oscille à la fréquence \textbf{double} autour d'une 
 \begin{intuition}
 La puissance oscille à $2f$ (à \SI{50}{Hz}, la puissance oscille à \SI{100}{Hz}). C'est ce qui fait ``vibrer'' les lampes fluorescentes et les transformateurs (bourdonnement à \SI{100}{Hz}). La valeur moyenne de cette oscillation est la puissance active $P$.
 \end{intuition}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[xscale=0.62, yscale=0.9]
+  \draw[-{Stealth}] (0,0) -- (10.7,0) node[right=2pt] {\footnotesize $t$};
+  \draw[-{Stealth}] (0,-1.6) -- (0,2.6);
+  % u et i déphasés
+  \draw[thick, blue!60!black, domain=0:10, samples=160] plot(\x,{1.1*sin(72*\x+90)});
+  \draw[thick, green!45!black, densely dashed, domain=0:10, samples=160] plot(\x,{0.8*sin(72*\x+50)});
+  % p(t) avec lobes négatifs
+  \draw[very thick, red!70!black, domain=0:10, samples=240] plot(\x,{1.9*sin(72*\x+90)*sin(72*\x+50)});
+  \draw[dashed] (0,0.61) -- (10.3,0.61); \node[left, font=\footnotesize] at (-0.1,0.61) {$P$};
+  \node[right, red!70!black, font=\footnotesize] at (10.35,1.5) {$p(t)$};
+  \node[right, blue!60!black, font=\footnotesize] at (10.35,0.95) {$u$};
+  \node[right, green!45!black, font=\footnotesize] at (10.35,0.3) {$i$};
+  \node[font=\footnotesize, align=center] at (7.9,-1.25) {$p<0$ : énergie rendue\\ à la source (réactif)};
+  \draw[-{Stealth}, thin] (6.4,-0.95) -- (5.5,-0.25);
+\end{tikzpicture}
+\caption{Charge déphasée : $p(t) = u\,i$ oscille à $2\omega$ autour de $P = U_{\text{eff}}I_{\text{eff}}\cos\varphi$. Les passages sous zéro sont les instants où la charge \emph{restitue} de l'énergie à la source : c'est la puissance réactive $Q$, qui ne fait que transiter mais impose du courant dans les câbles.}
+\end{figure}
 
 \subsection{Les trois puissances}
 
@@ -6357,6 +6377,28 @@ Condensateur pur & $-90°$ & $0$ & Aucune puissance active \\
 
 \subsection{Pourquoi un mauvais $\cos\varphi$ coûte cher}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.1]
+  % U horizontal (référence)
+  \draw[very thick, blue!70!black, -{Stealth[length=3mm]}] (0,0) -- (3,0);
+  \node[blue!70!black, right] at (3.05,0) {$\underline{U}$};
+  % I déphasé de -phi (inductif : i en retard)
+  \draw[very thick, green!55!black, -{Stealth[length=3mm]}] (0,0) -- (2.4,-1.6);
+  \node[green!55!black, below right] at (2.4,-1.6) {$\underline{I}$};
+  % projections
+  \draw[dashed, gray] (2.4,-1.6) -- (2.4,0);
+  \draw[very thick, orange!80!black, -{Stealth[length=2mm]}] (0,0) -- (2.4,0);
+  \node[orange!80!black, above, font=\footnotesize] at (1.2,0.02) {$I\cos\varphi$ (actif)};
+  \draw[very thick, red!70!black, -{Stealth[length=2mm]}] (2.4,0) -- (2.4,-1.6);
+  \node[red!70!black, right, font=\footnotesize] at (2.45,-0.8) {$I\sin\varphi$ (réactif)};
+  % angle
+  \draw (0.7,0) arc[start angle=0, end angle=-33.7, radius=0.7];
+  \node at (0.95,-0.25) {$\varphi$};
+\end{tikzpicture}
+\caption{Décomposition du courant (charge inductive, $\underline{U}$ en référence). Seule la composante en phase $I\cos\varphi$ transporte la puissance active ; la composante en quadrature $I\sin\varphi$ ne transporte que du réactif --- mais circule dans les câbles et y dissipe du $RI^2$. Compenser, c'est annuler cette composante en quadrature.}
+\end{figure}
+
 \begin{pratique}
 \textbf{Exemple concret :} une usine consomme $P = \SI{100}{kW}$ avec $\cos\varphi = 0{,}7$ sous $U = \SI{400}{V}$.
 
@@ -6384,31 +6426,33 @@ Le principe est simple : on ajoute un composant réactif de \textbf{signe oppos�
 \item Charge \textbf{capacitive} (rare) $\Rightarrow$ ajouter des \textbf{inductances}.
 \end{itemize}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{tikzpicture}[scale=1.0]
-  % Triangle avant
+  % Triangle avant (Q vers le haut = inductif)
   \begin{scope}[shift={(0,0)}]
     \draw[very thick, blue!70!black, -{Stealth[length=3mm]}] (0,0) -- (3,0) node[midway, below]{$P$};
-    \draw[very thick, red!70!black, -{Stealth[length=3mm]}] (3,0) -- (3,-2.5) node[midway, right]{$Q$};
-    \draw[very thick, green!60!black, -{Stealth[length=3mm]}] (0,0) -- (3,-2.5) node[midway, left=5pt]{$S$};
-    \draw[thick] (0.6,0) arc[start angle=0, end angle=-40, radius=0.6];
-    \node at (1,-0.4) {$\varphi$};
-    \node[below] at (1.5,-3) {\textbf{Avant compensation}};
+    \draw[very thick, red!70!black, -{Stealth[length=3mm]}] (3,0) -- (3,2.5) node[midway, right]{$Q$};
+    \draw[very thick, green!60!black, -{Stealth[length=3mm]}] (0,0) -- (3,2.5) node[midway, above left=-2pt]{$S$};
+    \draw[thick] (0.6,0) arc[start angle=0, end angle=40, radius=0.6];
+    \node at (1,0.4) {$\varphi$};
+    \node[below] at (1.5,-0.5) {\textbf{Avant compensation}};
   \end{scope}
   % Triangle après
   \begin{scope}[shift={(7,0)}]
     \draw[very thick, blue!70!black, -{Stealth[length=3mm]}] (0,0) -- (3,0) node[midway, below]{$P$};
-    \draw[very thick, red!70!black, -{Stealth[length=3mm]}] (3,0) -- (3,-0.8) node[midway, right]{$Q'$};
-    \draw[very thick, green!60!black, -{Stealth[length=3mm]}] (0,0) -- (3,-0.8) node[midway, left=5pt]{$S'$};
-    \draw[dashed, gray] (3,-0.8) -- (3,-2.5);
-    \draw[very thick, orange!70!black, -{Stealth[length=2.5mm]}] (3,-2.5) -- (3,-0.8);
-    \node[orange!70!black, right] at (3.1,-1.65) {$Q_C$};
-    \draw[thick] (0.6,0) arc[start angle=0, end angle=-15, radius=0.6];
-    \node at (1.2,-0.2) {$\varphi'$};
-    \node[below] at (1.5,-3) {\textbf{Après compensation}};
+    \draw[very thick, red!70!black, -{Stealth[length=3mm]}] (3,0) -- (3,0.8) node[midway, right]{$Q'$};
+    \draw[very thick, green!60!black, -{Stealth[length=3mm]}] (0,0) -- (3,0.8) node[midway, above left=-3pt]{$S'$};
+    \draw[dashed, gray] (3,0.8) -- (3,2.5);
+    \draw[very thick, orange!80!black, -{Stealth[length=2.5mm]}] (3,2.5) -- (3,0.8);
+    \node[orange!80!black, right] at (3.1,1.65) {$Q_C$};
+    \draw[thick] (0.6,0) arc[start angle=0, end angle=15, radius=0.6];
+    \node at (1.0,0.18) {$\varphi'$};
+    \node[below] at (1.5,-0.5) {\textbf{Après compensation}};
   \end{scope}
 \end{tikzpicture}
-\end{center}
+\caption{Triangle des puissances (convention : $Q>0$ inductif, vers le haut). Le condensateur fournit $Q_C$ qui \emph{soustrait} de la réactance inductive : $Q' = Q - Q_C$. $P$ est inchangée (le condensateur ne consomme pas d'actif), mais $S' < S$ : le réseau fournit moins de courant.}
+\end{figure}
 
 \begin{formule}
 Le condensateur de compensation doit fournir une puissance réactive :
@@ -6468,13 +6512,13 @@ Pourquoi le conjugué ? Si $\underline{U} = Ue^{j0}$ et $\underline{I} = Ie^{-j\
 \textbf{Composant} & $\underline{Z}$ & $\varphi$ & $P$ & $Q$ \\
 \midrule
 Résistance $R$ & $R$ & $0°$ & $RI^2$ & $0$ \\
-Inductance $L$ & $j\omega L$ & $+90°$ & $0$ & $+\omega LI^2$ (consomme) \\
-Condensateur $C$ & $1/(j\omega C)$ & $-90°$ & $0$ & $-U^2\omega C$ (fournit) \\
+Inductance $L$ & $j\omega L$ & $+90°$ & $0$ & $+\omega LI^2$ \\
+Condensateur $C$ & $1/(j\omega C)$ & $-90°$ & $0$ & $-U^2\omega C$ \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\textbf{Interprétation :} seule la résistance consomme de la puissance active. $L$ et $C$ ne font qu'échanger de la puissance réactive avec la source (avec des signes opposés : c'est pourquoi un condensateur peut compenser une inductance).
+\textbf{Interprétation physique.} Seule la résistance consomme de la puissance active (moyenne non nulle). $L$ et $C$ ne consomment \emph{rien} en moyenne : ils empruntent de l'énergie un quart de période et la rendent le suivant. La convention de signe ($Q_L > 0$, $Q_C < 0$) traduit leur \emph{opposition de phase} : quand la bobine appelle du courant réactif, le condensateur en fournit --- d'où la compensation. « $Q > 0$ » ne signifie pas « énergie perdue », mais « énergie qui oscille avec ce signe de phase ».
 
 \subsection{Bilan de puissance d'un circuit AC}
 
@@ -6541,12 +6585,12 @@ On peut le décomposer : $\text{PF} = \cos\varphi_1 \times \dfrac{I_1}{I_{\text{
 \end{formule}
 
 \begin{attention}
-Un pont redresseur classique (diodes) a un $\cos\varphi_1 \approx 1$ (le fondamental est en phase) mais un THD $\sim 80\%$. Le facteur de puissance réel n'est que $\text{PF} \approx 0{,}55$ ! Les condensateurs de compensation ne corrigent \textit{pas} ce problème --- il faut un PFC actif.
+Un pont redresseur classique (diodes) a un $\cos\varphi_1 \approx 1$ (le fondamental est en phase) mais un THD $\sim 80\%$. Le facteur de puissance réel n'est que $\text{PF} \approx 0{,}55$ ! Les condensateurs de compensation ne corrigent \textit{pas} ce problème --- il faut un PFC actif. Ces harmoniques de courant polluent aussi le réseau (perturbations conduites, chapitre 35).
 \end{attention}
 
 \subsection{Correction active du facteur de puissance (PFC)}
 
-Un étage PFC est un convertisseur boost commandé en courant qui force le courant d'entrée à suivre la forme de la tension (sinusoïdale). Résultat : $\text{PF} > 0{,}99$, THD $< 5\%$.
+Un étage PFC est un convertisseur boost commandé en courant qui force le courant d'entrée à suivre la forme de la tension (sinusoïdale). Résultat : $\text{PF} > 0{,}99$, THD $< 5\%$. Le convertisseur boost sous-jacent est traité aux chapitres 31--32.
 
 \begin{pratique}
 \textbf{Obligatoire} pour les appareils $> \SI{75}{W}$ (norme IEC 61000-3-2). C'est pourquoi tous les chargeurs de PC portable, alimentations ATX, et éclairages LED de puissance intègrent un étage PFC.
@@ -6637,9 +6681,9 @@ $C = Q_C/(\omega U^2) = 1923/(2\pi\times50\times230^2) = \SI{115.6}{\micro F}$.
 
 $= C\omega\hat{U}^2\cos(\omega t)[-\sin(\omega t)] = -\frac{1}{2}C\omega\hat{U}^2\sin(2\omega t)$.
 
-$P = \frac{1}{T}\int_0^T -\frac{1}{2}C\omega\hat{U}^2\sin(2\omega t)\,\mathrm{d}t = 0$ \checkmark{} (moyenne d'un sinus sur une période).
+$P = \frac{1}{T}\int_0^T -\frac{1}{2}C\omega\hat{U}^2\sin(2\omega t)\,\mathrm{d}t = 0$ \hfill$\blacksquare$
 
-Le condensateur ne consomme aucune puissance active. Toute l'énergie absorbée pendant un quart de période est restituée au quart de période suivant.
+(moyenne d'un sinus sur une période). Le condensateur ne consomme aucune puissance active. Toute l'énergie absorbée pendant un quart de période est restituée au quart suivant.
 \end{pratique}
 
 \subsection*{Niveau ingénieur}
@@ -6680,12 +6724,21 @@ Nouveau courant : $I' = 15000/(\sqrt{3}\times400\times0{,}95) = \SI{22.8}{A}$ (�
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Une bobine idéale consomme-t-elle de la puissance active ? Justifiez à l'aide du déphasage.
-\item Pourquoi la puissance instantanée oscille-t-elle à la fréquence $2f$ et non $f$ ?
-\item Un condensateur de compensation améliore le $\cos\varphi$ mais ne réduit pas la puissance active consommée. Pourquoi l'usine économise-t-elle quand même de l'argent ?
-\item Pourquoi un pont redresseur à diodes a-t-il un mauvais facteur de puissance malgré un fondamental en phase avec la tension ?
-\end{enumerate}
+\textbf{Q1.} Une bobine idéale consomme-t-elle de la puissance active ?
+
+\textit{Réponse : non. $\varphi = +90°$ entre u et i $\Rightarrow P = UI\cos 90° = 0$. Physiquement, elle stocke l'énergie dans son champ magnétique un quart de période et la restitue intégralement le suivant : bilan net nul. Elle n'échange que du réactif ($Q = \omega L I^2$), qui impose du courant dans les câbles sans travail utile.}
+
+\textbf{Q2.} Pourquoi $p(t)$ oscille-t-elle à $2f$ et non $f$ ?
+
+\textit{Réponse : $p = u\,i$, produit de deux sinusoïdes à $f$. Le produit $\cos(\omega t)\cos(\omega t - \varphi)$ contient un terme constant et un terme en $\cos(2\omega t - \varphi)$ (identité trigonométrique). Le doublement vient du produit : la puissance est maximale deux fois par période (aux crêtes positives \emph{et} négatives de u et i, qui coïncident). D'où le bourdonnement à \SI{100}{Hz} des transformateurs sur secteur \SI{50}{Hz}.}
+
+\textbf{Q3.} La compensation ne réduit pas $P$. Pourquoi l'usine économise-t-elle ?
+
+\textit{Réponse : le distributeur facture l'énergie active ($P$, en kWh) \emph{et} pénalise le réactif au-delà d'un seuil. Compenser supprime la pénalité réactive. Surtout, le courant total chute ($I = S/U$ diminue avec $S$) : moins de pertes Joule $RI^2$ dans l'installation du client (câbles, transfo), et un dimensionnement en $S$ (kVA) réduit --- transfo et câbles plus petits. L'énergie utile est la même, le coût de son transport baisse.}
+
+\textbf{Q4.} Pourquoi un pont à diodes a-t-il un mauvais PF malgré un fondamental en phase ?
+
+\textit{Réponse : il tire le courant par \emph{impulsions} étroites (aux crêtes de tension, quand les diodes conduisent et rechargent le condensateur de tête). Ce courant non sinusoïdal est riche en harmoniques : $\cos\varphi_1 \approx 1$ (fondamental en phase) mais $I_{\text{eff}} \gg I_1$ à cause des harmoniques. $\text{PF} = \cos\varphi_1/\sqrt{1+\text{THD}^2} \approx 0{,}55$. Le problème est la \emph{distorsion}, pas le déphasage --- d'où l'inefficacité des condensateurs (qui ne corrigent que le déphasage) et la nécessité d'un PFC actif.}
 
 % === RÉSUMÉ ===
 \section*{Résumé du chapitre}
@@ -6731,6 +6784,12 @@ Wattmètres & Méthode d'Aron : 2 wattmètres suffisent en 3 fils \\
 \end{tabular}
 \end{center}
 \end{ingenieur}
+
+\vspace{0.4cm}
+
+\begin{retenir}
+La compensation annule le réactif en \emph{ajoutant} un condensateur qui contrarie l'inductance. Il existe un régime où $L$ et $C$ s'annulent \emph{d'eux-mêmes}, sans composant ajouté : la résonance, où $Q$ réactif s'évanouit à $\omega_0$ et où le circuit ne présente plus que sa résistance. Ce phénomène --- sélectivité, surtensions, facteur de qualité --- est l'objet du chapitre 12.
+\end{retenir}
 
 % ============================================================================
 % CHAPITRE 12 : RÉSONANCE
