@@ -5080,7 +5080,7 @@ Les chapitres 7 et 8 ont étudié le condensateur et la bobine séparément. Ce 
 \section{Les Bases}
 
 \begin{bases}
-Cette section présente les comportements qualitatifs des circuits RC, RL et RLC. Prérequis : chapitres 7 et 8.
+Comportement qualitatif des circuits RC, RL et RLC : constantes de temps, oscillations, amortissement. Prérequis : chapitres 7 et 8.
 \end{bases}
 
 \subsection{Rappel : les trois comportements fondamentaux}
@@ -5139,6 +5139,17 @@ Vu au chapitre 8. L'essentiel :
 
 Quand on associe $R$, $L$ et $C$ en série, un phénomène nouveau apparaît : l'énergie peut \textbf{osciller} entre $L$ et $C$.
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.9]
+  \draw[very thick] (0,0) -- (0,1.32); \draw[very thick] (-0.28,1.32) -- (0.28,1.32);
+  \draw[very thick] (-0.5,1.68) -- (0.5,1.68); \draw[very thick] (0,1.68) -- (0,3);
+  \node[left, font=\small] at (-0.6,1.5) {$E$};
+  \draw (0,3) to[R, l=$R$, i=$i$] (2.4,3) to[L, l=$L$] (4.8,3) to[C, l=$C$, v_=$u_C$] (4.8,0) to[short] (0,0);
+\end{tikzpicture}
+\caption{Circuit RLC série. La sortie $u_C$ obéit à une équation du 2\textsuperscript{e} ordre : l'énergie oscille entre $L$ et $C$, amortie par $R$.}
+\end{figure}
+
 \begin{analogie}
 \textbf{La balançoire.} Une balançoire (ou un pendule) oscille entre énergie potentielle (en haut) et énergie cinétique (en bas). Le frottement de l'air l'amortit progressivement.
 
@@ -5150,43 +5161,39 @@ Dans le circuit RLC :
 \end{itemize}
 \end{analogie}
 
-La réponse à un échelon de tension dépend de la valeur de $R$ par rapport à $L$ et $C$. On distingue trois régimes :
+La réponse à un échelon dépend de l'amortissement, quantifié par le \textbf{coefficient d'amortissement} $\zeta$ (zêta) --- notation universelle des systèmes du 2\textsuperscript{e} ordre (chapitres 33--34) --- relié au facteur de qualité par $\zeta = 1/(2Q)$. Trois régimes :
 
 \begin{center}
 \begin{tabular}{lll}
 \toprule
 \textbf{Régime} & \textbf{Condition} & \textbf{Comportement} \\
 \midrule
-Sur-amorti & $R > 2\sqrt{L/C}$ & Pas d'oscillation, retour lent \\
-Critique & $R = 2\sqrt{L/C}$ & Retour le plus rapide sans oscillation \\
-Sous-amorti & $R < 2\sqrt{L/C}$ & Oscillations amorties \\
+Sur-amorti & $\zeta > 1$ ($R > 2\sqrt{L/C}$) & Pas d'oscillation, retour lent \\
+Critique & $\zeta = 1$ ($R = 2\sqrt{L/C}$) & Retour monotone le plus rapide \\
+Sous-amorti & $\zeta < 1$ ($R < 2\sqrt{L/C}$) & Oscillations amorties \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{tikzpicture}[scale=0.75]
   \draw[->] (0,0) -- (10,0) node[right]{\small $t$};
   \draw[->] (0,-1) -- (0,4) node[above]{\small $u_C(t)$};
   \draw[dashed, gray] (0,3) -- (9.5,3);
   \node[left, font=\small] at (0,3) {$E$};
-  
-  % Sur-amorti
   \draw[very thick, green!60!black, domain=0:9, samples=100] plot(\x, {3*(1-1.2*exp(-0.5*\x)+0.2*exp(-2*\x))});
-  \node[green!60!black, font=\small, right] at (7,2.3) {sur-amorti};
-  
-  % Critique
+  \node[green!60!black, font=\small, right] at (7,2.3) {sur-amorti ($\zeta>1$)};
   \draw[very thick, blue!70!black, domain=0:9, samples=100] plot(\x, {3*(1-(1+1.5*\x)*exp(-1.5*\x))});
-  \node[blue!70!black, font=\small, right] at (5,1.5) {critique};
-  
-  % Sous-amorti
+  \node[blue!70!black, font=\small, right] at (5,1.4) {critique ($\zeta=1$)};
   \draw[very thick, red!70!black, domain=0:9, samples=200] plot(\x, {3*(1-exp(-0.4*\x)*cos(120*\x))});
-  \node[red!70!black, font=\small, right] at (3.5,3.7) {sous-amorti};
+  \node[red!70!black, font=\small, right] at (3.3,3.75) {sous-amorti ($\zeta<1$)};
 \end{tikzpicture}
-\end{center}
+\caption{Réponse à un échelon selon l'amortissement. Le sous-amorti dépasse puis oscille ; le critique est la frontière du non-dépassement.}
+\end{figure}
 
 \begin{attention}
-\textbf{Le régime critique} ($R = 2\sqrt{L/C}$) est le cas idéal en instrumentation et en asservissement : c'est le régime qui atteint la valeur finale \textbf{le plus vite possible sans dépasser} ($0\%$ d'overshoot). En pratique, on vise souvent un léger sous-amortissement pour un bon compromis rapidité/dépassement.
+\textbf{Régime critique $\neq$ optimal.} Le critique ($\zeta = 1$) est le retour le plus rapide \emph{sans aucun dépassement}. Mais si l'on tolère un léger dépassement, un système \emph{sous-amorti} à $\zeta \approx 0{,}7$ ($Q \approx 0{,}7$) atteint la cible plus vite (temps de montée moindre, dépassement $\approx 5\%$) : c'est le réglage le plus courant en instrumentation et en asservissement. « Optimal » dépend donc du critère --- temps de montée, temps d'établissement, ou zéro dépassement.
 \end{attention}
 
 \subsection{Fréquence propre du circuit LC}
@@ -5211,10 +5218,10 @@ C'est une fréquence audio. Avec $L = \SI{10}{nH}$ et $C = \SI{1}{pF}$ : $f_0 \a
 \begin{retenir}
 \textbf{L'essentiel sur les circuits RC, RL, RLC :}
 \begin{enumerate}[nosep]
-\item RC et RL : comportement du 1er ordre (exponentielle, constante de temps $\tau$).
-\item RLC : comportement du 2nd ordre (oscillations possibles, 3 régimes).
+\item RC et RL : 1\textsuperscript{er} ordre (exponentielle, constante de temps $\tau$).
+\item RLC : 2\textsuperscript{e} ordre, amortissement $\zeta = 1/(2Q)$, trois régimes.
 \item Fréquence propre LC : $f_0 = 1/(2\pi\sqrt{LC})$.
-\item $R$ contrôle l'amortissement : plus $R$ est grand (RLC série), plus l'amortissement est fort.
+\item $R$ contrôle l'amortissement (RLC série : $R\uparrow \Rightarrow \zeta\uparrow$). Critique = frontière du non-dépassement, pas l'optimum universel.
 \end{enumerate}
 \end{retenir}
 
@@ -5222,7 +5229,7 @@ C'est une fréquence audio. Avec $L = \SI{10}{nH}$ et $C = \SI{1}{pF}$ : $f_0 \a
 \section{Approfondissement}
 
 \begin{approfondissement}
-Équations différentielles, facteur de qualité, réponses temporelles et fréquentielles. Prérequis : équations différentielles du 2nd ordre, exponentielles complexes.
+Équation différentielle du 2\textsuperscript{e} ordre, facteur de qualité $Q$ et amortissement $\zeta$, réponses temporelles, RLC parallèle, résonance. Prérequis : ED du 2\textsuperscript{e} ordre, exponentielles complexes.
 \end{approfondissement}
 
 \subsection{Équation différentielle du circuit RLC série}
@@ -5233,11 +5240,11 @@ KVL : $u_R + u_L + u_C = E$, soit $Ri + L\,\mathrm{d}i/\mathrm{d}t + u_C = E$ av
 \[
 \boxed{LC\frac{\mathrm{d}^2 u_C}{\mathrm{d}t^2} + RC\frac{\mathrm{d}u_C}{\mathrm{d}t} + u_C = E}
 \]
-Forme canonique (en divisant par $LC$) :
+Forme canonique (division par $LC$) :
 \[
-\frac{\mathrm{d}^2 u_C}{\mathrm{d}t^2} + \frac{\omega_0}{Q}\frac{\mathrm{d}u_C}{\mathrm{d}t} + \omega_0^2\, u_C = \omega_0^2\, E
+\frac{\mathrm{d}^2 u_C}{\mathrm{d}t^2} + 2\zeta\omega_0\frac{\mathrm{d}u_C}{\mathrm{d}t} + \omega_0^2\, u_C = \omega_0^2\, E
 \]
-avec $\omega_0 = 1/\sqrt{LC}$ et $Q = \frac{1}{R}\sqrt{L/C}$ (facteur de qualité).
+avec $\omega_0 = 1/\sqrt{LC}$, l'amortissement $\zeta = \frac{R}{2}\sqrt{C/L}$ et le facteur de qualité $Q = 1/(2\zeta) = \frac{1}{R}\sqrt{L/C}$. Les deux notations coexistent : $\zeta$ domine en automatique, $Q$ en électronique RF/filtres.
 \end{formule}
 
 \subsection{Facteur de qualité $Q$}
@@ -5249,9 +5256,9 @@ Le \textbf{facteur de qualité} $Q$ caractérise l'amortissement du circuit :
 \boxed{Q = \frac{1}{R}\sqrt{\frac{L}{C}}} \qquad \text{(RLC série)}
 \]
 \begin{itemize}[nosep]
-\item $Q < 0{,}5$ : sur-amorti (pas d'oscillation)
-\item $Q = 0{,}5$ : critique (amortissement optimal)
-\item $Q > 0{,}5$ : sous-amorti (oscillations)
+\item $Q < 0{,}5$ ($\zeta > 1$) : sur-amorti (pas d'oscillation)
+\item $Q = 0{,}5$ ($\zeta = 1$) : critique (frontière du non-dépassement)
+\item $Q > 0{,}5$ ($\zeta < 1$) : sous-amorti (oscillations)
 \end{itemize}
 Plus $Q$ est grand, moins il y a d'amortissement. $Q = \infty$ ($R = 0$) : oscillations permanentes.
 \end{formule}
@@ -5325,7 +5332,7 @@ La \textbf{bande passante} à $-3\,\text{dB}$ est liée au facteur de qualité :
 \[
 \boxed{\Delta f = \frac{f_0}{Q}}
 \]
-Plus $Q$ est élevé, plus la résonance est ``pointue'' (sélective). C'est le principe des filtres, des oscillateurs et des récepteurs radio.
+Plus $Q$ est élevé, plus la résonance est ``pointue'' (sélective). C'est le principe des filtres, des oscillateurs et des récepteurs radio ; le traitement fréquentiel complet est au chapitre 12.
 \end{formule}
 
 % ----------------------------------------------------------------------------
@@ -5335,15 +5342,50 @@ Plus $Q$ est élevé, plus la résonance est ``pointue'' (sélective). C'est le 
 Stabilité, pôles et zéros, amortissement en conception, et liens avec les systèmes asservis.
 \end{ingenieur}
 
+\begin{ingenieur}
+Pôles dans le plan complexe, facteur de qualité en conception réelle, équivalence avec les systèmes asservis, et résonances parasites non voulues. Prérequis : plan complexe, fonction de transfert.
+\end{ingenieur}
+
 \subsection{Pôles et zéros dans le plan complexe}
 
-L'équation caractéristique $s^2 + (\omega_0/Q)s + \omega_0^2 = 0$ donne deux \textbf{pôles} dans le plan complexe. Leur position détermine tout le comportement transitoire :
+L'équation caractéristique $s^2 + 2\zeta\omega_0 s + \omega_0^2 = 0$ donne deux \textbf{pôles} $s = -\zeta\omega_0 \pm \omega_0\sqrt{\zeta^2-1}$. Leur position dans le plan $s$ résume tout le transitoire :
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  \draw[->] (-4,0) -- (0.8,0) node[right, font=\footnotesize] {$\Re(s)$};
+  \draw[->] (0,-2.4) -- (0,2.4) node[above, font=\footnotesize] {$\Im(s)$};
+  % Cercle rayon omega_0
+  \draw[dashed, gray] (0,0) circle (2);
+  \node[gray, font=\footnotesize] at (-1.55,-1.62) {$\omega_0$};
+  % Pôles complexes conjugués (sous-amorti)
+  \fill[red!70!black] (-1,1.732) circle (2.2pt);
+  \fill[red!70!black] (-1,-1.732) circle (2.2pt);
+  \draw[red!70!black] (0,0) -- (-1,1.732);
+  \node[red!70!black, font=\footnotesize, right] at (-0.95,1.5) {sous-amorti};
+  % angle
+  \draw[red!70!black] (-0.4,0.69) arc[start angle=120, end angle=180, radius=0.8];
+  \node[red!70!black, font=\footnotesize] at (-0.95,0.35) {$\theta$};
+  \node[font=\footnotesize, align=left] at (-2.9,0.9) {$\cos\theta = \zeta$};
+  % Pôles réels (sur-amorti)
+  \fill[green!55!black] (-3.4,0) circle (2.2pt);
+  \fill[green!55!black] (-0.55,0) circle (2.2pt);
+  \node[green!55!black, font=\footnotesize, below] at (-3.0,-0.15) {sur-amorti};
+  % Pôle imaginaire pur
+  \fill[blue!60!black] (0,2) circle (2.2pt);
+  \fill[blue!60!black] (0,-2) circle (2.2pt);
+  \node[blue!60!black, font=\footnotesize, right] at (0.1,2.05) {$R=0$};
+  % demi-plan
+  \node[font=\footnotesize, align=center] at (-3.2,-1.9) {stable\\ ($\Re<0$)};
+\end{tikzpicture}
+\caption{Pôles du 2\textsuperscript{e} ordre dans le plan $s$. Ils sont sur un cercle de rayon $\omega_0$ ; l'angle à l'axe imaginaire donne $\cos\theta = \zeta$. Vers l'axe réel : sur-amorti. Sur l'axe imaginaire ($R=0$) : oscillation pure. Partie réelle $>0$ : instable.}
+\end{figure}
 
 \begin{itemize}[nosep]
-\item \textbf{Pôles réels négatifs} ($Q < 0{,}5$) : sur-amorti. Les pôles sont sur l'axe réel négatif.
-\item \textbf{Pôle double réel} ($Q = 0{,}5$) : critique. Un seul pôle (double) sur l'axe réel.
-\item \textbf{Pôles complexes conjugués} ($Q > 0{,}5$) : sous-amorti. Les pôles sont dans le demi-plan gauche, symétriques par rapport à l'axe réel. Leur partie imaginaire donne la pseudo-pulsation $\omega_d$, leur partie réelle donne le taux d'amortissement $\alpha$.
-\item \textbf{Pôles imaginaires purs} ($R = 0$, $Q = \infty$) : oscillations permanentes (non amorties). En pratique, cela n'existe pas (il y a toujours des pertes).
+\item \textbf{Pôles réels négatifs} ($\zeta > 1$) : sur-amorti, sur l'axe réel négatif.
+\item \textbf{Pôle double réel} ($\zeta = 1$) : critique.
+\item \textbf{Pôles complexes conjugués} ($\zeta < 1$) : sous-amorti. Partie réelle $-\zeta\omega_0$ = taux d'amortissement, partie imaginaire $\omega_d = \omega_0\sqrt{1-\zeta^2}$ = pseudo-pulsation.
+\item \textbf{Pôles imaginaires purs} ($\zeta = 0$) : oscillation non amortie --- inexistant en passif réel.
 \end{itemize}
 
 \begin{attention}
@@ -5368,7 +5410,7 @@ Résonateur MEMS & $> 100\,000$ \\
 \bottomrule
 \end{tabular}
 \end{center}
-En conception, $Q$ est limité par les pertes (ESR du condensateur, résistance du fil, pertes du noyau). On ne peut pas obtenir un $Q$ arbitrairement élevé avec des composants passifs seuls --- c'est pourquoi on utilise des \textbf{filtres actifs} (avec AOP) pour synthétiser des $Q$ élevés à basse fréquence.
+En conception, $Q$ est limité par les pertes (ESR du condensateur, résistance du fil, pertes du noyau). On ne peut pas obtenir un $Q$ arbitrairement élevé avec des composants passifs seuls --- c'est pourquoi on utilise des \textbf{filtres actifs} (avec AOP) pour synthétiser des $Q$ élevés à basse fréquence (chapitre 18).
 \end{pratique}
 
 \subsection{Lien avec les systèmes asservis}
@@ -5381,7 +5423,7 @@ Le circuit RLC du 2nd ordre est \textit{mathématiquement identique} à un syst�
 \]
 \end{formule}
 
-Les paramètres $\omega_0$ et $Q$ (ou de manière équivalente le coefficient d'amortissement $\zeta = 1/(2Q)$) caractérisent \textit{tous} les systèmes du 2nd ordre, qu'ils soient électriques, mécaniques ou logiciels. Maîtriser le RLC, c'est maîtriser la moitié de l'automatique.
+Les paramètres $\omega_0$ et $\zeta$ (ou de façon équivalente $Q = 1/2\zeta$) caractérisent \textit{tous} les systèmes du 2\textsuperscript{e} ordre --- électriques, mécaniques, thermiques ou logiciels. Maîtriser le RLC, c'est disposer du modèle de base de l'automatique (chapitres 33--34).
 
 \subsection{Composants parasites et circuits RLC non voulus}
 
@@ -5393,7 +5435,7 @@ En conception réelle, les circuits RLC apparaissent \textbf{sans qu'on le veuil
 \item Une piste de PCB a une inductance ($\sim\SI{1}{nH/mm}$) et une capacité ($\sim\SI{0.5}{pF/cm}$) parasites. Sur une piste de \SI{10}{cm} : $L \approx \SI{10}{nH}$, $C \approx \SI{0.5}{pF}$, $f_0 \approx \SI{2.3}{GHz}$.
 \item Un câble coaxial est une ligne de transmission distribuée, modélisée par une cascade infinie de cellules RLC.
 \end{itemize}
-Ces résonances parasites sont une source majeure de problèmes en CEM, en intégrité du signal et en stabilité des alimentations. Le travail de l'ingénieur consiste souvent à \textbf{amortir} ces résonances (ajout de résistances, choix de composants à faible $Q$, placement stratégique des découplages).
+Ces résonances parasites sont une source majeure de problèmes en CEM, en intégrité du signal et en stabilité des alimentations. Le travail de l'ingénieur consiste souvent à \textbf{amortir} ces résonances (résistances d'amortissement, composants à faible $Q$, placement des découplages --- chapitre 36).
 \end{attention}
 
 % === EXERCICES DU CHAPITRE 9 ===
@@ -5439,7 +5481,7 @@ Pour $R = \SI{200}{\ohm}$ : $Q = 0{,}5$, critique.
 
 Pour $R > \SI{200}{\ohm}$ : $Q < 0{,}5$, sur-amorti.
 
-Valeur critique : $R_c = 2\sqrt{L/C} = 2\times100 = \SI{200}{\ohm}$. \checkmark
+Valeur critique : $R_c = 2\sqrt{L/C} = 2\times100 = \SI{200}{\ohm}$. \hfill$\blacksquare$
 \end{pratique}
 
 \subsection*{Niveau ingénieur}
@@ -5465,17 +5507,26 @@ $Q = (1/\text{ESR})\sqrt{L/C} = (1/0{,}01)\sqrt{5\times10^{-9}/10^{-5}} = 100\ti
 
 $Q = 0{,}07 \ll 0{,}5$ : \textbf{très sur-amorti}, pas de problème de résonance. L'ESR du condensateur amortit suffisamment.
 
-Si on avait un condensateur céramique (ESR $\sim\SI{1}{m\ohm}$) : $Q \approx 0{,}7$, sous-amorti ! On verrait des oscillations sur le bus d'alimentation. Solution : ajouter une petite résistance en série (``ESR snubber'') ou un condensateur électrolytique en parallèle (fort ESR naturel) pour amortir.
+Si on avait un condensateur céramique (ESR $\sim\SI{1}{m\ohm}$) : $Q \approx 0{,}7$, sous-amorti --- oscillations sur le bus d'alimentation à chaque transitoire de charge. Parades : résistance série d'amortissement (\emph{ESR snubber}), ou électrolytique en parallèle (fort ESR naturel) qui amortit sans dégrader le découplage HF. C'est un dimensionnement courant du réseau de distribution (chapitre 36).
 \end{pratique}
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Pourquoi un circuit LC pur (sans résistance) oscille-t-il indéfiniment en théorie ? En pratique, s'arrête-t-il ? Pourquoi ?
-\item On veut qu'un capteur atteigne sa valeur finale le plus vite possible sans dépasser. Quel régime faut-il choisir et pourquoi ?
-\item Expliquez pourquoi les fabricants de condensateurs spécifient l'ESR : est-ce toujours un défaut ? Donnez un exemple où un ESR élevé est souhaitable.
-\item Un oscillateur à quartz a un $Q$ de 50\,000. Comparez avec un circuit LC classique ($Q \sim 100$). Quelles conséquences pratiques ?
-\end{enumerate}
+\textbf{Q1.} Pourquoi un LC pur oscille-t-il indéfiniment en théorie ? S'arrête-t-il en pratique ?
+
+\textit{Réponse : sans résistance, aucune dissipation : l'énergie fait des allers-retours $\frac12 Cu^2 \leftrightarrow \frac12 Li^2$ sans perte, pôles imaginaires purs. En pratique il s'arrête toujours : $R_{\text{DC}}$ du fil, ESR du condensateur, pertes noyau et rayonnement forment un $R$ effectif non nul. Le $Q$ fini fixe le nombre d'oscillations avant amortissement ($\sim Q$ périodes).}
+
+\textbf{Q2.} On veut qu'un capteur atteigne sa valeur finale au plus vite sans dépasser. Quel régime ?
+
+\textit{Réponse : critique ($\zeta = 1$) si le cahier des charges impose \emph{zéro} dépassement strict. Si un dépassement de quelques \% est toléré, $\zeta \approx 0{,}7$ est plus rapide (temps d'établissement à 5\% minimal). Le choix dépend du critère exact --- un ADC qui échantillonne tôt exige le non-dépassement ; une régulation qui vise la vitesse préfère $\zeta \approx 0{,}7$.}
+
+\textbf{Q3.} Pourquoi spécifier l'ESR ? Est-ce toujours un défaut ?
+
+\textit{Réponse : non. L'ESR dissipe (pertes, échauffement, filtrage dégradé) mais amortit : sur un bus d'alimentation, un ESR trop faible rend le LC parasite sous-amorti et le rail « sonne » (cf.\ ex 9.6). L'électrolytique à fort ESR est alors un amortisseur naturel. L'ESR est un paramètre de conception, pas seulement un défaut --- d'où sa spécification.}
+
+\textbf{Q4.} Quartz $Q = 50\,000$ vs LC $Q \sim 100$ : conséquences pratiques ?
+
+\textit{Réponse : la stabilité fréquentielle et la sélectivité vont comme $Q$. Bande passante $\Delta f = f_0/Q$ : à \SI{10}{MHz}, \SI{200}{Hz} pour le quartz contre \SI{100}{kHz} pour le LC --- 500× plus sélectif. Un oscillateur à quartz dérive de quelques ppm, un LC de plusieurs \% (température, tolérances). D'où le quartz pour les horloges/références, le LC pour l'accord large bande où la stabilité importe peu.}
 
 % === RÉSUMÉ DU CHAPITRE 9 ===
 \section*{Résumé du chapitre}
@@ -5500,10 +5551,11 @@ Fréquence propre & $f_0 = 1/(2\pi\sqrt{LC})$ \\
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{p{4cm}p{9cm}}
 \toprule
-Facteur de qualité & $Q = (1/R)\sqrt{L/C}$ (série), $Q = R\sqrt{C/L}$ (parallèle) \\
-Amortissement & $Q < 0{,}5$ : sur-amorti, $Q = 0{,}5$ : critique, $Q > 0{,}5$ : sous-amorti \\
+Forme canonique & $\ddot u + 2\zeta\omega_0\dot u + \omega_0^2 u = \omega_0^2 E$ \\
+Amortissement & $\zeta = \frac{R}{2}\sqrt{C/L} = 1/(2Q)$ --- série ; $Q = R\sqrt{C/L}$ parallèle \\
+Régimes & $\zeta>1$ sur-amorti, $\zeta=1$ critique, $\zeta<1$ sous-amorti \\
 Bande passante & $\Delta f = f_0/Q$ \\
-Résonance & Série : $|Z|$ min $= R$ ; Parallèle : $|Z|$ max $= R$ \\
+Résonance & Série : $|Z|$ min $=R$ ; Parallèle : $|Z|$ max $=R$ \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -5514,14 +5566,20 @@ Résonance & Série : $|Z|$ min $= R$ ; Parallèle : $|Z|$ max $= R$ \\
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{p{4cm}p{9cm}}
 \toprule
-Pôles & Position dans le plan $s$ détermine le transitoire \\
-$H(s)$ canonique & $\omega_0^2/(s^2 + \omega_0 s/Q + \omega_0^2)$ --- universel (élec, méca, auto) \\
-$Q$ en conception & Limité par pertes composants, filtres actifs pour $Q$ élevé \\
-RLC parasites & Pistes, condensateurs, inductances résonent --- amortir ! \\
+Pôles & Sur cercle $\omega_0$, $\cos\theta = \zeta$ --- $\Re>0$ = instable \\
+$H(s)$ canonique & $\omega_0^2/(s^2 + 2\zeta\omega_0 s + \omega_0^2)$ --- universel (élec, méca, auto) \\
+$Q$ en conception & Limité par pertes ; filtres actifs pour $Q$ élevé (ch.~18) \\
+RLC parasites & Pistes, condos, selfs résonent --- amortir (ch.~36) \\
 \bottomrule
 \end{tabular}
 \end{center}
 \end{ingenieur}
+
+\vspace{0.4cm}
+
+\begin{retenir}
+Le régime transitoire (échelon, décharge) se résout par équation différentielle. Mais l'électronique travaille massivement en \emph{régime permanent sinusoïdal} : y résoudre une ED à chaque fois serait absurde. L'outil qui transforme ces dérivées en algèbre --- multiplier par $j\omega$ au lieu de dériver --- est la notation complexe : chapitre 10.
+\end{retenir}
 
 
 % ============================================================================
