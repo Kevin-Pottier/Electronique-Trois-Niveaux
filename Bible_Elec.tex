@@ -6810,7 +6810,7 @@ Le chapitre 9 a introduit la fréquence propre $f_0 = 1/(2\pi\sqrt{LC})$ et le f
 \section{Les Bases}
 
 \begin{bases}
-La résonance est un phénomène universel : une corde de guitare, un verre de cristal, une balançoire, la radio FM\ldots{} Dans tous les cas, le principe est le même : un système oscille avec une grande amplitude quand on l'excite à ``sa'' fréquence. Prérequis : chapitres 9 et 10.
+Le phénomène de résonance, pourquoi $L$ et $C$ se compensent à $f_0$, les résonances série et parallèle, la surtension, la bande passante et la sélectivité. Prérequis : chapitres 9 et 10.
 \end{bases}
 
 \subsection{Le phénomène de résonance : intuition}
@@ -6849,16 +6849,16 @@ C'est la \textbf{fréquence de résonance}. Elle ne dépend que de $L$ et $C$, p
 
 Considérons un circuit RLC série alimenté par une source sinusoïdale $\underline{E}$ de fréquence variable :
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=0.85]
   \draw (0,0) to[sinusoidal voltage source, l=$e(t)$] (0,3)
-        to[R, l=$R$] (2.5,3)
+        to[R, l=$R$, i=$i$] (2.5,3)
         to[L, l=$L$] (5,3)
         to[C, l=$C$] (5,0) -- (0,0);
-  \draw[line width=1.2pt, blue!70!black, -{Stealth[length=2.5mm]}] (0.3,3.3) -- (1.8,3.3);
-  \node[blue!70!black, above, font=\small] at (1.05,3.3) {$i$};
 \end{circuitikz}
-\end{center}
+\caption{Circuit RLC série alimenté par une source de fréquence variable. À $f_0$, $L$ et $C$ s'annulent et le circuit ne présente que $R$.}
+\end{figure}
 
 L'impédance totale est $\underline{Z} = R + j(\omega L - 1/(\omega C))$.
 
@@ -6885,7 +6885,8 @@ Si $Q = 50$ et $E = \SI{1}{V}$, alors $U_L = U_C = \SI{50}{V}$ ! Ces deux tensio
 
 Dans un circuit RLC parallèle (les trois composants entre les mêmes deux n\oe uds) :
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=0.85]
   \draw (0,0) to[sinusoidal voltage source, l=$e(t)$] (0,3) -- (1.5,3);
   \draw (1.5,3) -- (1.5,2.5) to[R, l=$R$] (1.5,0.5) -- (1.5,0);
@@ -6894,7 +6895,8 @@ Dans un circuit RLC parallèle (les trois composants entre les mêmes deux n\oe 
   \draw (1.5,3) -- (4.5,3);
   \draw (0,0) -- (4.5,0);
 \end{circuitikz}
-\end{center}
+\caption{Circuit RLC parallèle idéal. À $f_0$, l'impédance est \emph{maximale} : c'est le circuit bouchon.}
+\end{figure}
 
 \begin{formule}
 \textbf{À la résonance} ($f = f_0$) :
@@ -6921,6 +6923,14 @@ Application & Filtre passe-bande & Circuit bouchon (réjecteur) \\
 \end{tabular}
 \end{center}
 \end{intuition}
+
+\begin{attention}
+\textbf{Bouchon idéal vs réel.} Le modèle « R en parallèle » ci-dessus donne $|Z|_{\max} = R$ --- commode, mais rare en pratique. Un vrai circuit bouchon est un condensateur (quasi parfait) en parallèle avec une \emph{bobine réelle}, dont les pertes sont une résistance \emph{série} $r$ dans la branche $L$. Le calcul change :
+\[
+|Z|_{\max} \approx \frac{L}{rC} = Q^2 r \qquad (Q = \omega_0 L / r)
+\]
+L'impédance au sommet n'est pas $r$ mais $Q^2 r$ --- souvent des dizaines de k$\Omega$. Confondre les deux modèles fait sous-estimer l'impédance de bouchon d'un facteur $Q^2$. Retenir : \emph{où} se trouve la résistance (série dans une branche, ou parallèle) détermine la formule.
+\end{attention}
 
 \subsection{Bande passante et sélectivité}
 
@@ -6980,53 +6990,41 @@ On peut écrire sous forme normalisée en posant $x = \omega/\omega_0 = f/f_0$ :
 |Z| = R\sqrt{1 + Q^2\left(x - \frac{1}{x}\right)^2}
 \]
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{tikzpicture}[scale=0.9]
   % Axes
   \draw[-{Stealth[length=2.5mm]}] (0,0) -- (8.5,0) node[right]{\small $f/f_0$};
   \draw[-{Stealth[length=2.5mm]}] (0,0) -- (0,6) node[above]{\small $|Z|/R$};
-  
-  % Graduations axe x
   \foreach \x/\lab in {1/0.5, 2/1, 4/2, 6/3, 8/4} {
     \draw (\x,0.07) -- (\x,-0.07);
   }
   \node[below, font=\small] at (2,-0.15) {$1$};
   \node[below, font=\small] at (4,-0.15) {$2$};
   \node[below, font=\small] at (6,-0.15) {$3$};
-  
-  % Graduations axe y
   \node[left, font=\small] at (0,1) {$1$};
   \draw (0.07,1) -- (-0.07,1);
   \node[left, font=\small] at (0,3) {$3$};
   \draw (0.07,3) -- (-0.07,3);
   \node[left, font=\small] at (0,5) {$5$};
   \draw (0.07,5) -- (-0.07,5);
-  
-  % Courbe Q = 1 (x en unités de graphe : x_graph = 2*f/f0, donc f/f0 = x_graph/2)
-  % |Z|/R = sqrt(1 + Q^2 * (f/f0 - f0/f)^2)
-  % Avec x_graph: f/f0 = x_graph/2, donc (f/f0 - f0/f) = (x/2 - 2/x)
   \draw[thick, green!60!black, domain=0.35:8, samples=300, smooth]
     plot(\x, {min(5.8, sqrt(1 + 1*(\x/2 - 2/\x)*(\x/2 - 2/\x)))});
   \node[green!60!black, font=\small\bfseries] at (6.5,2.2) {$Q = 1$};
-  
-  % Courbe Q = 5
   \draw[very thick, blue!70!black, domain=0.35:8, samples=300, smooth]
     plot(\x, {min(5.8, sqrt(1 + 25*(\x/2 - 2/\x)*(\x/2 - 2/\x)))});
   \node[blue!70!black, font=\small\bfseries] at (5,5.3) {$Q = 5$};
-  
-  % Minimum à f/f0 = 1
   \draw[dashed, gray] (2,0) -- (2,1);
   \draw[dashed, gray] (0,1) -- (2,1);
   \filldraw[red!70!black] (2,1) circle (2.5pt);
   \node[red!70!black, above right, font=\small] at (2.1,1.15) {$|Z|_{\min} = R$};
-  
-  % Annotations régions
   \draw[<-, thick, gray!60!black] (0.6,4.5) -- (1.2,4.5);
   \node[font=\footnotesize, right] at (1.25,4.5) {\textbf{capacitif}};
   \draw[->, thick, gray!60!black] (5.8,4.5) -- (6.4,4.5);
   \node[font=\footnotesize, left] at (5.75,4.5) {\textbf{inductif}};
 \end{tikzpicture}
-\end{center}
+\caption{Module d'impédance du RLC série (normalisé). Le minimum $|Z| = R$ est à $f_0$ ; plus $Q$ est grand, plus la cuvette est étroite et profonde. En dessous de $f_0$ le circuit est capacitif, au-dessus inductif.}
+\end{figure}
 
 \textbf{Comportement asymptotique :}
 \begin{itemize}[nosep]
@@ -7063,6 +7061,33 @@ $f \gg f_0$ & $\to 0$ (atténuation HF) & $\to -90°$ \\
 
 Le filtre laisse passer les fréquences autour de $f_0$ et atténue le reste. La largeur de la bande passante est $\Delta f = f_0/Q$.
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.9]
+  \draw[-{Stealth[length=2.5mm]}] (0,0) -- (9,0) node[right]{\small $f/f_0$};
+  \draw[-{Stealth[length=2.5mm]}] (0,0) -- (0,4) node[above]{\small $|H|$};
+  \node[left, font=\small] at (0,3) {$1$};
+  \draw (0.07,3) -- (-0.07,3);
+  \node[left, font=\footnotesize] at (0,2.12) {$0{,}707$};
+  \draw[dashed, gray] (0,2.12) -- (9,2.12);
+  % Courbe passe-bande Q=5 : |H| = 1/sqrt(1+Q^2(x-1/x)^2), sommet à x=1 (graphe x=4.5)
+  \draw[very thick, blue!70!black, domain=0.9:8.5, samples=400, smooth]
+    plot(\x, {3/sqrt(1 + 25*(\x/4.5 - 4.5/\x)*(\x/4.5 - 4.5/\x))});
+  \filldraw[red!70!black] (4.5,3) circle (2pt);
+  \node[red!70!black, above, font=\footnotesize] at (4.5,3.05) {$f_0$};
+  % Points -3dB : x tel que Q(x-1/x)=1 -> pour Q=5, x-1/x=0.2 -> x≈1.105 et 0.905
+  % en graphe: 4.5*1.105=4.97, 4.5*0.905=4.07
+  \draw[dashed, gray] (4.07,0) -- (4.07,2.12);
+  \draw[dashed, gray] (4.97,0) -- (4.97,2.12);
+  \filldraw[red!70!black] (4.07,2.12) circle (1.5pt);
+  \filldraw[red!70!black] (4.97,2.12) circle (1.5pt);
+  \draw[{Stealth}-{Stealth}, red!70!black] (4.07,1.4) -- (4.97,1.4);
+  \node[red!70!black, font=\footnotesize, below] at (4.52,1.4) {$\Delta f$};
+  \node[font=\small] at (2,0) {}; \node[below, font=\small] at (4.5,-0.15) {$1$};
+\end{tikzpicture}
+\caption{Réponse du filtre passe-bande ($Q = 5$). Le gain vaut 1 à $f_0$ et chute de $-3$~dB ($1/\sqrt2$) aux bords de la bande $\Delta f = f_0/Q$. C'est cette courbe --- pas celle de $|Z|$ --- qui définit la sélectivité vue en sortie.}
+\end{figure}
+
 \subsection{Les autres fonctions de transfert du RLC série}
 
 Le même circuit RLC série donne des filtres \textit{différents} selon le composant aux bornes duquel on prend la sortie :
@@ -7081,7 +7106,7 @@ $L + C$ & \textbf{Coupe-bande} (réjecteur) & $|H| = 0$ (zéro de transmission) 
 \end{center}
 
 \begin{attention}
-\textbf{Piège :} le ``filtre passe-bas'' aux bornes de $C$ a un gain $> 1$ à $f_0$ si $Q > 1$. Ce n'est pas une amplification (le circuit est passif) : c'est la surtension de résonance. Le gain \textit{maximal} ne se produit pas exactement à $f_0$ mais légèrement en dessous (pour $Q > 1/\sqrt{2}$). Cette distinction est souvent source de confusion.
+\textbf{Piège :} le ``filtre passe-bas'' aux bornes de $C$ a un gain $> 1$ à $f_0$ si $Q > 1$. Ce n'est pas une amplification (le circuit est passif) : c'est la surtension de résonance. Le gain \textit{maximal} ne se produit pas exactement à $f_0$ mais légèrement en dessous (pour $Q > 1/\sqrt{2}$). Cette distinction est souvent source de confusion --- l'analyse complète de ces réponses (Bode, asymptotes) est l'objet du chapitre 13.
 \end{attention}
 
 \subsection{Circuit bouchon (résonance parallèle)}
@@ -7123,7 +7148,7 @@ $= (1/45{,}5)\times\sqrt{1{,}22\times10^7} = (1/45{,}5)\times3493 \approx \SI{76
 \section{Niveau Ingénieur}
 
 \begin{ingenieur}
-Facteur de qualité en charge, résonateurs réels, transformation d'impédance, et applications avancées.
+Distinction $Q_0$/$Q_L$/$Q_{\text{ext}}$, transformation d'impédance par réseau résonant, panorama des résonateurs réels (LC, quartz, SAW, MEMS), et résonances parasites. Prérequis : sections précédentes.
 \end{ingenieur}
 
 \subsection{$Q$ intrinsèque, $Q$ en charge, et $Q$ externe}
@@ -7179,6 +7204,7 @@ Bande passante : $\Delta f \approx 100/1{,}73 \approx \SI{58}{MHz}$ (large bande
 Les circuits LC discrets ont un $Q$ limité par les pertes dans les composants ($Q \sim 50$--$200$). Pour obtenir des $Q$ très élevés, on utilise d'autres technologies :
 
 \begin{center}
+\footnotesize
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{llll}
 \toprule
@@ -7215,7 +7241,7 @@ C'est pourquoi toutes les horloges numériques (montres, microcontrôleurs, ordi
 
 \textbf{4. Plan d'alimentation :} le plan de cuivre et le plan de masse forment un condensateur plan, avec des inductances de via. Le résultat est un réseau de résonances qui peut amplifier le bruit sur le bus d'alimentation à certaines fréquences.
 
-\textbf{Solution systématique :} amortir les résonances par des résistances (réduire $Q$), multiplier les condensateurs de découplage (couvrir toutes les fréquences), et simuler l'impédance du bus d'alimentation ($Z_{\text{PDN}}$) en phase de conception.
+\textbf{Solution systématique :} amortir les résonances par des résistances (réduire $Q$), multiplier les condensateurs de découplage (couvrir toutes les fréquences), et simuler l'impédance du réseau de distribution d'alimentation ($Z_{\text{PDN}}$) dès la conception (chapitre 36).
 \end{attention}
 
 % === EXERCICES DU CHAPITRE 12 ===
@@ -7310,12 +7336,21 @@ La bande passante est large ($\sim\SI{100}{MHz}$) car le rapport de transformati
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Un circuit LC pur (sans résistance) oscille indéfiniment en théorie. En pratique, pourquoi s'arrête-t-il ? Listez les sources de pertes.
-\item À la résonance série, la tension aux bornes de $L$ et $C$ peut dépasser largement la tension source. Cela viole-t-il la conservation de l'énergie ? Expliquez.
-\item On veut un filtre très sélectif ($\Delta f = \SI{100}{Hz}$ à $f_0 = \SI{1}{MHz}$). Quel $Q$ faut-il ? Est-ce réalisable avec un circuit LC discret ? Sinon, que faut-il utiliser ?
-\item Expliquez pourquoi un condensateur de découplage MLCC de \SI{10}{\micro F} peut être \textit{moins bon} qu'un \SI{100}{nF} pour filtrer le bruit à \SI{50}{MHz}. Répondez en termes de SRF.
-\end{enumerate}
+\textbf{Q1.} Un LC pur oscille indéfiniment en théorie. Pourquoi s'arrête-t-il en pratique ? Listez les pertes.
+
+\textit{Réponse : toute oscillation réelle dissipe. Sources, par ordre d'importance typique en LC discret : résistance série du fil de la bobine ($R_{\text{DC}}$, effet de peau en HF), pertes dans le noyau magnétique (hystérésis + Foucault), ESR du condensateur, pertes diélectriques, et rayonnement. Ces pertes forment un $R$ effectif qui borne $Q$ à quelques centaines. L'énergie stockée décroît de $e^{-\omega_0 t/Q}$ : le circuit oscille $\sim Q$ périodes avant extinction.}
+
+\textbf{Q2.} À la résonance série, $U_L$ et $U_C$ dépassent la tension source. Violation de la conservation de l'énergie ?
+
+\textit{Réponse : non. $U_L$ et $U_C$ sont \emph{en opposition de phase} : leur somme instantanée reste faible (elle vaut $RI$, la tension source). L'énergie n'est pas créée, elle \emph{circule} : à chaque instant, ce que la bobine stocke, le condensateur le déstocke. La surtension $QE$ est l'amplitude de cet échange interne, pas une énergie nette. Analogie : une masse sur ressort dépasse largement l'amplitude de l'excitation à la résonance, sans violer quoi que ce soit --- l'énergie fait des allers-retours cinétique/potentiel.}
+
+\textbf{Q3.} Filtre très sélectif : $\Delta f = \SI{100}{Hz}$ à $f_0 = \SI{1}{MHz}$. Quel $Q$ ? Réalisable en LC discret ?
+
+\textit{Réponse : $Q = f_0/\Delta f = 10^6/100 = 10\,000$. \textbf{Irréalisable} en LC discret ($Q_{\max} \sim 200$, limité par les pertes). Il faut un résonateur mécanique : quartz ($Q \sim 10^4$--$10^5$) ou SAW. C'est précisément pourquoi les filtres IF étroits et les références de fréquence sont à quartz, jamais à LC. Pour un $Q$ modéré à basse fréquence, un filtre actif (chapitre 18) synthétise le $Q$ sans self.}
+
+\textbf{Q4.} Pourquoi un MLCC de \SI{10}{\micro F} peut être \emph{moins bon} qu'un \SI{100}{nF} pour filtrer à \SI{50}{MHz} ?
+
+\textit{Réponse : au-delà de sa SRF, un condensateur devient inductif ($|Z| = \omega\,$ESL) et ne découple plus. La SRF vaut $1/(2\pi\sqrt{\text{ESL}\cdot C})$ : le \SI{10}{\micro F}, à capacité 100× plus grande, a une SRF $\sim$10× plus basse. À \SI{50}{MHz}, le \SI{10}{\micro F} est déjà nettement au-dessus de sa SRF (inductif, $|Z|$ remonte) tandis que le \SI{100}{nF} est proche de la sienne (encore efficace). Ce n'est pas la valeur en farads qui compte en HF mais la SRF, donc l'ESL de montage (chapitre 7). D'où le montage en parallèle de valeurs échelonnées --- avec les précautions d'anti-résonance déjà vues.}
 
 % === RÉSUMÉ ===
 \section*{Résumé du chapitre}
@@ -7361,6 +7396,12 @@ Parasites & Tout composant réel résonne --- amortir systématiquement \\
 \end{tabular}
 \end{center}
 \end{ingenieur}
+
+\vspace{0.4cm}
+
+\begin{retenir}
+La résonance est le cas particulier où la réponse d'un circuit du 2\textsuperscript{e} ordre culmine à une fréquence précise. Mais tout circuit --- filtre, ampli, boucle de régulation --- possède une réponse en fréquence complète : gain et phase sur tout le spectre. L'outil qui la décrit et la trace systématiquement, la fonction de transfert et son diagramme de Bode, ouvre la Partie IV au chapitre 13.
+\end{retenir}
 
 
 % ============================================================================
