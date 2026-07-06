@@ -5606,7 +5606,7 @@ Jusqu'ici, nous avons analysé les circuits en continu (DC) ou en transitoire (e
 \section{Les Bases}
 
 \begin{bases}
-Cette section est un \textbf{rappel mathématique complet} sur les nombres complexes, suivi de leur application aux circuits. On part de zéro : aucune connaissance préalable sur les complexes n'est nécessaire.
+Rappel sur les nombres complexes, puis leur usage en circuits : phaseur, impédance, comportement asymptotique BF/HF. On part de zéro.
 \end{bases}
 
 \subsection{Pourquoi les nombres complexes ?}
@@ -5743,8 +5743,27 @@ On définit l'\textbf{amplitude complexe} (ou \textbf{phaseur}) :
 $\underline{U}$ contient \textit{toute} l'information sur le signal sinusoïdal : son amplitude $\hat{U}$ (module) et sa phase $\varphi_u$ (argument). Le facteur $e^{j\omega t}$, commun à tous les signaux du circuit, est omis.
 \end{formule}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.85]
+  % Plan complexe tournant
+  \draw[->] (-1.8,0) -- (1.8,0); \draw[->] (0,-1.8) -- (0,1.8);
+  \draw[dashed, gray] (0,0) circle (1.4);
+  \draw[very thick, blue!70!black, -{Stealth[length=2.5mm]}] (0,0) -- (35:1.4);
+  \node[blue!70!black, font=\footnotesize] at (35:1.65) {$\underline{U}e^{j\omega t}$};
+  \draw[red!70!black, thick] (35:1.4) -- (2.0,{1.4*sin(35)});
+  \fill[red!70!black] (2.0,{1.4*sin(35)}) circle (1.5pt);
+  % Sinusoïde
+  \draw[->] (2.0,0) -- (7.0,0) node[right, font=\footnotesize] {$\omega t$};
+  \draw[very thick, red!70!black, domain=0:4.7, samples=100] plot({2.0+\x}, {1.4*sin(35+\x*57.3)});
+  \draw[dashed, gray] (2.0,{1.4*sin(35)}) -- (2.0,{1.4*sin(35)});
+  \node[red!70!black, font=\footnotesize, right] at (6.5,1.0) {$u(t)$};
+\end{tikzpicture}
+\caption{Le phaseur tournant. $u(t) = \Re[\underline{U}e^{j\omega t}]$ est la projection sur l'axe réel d'un vecteur qui tourne à $\omega$. Amplitude $=$ longueur, phase $=$ angle initial : le régime sinusoïdal se réduit à de la géométrie.}
+\end{figure}
+
 \begin{attention}
-\textbf{Condition fondamentale :} la notation complexe n'est valable qu'en \textbf{régime sinusoïdal permanent} (une seule fréquence $\omega$). Elle ne s'applique pas directement aux transitoires ni aux signaux non sinusoïdaux (pour ceux-ci, on utilise la transformée de Fourier ou de Laplace).
+\textbf{Condition de validité :} la notation complexe suppose le \textbf{régime sinusoïdal permanent} --- une seule pulsation $\omega$, transitoires éteints. Pour les régimes transitoires ou les signaux quelconques, on passe à la transformée de Laplace (chapitre 33), dont la notation complexe est le cas particulier $s = j\omega$.
 \end{attention}
 
 \subsection{L'impédance : la loi d'Ohm généralisée}
@@ -5790,13 +5809,32 @@ Pour la bobine : $u = L\,\mathrm{d}i/\mathrm{d}t \to \underline{U} = j\omega L\,
 La dérivée temporelle est devenue une simple multiplication par $j\omega$. C'est \textit{toute} la puissance de la méthode.
 \end{intuition}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  \draw[->] (-0.5,0) -- (2.8,0) node[right, font=\footnotesize] {$\Re$};
+  \draw[->] (0,-2) -- (0,2) node[above, font=\footnotesize] {$\Im$};
+  % Z_R sur axe réel
+  \draw[very thick, gray, -{Stealth[length=2.5mm]}] (0,0) -- (2,0);
+  \node[gray, font=\footnotesize, below] at (1.6,-0.05) {$\underline{Z}_R = R$};
+  % Z_L +90
+  \draw[very thick, red!70!black, -{Stealth[length=2.5mm]}] (0,0) -- (0,1.7);
+  \node[red!70!black, font=\footnotesize, right] at (0.05,1.3) {$\underline{Z}_L = j\omega L$};
+  % Z_C -90
+  \draw[very thick, blue!70!black, -{Stealth[length=2.5mm]}] (0,0) -- (0,-1.7);
+  \node[blue!70!black, font=\footnotesize, right] at (0.05,-1.3) {$\underline{Z}_C = \dfrac{1}{j\omega C}$};
+\end{tikzpicture}
+\caption{Les trois impédances dans le plan complexe. $R$ sur l'axe réel (u et i en phase), $\underline{Z}_L$ à $+90°$ (u en avance sur i), $\underline{Z}_C$ à $-90°$ (u en retard sur i). Tout circuit passif se place dans le demi-plan $\Re \geq 0$.}
+\end{figure}
+
 \subsection{Comportement en basse et haute fréquence}
 
 Comprendre le comportement asymptotique des composants est \textbf{fondamental} pour l'analyse rapide des circuits :
 
 \begin{formule}
 \begin{center}
-\renewcommand{\arraystretch}{1.8}
+\footnotesize
+\renewcommand{\arraystretch}{1.6}
 \begin{tabular}{lcccc}
 \toprule
 \textbf{Composant} & $\underline{Z}$ & \textbf{BF} ($\omega \to 0$) & \textbf{HF} ($\omega \to \infty$) & \textbf{Comportement} \\
@@ -5902,16 +5940,16 @@ avec $\omega_c = 1/(RC)$.
 
 \subsection{Déphasage : signification physique}
 
+Le déphasage porté par l'impédance est $\varphi = \arg(\underline{Z}) = \varphi_u - \varphi_i$ : le décalage de la \emph{tension} par rapport au \emph{courant}. Le décalage temporel correspondant est $\Delta t = \varphi/\omega$.
+
 \begin{intuition}
-Le \textbf{déphasage} $\varphi$ entre tension et courant indique le décalage temporel entre les deux signaux :
-\[
-\Delta t = \frac{\varphi}{\omega} = \frac{\varphi}{2\pi f}
-\]
+Trois cas de référence (convention : $\varphi = \varphi_u - \varphi_i$) :
 \begin{itemize}[nosep]
-\item $\varphi = 0$ : $u$ et $i$ en phase (résistance pure).
-\item $\varphi = +90°$ : $i$ en retard sur $u$ (inductance : le courant ``réagit lentement'').
-\item $\varphi = -90°$ : $i$ en avance sur $u$ (condensateur : le courant ``anticipe'' la variation de tension).
+\item \textbf{Résistance}, $\underline{Z}_R = R$ : $\varphi = 0$. $u$ et $i$ en phase.
+\item \textbf{Inductance}, $\underline{Z}_L = j\omega L$ : $\varphi = +90°$. La tension \emph{devance} le courant --- physiquement, $u = L\,\mathrm{d}i/\mathrm{d}t$ : la tension réagit à la \emph{pente} du courant, donc le précède. Le courant « traîne ».
+\item \textbf{Condensateur}, $\underline{Z}_C = 1/(j\omega C)$ : $\varphi = -90°$. La tension est \emph{en retard} sur le courant --- $i = C\,\mathrm{d}u/\mathrm{d}t$ : il faut d'abord du courant pour charger, la tension suit.
 \end{itemize}
+Moyen mnémotechnique (\textbf{CIVIL}) : dans un \textbf{C}, \textbf{I} devance \textbf{V} ; \textbf{V} devance \textbf{I} dans une \textbf{L}.
 \end{intuition}
 
 \subsection{Impédance d'un circuit RLC série à la résonance}
@@ -5927,8 +5965,29 @@ Or $\omega_0^2 LC = 1$, donc $\omega_0 L = 1/(\omega_0 C)$. Les deux termes se c
 \]
 
 \begin{intuition}
-\textbf{À la résonance}, l'inductance et le condensateur s'annulent mutuellement. Le circuit se comporte comme une \textbf{simple résistance}. C'est pour cela que le courant est maximal (en série) ou minimal (en parallèle) à la résonance.
+\textbf{À la résonance}, l'inductance et le condensateur s'annulent mutuellement. Le circuit se comporte comme une \textbf{simple résistance}. C'est pour cela que le courant est maximal (en série) ou minimal (en parallèle) à la résonance --- traité en détail au chapitre 12.
 \end{intuition}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  \draw[->] (-0.3,0) -- (3.2,0) node[right, font=\footnotesize] {$\Re$};
+  \draw[->] (0,-0.3) -- (0,2.2) node[above, font=\footnotesize] {$\Im$};
+  % R horizontal
+  \draw[very thick, gray, -{Stealth[length=2mm]}] (0,0) -- (2.4,0);
+  \node[gray, font=\footnotesize, below] at (1.2,-0.05) {$R$};
+  % reactance verticale X = wL - 1/wC
+  \draw[very thick, red!70!black, -{Stealth[length=2mm]}] (2.4,0) -- (2.4,1.5);
+  \node[red!70!black, font=\footnotesize, right] at (2.45,0.75) {$X = \omega L - \dfrac{1}{\omega C}$};
+  % Z resultant
+  \draw[very thick, blue!70!black, -{Stealth[length=2.5mm]}] (0,0) -- (2.4,1.5);
+  \node[blue!70!black, font=\footnotesize, above left] at (1.5,1.0) {$\underline{Z}$};
+  % angle phi
+  \draw[blue!70!black] (0.7,0) arc[start angle=0, end angle=32, radius=0.7];
+  \node[blue!70!black, font=\footnotesize] at (0.95,0.2) {$\varphi$};
+\end{tikzpicture}
+\caption{Triangle d'impédance d'un RLC série hors résonance : $\underline{Z} = R + jX$ avec la réactance $X = \omega L - 1/\omega C$. $|\underline{Z}| = \sqrt{R^2+X^2}$, $\tan\varphi = X/R$. À la résonance, $X = 0$ et $\underline{Z}$ se couche sur l'axe réel.}
+\end{figure}
 
 \subsection{Théorème de Millman en complexe}
 
@@ -6026,7 +6085,7 @@ Les paramètres S sont mesurés par rapport à une \textbf{impédance de référ
 \[
 S_{11} = \frac{\underline{Z}_{\text{in}} - Z_0}{\underline{Z}_{\text{in}} + Z_0}
 \]
-Si $\underline{Z}_{\text{in}} = Z_0 = \SI{50}{\ohm}$ : $S_{11} = 0$ (adaptation parfaite, aucune réflexion). Ce sujet sera développé dans le chapitre consacré aux lignes de transmission.
+Si $\underline{Z}_{\text{in}} = Z_0 = \SI{50}{\ohm}$ : $S_{11} = 0$ (adaptation parfaite, aucune réflexion). Ce sujet est développé au chapitre 37 (lignes de transmission).
 \end{attention}
 
 % === EXERCICES DU CHAPITRE 10 ===
@@ -6106,7 +6165,7 @@ Au-delà de $\sim\SI{40}{MHz}$, l'inductance parasite du bonding wire dégrade l
 \textbf{Exercice 10.6 ---} Montrez que pour un circuit RLC série, l'impédance à la résonance est purement réelle et vaut $R$. Calculez le coefficient de réflexion $S_{11}$ vu d'une source de \SI{50}{\ohm} si $R = \SI{10}{\ohm}$. L'adaptation est-elle bonne ?
 
 \begin{pratique}
-\textbf{Solution :} $\underline{Z}(\omega_0) = R + j\omega_0 L + 1/(j\omega_0 C) = R + j(\omega_0 L - 1/(\omega_0 C)) = R$ (car $\omega_0 L = 1/(\omega_0 C)$). \checkmark
+\textbf{Solution :} $\underline{Z}(\omega_0) = R + j\omega_0 L + 1/(j\omega_0 C) = R + j(\omega_0 L - 1/(\omega_0 C)) = R$ (car $\omega_0 L = 1/(\omega_0 C)$). \hfill$\blacksquare$
 
 $S_{11} = (Z - Z_0)/(Z + Z_0) = (10-50)/(10+50) = -40/60 = -0{,}667$.
 
@@ -6115,12 +6174,21 @@ $|S_{11}| = 0{,}667$, soit $|S_{11}|^2 = 44\%$ de la puissance réfléchie. L'ad
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Pourquoi utilise-t-on $j$ et pas $i$ pour l'unité imaginaire en électronique ?
-\item Un condensateur ``laisse passer le courant alternatif''. Pourtant, physiquement, aucune charge ne traverse le diélectrique. Expliquez ce paradoxe en termes de courant de déplacement et de circulation du courant dans le circuit extérieur.
-\item On mesure une impédance $\underline{Z} = 50 + j50\,\Omega$ à une certaine fréquence. Le circuit est-il plutôt inductif ou capacitif ? Quel est le déphasage entre tension et courant ?
-\item Pourquoi les méthodes de Kirchhoff, Thévenin et superposition fonctionnent-elles avec les impédances complexes sans aucune modification ?
-\end{enumerate}
+\textbf{Q1.} Pourquoi $j$ et pas $i$ pour l'unité imaginaire en électronique ?
+
+\textit{Réponse : $i$ désigne déjà le courant instantané. Utiliser $i$ pour $\sqrt{-1}$ rendrait $u = Zi$ ambigu. Convention universelle en génie électrique : $j^2 = -1$, $i$ reste le courant.}
+
+\textbf{Q2.} Un condensateur « laisse passer l'alternatif » alors qu'aucune charge ne traverse le diélectrique. Expliquez.
+
+\textit{Réponse : le courant de conduction s'arrête aux armatures, mais le champ variable entre elles constitue un courant de déplacement $\varepsilon\,\partial E/\partial t$ (Maxwell) qui assure la continuité. Dans le circuit extérieur, un courant réel circule : les électrons s'accumulent sur une armature et refluent de l'autre au rythme de $u(t)$. Rien ne traverse, mais le va-et-vient sur les armatures \emph{est} le courant --- d'où $\underline{I} = j\omega C\,\underline{U}$, non nul dès que $\omega \neq 0$.}
+
+\textbf{Q3.} On mesure $\underline{Z} = 50 + 50j\ \Omega$. Circuit inductif ou capacitif ? Déphasage ?
+
+\textit{Réponse : partie imaginaire positive $\Rightarrow$ \textbf{inductif}. $\varphi = \arg(\underline{Z}) = \arctan(50/50) = +45°$ : la tension devance le courant de $45°$. $|\underline{Z}| = 50\sqrt{2} \approx \SI{70.7}{\ohm}$. Concrètement, une self en série avec une résistance égale à sa réactance à cette fréquence.}
+
+\textbf{Q4.} Pourquoi Kirchhoff, Thévenin et superposition marchent-ils tels quels avec les impédances ?
+
+\textit{Réponse : ces théorèmes ne reposent que sur la \emph{linéarité} et sur les lois de conservation (KCL/KVL), pas sur la nature réelle des coefficients. En régime sinusoïdal permanent, $\underline{U} = \underline{Z}\,\underline{I}$ est une relation linéaire à coefficients complexes : toute la machinerie algébrique se transpose en remplaçant $R$ par $\underline{Z}$ et les réels par des complexes. La structure des équations est identique.}
 
 % === RÉSUMÉ DU CHAPITRE 10 ===
 \section*{Résumé du chapitre}
@@ -6169,6 +6237,11 @@ Paramètres S & Remplacent $Z$ au-delà de quelques 100 MHz (ondes) \\
 \end{center}
 \end{ingenieur}
 
+\vspace{0.4cm}
+
+\begin{retenir}
+L'impédance donne le rapport $\underline{U}/\underline{I}$ : module (gain) et argument (déphasage). Ce déphasage entre tension et courant a une conséquence directe et coûteuse sur l'énergie : une partie de la puissance ne fait qu'osciller entre source et charge sans être consommée. Quantifier cela --- puissance active, réactive, apparente, facteur de puissance --- est l'objet du chapitre 11.
+\end{retenir}
 
 % ============================================================================
 % CHAPITRE 11 : PUISSANCE EN RÉGIME SINUSOÏDAL
