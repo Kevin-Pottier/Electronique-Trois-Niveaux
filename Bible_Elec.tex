@@ -8438,12 +8438,13 @@ Le chapitre 13 a donné la théorie : fonctions de transfert, Bode, pôles et z�
 \section{Les Bases}
 
 \begin{bases}
-Cette section présente les quatre types de filtres fondamentaux avec des circuits concrets. Prérequis : chapitres 9, 10 et 13.
+Les quatre types de filtres sur circuits concrets, les cellules passives du 1\textsuperscript{er} ordre et leurs limites, le 2\textsuperscript{e} ordre passif, et pourquoi passer à l'actif. Prérequis : chapitres 9, 10 et 13.
 \end{bases}
 
 \subsection{Les quatre types de filtres (rappel)}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{tikzpicture}[scale=0.65]
   % Passe-bas
   \begin{scope}[shift={(0,0)}]
@@ -8486,7 +8487,8 @@ Cette section présente les quatre types de filtres fondamentaux avec des circui
     \node[font=\small\bfseries] at (2,-0.8) {Coupe-bande};
   \end{scope}
 \end{tikzpicture}
-\end{center}
+\caption{Les quatre gabarits fondamentaux. Zones bleues : bandes passantes ; zones rouges : bandes coupées. Tout filtre analogique se ramène à l'une de ces réponses (ou à leur combinaison).}
+\end{figure}
 
 \subsection{Filtres passifs du 1er ordre}
 
@@ -8494,14 +8496,16 @@ Les filtres les plus simples n'utilisent qu'une résistance et un condensateur (
 
 \textbf{Passe-bas RC :}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=0.85]
   \draw (0,0) to[R, l=$R$] (3,0) to[short] (4,0);
   \draw (3,0) to[C, l=$C$] (3,-1.5) node[ground]{};
   \draw[->, blue!70!black, thick] (-0.5,0.3) -- (0.5,0.3) node[midway, above, font=\small]{$v_{\text{in}}$};
   \draw[->, red!70!black, thick] (3.5,0.3) -- (4.5,0.3) node[midway, above, font=\small]{$v_{\text{out}}$};
 \end{circuitikz}
-\end{center}
+\caption{Passe-bas RC du 1\textsuperscript{er} ordre : $C$ en dérivation court-circuite les HF vers la masse.}
+\end{figure}
 
 \begin{formule}
 \[
@@ -8511,14 +8515,16 @@ Les filtres les plus simples n'utilisent qu'une résistance et un condensateur (
 
 \textbf{Passe-haut CR :} on échange $R$ et $C$.
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=0.85]
   \draw (0,0) to[C, l=$C$] (3,0) to[short] (4,0);
   \draw (3,0) to[R, l=$R$] (3,-1.5) node[ground]{};
   \draw[->, blue!70!black, thick] (-0.5,0.3) -- (0.5,0.3) node[midway, above, font=\small]{$v_{\text{in}}$};
   \draw[->, red!70!black, thick] (3.5,0.3) -- (4.5,0.3) node[midway, above, font=\small]{$v_{\text{out}}$};
 \end{circuitikz}
-\end{center}
+\caption{Passe-haut CR du 1\textsuperscript{er} ordre : $C$ en série bloque les BF.}
+\end{figure}
 
 \begin{formule}
 \[
@@ -8595,39 +8601,35 @@ Topologies de filtres actifs, dimensionnement, et réponses normalisées (Butter
 
 \subsection{La topologie Sallen-Key}
 
-C'est la topologie de filtre actif la plus utilisée pour le 2nd ordre. L'AOP est monté en \textbf{suiveur} (gain unitaire) ou en non-inverseur (gain $> 1$).
+C'est la topologie de filtre actif la plus utilisée pour le 2\textsuperscript{e} ordre. L'AOP (chapitre 18) est monté en \textbf{suiveur} (gain unitaire) ou en non-inverseur (gain $> 1$).
 
 \textbf{Passe-bas Sallen-Key (gain unitaire) :}
 
-\begin{center}
-\begin{circuitikz}[scale=0.85]
-  \draw (0,0) to[R, l=$R_1$] (2.5,0) to[R, l=$R_2$] (5,0);
-  \draw (5,0) -- (5.5,0);
-  % C2 vers masse
-  \draw (2.5,0) to[C, l_=$C_2$] (2.5,-1.5) node[ground]{};
-  % C1 de la jonction R2/entrée+ vers sortie
-  \draw (5,0) to[C, l=$C_1$] (5,-1.5) node[ground]{};
-  % AOP
-  \draw (5.5,0.3) node[op amp, anchor=+, scale=0.6](AOP){};
-  \draw (AOP.-) -- ++(0,-0.8) -| (AOP.out);
-  \draw (AOP.out) -- ++(0.8,0) node[right]{$v_{\text{out}}$};
-  % Feedback C1
-  \draw (5,0) -- (5,1.2) -| (AOP.out);
-  % Labels
+\begin{figure}[h]
+\centering
+\begin{circuitikz}[scale=0.9]
+  % Deux résistances série de l'entrée au +
+  \draw (0,0) to[R, l=$R_1$] (2.2,0) coordinate(mid) to[R, l=$R_2$] (4.4,0) coordinate(np);
+  % C2 du noeud + vers la masse
+  \draw (np) to[C, l_=$C_2$] (4.4,-1.6) node[ground]{};
+  % AOP : entrée + sur np, suiveur
+  \draw (np) -- (4.9,0);
+  \node[op amp, anchor=+, scale=0.62] (A) at (4.9,-0.15){};
+  \draw (A.-) -- ++(0,-0.7) coordinate(fb) -| (A.out);
+  \draw (A.out) -- ++(0.7,0) coordinate(out) node[right]{$v_{\text{out}}$};
+  % C1 en RETROACTION : condensateur du noeud milieu (R1-R2) vers la sortie AOP
+  \draw (mid) to[C, l=$C_1$] (2.2,1.6) -| (out);
   \draw[->, blue!70!black, thick] (-0.7,0.3) -- (0.3,0.3) node[midway, above, font=\small]{$v_{\text{in}}$};
 \end{circuitikz}
-\end{center}
-
-\begin{attention}
-Le schéma ci-dessus est une version simplifiée. Dans la topologie Sallen-Key complète, $C_1$ est connecté entre la sortie de $R_2$ et la sortie de l'AOP (rétroaction positive via $C_1$), ce qui est essentiel pour obtenir un $Q > 0{,}5$ sans inductance.
-\end{attention}
+\caption{Passe-bas Sallen-Key du 2\textsuperscript{e} ordre. La clé est $C_1$ : rebouclé du n\oe ud milieu ($R_1$--$R_2$) vers la sortie de l'AOP, il réinjecte une fraction du signal (rétroaction positive contrôlée) et crée un $Q > 0{,}5$ \emph{sans aucune inductance}. Avec $C_1$ à la masse, on n'aurait qu'un double RC ($Q < 0{,}5$).}
+\end{figure}
 
 \begin{formule}
-Pour un Sallen-Key passe-bas avec composants égaux ($R_1 = R_2 = R$, gain unitaire) :
+Pour un Sallen-Key passe-bas à gain unitaire ($R_1 = R_2 = R$) :
 \[
-f_0 = \frac{1}{2\pi R\sqrt{C_1 C_2}} \qquad Q = \frac{\sqrt{C_1 C_2}}{C_1 + C_2}\cdot\frac{1}{1} = \frac{\sqrt{C_1/C_2}}{1 + C_1/C_2}
+f_0 = \frac{1}{2\pi R\sqrt{C_1 C_2}} \qquad Q = \frac{\sqrt{C_1/C_2}}{2}
 \]
-Pour un filtre Butterworth ($Q = 0{,}707$) avec $R_1 = R_2 = R$ : choisir $C_1/C_2 = 2$, par exemple $C_1 = \SI{2.2}{nF}$, $C_2 = \SI{1}{nF}$.
+Pour un Butterworth ($Q = 0{,}707$) avec $R_1 = R_2 = R$ : $C_1/C_2 = 2$, par exemple $C_1 = \SI{2.2}{nF}$, $C_2 = \SI{1}{nF}$.
 \end{formule}
 
 \subsection{La topologie MFB (Multiple Feedback)}
@@ -8672,6 +8674,34 @@ Le choix de la \textbf{réponse normalisée} détermine la forme de la courbe de
 \item Elliptique pousse le compromis au maximum : transition la plus raide pour un ordre donné, mais ondulation partout.
 \end{itemize}
 \end{intuition}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.9]
+  \draw[-{Stealth[length=2mm]}] (0,0) -- (7.2,0) node[right, font=\footnotesize]{$f/f_c$};
+  \draw[-{Stealth[length=2mm]}] (0,-0.3) -- (0,3.3) node[above, font=\footnotesize]{$|H|$ (dB)};
+  \node[left, font=\footnotesize] at (0,2.6) {$0$};
+  \node[left, font=\footnotesize] at (0,1.84) {$-3$};
+  \draw[dashed, gray] (0,1.84) -- (6.8,1.84);
+  \draw (-0.06,2.6)--(0.06,2.6);
+  \node[below, font=\footnotesize] at (2.6,0) {$1$};
+  \draw (2.6,0.06)--(2.6,-0.06);
+  % Passe-bas 2nd ordre normalisé, x_graph=2.6*(f/fc). y=2.6+... (0 dB à y=2.6, -3dB à 1.84 => 0.076/dB... on trace ~forme)
+  % Bessel Q=0.577 : doux, chute tôt
+  \draw[very thick, green!55!black, domain=0.05:2.6, samples=120, variable=\u]
+    plot({2.6*\u}, {2.6 + 0.6*( -0.5*ln( (1-\u*\u)^2 + \u*\u/(0.577*0.577) )/ln(10) )});
+  \node[green!55!black, font=\footnotesize] at (5.4,0.5) {Bessel};
+  % Butterworth Q=0.707 : plat puis chute
+  \draw[very thick, blue!70!black, domain=0.05:2.6, samples=140, variable=\u]
+    plot({2.6*\u}, {2.6 + 0.6*( -0.5*ln( (1-\u*\u)^2 + \u*\u/(0.707*0.707) )/ln(10) )});
+  \node[blue!70!black, font=\footnotesize] at (4.6,1.35) {Butterworth};
+  % Tchebychev Q=1.306 : bosse (ripple) avant chute raide
+  \draw[very thick, red!70!black, domain=0.05:2.6, samples=200, variable=\u]
+    plot({2.6*\u}, {2.6 + 0.6*( -0.5*ln( (1-\u*\u)^2 + \u*\u/(1.306*1.306) )/ln(10) )});
+  \node[red!70!black, font=\footnotesize] at (2.0,3.05) {Tchebychev};
+\end{tikzpicture}
+\caption{Trois réponses du 2\textsuperscript{e} ordre, même $f_c$. Bessel (vert) descend en douceur dès la bande passante (phase linéaire). Butterworth (bleu) reste plat puis coupe. Tchebychev (rouge) présente une bosse (\emph{ripple}) avant une transition plus raide. Le choix est un arbitrage platitude / raideur / phase --- jamais les trois à la fois.}
+\end{figure}
 
 \subsection{Tables de dimensionnement du 2nd ordre}
 
@@ -8825,9 +8855,9 @@ Au-dessus de quelques MHz, les filtres actifs ne fonctionnent plus (la bande pas
 
 \textbf{En puissance} (filtrage EMI, alimentation) :
 \begin{itemize}[nosep]
-\item \textbf{Filtre LC en $\pi$} sur les entrées secteur (norme EMI).
-\item \textbf{Filtre de sortie LC} des convertisseurs buck/boost (lisse l'ondulation de commutation).
-\item \textbf{Common-mode choke} + condensateurs Y pour le mode commun.
+\item \textbf{Filtre LC en $\pi$} sur les entrées secteur (conformité EMI conduite, chapitre 35).
+\item \textbf{Filtre de sortie LC} des convertisseurs buck/boost (lisse l'ondulation de commutation, chapitre 31).
+\item \textbf{Common-mode choke} + condensateurs Y pour le mode commun (chapitre 35).
 \end{itemize}
 \end{pratique}
 
@@ -8868,7 +8898,7 @@ Pour les applications exigeantes (audio haute fidélité, télécoms, radar), on
 
 Choisissons $f_c = \SI{500}{Hz}$. À \SI{50}{kHz} : $f/f_c = 100 = 2$ décades $\Rightarrow$ $\SI{-40}{dB}$. OK.
 
-Le signal utile à \SI{50}{Hz} est à $0{,}1 \times f_c$ : gain $\approx \SI{0}{dB}$ (quasi pas d'atténuation). \checkmark
+Le signal utile à \SI{50}{Hz} est à $0{,}1 \times f_c$ : gain $\approx \SI{0}{dB}$ (quasi pas d'atténuation). 
 \end{pratique}
 
 \subsection*{Niveau intermédiaire}
@@ -8886,7 +8916,7 @@ $C_2 = C_{\text{ref}}/(2Q) = 1{,}59/(2\times0{,}707) = \SI{1.12}{nF}$ $\to$ \SI{
 
 Vérification : $f_0 = 1/(2\pi R\sqrt{C_1 C_2}) = 1/(2\pi\times10^4\times\sqrt{2{,}2\times10^{-9}\times10^{-9}})$
 
-$= 1/(2\pi\times10^4\times1{,}483\times10^{-9}) = \SI{10.7}{kHz}$. Proche de \SI{10}{kHz} (\checkmark, l'arrondi E24 décale légèrement).
+$= 1/(2\pi\times10^4\times1{,}483\times10^{-9}) = \SI{10.7}{kHz}$. Proche de \SI{10}{kHz} (, l'arrondi E24 décale légèrement).
 \end{pratique}
 
 \textbf{Exercice 14.4 ---} On met en cascade un passe-haut CR ($f_c = \SI{20}{Hz}$) et un passe-bas RC ($f_c = \SI{20}{kHz}$) avec un buffer entre les deux. Quel est le type de filtre résultant ? Quelle est la bande passante ? Tracez le diagramme de Bode asymptotique.
@@ -8934,7 +8964,7 @@ Ordre de cascade : cellule 1 (faible $Q$) en premier, cellule 2 (haut $Q$) en de
 \begin{pratique}
 \textbf{Solution :} $f_0 = 1/(2\pi\sqrt{22\times10^{-9}\times6{,}2\times10^{-12}}) = 1/(2\pi\times\SI{1.168e-10}{})$
 
-$= 1/(7{,}34\times10^{-10}) \approx \SI{432}{MHz}$. \checkmark{} (proche de \SI{433}{MHz}).
+$= 1/(7{,}34\times10^{-10}) \approx \SI{432}{MHz}$.  (proche de \SI{433}{MHz}).
 
 $R_L = \omega_0 L/Q_L = 2\pi\times433\times10^6\times22\times10^{-9}/40 = \SI{1.50}{\ohm}$.
 
@@ -8947,12 +8977,21 @@ $\Delta f = f_0/Q_L = 433/0{,}587 \approx \SI{738}{MHz}$. Le filtre est \textbf{
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Pourquoi préfère-t-on les filtres actifs aux filtres passifs en dessous de \SI{100}{kHz} ? Qu'est-ce qui change au-dessus ?
-\item Un filtre Butterworth et un filtre Tchebychev de même ordre ont la même $f_c$. Lequel atténue le plus à $2f_c$ ? Lequel a la meilleure réponse en transitoire ? Pourquoi ?
-\item On cascade trois cellules passe-bas du 1er ordre identiques ($f_c = \SI{1}{kHz}$). Le filtre résultant a-t-il le même comportement qu'un Butterworth d'ordre 3 ? Si non, quelle est la différence ?
-\item Expliquez pourquoi un filtre à capacités commutées nécessite un filtre anti-aliasing analogique en amont.
-\end{enumerate}
+\textbf{Q1.} Pourquoi préfère-t-on les filtres actifs sous \SI{100}{kHz} ? Qu'est-ce qui change au-dessus ?
+
+\textit{Réponse : sous \SI{100}{kHz}, un 2\textsuperscript{e} ordre passif exigerait des inductances énormes (des H en BF), encombrantes, à pertes et couplages parasites. L'actif (RC + AOP) les élimine, apporte du gain, une sortie basse impédance (insensible à la charge) et un $Q$ réglable. Au-dessus de quelques MHz, la bande passante finie de l'AOP (produit gain-bande) s'effondre : le gain de boucle disparaît, le filtre actif ne tient plus. On revient alors au LC passif, dont les valeurs redeviennent petites et réalistes en HF. La frontière est fixée par le GBW de l'AOP, pas par une règle absolue.}
+
+\textbf{Q2.} Butterworth vs Tchebychev de même ordre et même $f_c$ : lequel atténue le plus à $2f_c$ ? Meilleur transitoire ?
+
+\textit{Réponse : Tchebychev atténue davantage à $2f_c$ (transition plus raide, c'est sa raison d'être). Mais Butterworth a le meilleur transitoire : son $Q$ plus faible ($0{,}707$ vs $>1$ pour Tchebychev) donne moins de dépassement et de sonnerie. Physiquement, Tchebychev « achète » la raideur en rapprochant ses pôles de l'axe imaginaire (Q élevé) — d'où la bosse fréquentielle et le ringing temporel. C'est le compromis raideur $\leftrightarrow$ comportement transitoire.}
+
+\textbf{Q3.} Trois cellules RC 1\textsuperscript{er} ordre identiques ($f_c = \SI{1}{kHz}$) en cascade $\neq$ Butterworth ordre 3 ?
+
+\textit{Réponse : non, et c'est un piège classique. Trois RC identiques ont trois pôles réels \emph{confondus} à $f_c$ ($Q$ implicite très faible). Résultat : la coupure est molle et la $f_{-3\text{dB}}$ globale chute bien en dessous de \SI{1}{kHz} (chaque étage retire déjà $-1$\,dB à $f_c$, cumul $-3$\,dB atteint plus tôt). Un vrai Butterworth ordre 3 a des pôles \emph{répartis} (une cellule $Q=1$ + un pôle réel, tous à $f_c$) donnant une bande passante maximalement plate jusqu'à $f_c$. Même pente asymptotique ($-60$\,dB/déc), mais forme et $f_c$ effective différentes. Il faut des cellules à $Q$ imposé, pas des RC identiques.}
+
+\textbf{Q4.} Pourquoi un filtre à capacités commutées exige-t-il un anti-aliasing analogique en amont ?
+
+\textit{Réponse : parce qu'il \emph{échantillonne} le signal à $f_{\text{clk}}$. Tout signal d'entrée au-dessus de $f_{\text{clk}}/2$ se replie (aliasing) dans la bande utile — le filtre SC lui-même ne peut pas l'éviter puisqu'il est la cause. Un filtre analogique continu (RC simple suffit souvent) doit donc limiter le spectre d'entrée sous $f_{\text{clk}}/2$ avant l'échantillonnage. C'est la même contrainte que devant un ADC (chapitre 27) : on ne peut pas filtrer numériquement un repliement déjà produit.}
 
 % === RÉSUMÉ DU CHAPITRE 14 ===
 \section*{Résumé du chapitre}
@@ -9000,6 +9039,12 @@ Numérique & FIR/IIR dans DSP/FPGA pour les besoins exigeants \\
 \end{tabular}
 \end{center}
 \end{ingenieur}
+
+\vspace{0.4cm}
+
+\begin{retenir}
+Les filtres actifs reposent entièrement sur l'amplificateur opérationnel --- lui-même construit à partir de transistors, eux-mêmes bâtis sur une brique plus élémentaire : la jonction PN. Avant de comprendre l'AOP (chapitre 18), il faut comprendre le premier composant non-linéaire, celui qui ne laisse passer le courant que dans un sens : la diode. Elle ouvre la Partie V et le chapitre 15.
+\end{retenir}
 
 
 % ============================================================================
