@@ -8607,19 +8607,29 @@ C'est la topologie de filtre actif la plus utilisée pour le 2\textsuperscript{e
 
 \begin{figure}[h]
 \centering
-\begin{circuitikz}[scale=0.9]
-  % Deux résistances série de l'entrée au +
-  \draw (0,0) to[R, l=$R_1$] (2.2,0) coordinate(mid) to[R, l=$R_2$] (4.4,0) coordinate(np);
+\begin{circuitikz}[scale=0.92]
+  % Entrée
+  \draw[->, blue!70!black, thick] (-0.9,0) -- (-0.1,0) node[midway,above,font=\small]{$v_{\text{in}}$};
+  % R1, R2 en série vers le + de l'AOP
+  \draw (-0.1,0) to[R,l=$R_1$] (2,0) coordinate(A) to[R,l=$R_2$] (4,0) coordinate(B);
   % C2 du noeud + vers la masse
-  \draw (np) to[C, l_=$C_2$] (4.4,-1.6) node[ground]{};
-  % AOP : entrée + sur np, suiveur
-  \draw (np) -- (4.9,0);
-  \node[op amp, anchor=+, scale=0.62] (A) at (4.9,-0.15){};
-  \draw (A.-) -- ++(0,-0.7) coordinate(fb) -| (A.out);
-  \draw (A.out) -- ++(0.7,0) coordinate(out) node[right]{$v_{\text{out}}$};
-  % C1 en RETROACTION : condensateur du noeud milieu (R1-R2) vers la sortie AOP
-  \draw (mid) to[C, l=$C_1$] (2.2,1.6) -| (out);
-  \draw[->, blue!70!black, thick] (-0.7,0.3) -- (0.3,0.3) node[midway, above, font=\small]{$v_{\text{in}}$};
+  \draw (B) to[C,l_=$C_2$] (4,-1.7) node[ground]{};
+  % AOP : triangle manuel, - en haut, + en bas
+  \draw (4.7,0.78) -- (6.2,0) coordinate(Otip) -- (4.7,-0.78) -- cycle;
+  \node[font=\footnotesize] at (4.98,0.40) {$-$};
+  \node[font=\footnotesize] at (4.98,-0.40) {$+$};
+  \coordinate (Om) at (4.7,0.42);
+  \coordinate (Op) at (4.7,-0.42);
+  % B -> entrée + (route en L, à droite de C2)
+  \draw (B) -- (4.35,0) -- (4.35,-0.42) -- (Op);
+  % Sortie
+  \draw (Otip) -- (7,0) coordinate(out) node[right]{$v_{\text{out}}$};
+  % Rebouclage suiveur : - relié à la sortie (rail à x=6.6)
+  \draw (Om) -- (4.35,0.42) -- (4.35,1.15) -- (6.6,1.15) -- (6.6,0);
+  % C1 en rétroaction : noeud A -> rail haut -> condensateur horizontal -> sortie
+  \draw (A) -- (2,1.9);
+  \draw (2,1.9) to[C,l=$C_1$] (6.6,1.9);
+  \draw (6.6,1.9) -- (6.6,1.15);
 \end{circuitikz}
 \caption{Passe-bas Sallen-Key du 2\textsuperscript{e} ordre. La clé est $C_1$ : rebouclé du n\oe ud milieu ($R_1$--$R_2$) vers la sortie de l'AOP, il réinjecte une fraction du signal (rétroaction positive contrôlée) et crée un $Q > 0{,}5$ \emph{sans aucune inductance}. Avec $C_1$ à la masse, on n'aurait qu'un double RC ($Q < 0{,}5$).}
 \end{figure}
@@ -8678,29 +8688,32 @@ Le choix de la \textbf{réponse normalisée} détermine la forme de la courbe de
 \begin{figure}[h]
 \centering
 \begin{tikzpicture}[scale=0.9]
-  \draw[-{Stealth[length=2mm]}] (0,0) -- (7.2,0) node[right, font=\footnotesize]{$f/f_c$};
-  \draw[-{Stealth[length=2mm]}] (0,-0.3) -- (0,3.3) node[above, font=\footnotesize]{$|H|$ (dB)};
-  \node[left, font=\footnotesize] at (0,2.6) {$0$};
-  \node[left, font=\footnotesize] at (0,1.84) {$-3$};
-  \draw[dashed, gray] (0,1.84) -- (6.8,1.84);
-  \draw (-0.06,2.6)--(0.06,2.6);
-  \node[below, font=\footnotesize] at (2.6,0) {$1$};
-  \draw (2.6,0.06)--(2.6,-0.06);
-  % Passe-bas 2nd ordre normalisé, x_graph=2.6*(f/fc). y=2.6+... (0 dB à y=2.6, -3dB à 1.84 => 0.076/dB... on trace ~forme)
-  % Bessel Q=0.577 : doux, chute tôt
-  \draw[very thick, green!55!black, domain=0.05:2.6, samples=120, variable=\u]
-    plot({2.6*\u}, {2.6 + 0.6*( -0.5*ln( (1-\u*\u)^2 + \u*\u/(0.577*0.577) )/ln(10) )});
-  \node[green!55!black, font=\footnotesize] at (5.4,0.5) {Bessel};
-  % Butterworth Q=0.707 : plat puis chute
-  \draw[very thick, blue!70!black, domain=0.05:2.6, samples=140, variable=\u]
-    plot({2.6*\u}, {2.6 + 0.6*( -0.5*ln( (1-\u*\u)^2 + \u*\u/(0.707*0.707) )/ln(10) )});
-  \node[blue!70!black, font=\footnotesize] at (4.6,1.35) {Butterworth};
-  % Tchebychev Q=1.306 : bosse (ripple) avant chute raide
-  \draw[very thick, red!70!black, domain=0.05:2.6, samples=200, variable=\u]
-    plot({2.6*\u}, {2.6 + 0.6*( -0.5*ln( (1-\u*\u)^2 + \u*\u/(1.306*1.306) )/ln(10) )});
-  \node[red!70!black, font=\footnotesize] at (2.0,3.05) {Tchebychev};
+  \draw[-{Stealth[length=2mm]}] (0,-0.5) -- (7.4,-0.5) node[right, font=\footnotesize]{$f/f_c$};
+  \draw[-{Stealth[length=2mm]}] (0,-0.7) -- (0,3.3) node[above, font=\footnotesize]{$|H|$ (dB)};
+  % Échelle : y = 2.5 + 0.15*G(dB). 0dB->2.5, -3->2.05, -10->1.0, -20->-0.5
+  \node[left, font=\footnotesize] at (0,2.5) {$0$};   \draw (-0.06,2.5)--(0.06,2.5);
+  \node[left, font=\footnotesize] at (0,2.05) {$-3$};  \draw (-0.06,2.05)--(0.06,2.05);
+  \node[left, font=\footnotesize] at (0,1.0) {$-10$};  \draw (-0.06,1.0)--(0.06,1.0);
+  \node[left, font=\footnotesize] at (0,-0.5) {$-20$};
+  \draw[dashed, gray] (0,2.05) -- (7.0,2.05);
+  \node[below, font=\footnotesize] at (2.6,-0.5) {$1$};  \draw (2.6,-0.44)--(2.6,-0.56);
+  \node[below, font=\footnotesize] at (5.2,-0.5) {$2$};  \draw (5.2,-0.44)--(5.2,-0.56);
+  % x = 2.6*(f/fc). y = 2.5 - 1.5*ln(arg)/ln(10), arg=(1-u^2)^2+u^2/Q^2. clamp [-0.65,3.1]
+  % Bessel Q=0.577
+  \draw[very thick, green!55!black, domain=0.05:2.75, samples=160, variable=\u]
+    plot({2.6*\u}, {min(3.1, max(-0.65, 2.5 - 1.5*ln( (1-\u*\u)^2 + \u*\u/(0.577*0.577) )/ln(10)))});
+  \node[green!55!black, font=\footnotesize] at (5.75,1.15) {Bessel};
+  % Butterworth Q=0.707 (croise -3dB pile à f/fc=1)
+  \draw[very thick, blue!70!black, domain=0.05:2.75, samples=180, variable=\u]
+    plot({2.6*\u}, {min(3.1, max(-0.65, 2.5 - 1.5*ln( (1-\u*\u)^2 + \u*\u/(0.707*0.707) )/ln(10)))});
+  \node[blue!70!black, font=\footnotesize] at (4.7,1.75) {Butterworth};
+  % Tchebychev Q=1.306 (bosse ~+2.3dB puis chute plus raide)
+  \draw[very thick, red!70!black, domain=0.05:2.75, samples=240, variable=\u]
+    plot({2.6*\u}, {min(3.1, max(-0.65, 2.5 - 1.5*ln( (1-\u*\u)^2 + \u*\u/(1.306*1.306) )/ln(10)))});
+  \node[red!70!black, font=\footnotesize] at (2.35,3.05) {Tchebychev};
+  \filldraw[blue!70!black] (2.6,2.05) circle (1.6pt);
 \end{tikzpicture}
-\caption{Trois réponses du 2\textsuperscript{e} ordre, même $f_c$. Bessel (vert) descend en douceur dès la bande passante (phase linéaire). Butterworth (bleu) reste plat puis coupe. Tchebychev (rouge) présente une bosse (\emph{ripple}) avant une transition plus raide. Le choix est un arbitrage platitude / raideur / phase --- jamais les trois à la fois.}
+\caption{Trois réponses du 2\textsuperscript{e} ordre, même $f_c$. Butterworth (bleu) reste plat puis croise exactement $-3$~dB à $f_c$ ; Bessel (vert) descend plus tôt en douceur (phase linéaire) ; Tchebychev (rouge) fait une bosse (\emph{ripple}) dans la bande, en échange d'une coupure plus raide au-delà. Arbitrage platitude / raideur / phase --- jamais les trois à la fois.}
 \end{figure}
 
 \subsection{Tables de dimensionnement du 2nd ordre}
