@@ -7429,7 +7429,7 @@ Ce chapitre est un \textbf{chapitre charnière} du livre. Il fait la synthèse d
 \section{Les Bases}
 
 \begin{bases}
-Cette section explique ce qu'est une fonction de transfert, pourquoi on utilise les décibels, et comment lire un diagramme de Bode simple. Prérequis : chapitre 10 (notation complexe et impédances).
+Ce qu'est une fonction de transfert, le décibel et sa logique, la lecture d'un diagramme de Bode, les filtres du 1\textsuperscript{er} ordre. Prérequis : chapitre 10.
 \end{bases}
 
 \subsection{Qu'est-ce qu'une fonction de transfert ?}
@@ -7545,8 +7545,9 @@ $\omega \gg \omega_c$ (HF) & $\approx \omega_c/\omega$ & $-\SI{20}{dB/décade}$ 
 \end{tabular}
 \end{center}
 
-\begin{center}
-\begin{tikzpicture}[scale=0.85]
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.72]
   % === GAIN ===
   \begin{scope}[shift={(0,0)}]
     \draw[-{Stealth[length=2.5mm]}] (0,0) -- (8.5,0) node[right, font=\small]{$\log(f/f_c)$};
@@ -7590,7 +7591,7 @@ $\omega \gg \omega_c$ (HF) & $\approx \omega_c/\omega$ & $-\SI{20}{dB/décade}$ 
   \end{scope}
   
   % === PHASE ===
-  \begin{scope}[shift={(11,0)}]
+  \begin{scope}[shift={(9.3,0)}]
     \draw[-{Stealth[length=2.5mm]}] (0,0.5) -- (8.5,0.5) node[right, font=\small]{$\log(f/f_c)$};
     \draw[-{Stealth[length=2.5mm]}] (0,-4.5) -- (0,1.5) node[above, font=\small]{$\varphi$ (°)};
     
@@ -7622,7 +7623,8 @@ $\omega \gg \omega_c$ (HF) & $\approx \omega_c/\omega$ & $-\SI{20}{dB/décade}$ 
     \node[below, font=\bfseries] at (4,-5) {Diagramme de phase};
   \end{scope}
 \end{tikzpicture}
-\end{center}
+\caption{Diagramme de Bode du passe-bas du 1\textsuperscript{er} ordre. Gain (gauche) : plat à \SI{0}{dB} puis $-\SI{20}{dB/décade}$ après $f_c$, asymptotes en vert, écart maximal de \SI{3}{dB} à $f_c$. Phase (droite) : de $0°$ à $-90°$, passant par $-45°$ à $f_c$.}
+\end{figure}
 
 \begin{intuition}
 \textbf{Comment lire ce diagramme :}
@@ -7766,6 +7768,39 @@ $Q = 50$ & $\SI{+34}{dB}$ & Pic très pointu (filtre sélectif) \\
 
 Le gain au pic de résonance vaut exactement $Q$ en linéaire, soit $20\log Q$ en dB.
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.72]
+  \draw[-{Stealth[length=2.5mm]}] (0,0) -- (9,0) node[right, font=\small]{$\log(f/f_0)$};
+  \draw[-{Stealth[length=2.5mm]}] (0,-4.5) -- (0,2.5) node[above, font=\small]{$G$ (dB)};
+  \foreach \x/\l in {0/{0{,}1}, 3/{1}, 6/{10}} {\draw (\x,0.08)--(\x,-0.08); \node[below,font=\footnotesize] at (\x,-0.15){\l};}
+  \node[left, font=\footnotesize] at (0,0) {$0$};
+  \node[left, font=\footnotesize] at (0,1.4) {$+14$};
+  \draw (-0.08,1.4)--(0.08,1.4);
+  \node[left, font=\footnotesize] at (0,-2) {$-20$};
+  \draw (-0.08,-2)--(0.08,-2);
+  % asymptotes
+  \draw[dashed, gray] (0,0) -- (3,0) -- (5.5,-3.33);
+  \node[gray, font=\footnotesize, rotate=-38] at (4.7,-2.3) {$-40$ dB/déc};
+  % Courbes paramétrées en u=f/f0 (log10(u) mappé sur x : x=3+3*log10(u))
+  % G = -10 log10( (1-u^2)^2 + u^2/Q^2 ). u de 0.1 à 30 -> x de 0 à ~7.4, on borne à x<=6
+  % Q=0.707
+  \draw[very thick, green!60!black, domain=0.125:8, samples=200, smooth, variable=\u]
+    plot({3+3*ln(\u)/ln(10)}, {max(-4.3, -10*ln( (1-\u*\u)*(1-\u*\u) + 2*\u*\u )/ln(10))});
+  \node[green!60!black, font=\footnotesize] at (1.3,-0.55) {$Q=0{,}707$};
+  % Q=1
+  \draw[very thick, blue!70!black, domain=0.125:8, samples=240, smooth, variable=\u]
+    plot({3+3*ln(\u)/ln(10)}, {max(-4.3, -10*ln( (1-\u*\u)*(1-\u*\u) + \u*\u )/ln(10))});
+  \node[blue!70!black, font=\footnotesize] at (3.95,0.7) {$Q=1$};
+  % Q=5
+  \draw[very thick, red!70!black, domain=0.125:8, samples=320, smooth, variable=\u]
+    plot({3+3*ln(\u)/ln(10)}, {max(-4.3, -10*ln( (1-\u*\u)*(1-\u*\u) + \u*\u/25 )/ln(10))});
+  \node[red!70!black, font=\footnotesize] at (3.25,1.75) {$Q=5$};
+  \filldraw[red!70!black] (3,1.4) circle (2pt);
+\end{tikzpicture}
+\caption{Passe-bas du 2\textsuperscript{e} ordre selon $Q$. Tous partagent l'asymptote $-\SI{40}{dB/décade}$, mais près de $f_0$ la courbe réelle dépasse l'asymptote d'autant plus que $Q$ est grand (pic $= 20\log Q$, soit $+\SI{14}{dB}$ pour $Q=5$). L'asymptotique seul est trompeur dès $Q > 1/\sqrt2$.}
+\end{figure}
+
 \begin{attention}
 \textbf{Piège de l'asymptotique au 2nd ordre :} l'asymptote prédit une cassure nette de $-\SI{40}{dB/décade}$ à $\omega_0$. Mais si $Q > 1/\sqrt{2}$, la courbe réelle \textbf{dépasse} l'asymptote avant de la rejoindre : c'est le pic de résonance. L'écart peut être considérable ($\SI{34}{dB}$ pour $Q = 50$). \textbf{Ne jamais se fier à l'asymptotique seul au 2nd ordre} quand $Q$ est élevé.
 \end{attention}
@@ -7860,7 +7895,8 @@ Stabilité des systèmes bouclés, critères de Routh-Hurwitz et de Nyquist, mar
 
 La plupart des systèmes électroniques réels utilisent une \textbf{rétroaction} (feedback) : une partie du signal de sortie est renvoyée à l'entrée pour contrôler le comportement. C'est le cas des amplificateurs opérationnels bouclés, des régulateurs de tension, des PLL, des asservissements de moteur\ldots
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{tikzpicture}[scale=0.9, >=Stealth, every node/.style={font=\small}]
   % Comparateur
   \draw (0,0) circle (0.3);
@@ -7895,7 +7931,8 @@ La plupart des systèmes électroniques réels utilisent une \textbf{rétroactio
   \node[above, font=\footnotesize] at (2.2,0.7) {chaîne directe};
   \node[below, font=\footnotesize] at (-0.5,-2.5) {chaîne de retour};
 \end{tikzpicture}
-\end{center}
+\caption{Système bouclé. Le comparateur soustrait le retour $B(s)\underline{S}$ de l'entrée $\underline{E}$ ; l'erreur $\varepsilon$ attaque la chaîne directe $A(s)$. Toute la conception à rétroaction tient dans ce schéma.}
+\end{figure}
 
 \begin{formule}
 \textbf{Fonction de transfert en boucle ouverte} (FTBO) :
@@ -7949,8 +7986,9 @@ Pour qu'un système bouclé soit stable avec une marge de sécurité, on défini
 \]
 \end{formule}
 
-\begin{center}
-\begin{tikzpicture}[scale=0.8, >=Stealth]
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.68, >=Stealth]
   % === GAIN ===
   \begin{scope}[shift={(0,0)}]
     \draw[->] (0,0) -- (8,0) node[right, font=\small]{$\log f$};
@@ -8006,7 +8044,30 @@ Pour qu'un système bouclé soit stable avec une marge de sécurité, on défini
     \node[font=\bfseries\small] at (4,-4.5) {Phase};
   \end{scope}
 \end{tikzpicture}
-\end{center}
+\caption{ sur le Bode de la FTBO. Marge de phase $M_\varphi$ : écart à $-180°$ là où $|T| = \SI{0}{dB}$. Marge de gain $M_G$ : écart à \SI{0}{dB} là où la phase atteint $-180°$. Les deux doivent rester positives et confortables.}
+\end{figure}
+
+Le même verdict de stabilité se lit dans le plan complexe (diagramme de Nyquist) :
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.85, >=Stealth]
+  \draw[->] (-3.5,0) -- (1.5,0) node[right, font=\footnotesize]{$\Re(T)$};
+  \draw[->] (0,-2.3) -- (0,2.3) node[above, font=\footnotesize]{$\Im(T)$};
+  % point critique -1
+  \filldraw[red!70!black] (-1,0) circle (2.5pt);
+  \node[red!70!black, below, font=\footnotesize] at (-1,-0.1) {$-1$};
+  % courbe Nyquist stable (n'entoure pas -1)
+  \draw[very thick, blue!70!black]
+    (1,0) .. controls (1,1.2) and (-0.3,1.5) .. (-0.55,0.7)
+    .. controls (-0.7,0.2) and (-0.6,-0.2) .. (-0.55,-0.7)
+    .. controls (-0.3,-1.5) and (1,-1.2) .. (1,0);
+  \node[blue!70!black, font=\footnotesize, right] at (0.75,1.3) {$T(j\omega)$};
+  \draw[->, blue!70!black, thick] (0.5,1.42) -- (0.35,1.46);
+  \node[font=\footnotesize, align=left] at (-2.5,1.5) {$-1$ hors de la\\ courbe $\Rightarrow$ stable};
+\end{tikzpicture}
+\caption{Diagramme de Nyquist (système stable en boucle ouverte). Le tracé de $T(j\omega)$ n'encercle pas le point critique $(-1, 0)$ : la boucle fermée est stable. S'il l'entourait, elle serait instable --- c'est la lecture géométrique du critère de Barkhausen $T = -1$.}
+\end{figure}
 
 \begin{pratique}
 \textbf{Valeurs cibles en conception :}
@@ -8114,10 +8175,10 @@ Quand un système bouclé a une marge de phase insuffisante, on ajoute un résea
 \begin{pratique}
 \textbf{Techniques courantes :}
 \begin{itemize}[nosep]
-\item \textbf{Compensation dominante (pôle dominant)} : on ajoute un pôle à basse fréquence qui force le gain à croiser \SI{0}{dB} bien avant que la phase n'atteigne $-180°$. C'est ce que fait la capacité de compensation ``Miller'' dans un ampli-op (typiquement $\SI{30}{pF}$ interne).
+\item \textbf{Compensation dominante (pôle dominant)} : on ajoute un pôle à basse fréquence qui force le gain à croiser \SI{0}{dB} bien avant que la phase n'atteigne $-180°$. C'est ce que fait la capacité de compensation ``Miller'' dans un ampli-op (typiquement $\SI{30}{pF}$ interne, chapitre 18).
 \item \textbf{Avance de phase (lead)} : un réseau zéro-pôle ($f_z < f_p$) qui ``remonte'' la phase au voisinage du croisement à \SI{0}{dB}. Utilisé dans les régulateurs de tension et les boucles PLL.
 \item \textbf{Retard de phase (lag)} : un réseau pôle-zéro ($f_p < f_z$) qui augmente le gain en BF (réduit l'erreur statique) sans affecter la phase au croisement. Utilisé en automatique.
-\item \textbf{PID} : combinaison d'un intégrateur (erreur statique nulle), d'un proportionnel (gain) et d'un dérivateur (avance de phase). C'est le correcteur universel des systèmes asservis. Il sera détaillé dans un chapitre dédié.
+\item \textbf{PID} : combinaison d'un intégrateur (erreur statique nulle), d'un proportionnel (gain) et d'un dérivateur (avance de phase). C'est le correcteur universel des systèmes asservis, détaillé au chapitre 34.
 \end{itemize}
 \end{pratique}
 
@@ -8243,10 +8304,9 @@ $s^0$ & $K$ & \\
 \end{tabular}
 \end{center}
 
-Conditions de stabilité (tous les éléments de la 1ère colonne de même signe, ici positifs) :
+Conditions de stabilité (tous les éléments de la 1\textsuperscript{re} colonne de même signe, ici positifs) :
 \begin{itemize}[nosep]
-\item $1 > 0$ \checkmark
-\item $4 > 0$ \checkmark
+\item $1 > 0$ et $4 > 0$ : toujours vérifiés.
 \item $(20-K)/4 > 0 \Rightarrow K < 20$
 \item $K > 0$
 \end{itemize}
@@ -8296,12 +8356,21 @@ De plus, le $Q = 5$ crée un pic de $\SI{14}{dB}$ qui peut provoquer de la satur
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Pourquoi utilise-t-on une échelle logarithmique en fréquence (et pas linéaire) pour les diagrammes de Bode ?
-\item Un amplificateur a un gain en boucle ouverte de \SI{100}{dB} et une bande passante de \SI{10}{Hz}. On le boucle pour obtenir un gain de \SI{20}{dB}. Quelle est la bande passante en boucle fermée (approximation du produit gain-bande constant) ?
-\item Expliquez physiquement pourquoi une rétroaction négative peut devenir instable. À quelle fréquence le déphasage transforme-t-il la rétroaction négative en rétroaction positive ?
-\item Un système a deux pôles à $f_1$ et $f_2$. Si $f_2 = 2f_1$, la phase au croisement à \SI{0}{dB} est proche de $-180°$. Pourquoi est-ce un cas critique pour la stabilité ? Que se passe-t-il si on ajoute un 3e pôle ?
-\end{enumerate}
+\textbf{Q1.} Pourquoi une échelle logarithmique en fréquence (et pas linéaire) pour Bode ?
+
+\textit{Réponse : parce que le comportement électronique est multiplicatif en fréquence (une décade = un facteur 10) et que l'oreille, les filtres et les pentes raisonnent en rapports, pas en écarts. En log, un pôle du 1\textsuperscript{er} ordre devient une droite de pente constante ($-\SI{20}{dB/déc}$) au lieu d'une courbe, et l'on visualise \SI{1}{Hz} à \SI{1}{GHz} sur un même axe. Le log transforme les produits de $H$ en sommes de segments : c'est ce qui rend le tracé asymptotique possible.}
+
+\textbf{Q2.} Gain BO \SI{100}{dB}, bande \SI{10}{Hz}. Bouclé à \SI{20}{dB} : bande passante ?
+
+\textit{Réponse : produit gain$\times$bande constant (pôle dominant). $\text{GBW} = 10^5 \times 10 = \SI{1}{MHz}$. En boucle fermée à un gain de $10$ ($=\SI{20}{dB}$) : $f_c = \text{GBW}/10 = \SI{100}{kHz}$. On échange du gain contre de la bande : diviser le gain par $10^4$ (de \SI{100}{dB} à \SI{20}{dB}) multiplie la bande par $10^4$ (\SI{10}{Hz} → \SI{100}{kHz}). C'est le compromis universel des AOP.}
+
+\textbf{Q3.} Pourquoi une rétroaction négative peut-elle devenir instable ? À quelle fréquence bascule-t-elle en positive ?
+
+\textit{Réponse : le retour est soustrait en phase à l'entrée seulement en BF. Chaque pôle de la boucle ajoute du retard de phase ; quand le déphasage cumulé de $T(j\omega)$ atteint $-180°$, le signal renvoyé arrive \emph{en opposition} de ce qu'on voulait soustraire : la soustraction devient addition, la rétroaction est positive. Si de plus $|T| \geq 1$ à cette fréquence (Barkhausen), l'oscillation s'auto-entretient. L'instabilité n'est donc pas un gain trop fort en soi, mais un gain $\geq 1$ persistant \emph{là où} la phase a viré à $-180°$.}
+
+\textbf{Q4.} Deux pôles à $f_1$ et $f_2 = 2f_1$ : pourquoi le croisement \SI{0}{dB} proche de $-180°$ est-il critique ? Effet d'un 3\textsuperscript{e} pôle ?
+
+\textit{Réponse : deux pôles apportent au plus $-180°$. S'ils sont proches (rapport 2) et encadrent le croisement \SI{0}{dB}, la phase y est déjà voisine de $-135°$ à $-160°$ : la marge fond, transitoire très oscillant ($Q$ élevé en BF), voire instabilité. Un système à deux pôles \emph{seuls} reste toutefois stable (phase $> -180°$ strictement). Ajouter un 3\textsuperscript{e} pôle fait franchir $-180°$ avec un gain encore $> \SI{0}{dB}$ possible : là, instabilité franche. D'où la règle : viser un croisement à pente $-\SI{20}{dB/déc}$ (un seul pôle actif au croisement), en repoussant les autres pôles au-delà.}
 
 % === RÉSUMÉ DU CHAPITRE 13 ===
 \section*{Résumé du chapitre}
@@ -8350,6 +8419,12 @@ Compensation & Lead (avance phase), lag (gain BF), Miller (pôle dominant), PID 
 \end{tabular}
 \end{center}
 \end{ingenieur}
+
+\vspace{0.4cm}
+
+\begin{retenir}
+La fonction de transfert et le diagramme de Bode sont désormais l'outil universel : gain, phase, bande passante, stabilité, tout s'y lit. Reste à passer de l'analyse à la \emph{synthèse} : comment réaliser concrètement un filtre qui a la réponse voulue --- avec des composants passifs, ou avec des amplificateurs pour s'affranchir de leurs limites. C'est l'objet du chapitre 14 : les filtres passifs et actifs.
+\end{retenir}
 
 % ============================================================================
 % CHAPITRE 14 : FILTRES PASSIFS ET ACTIFS
