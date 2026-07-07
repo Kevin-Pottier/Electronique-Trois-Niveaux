@@ -7782,21 +7782,18 @@ Le gain au pic de résonance vaut exactement $Q$ en linéaire, soit $20\log Q$ e
   % asymptotes
   \draw[dashed, gray] (0,0) -- (3,0) -- (5.5,-3.33);
   \node[gray, font=\footnotesize, rotate=-38] at (4.7,-2.3) {$-40$ dB/déc};
-  % Courbes paramétrées en u=f/f0 (log10(u) mappé sur x : x=3+3*log10(u))
-  % G = -10 log10( (1-u^2)^2 + u^2/Q^2 ). u de 0.1 à 30 -> x de 0 à ~7.4, on borne à x<=6
-  % Q=0.707
-  \draw[very thick, green!60!black, domain=0.125:8, samples=200, smooth, variable=\u]
-    plot({3+3*ln(\u)/ln(10)}, {max(-4.3, -10*ln( (1-\u*\u)*(1-\u*\u) + 2*\u*\u )/ln(10))});
-  \node[green!60!black, font=\footnotesize] at (1.3,-0.55) {$Q=0{,}707$};
-  % Q=1
-  \draw[very thick, blue!70!black, domain=0.125:8, samples=240, smooth, variable=\u]
-    plot({3+3*ln(\u)/ln(10)}, {max(-4.3, -10*ln( (1-\u*\u)*(1-\u*\u) + \u*\u )/ln(10))});
-  \node[blue!70!black, font=\footnotesize] at (3.95,0.7) {$Q=1$};
-  % Q=5
-  \draw[very thick, red!70!black, domain=0.125:8, samples=320, smooth, variable=\u]
-    plot({3+3*ln(\u)/ln(10)}, {max(-4.3, -10*ln( (1-\u*\u)*(1-\u*\u) + \u*\u/25 )/ln(10))});
-  \node[red!70!black, font=\footnotesize] at (3.25,1.75) {$Q=5$};
-  \filldraw[red!70!black] (3,1.4) circle (2pt);
+  % Courbes en u=f/f0, mappé x=3+3*log10(u). y = 0.1*G = -log10((1-u^2)^2+u^2/Q^2)
+  % (axe calibré 0.1 unité/dB : +14 dB -> y=1.4). Cap [+1.55 ; -4.3], sans smooth (spline overshoot).
+  \draw[very thick, green!60!black, domain=0.14:7, samples=260, variable=\u]
+    plot({3+3*ln(\u)/ln(10)}, {min(1.55, max(-4.3, -ln( (1-\u*\u)*(1-\u*\u) + 2*\u*\u )/ln(10)))});
+  \node[green!60!black, font=\footnotesize] at (1.25,-0.5) {$Q=0{,}707$};
+  \draw[very thick, blue!70!black, domain=0.14:7, samples=320, variable=\u]
+    plot({3+3*ln(\u)/ln(10)}, {min(1.55, max(-4.3, -ln( (1-\u*\u)*(1-\u*\u) + \u*\u )/ln(10)))});
+  \node[blue!70!black, font=\footnotesize] at (4.0,0.35) {$Q=1$};
+  \draw[very thick, red!70!black, domain=0.14:7, samples=500, variable=\u]
+    plot({3+3*ln(\u)/ln(10)}, {min(1.55, max(-4.3, -ln( (1-\u*\u)*(1-\u*\u) + \u*\u/25 )/ln(10)))});
+  \node[red!70!black, font=\footnotesize] at (2.15,1.25) {$Q=5$};
+  \filldraw[red!70!black] (3,1.4) circle (1.8pt);
 \end{tikzpicture}
 \caption{Passe-bas du 2\textsuperscript{e} ordre selon $Q$. Tous partagent l'asymptote $-\SI{40}{dB/décade}$, mais près de $f_0$ la courbe réelle dépasse l'asymptote d'autant plus que $Q$ est grand (pic $= 20\log Q$, soit $+\SI{14}{dB}$ pour $Q=5$). L'asymptotique seul est trompeur dès $Q > 1/\sqrt2$.}
 \end{figure}
@@ -7897,39 +7894,36 @@ La plupart des systèmes électroniques réels utilisent une \textbf{rétroactio
 
 \begin{figure}[h]
 \centering
-\begin{tikzpicture}[scale=0.9, >=Stealth, every node/.style={font=\small}]
+\begin{tikzpicture}[scale=0.95, >=Stealth, every node/.style={font=\small}]
   % Comparateur
   \draw (0,0) circle (0.3);
   \node at (0,0) {$\Sigma$};
-  \node[left] at (-0.3,0.15) {\tiny $+$};
-  \node[below] at (-0.05,-0.3) {\tiny $-$};
-  
+  \node[above left, font=\footnotesize] at (-0.22,0.05) {$+$};
+  \node[below right, font=\footnotesize] at (0.02,-0.24) {$-$};
   % Entrée
-  \draw[->, thick] (-2,0) -- (-0.3,0) node[midway, above]{$\underline{E}$};
-  
+  \draw[->, thick] (-2.3,0) -- (-0.3,0) node[midway, above]{$\underline{E}$};
+  % epsilon
+  \draw[->, thick] (0.3,0) -- (1.5,0) node[midway, above]{$\varepsilon$};
   % Bloc A(s)
-  \draw[thick, fill=blue!10] (1.2,-0.6) rectangle (3.2,0.6);
-  \node at (2.2,0) {$A(s)$};
-  \draw[->, thick] (0.3,0) -- (1.2,0) node[midway, above]{$\varepsilon$};
-  
+  \draw[thick, fill=blue!10] (1.5,-0.55) rectangle (3.3,0.55);
+  \node at (2.4,0) {$A(s)$};
   % Sortie
-  \draw[->, thick] (3.2,0) -- (5.5,0) node[midway, above]{$\underline{S}$};
-  
-  % Point de prélèvement
-  \filldraw (4.5,0) circle (2pt);
-  
-  % Retour
-  \draw[thick] (4.5,0) -- (4.5,-1.8) -- (-1.5,-1.8);
-  
-  % Bloc B(s)
-  \draw[thick, fill=orange!10] (-1.5,-2.4) rectangle (0.5,-1.2);
-  \node at (-0.5,-1.8) {$B(s)$};
-  
-  \draw[->, thick] (-0.5,-1.2) -- (0,-0.3);
-  
+  \draw[->, thick] (3.3,0) -- (5.4,0) node[midway, above]{$\underline{S}$};
+  % Prélèvement
+  \filldraw (4.4,0) circle (2pt);
+  % Retour : descente
+  \draw[thick] (4.4,0) -- (4.4,-1.7);
+  % Bloc B(s) dans la chaîne de retour (signal circule de droite à gauche)
+  \draw[thick, fill=orange!10] (1.5,-2.15) rectangle (3.3,-1.25);
+  \node at (2.4,-1.7) {$B(s)$};
+  % entrée B (côté droit, depuis S) et sortie B (côté gauche, vers Sigma)
+  \draw[->, thick] (4.4,-1.7) -- (3.3,-1.7);
+  \draw[thick] (1.5,-1.7) -- (0,-1.7);
+  % remontée vers Sigma (entrée par le bas)
+  \draw[->, thick] (0,-1.7) -- (0,-0.3);
   % Labels
-  \node[above, font=\footnotesize] at (2.2,0.7) {chaîne directe};
-  \node[below, font=\footnotesize] at (-0.5,-2.5) {chaîne de retour};
+  \node[above, font=\footnotesize] at (2.4,0.7) {chaîne directe};
+  \node[below, font=\footnotesize] at (2.4,-2.25) {chaîne de retour};
 \end{tikzpicture}
 \caption{Système bouclé. Le comparateur soustrait le retour $B(s)\underline{S}$ de l'entrée $\underline{E}$ ; l'erreur $\varepsilon$ attaque la chaîne directe $A(s)$. Toute la conception à rétroaction tient dans ce schéma.}
 \end{figure}
@@ -7989,84 +7983,83 @@ Pour qu'un système bouclé soit stable avec une marge de sécurité, on défini
 \begin{figure}[h]
 \centering
 \begin{tikzpicture}[scale=0.68, >=Stealth]
-  % === GAIN ===
+  % === GAIN === croise 0 dB exactement à x=4 ; f_-180 à x=5.5
   \begin{scope}[shift={(0,0)}]
     \draw[->] (0,0) -- (8,0) node[right, font=\small]{$\log f$};
     \draw[->] (0,-3.5) -- (0,3) node[above, font=\small]{$|T|$ (dB)};
-    
     \node[left, font=\footnotesize] at (0,0) {$0$};
     \draw[dashed, gray] (0,0) -- (7.5,0);
-    
-    % Courbe de gain BO
-    \draw[very thick, blue!70!black] (0.5,2.5) -- (2,2.5) -- (5,-1) -- (7.5,-3);
-    
-    % f0 dB et f_180
-    \draw[dashed, red!70!black] (3.86,0) -- (3.86,-3.5);
-    \node[below, red!70!black, font=\footnotesize] at (3.86,-3.5) {$f_{0\text{dB}}$};
-    
-    \draw[dashed, orange!70!black] (6.2,0) -- (6.2,-2.2);
-    \node[below, orange!70!black, font=\footnotesize] at (6.2,-3.5) {$f_{-180°}$};
-    \filldraw[orange!70!black] (6.2,-2.2) circle (2pt);
-    
-    % Marge de gain
-    \draw[<->, very thick, orange!70!black] (6.5,0) -- (6.5,-2.2);
-    \node[orange!70!black, font=\footnotesize, right] at (6.6,-1.1) {$M_G$};
-    
-    \node[font=\bfseries\small] at (4,-4.5) {Gain};
+    % Gain : plat (0.5,2)->(2,2) puis pente -1 jusqu'à (7,-3). Passe 0 à x=4, vaut -1.5 à x=5.5
+    \draw[very thick, blue!70!black] (0.5,2) -- (2,2) -- (7,-3);
+    % f0dB à x=4 (gain=0)
+    \draw[dashed, red!70!black] (4,0) -- (4,-3.5);
+    \node[below, red!70!black, font=\footnotesize] at (4,-3.5) {$f_{0\text{dB}}$};
+    % f_-180 à x=5.5 (gain=-1.5)
+    \draw[dashed, orange!80!black] (5.5,0) -- (5.5,-1.5);
+    \node[below, orange!80!black, font=\footnotesize] at (5.5,-3.5) {$f_{-180°}$};
+    \filldraw[orange!80!black] (5.5,-1.5) circle (2pt);
+    % Marge de gain : du point (5.5,-1.5) jusqu'à 0 dB
+    \draw[<->, very thick, orange!80!black] (5.5,-1.5) -- (5.5,0);
+    \node[orange!80!black, font=\footnotesize, right] at (5.6,-0.75) {$M_G$};
+    \node[font=\bfseries\small] at (4,-4.4) {Gain};
   \end{scope}
-  
-  % === PHASE ===
-  \begin{scope}[shift={(10,0)}]
+  % === PHASE === atteint -180 exactement à x=5.5 ; à f0dB (x=4) vaut -126°
+  \begin{scope}[shift={(9,0)}]
     \draw[->] (0,0.5) -- (8,0.5) node[right, font=\small]{$\log f$};
     \draw[->] (0,-3.5) -- (0,1.5) node[above, font=\small]{$\arg(T)$};
-    
     \node[left, font=\footnotesize] at (0,0.5) {$0°$};
     \node[left, font=\footnotesize] at (0,-1) {$-90°$};
     \node[left, font=\footnotesize] at (0,-2.5) {$-180°$};
     \draw[dashed, gray] (0,-2.5) -- (7.5,-2.5);
-    
-    % Courbe de phase BO
-    \draw[very thick, red!70!black] (0.5,0.3) -- (1.5,0) -- (3,-1) -- (5,-2.3) -- (7.5,-3.2);
-    
-    % f0 dB
-    \draw[dashed, red!70!black] (3.86,0.5) -- (3.86,-2.5);
-    \node[above, red!70!black, font=\footnotesize] at (3.86,0.6) {$f_{0\text{dB}}$};
-    \filldraw[red!70!black] (3.86,-1.7) circle (2pt);
-    
-    % Marge de phase
-    \draw[<->, very thick, red!70!black] (4.16,-1.7) -- (4.16,-2.5);
-    \node[red!70!black, font=\footnotesize, right] at (4.26,-2.1) {$M_\varphi$};
-    
-    % f_180
-    \draw[dashed, orange!70!black] (6.2,0.5) -- (6.2,-2.5);
-    \node[above, orange!70!black, font=\footnotesize] at (6.2,0.6) {$f_{-180°}$};
-    
-    \node[font=\bfseries\small] at (4,-4.5) {Phase};
+    % Phase : (0.5,0.3)->(2,0)->(4,-1.6)->(5.5,-2.5)->(7,-3.1). -180 à x=5.5, -126° (y=-1.6) à x=4
+    \draw[very thick, red!70!black] (0.5,0.3) -- (2,0) -- (4,-1.6) -- (5.5,-2.5) -- (7,-3.1);
+    % f0dB à x=4
+    \draw[dashed, red!70!black] (4,0.5) -- (4,-1.6);
+    \node[above, red!70!black, font=\footnotesize] at (4,0.6) {$f_{0\text{dB}}$};
+    \filldraw[red!70!black] (4,-1.6) circle (2pt);
+    % Marge de phase : de la courbe (4,-1.6) jusqu'à -180 (y=-2.5)
+    \draw[<->, very thick, red!70!black] (4,-1.6) -- (4,-2.5);
+    \node[red!70!black, font=\footnotesize, right] at (4.1,-2.05) {$M_\varphi$};
+    % f_-180 à x=5.5
+    \draw[dashed, orange!80!black] (5.5,0.5) -- (5.5,-2.5);
+    \node[above, orange!80!black, font=\footnotesize] at (5.5,0.6) {$f_{-180°}$};
+    \filldraw[orange!80!black] (5.5,-2.5) circle (2pt);
+    \node[font=\bfseries\small] at (4,-4.4) {Phase};
   \end{scope}
 \end{tikzpicture}
-\caption{ sur le Bode de la FTBO. Marge de phase $M_\varphi$ : écart à $-180°$ là où $|T| = \SI{0}{dB}$. Marge de gain $M_G$ : écart à \SI{0}{dB} là où la phase atteint $-180°$. Les deux doivent rester positives et confortables.}
+\caption{Lecture des marges sur le Bode de la FTBO. Marge de phase $M_\varphi$ : écart à $-180°$ de la phase, lu à $f_{0\text{dB}}$ (où $|T| = \SI{0}{dB}$). Marge de gain $M_G$ : écart à \SI{0}{dB} du gain, lu à $f_{-180°}$ (où la phase atteint $-180°$). Les deux doivent rester positives et confortables.}
 \end{figure}
 
 Le même verdict de stabilité se lit dans le plan complexe (diagramme de Nyquist) :
 
 \begin{figure}[h]
 \centering
-\begin{tikzpicture}[scale=0.85, >=Stealth]
-  \draw[->] (-3.5,0) -- (1.5,0) node[right, font=\footnotesize]{$\Re(T)$};
-  \draw[->] (0,-2.3) -- (0,2.3) node[above, font=\footnotesize]{$\Im(T)$};
+\begin{tikzpicture}[scale=0.9, >=Stealth]
+  \draw[->] (-2.6,0) -- (2.7,0) node[right, font=\footnotesize]{$\Re(T)$};
+  \draw[->] (0,-2.1) -- (0,2.1) node[above, font=\footnotesize]{$\Im(T)$};
   % point critique -1
   \filldraw[red!70!black] (-1,0) circle (2.5pt);
-  \node[red!70!black, below, font=\footnotesize] at (-1,-0.1) {$-1$};
-  % courbe Nyquist stable (n'entoure pas -1)
+  \node[red!70!black, above, font=\footnotesize] at (-1,0.08) {$-1$};
+  % Nyquist : depart (2,0) à omega=0 sur l'axe réel +, sens horaire (moitié basse),
+  % croise l'axe réel négatif à -0.6 (à droite de -1), rejoint l'origine à omega->inf.
+  % moitié inférieure (omega : 0 -> +inf)
   \draw[very thick, blue!70!black]
-    (1,0) .. controls (1,1.2) and (-0.3,1.5) .. (-0.55,0.7)
-    .. controls (-0.7,0.2) and (-0.6,-0.2) .. (-0.55,-0.7)
-    .. controls (-0.3,-1.5) and (1,-1.2) .. (1,0);
-  \node[blue!70!black, font=\footnotesize, right] at (0.75,1.3) {$T(j\omega)$};
-  \draw[->, blue!70!black, thick] (0.5,1.42) -- (0.35,1.46);
-  \node[font=\footnotesize, align=left] at (-2.5,1.5) {$-1$ hors de la\\ courbe $\Rightarrow$ stable};
+    (2,0) .. controls (1.95,-0.9) and (1.2,-1.55) .. (0.3,-1.45)
+    .. controls (-0.45,-1.35) and (-0.75,-0.55) .. (-0.6,0)
+    % moitié supérieure (omega : -inf -> 0), miroir
+    .. controls (-0.75,0.55) and (-0.45,1.35) .. (0.3,1.45)
+    .. controls (1.2,1.55) and (1.95,0.9) .. (2,0);
+  % marqueur départ omega=0
+  \filldraw[blue!70!black] (2,0) circle (1.6pt);
+  \node[blue!70!black, below right, font=\footnotesize] at (2,-0.05) {$\omega=0$};
+  % marqueur origine omega->inf
+  \node[below left, font=\footnotesize] at (0.05,-0.05) {$\omega\to\infty$};
+  % sens de parcours (horaire) : fleche sur la moitié basse
+  \draw[->, blue!70!black, very thick] (1.28,-1.5) -- (1.1,-1.53);
+  \node[blue!70!black, font=\footnotesize] at (1.75,-1.15) {$T(j\omega)$};
+  \node[font=\footnotesize, align=left] at (-1.55,1.35) {$-1$ hors de la\\ courbe $\Rightarrow$ stable};
 \end{tikzpicture}
-\caption{Diagramme de Nyquist (système stable en boucle ouverte). Le tracé de $T(j\omega)$ n'encercle pas le point critique $(-1, 0)$ : la boucle fermée est stable. S'il l'entourait, elle serait instable --- c'est la lecture géométrique du critère de Barkhausen $T = -1$.}
+\caption{Diagramme de Nyquist (système stable en boucle ouverte). Le tracé de $T(j\omega)$ part du gain statique sur l'axe réel positif ($\omega=0$), tourne dans le sens horaire et rejoint l'origine ($\omega\to\infty$). Il croise l'axe réel négatif à droite de $-1$ : le point critique n'est pas encerclé, la boucle fermée est stable. S'il l'entourait, elle serait instable --- lecture géométrique du critère de Barkhausen $T = -1$.}
 \end{figure}
 
 \begin{pratique}
