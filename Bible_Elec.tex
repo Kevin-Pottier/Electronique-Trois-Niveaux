@@ -9603,6 +9603,30 @@ Pour utiliser les \textit{deux} alternances, on utilise un pont de 4 diodes :
 
 Les deux alternances sont redressées. La tension moyenne est : $V_{\text{moy}} = 2(\hat{V} - 2V_F)/\pi$.
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  \draw[-{Stealth[length=2mm]}] (0,0) -- (7.2,0) node[right, font=\footnotesize]{$t$};
+  \draw[-{Stealth[length=2mm]}] (0,-1.4) -- (0,1.6) node[above, font=\footnotesize]{$v$};
+  % Entrée : sinusoïde complète (gris pointillé)
+  \draw[gray, densely dashed, domain=0:6.6, samples=160]
+    plot(\x, {1.2*sin(180*\x)});
+  \node[gray, font=\footnotesize] at (0.5,1.35) {$v_{\text{AC}}$};
+  % Sortie double alternance : toutes les demi-périodes redressées (valeur absolue - VF)
+  \foreach \k in {0,1,2,3,4,5} {
+    \draw[very thick, blue!70!black, domain=0:1, samples=50]
+      plot({\x+\k}, {max(0, 1.2*abs(sin(180*(\x+\k))) - 0.15)});
+  }
+  \draw[very thick, blue!70!black, domain=0:0.6, samples=30]
+    plot({\x+6}, {max(0, 1.2*abs(sin(180*(\x+6))) - 0.15)});
+  \node[blue!70!black, font=\footnotesize] at (6.3,1.1) {$v_{\text{out}}$};
+  % Valeur moyenne (pointillé horizontal)
+  \draw[dashed, orange!70!black] (0,0.72) -- (6.9,0.72);
+  \node[orange!70!black, font=\footnotesize, left] at (0,0.72) {$V_{\text{moy}}$};
+\end{tikzpicture}
+\caption{Formes d'onde du redressement double alternance. Les deux demi-périodes sont exploitées (fréquence des bosses $= 2f_{\text{AC}} = \SI{100}{Hz}$). L'ondulation est plus faible et plus facile à filtrer qu'en simple alternance.}
+\end{figure}
+
 \begin{attention}
 Le pont de diodes perd \textbf{deux chutes de diode} ($2V_F \approx \SI{1.4}{V}$ en Si). Pour les alimentations basse tension ($\SI{3.3}{V}$, $\SI{5}{V}$), c'est une perte significative. On utilise alors des \textbf{diodes Schottky} ($2 \times \SI{0.3}{V} = \SI{0.6}{V}$) ou un \textbf{redressement synchrone} (MOSFETs, perte $< \SI{0.1}{V}$).
 \end{attention}
@@ -9663,6 +9687,30 @@ C_j(V) = \frac{C_{J0}}{(1 - V/V_J)^M}
 avec $V_J \approx \SI{0.7}{V}$ (potentiel de jonction) et $M \approx 0{,}33$ à $0{,}5$.
 \end{formule}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.85]
+  \draw[-{Stealth[length=2mm]}] (-5.5,0) -- (0.5,0) node[right, font=\footnotesize]{$V$ (V)};
+  \draw[-{Stealth[length=2mm]}] (0,0) -- (0,3.5) node[above, font=\footnotesize]{$C_j$ (pF)};
+  % Axe : V inverse de 0 à -5V, x=-V donc x de 0 à 5 en sens négatif
+  \foreach \v/\l in {-1/{1},-2/{2},-3/{3},-4/{4},-5/{5}} {
+    \draw (\v,0.06)--(\v,-0.06); \node[below, font=\footnotesize] at (\v,-0.1) {$-\l$};
+  }
+  \node[left, font=\footnotesize] at (0,1) {$C_{J0}$};
+  \draw (-0.06,1)--(0.06,1);
+  \draw[dashed, gray] (0,1)--(-5.5,1);
+  % Courbe Cj = CJ0 / (1 - V/VJ)^M, V < 0, VJ=0.7, M=0.5, CJ0=1 unité
+  % V de 0 à -5, x = V donc de 0 à -5
+  \draw[very thick, blue!70!black, domain=-0.01:-5.2, samples=120, smooth]
+    plot(\x, {1/sqrt(1 - \x/0.7)});
+  \node[blue!70!black, font=\footnotesize] at (-3.5,2.2) {$C_j(V) = \dfrac{C_{J0}}{(1-V/V_J)^{1/2}}$};
+  % VCO annotation : plage de contrôle
+  \draw[<->, red!70!black] (-1,{1/sqrt(1+1/0.7)}) -- (-4,{1/sqrt(1+4/0.7)});
+  \node[red!70!black, font=\footnotesize, below] at (-2.5,0.52) {plage varicap};
+\end{tikzpicture}
+\caption{Capacité de jonction $C_j$ en fonction de la tension inverse. Elle diminue quand on polarise plus fortement en inverse (ZCE s'élargit). Cette variation est exploitée dans les varicaps (VCO, PLL) : la tension de commande déplace la fréquence de résonance du circuit LC associé.}
+\end{figure}
+
 \begin{pratique}
 \textbf{Conséquences :}
 \begin{itemize}[nosep]
@@ -9674,6 +9722,36 @@ avec $V_J \approx \SI{0.7}{V}$ (potentiel de jonction) et $M \approx 0{,}33$ à 
 \subsection{Temps de recouvrement inverse ($t_{rr}$)}
 
 Quand une diode passe de l'état passant à l'état bloqué, elle ne se bloque pas instantanément. Pendant un bref instant ($t_{rr}$), un \textbf{courant inverse} circule (évacuation des charges stockées dans la jonction).
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.85]
+  \draw[-{Stealth[length=2mm]}] (0,-2.8) -- (0,2.5) node[above, font=\footnotesize]{$i_D$};
+  \draw[-{Stealth[length=2mm]}] (-0.3,0) -- (8.5,0) node[right, font=\footnotesize]{$t$};
+  % Courant direct avant t=0
+  \draw[very thick, blue!70!black] (0,1.8) -- (2,1.8);
+  \node[blue!70!black, left, font=\footnotesize] at (0,1.8) {$I_F$};
+  % Commutation : descente rapide au-delà de 0 (le circuit impose une rampe raide)
+  \draw[very thick, blue!70!black] (2,1.8) -- (3.2,-1.8);
+  \node[below, font=\footnotesize] at (2,0) {$t_0$};
+  \draw[dashed, gray] (2,0)--(2,1.8);
+  % Courant inverse peak : Irr
+  \draw[dashed, gray] (0,-1.8)--(3.2,-1.8);
+  \node[left, font=\footnotesize] at (0,-1.8) {$-I_{rr}$};
+  \filldraw[red!70!black] (3.2,-1.8) circle (2pt);
+  % Recouvrement : remontée exponentielle vers 0
+  \draw[very thick, red!70!black, domain=3.2:7.5, samples=80]
+    plot(\x, {-1.8*exp(-(\x-3.2)/0.8)});
+  % trr annotation
+  \draw[<->, thick, orange!70!black] (2,-2.3) -- (6.5,-2.3);
+  \node[orange!70!black, font=\footnotesize, below] at (4.25,-2.3) {$t_{rr}$};
+  \node[font=\footnotesize, align=left] at (5.8,-0.9) {charges\\ stockées};
+  % Fin du recouvrement
+  \draw[dashed, gray] (6.5,-0.1)--(6.5,-2.3);
+  \node[below, font=\footnotesize] at (6.5,-0.05) {$t_0+t_{rr}$};
+\end{tikzpicture}
+\caption{Chronogramme du courant de diode au blocage. À $t_0$, le circuit impose un dI/dt inverse. Avant de se bloquer, la diode laisse passer un courant inverse $I_{rr}$ pendant $t_{rr}$ : ce sont les porteurs minoritaires stockés dans la jonction qui s'évacuent. L'énergie $E_{rr}\approx\frac12 V_R I_{rr}t_{rr}$ est dissipée à \emph{chaque} commutation.}
+\end{figure}
 
 \begin{attention}
 \textbf{En commutation de puissance, $t_{rr}$ est critique.} Pendant le recouvrement, la diode dissipe de la puissance ($V_R \times I_{rr}$). À haute fréquence de commutation (\SI{100}{kHz}--\SI{1}{MHz} dans les convertisseurs modernes), ces pertes de commutation peuvent devenir dominantes.
