@@ -10131,7 +10131,8 @@ Un transistor bipolaire (BJT, \textit{Bipolar Junction Transistor}) possède \te
 \item \textbf{Émetteur} (E) : la borne par laquelle sort le courant total.
 \end{itemize}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=1.0, american]
   % NPN
   \begin{scope}[shift={(0,0)}]
@@ -10150,7 +10151,8 @@ Un transistor bipolaire (BJT, \textit{Bipolar Junction Transistor}) possède \te
     \node[font=\bfseries] at (0,-2.2) {PNP};
   \end{scope}
 \end{circuitikz}
-\end{center}
+\caption{Symboles du BJT. La flèche d'émetteur indique le sens du courant conventionnel : sortant pour le NPN, entrant pour le PNP.}
+\end{figure}
 
 La flèche sur l'émetteur indique le sens du courant \textit{conventionnel}. Ce chapitre traite principalement du \textbf{NPN}, le plus courant (2N2222, BC547, 2N3904). Le PNP fonctionne de manière symétrique avec tensions et courants inversés.
 
@@ -10212,7 +10214,8 @@ La flèche sur l'émetteur indique le sens du courant \textit{conventionnel}. Ce
 
 En commutation, le transistor est soit \textbf{bloqué} (interrupteur ouvert), soit \textbf{saturé} (interrupteur fermé). On ne reste jamais en régime actif (transition aussi rapide que possible).
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=1.0, american]
   % Alimentation haute
   \draw (3,5) node[above]{$V_{CC}$};
@@ -10220,12 +10223,13 @@ En commutation, le transistor est soit \textbf{bloqué} (interrupteur ouvert), s
   \draw (3,2.8) -- (3,2.2);
   % Transistor
   \draw (1.5,1.5) node[npn, anchor=B](Q){};
-  \draw (Q.C) -- (3,2.2);
-  \draw (Q.E) -- (1.5,-0.2) node[ground]{};
+  \draw (Q.C) -| (3,2.2);
+  \draw (Q.E) -- (Q.E |- 0,-0.2) node[ground]{};
   % Base avec RB
-  \draw (-2.5,1.5) node[left]{$V_{\text{cmd}}$} to[R, l=$R_B$, i>=$I_B$] (Q.B);
+  \draw (-2.5,1.5) node[ocirc]{} node[left]{$V_{\text{cmd}}$} to[R, l=$R_B$, i>=$I_B$] (Q.B);
 \end{circuitikz}
-\end{center}
+\caption{Le BJT en commutation : la charge est dans le collecteur, la commande attaque la base à travers $R_B$. Bloqué = interrupteur ouvert ; saturé = interrupteur fermé ($V_{CE} \approx V_{CE,\text{sat}}$).}
+\end{figure}
 
 \begin{formule}
 \textbf{Dimensionnement en commutation :}
@@ -10268,7 +10272,8 @@ Modèle ingénieur : équation de Shockley, polarisation, modèle petit signal h
 
 \subsubsection*{Structure physique}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{tikzpicture}[scale=0.95]
   \fill[blue!12] (0,0) rectangle (2.2,2.5);
   \fill[red!12] (2.2,0) rectangle (3.2,2.5);
@@ -10289,7 +10294,8 @@ Modèle ingénieur : équation de Shockley, polarisation, modèle petit signal h
   \node[font=\footnotesize, below] at (2.7,-0.25) {$P$};
   \node[font=\footnotesize, below] at (4.6,-0.25) {$N$ (dopage modéré)};
 \end{tikzpicture}
-\end{center}
+\caption{Structure du NPN : émetteur $N^+$ très dopé, base P mince et peu dopée, collecteur N. La finesse de la base est la clé du gain : presque tous les électrons injectés la traversent sans se recombiner.}
+\end{figure}
 
 \subsubsection*{La chaîne causale physique}
 
@@ -10332,8 +10338,8 @@ Cette distinction est fondamentale pour comprendre :
 \textbf{Hypothèses :} régime actif direct, modèle d'Ebers-Moll simplifié.
 
 \begin{itemize}[nosep]
-\item $I_S$ : courant de saturation inverse ($\sim\SI{1e-15}{A}$ à $\SI{1e-12}{A}$). Dépend \textbf{fortement} de la température : $I_S \propto T^4 e^{-E_g/kT}$, approximativement $\times 2$ tous les \SI{10}{°C}.
-\item $V_T = kT/q$ : tension thermique (\SI{25.85}{mV} à \SI{25}{°C}, \SI{33.5}{mV} à \SI{125}{°C}).
+\item $I_S$ : courant de saturation inverse ($\sim\SI{1e-15}{A}$ à $\SI{1e-12}{A}$). Dépend \textbf{fortement} de la température : $I_S \propto T^4 e^{-E_g/kT}$, approximativement $\times 2$ tous les \SI{5}{°C}. Conséquence pratique : à $V_{BE}$ fixé, $I_C$ double environ tous les \SI{10}{°C} (la hausse de $V_T$ compense partiellement la montée de $I_S$).
+\item $V_T = kT/q$ : tension thermique (\SI{25.7}{mV} à \SI{25}{°C} --- souvent arrondie à \SI{26}{mV} ---, \SI{34.3}{mV} à \SI{125}{°C}).
 \item $V_A$ : tension d'Early (\SI{50}{V} à \SI{200}{V}), modélise la dépendance de $I_C$ en $V_{CE}$.
 \item Le terme $(1 + V_{CE}/V_A)$ est souvent omis en première approximation.
 \end{itemize}
@@ -10347,24 +10353,64 @@ Cette distinction est fondamentale pour comprendre :
 
 Pour utiliser un BJT en amplification, il faut fixer un \textbf{point de repos} $Q = (I_{C,Q}, V_{CE,Q})$ stable en régime actif.
 
-\begin{center}
+Graphiquement, le point de repos est l'intersection de la \textbf{droite de charge} --- imposée par $V_{CC}$ et $R_C$ --- avec la caractéristique $I_C(V_{CE})$ sélectionnée par la polarisation de base :
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Échelle : 1 unité = 2 V (x) et 2 mA (y). Vérifié : sommet réseau y = 4,4 < 5,7 ;
+  % Q = intersection droite (0,5)-(5,0) avec la courbe I_B=40 µA : (2,885 ; 2,115).
+  \draw[-{Stealth[length=2.5mm]}] (-0.3,0) -- (5.7,0) node[right, font=\small]{$V_{CE}$ (V)};
+  \draw[-{Stealth[length=2.5mm]}] (0,-0.3) -- (0,5.7) node[above, font=\small]{$I_C$ (mA)};
+  \foreach \i in {1,...,5} {
+    \draw (\i,0.06) -- (\i,-0.06);
+    \node[below, font=\footnotesize] at (\i,-0.1) {\pgfmathparse{int(2*\i)}\pgfmathresult};
+    \draw (-0.06,\i) -- (0.06,\i);
+    \node[left, font=\footnotesize] at (-0.1,\i) {\pgfmathparse{int(2*\i)}\pgfmathresult};
+  }
+  % Réseau : I_C = 2L·(1-e^{-V_CE/60mV})·(1+V_CE/V_A), V_A = 100 V, beta = 100
+  \foreach \L/\lab in {1/20, 2/40, 3/60, 4/80} {
+    \draw[very thick, blue!70!black, domain=0:5, samples=250]
+      plot(\x, {\L*(1-exp(max(-11,-33.33*\x)))*(1+0.02*\x)});
+    \node[blue!70!black, font=\footnotesize, right] at (5.05,{1.1*\L}) {$I_B{=}\lab\,\si{\micro A}$};
+  }
+  \draw[very thick, blue!70!black] (0,0.02) -- (5,0.02);
+  \node[blue!70!black, font=\footnotesize, right] at (5.05,0.3) {$I_B{=}0$ (bloqué)};
+  % Frontière de saturation
+  \draw[dashed, gray!60] (0.15,0) -- (0.15,5.1);
+  \node[gray!60!black, font=\footnotesize, below] at (0.15,-0.35) {$V_{CE,\text{sat}}$};
+  \node[gray!60!black, font=\footnotesize] at (3.9,4.95) {régime actif};
+  % Droite de charge : V_CC = 10 V, R_C = 1 kOhm
+  \draw[thick, red!70!black] (0,5) -- (5,0);
+  \node[red!70!black, font=\footnotesize, rotate=-45] at (1.62,3.62) {droite de charge};
+  \filldraw[red!70!black] (2.885,2.115) circle (2pt);
+  \node[red!70!black, font=\small\bfseries, above right] at (2.95,2.2) {$Q$};
+  \draw[dashed, gray!50] (2.885,0) -- (2.885,2.115) -- (0,2.115);
+\end{tikzpicture}
+\caption{Réseau de caractéristiques $I_C(V_{CE})$ paramétré par $I_B$ (ici $\beta = 100$ ; la légère pente en régime actif est l'effet Early). La droite de charge $I_C = (V_{CC}-V_{CE})/R_C$ (ici $V_{CC} = \SI{10}{V}$, $R_C = \SI{1}{k\ohm}$) coupe la caractéristique imposée par la polarisation au point de repos $Q = (V_{CE,Q},\, I_{C,Q})$.}
+\end{figure}
+
+Le montage standard qui réalise cette polarisation :
+
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=0.9, american]
   \draw (4,6) node[above]{$V_{CC}$} -- (4,5.5);
   \draw (4,5.5) to[R, l=$R_C$, i>=$I_C$] (4,3.5);
   \draw (4,3.5) -- (4,3.2);
   \draw (2.5,2.5) node[npn, anchor=B](Q){};
-  \draw (Q.C) -- (4,3.2);
-  \draw (Q.E) -- (2.5,1.2);
-  \draw (2.5,1.2) to[R, l=$R_E$] (2.5,-0.5) node[ground]{};
+  \draw (Q.C) -| (4,3.2);
+  \draw (Q.E) to[R, l=$R_E$] (Q.E |- 0,-0.5) node[ground]{};
   \draw (0,6) node[above]{$V_{CC}$} -- (0,5.5);
   \draw (0,5.5) to[R, l=$R_1$] (0,2.5);
   \draw (0,2.5) to[R, l=$R_2$] (0,-0.5) node[ground]{};
   \draw (0,2.5) -- (Q.B);
   \filldraw (0,2.5) circle (1.5pt);
   \node[above, font=\footnotesize] at (1.3,2.55) {$V_B$};
-  \node[font=\footnotesize] at (3.5,1.5) {$V_E$};
+  \node[right, font=\footnotesize] at ([xshift=3pt, yshift=-8pt]Q.E) {$V_E$};
 \end{circuitikz}
-\end{center}
+\caption{Polarisation par diviseur de tension : le pont $R_1$--$R_2$ fixe $V_B$, et $R_E$ stabilise le point de repos par rétroaction négative.}
+\end{figure}
 
 \begin{formule}
 \textbf{Calcul du point de repos} (hypothèse : $I_B \ll I_{\text{div}} = V_{CC}/(R_1+R_2)$) :
@@ -10431,20 +10477,20 @@ $r_o$ représente le fait que le collecteur n'est pas une source de courant parf
 
 \subsubsection*{Le schéma équivalent}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=1.0, american]
   \node[left, font=\small] at (0,0) {B};
   \node[right, font=\small] at (8,0) {C};
   \node[left, font=\small] at (0,-3) {E};
   \node[right, font=\small] at (8,-3) {E};
-  \draw (0,0) -- (2,0);
+  \draw (0,0) to[short, i=$i_b$] (2,0);
   \draw (2,0) to[R, l=$r_\pi$] (2,-3);
   \draw (0,-3) -- (8,-3);
   \draw (4.5,0) to[american controlled current source, l_=$g_m\,v_{be}$] (4.5,-3);
-  \draw (2,0) -- (4.5,0);
   \draw (7,0) to[R, l=$r_o$] (7,-3);
   \draw (4.5,0) -- (7,0);
-  \draw (7,0) -- (8,0);
+  \draw (7,0) to[short, i<=$i_c$] (8,0);
   \filldraw (2,0) circle (1.5pt);
   \filldraw (2,-3) circle (1.5pt);
   \filldraw (4.5,0) circle (1.5pt);
@@ -10454,7 +10500,8 @@ $r_o$ représente le fait que le collecteur n'est pas une source de courant parf
   \draw[{Stealth[length=2.5mm]}-{Stealth[length=2.5mm]}, thick] (1,-0.15) -- (1,-2.85);
   \node[font=\small, left] at (0.95,-1.5) {$v_{be}$};
 \end{circuitikz}
-\end{center}
+\caption{Modèle petit signal hybride-$\pi$. L'entrée (B--E) présente $r_\pi$ ; la sortie est la source commandée $g_m v_{be}$ en parallèle avec $r_o$ (effet Early), entre collecteur et émetteur. Base et collecteur ne sont reliés par aucun fil : le couplage est uniquement la commande $g_m v_{be}$.}
+\end{figure}
 
 \begin{intuition}
 \textbf{Comment lire le modèle :}
@@ -10469,7 +10516,7 @@ $r_o$ représente le fait que le collecteur n'est pas une source de courant parf
 \subsection{Gain en tension de l'émetteur commun}
 
 \begin{formule}
-\textbf{Avec $R_E$ découplée} (condensateur de bypass) :
+\textbf{Avec $R_E$ découplée} (condensateur de découplage en parallèle sur $R_E$) :
 \[
 \boxed{A_v = -g_m(R_C \parallel r_o) \approx -g_m R_C = -\frac{I_{C,Q} R_C}{V_T}}
 \]
@@ -10486,7 +10533,8 @@ Le gain ne dépend que de résistances : indépendant de $g_m$, $I_C$, $T$ et $\
 
 L'émetteur commun amplifie la tension. Mais que faire quand le problème n'est pas le gain, mais l'\textbf{impédance} --- une source fragile (capteur, filtre du chapitre 14) qui doit piloter une charge gourmande ? Réponse : le \textbf{collecteur commun}, dit \textbf{émetteur suiveur}.
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=0.95, american]
   % Transistor
   \draw (3,2) node[npn, anchor=B](Q){};
@@ -10499,7 +10547,8 @@ L'émetteur commun amplifie la tension. Mais que faire quand le problème n'est 
   \draw (Q.E) -- ++(1.8,0) node[right]{$v_{\text{out}}$};
   \filldraw (Q.E) circle (1.5pt);
 \end{circuitikz}
-\end{center}
+\caption{Collecteur commun (émetteur suiveur) : la sortie, prise sur l'émetteur, suit l'entrée à $V_{BE}$ près. Gain $\approx 1$, impédance d'entrée élevée, impédance de sortie faible.}
+\end{figure}
 
 \begin{formule}
 \textbf{Hypothèses :} régime actif, petit signal, $r_o \gg R_E$.
@@ -10592,7 +10641,7 @@ Dans le montage émetteur commun, $C_\mu$ est ``multipliée'' par le gain et app
 \[
 \boxed{C_{\text{Miller}} = C_\mu(1 + |A_v|)}
 \]
-\textbf{Exemple :} $C_\mu = \SI{4}{pF}$, $A_v = -180$ $\Rightarrow$ $C_{\text{Miller}} = \SI{724}{pF}$. Avec une source de $R_s = \SI{1}{k\ohm}$ : $f_{-3\text{dB}} = 1/(2\pi R_s C_{\text{in}}) \approx \SI{250}{kHz}$ seulement.
+\textbf{Exemple :} $C_\mu = \SI{4}{pF}$, $A_v = -180$ $\Rightarrow$ $C_{\text{Miller}} = \SI{724}{pF}$. Avec une source de $R_s = \SI{1}{k\ohm}$ : $f_{-3\text{dB}} = 1/(2\pi R_s C_{\text{in}}) \approx \SI{220}{kHz}$ seulement.
 \end{formule}
 
 \begin{pratique}
@@ -10601,7 +10650,8 @@ Dans le montage émetteur commun, $C_\mu$ est ``multipliée'' par le gain et app
 
 \subsection{Le miroir de courant : la brique des circuits intégrés}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=0.95, american]
   % Q1 diode-connecté (gauche, miroir horizontal)
   \draw (0,1.2) node[npn, xscale=-1, anchor=B](Q1){};
@@ -10611,8 +10661,9 @@ Dans le montage émetteur commun, $C_\mu$ est ``multipliée'' par le gain et app
   \draw (Q1.B) -- (Q2.B);
   \filldraw (1.7,1.2) circle (1.5pt);
   % Diode-connexion : C de Q1 relié à la ligne des bases
-  \draw (Q1.C) -| (1.7,1.2);
-  \filldraw (Q1.C) circle (1.5pt);
+  \draw (Q1.C) -- ++(0,0.35) coordinate(tap);
+  \draw (tap) -| (1.7,1.2);
+  \filldraw (tap) circle (1.5pt);
   % Courants d'entrée et de sortie
   \draw (Q1.C) ++(0,1.4) node[above]{$I_{\text{ref}}$ (depuis $R_{\text{ref}}$)} to[short, i=$ $] (Q1.C);
   \draw (Q2.C) ++(0,1.4) node[above]{$I_{\text{out}}$ (vers la charge)} to[short, i=$ $] (Q2.C);
@@ -10620,7 +10671,8 @@ Dans le montage émetteur commun, $C_\mu$ est ``multipliée'' par le gain et app
   \draw (Q1.E) -- ++(0,-0.5) node[ground]{};
   \draw (Q2.E) -- ++(0,-0.5) node[ground]{};
 \end{circuitikz}
-\end{center}
+\caption{Miroir de courant : $Q_1$, monté en diode, convertit $I_{\text{ref}}$ en un $V_{BE}$ qui est appliqué tel quel à $Q_2$. Si les transistors sont appariés, $I_{\text{out}} \approx I_{\text{ref}}$.}
+\end{figure}
 
 \begin{formule}
 \textbf{Principe :} $Q_1$ est ``monté en diode'' (collecteur relié à la base) : le courant $I_{\text{ref}}$ qui le traverse impose son $V_{BE}$. Ce $V_{BE}$ est appliqué tel quel à $Q_2$. Si les deux transistors sont \textbf{appariés} (même puce, même température, même géométrie), l'équation de Shockley donne :
@@ -10642,6 +10694,31 @@ Le courant est ``recopié'' --- d'où le nom de miroir.
 \end{intuition}
 
 \subsection{La paire différentielle : amplifier une différence}
+
+\begin{figure}[h]
+\centering
+\begin{circuitikz}[scale=0.95, american]
+  \draw (2,3) node[npn, anchor=B](Q1){};
+  \draw (6.9,3) node[npn, xscale=-1, anchor=B](Q2){};
+  % Émetteurs réunis sur la source de courant de queue
+  \draw (Q1.E) -- (Q1.E |- 0,2.1) -- (4.45,2.1) -- (Q2.E |- 0,2.1) -- (Q2.E);
+  \filldraw (4.45,2.1) circle (1.5pt);
+  \draw (4.45,2.1) to[american current source, l=$I_{\text{tail}}$] (4.45,0.5) node[ground]{};
+  % Collecteurs -> R_C -> rail V_CC
+  \draw (Q1.C) -- (Q1.C |- 0,4) to[R, l=$R_C$] (Q1.C |- 0,6) -- (4.45,6) -- (Q2.C |- 0,6) to[R, l_=$R_C$] (Q2.C |- 0,4) -- (Q2.C);
+  \node[above, font=\small] at (4.45,6) {$V_{CC}$};
+  % Entrées
+  \draw (Q1.B) -- ++(-0.9,0) node[ocirc]{} node[left, font=\small]{$v_1$};
+  \draw (Q2.B) -- ++(0.9,0) node[ocirc]{} node[right, font=\small]{$v_2$};
+  % Sorties sur les collecteurs
+  \draw (Q1.C |- 0,3.8) -- ++(-1.1,0) node[ocirc]{} node[left, font=\small]{$v_{o1}$};
+  \filldraw (Q1.C |- 0,3.8) circle (1.5pt);
+  \draw (Q2.C |- 0,3.8) -- ++(1.1,0) node[ocirc]{} node[right, font=\small]{$v_{o2}$};
+  \filldraw (Q2.C |- 0,3.8) circle (1.5pt);
+\end{circuitikz}
+\caption{Paire différentielle : les émetteurs partagent la source de courant de queue $I_{\text{tail}}$, qui se répartit entre $Q_1$ et $Q_2$ selon la différence $v_d = v_1 - v_2$. Tout ce qui est commun aux deux entrées ne change pas la répartition : c'est la réjection du mode commun.}
+\end{figure}
+
 
 \begin{formule}
 \textbf{Structure :} deux transistors identiques dont les émetteurs sont reliés à une \textbf{source de courant} commune $I_{\text{tail}}$ (réalisée\ldots par un miroir). Les entrées sont les deux bases ; les sorties, les deux collecteurs.
@@ -10698,7 +10775,7 @@ Un ampli classe A de $\SI{10}{W}$ utiles dissipe $\geq \SI{30}{W}$ \textit{au re
 \[
 T \uparrow \;\Rightarrow\; I_S \uparrow \;\Rightarrow\; I_C \uparrow \text{ (à $V_{BE}$ constant)} \;\Rightarrow\; P = V_{CE}I_C \uparrow \;\Rightarrow\; T \uparrow
 \]
-$I_S$ double environ tous les \SI{10}{°C}. À $V_{BE}$ constant, le courant collecteur augmente de $\approx 8{,}7\%/°$C.
+À $V_{BE}$ constant, $I_C$ augmente de $\approx 8{,}7\,\%/°$C, soit un doublement environ tous les \SI{10}{°C}.
 
 \textbf{Condition de stabilité thermique} (critère simplifié) :
 \[
@@ -10741,7 +10818,7 @@ Le BJT est un composant \textbf{remarquablement peu bruyant}, ce qui explique sa
 \item \textbf{Bruit $1/f$ (flicker)} : faible dans le BJT car les porteurs traversent le \textit{volume} du cristal (pas la surface). C'est un avantage majeur par rapport au MOSFET dont le canal est à l'interface Si/SiO$_2$ (riche en pièges).
 \end{itemize}
 
-Le \textbf{facteur de bruit} $NF$ minimal est atteint pour un courant optimal $I_{C,\text{opt}} \approx V_T/(R_s \sqrt{\beta})$.
+Le \textbf{facteur de bruit} $NF$ minimal est atteint pour un courant optimal $I_{C,\text{opt}} \approx (V_T/R_s)\sqrt{\beta}$.
 \end{formule}
 
 \subsection{Technologies modernes}
@@ -10810,22 +10887,31 @@ Cascode : $C_{\text{Miller}} \approx 2\times3{,}5 = \SI{7}{pF}$. $C_{\text{in}} 
 \textbf{Solution :} $I_{\text{out}} = I_{\text{ref}}/(1+2/\beta) = 100/1{,}01 = \SI{99}{\micro A}$ (erreur $1\%$). $r_o = \SI{1}{M\ohm}$. $\Delta I = 3/10^6 = \SI{3}{\micro A}$ ($3\%$). Miroir cascode ou Wilson pour améliorer.
 \end{pratique}
 
-\textbf{Exercice 16.6 ---} Un BJT de puissance ($V_{CE} = \SI{10}{V}$, $I_C = \SI{2}{A}$, $R_{\theta JA} = \SI{5}{°C/W}$) fonctionne à \SI{25}{°C}. La puissance dissipée est $P = \SI{20}{W}$. La température de jonction atteint $T_j = 25 + 20\times5 = \SI{125}{°C}$. À cette température, $I_S$ a été multiplié par $2^{(125-25)/10} = 2^{10} = 1024$. Le point de repos est-il stable ? Que se passe-t-il si $R_E = \SI{0}{\ohm}$ vs $R_E = \SI{0.5}{\ohm}$ ?
+\textbf{Exercice 16.6 ---} Un BJT de puissance ($V_{CE} = \SI{10}{V}$, $I_C = \SI{2}{A}$, $R_{\theta JA} = \SI{5}{°C/W}$) fonctionne à \SI{25}{°C}. La puissance dissipée est $P = \SI{20}{W}$. La température de jonction atteint $T_j = 25 + 20\times5 = \SI{125}{°C}$. À cette température, à $V_{BE}$ fixé, $I_C$ tendrait à être multiplié par $2^{(125-25)/10} = 2^{10} \approx 1000$ (doublement tous les \SI{10}{°C}). Le point de repos est-il stable ? Que se passe-t-il si $R_E = \SI{0}{\ohm}$ vs $R_E = \SI{0.5}{\ohm}$ ?
 
 \begin{pratique}
-\textbf{Solution :} Sans $R_E$ ($R_E = 0$), $V_{BE}$ est fixé uniquement par le diviseur de base. Si $I_S \times 1024$, à $V_{BE}$ constant : $I_C$ tente de monter de 1024 $\times$ ! La puissance explose $\Rightarrow$ \textbf{emballement thermique} $\Rightarrow$ destruction.
+\textbf{Solution :} Sans $R_E$ ($R_E = 0$), $V_{BE}$ est fixé uniquement par le diviseur de base. À $V_{BE}$ constant, $I_C$ tente de monter d'un facteur $\sim 1000$ ! La puissance explose $\Rightarrow$ \textbf{emballement thermique} $\Rightarrow$ destruction.
 
 Avec $R_E = \SI{0.5}{\ohm}$ : $V_E = R_E I_E \approx 0{,}5\times2 = \SI{1}{V}$. Si $I_C$ augmente de $10\%$, $V_E$ augmente de $\SI{100}{mV}$, donc $V_{BE}$ diminue de $\SI{100}{mV}$. Par l'exponentielle, cela \textit{divise} $I_C$ par $\sim 50$ ! La rétroaction est très forte : le point de repos est \textbf{stable}.
 \end{pratique}
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Expliquez en termes de physique du transport pourquoi $I_B$ n'est pas la \textit{cause} de $I_C$.
-\item Pourquoi $g_m = I_C/V_T$ est-il indépendant de la technologie du transistor (géométrie, dopage) ?
-\item Le bruit $1/f$ du BJT est plus faible que celui du MOSFET. Quelle propriété physique l'explique ?
-\item Un transistor SiGe HBT peut atteindre $f_T > \SI{300}{GHz}$. Quel mécanisme physique le permet par rapport à un BJT silicium homogène ?
-\end{enumerate}
+\textbf{Q1.} Expliquez en termes de physique du transport pourquoi $I_B$ n'est pas la \textit{cause} de $I_C$.
+
+\textit{Réponse : c'est $V_{BE}$ qui abaisse la barrière de la jonction BE et fixe l'injection d'électrons dans la base ; ces électrons diffusent à travers la base mince et sont collectés ($I_C$). $I_B$ ne fait que compenser les recombinaisons dans la base et l'injection de trous vers l'émetteur : c'est un sous-produit de la même cause ($V_{BE}$), pas le moteur de $I_C$.}
+
+\textbf{Q2.} Pourquoi $g_m = I_C/V_T$ est-il indépendant de la technologie du transistor (géométrie, dopage) ?
+
+\textit{Réponse : $g_m = \partial I_C/\partial V_{BE}$ dérive de l'exponentielle de Shockley $I_C = I_S\,e^{V_{BE}/V_T}$, d'où $g_m = I_C/V_T$. La géométrie et le dopage ne fixent que $I_S$, donc le point de fonctionnement ; une fois $I_C$ imposé par la polarisation, la pente ne dépend plus que de la statistique de Boltzmann ($V_T = kT/q$) --- une propriété de la jonction PN elle-même.}
+
+\textbf{Q3.} Le bruit $1/f$ du BJT est plus faible que celui du MOSFET. Quelle propriété physique l'explique ?
+
+\textit{Réponse : dans le BJT, les porteurs traversent le volume du cristal, loin des surfaces ; dans le MOSFET, le canal est plaqué contre l'interface Si/SiO$_2$, riche en pièges qui capturent puis relâchent lentement les porteurs --- c'est ce piégeage qui engendre le bruit en $1/f$.}
+
+\textbf{Q4.} Un transistor SiGe HBT peut atteindre $f_T > \SI{300}{GHz}$. Quel mécanisme physique le permet par rapport à un BJT silicium homogène ?
+
+\textit{Réponse : l'hétérojonction (gap plus étroit dans la base SiGe) préserve l'efficacité d'injection même avec une base très dopée --- donc très mince et peu résistive --- et le gradient de germanium crée un champ électrique interne qui accélère les électrons dans la base (dérive en plus de la diffusion). Le temps de transit $\tau_F$ s'effondre, donc $f_T = g_m/[2\pi(C_\pi + C_\mu)]$ grimpe.}
 
 % === RÉSUMÉ ===
 \section*{Résumé du chapitre}
@@ -10868,7 +10954,7 @@ Gain EC & $-g_m R_C$ (découplé), $-R_C/R_E$ (non découplé) \\
 \toprule
 $f_T$ & $g_m/[2\pi(C_\pi+C_\mu)]$ --- bande passante du transistor \\
 Miller & $C_\mu(1+|A_v|)$ --- tue la BP $\Rightarrow$ cascode \\
-Emballement & $I_S$ double tous les \SI{10}{°C}, stabiliser par $R_E$ \\
+Emballement & à $V_{BE}$ fixé, $I_C$ double tous les $\sim$\SI{10}{°C} $\Rightarrow$ stabiliser par $R_E$ \\
 Saturation profonde & Charges stockées $\Rightarrow$ temps de stockage $t_s$ \\
 Bruit & Shot noise ($2qI_C$), faible $1/f$ (transport en volume) \\
 SiGe HBT & $f_T > \SI{300}{GHz}$, $NF < \SI{0.5}{dB}$, BiCMOS \\
@@ -10876,6 +10962,12 @@ SiGe HBT & $f_T > \SI{300}{GHz}$, $NF < \SI{0.5}{dB}$, BiCMOS \\
 \end{tabular}
 \end{center}
 \end{ingenieur}
+
+\begin{retenir}
+\textbf{Ce qu'il faut emporter de ce chapitre :} le BJT est commandé par la tension $V_{BE}$, avec une transconductance universelle $g_m = I_C/V_T$ ; on ne conçoit jamais un circuit sur la valeur exacte de $\beta$, on stabilise par rétroaction ($R_E$, pont diviseur) ; et les trois montages fondamentaux (EC, CC, BC) couvrent le gain, l'isolation et la bande passante --- jusqu'aux briques des circuits intégrés que sont le miroir de courant, la paire différentielle et le push-pull.
+
+Ses limites sont doubles : le courant de base charge la source de commande, et les charges stockées ralentissent la commutation. Le chapitre 17 introduit le composant qui lève ces deux verrous d'un coup --- une grille \textit{isolée} qui ne consomme aucun courant statique : le MOSFET.
+\end{retenir}
 
 % ============================================================================
 % CHAPITRE 17 : LE MOSFET — VERSION PEER-REVIEW
