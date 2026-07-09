@@ -10491,13 +10491,11 @@ $r_o$ représente le fait que le collecteur n'est pas une source de courant parf
   \draw (7,0) to[R, l=$r_o$] (7,-3);
   \draw (4.5,0) -- (7,0);
   \draw (7,0) to[short, i<=$i_c$] (8,0);
-  \filldraw (2,0) circle (1.5pt);
   \filldraw (2,-3) circle (1.5pt);
-  \filldraw (4.5,0) circle (1.5pt);
   \filldraw (4.5,-3) circle (1.5pt);
   \filldraw (7,0) circle (1.5pt);
   \filldraw (7,-3) circle (1.5pt);
-  \draw[{Stealth[length=2.5mm]}-{Stealth[length=2.5mm]}, thick] (1,-0.15) -- (1,-2.85);
+  \draw[-{Stealth[length=2.5mm]}, thick] (1,-2.85) -- (1,-0.15);
   \node[font=\small, left] at (0.95,-1.5) {$v_{be}$};
 \end{circuitikz}
 \caption{Modèle petit signal hybride-$\pi$. L'entrée (B--E) présente $r_\pi$ ; la sortie est la source commandée $g_m v_{be}$ en parallèle avec $r_o$ (effet Early), entre collecteur et émetteur. Base et collecteur ne sont reliés par aucun fil : le couplage est uniquement la commande $g_m v_{be}$.}
