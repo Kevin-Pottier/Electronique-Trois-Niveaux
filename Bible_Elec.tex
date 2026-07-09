@@ -9085,7 +9085,7 @@ Jusqu'ici, tous les composants étudiés étaient \textbf{linéaires} : la relat
 \section{Les Bases}
 
 \begin{bases}
-Cette section présente la diode de manière intuitive et pratique, sans entrer dans la physique des semi-conducteurs. Prérequis : chapitres 1 à 3 (courant, tension, résistance).
+Ce qu'est une diode, ses deux régimes, la tension de seuil selon la techno, la caractéristique $I(V)$, les modèles simplifiés et le circuit diode + résistance. Prérequis : chapitres 1 à 3.
 \end{bases}
 
 \subsection{Qu'est-ce qu'une diode ?}
@@ -9097,7 +9097,8 @@ Une diode est un composant à \textbf{deux bornes} (un dipôle) qui conduit le c
 \item La \textbf{cathode} (K) : borne ``$-$'', marquée par un trait ou une bande sur le boîtier.
 \end{itemize}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=1.2]
   \draw (0,0) -- (0.8,0) to[D, l=$D$, v=$V_D$] (3.2,0) -- (4,0);
   \draw[-{Stealth[length=2.5mm]}, blue!70!black, thick] (0,0.05) -- (0.6,0.05);
@@ -9105,7 +9106,8 @@ Une diode est un composant à \textbf{deux bornes} (un dipôle) qui conduit le c
   \node[below, font=\small] at (0,-0.15) {A};
   \node[below, font=\small] at (4,-0.15) {K};
 \end{circuitikz}
-\end{center}
+\caption{Symbole de la diode. Le triangle pointe dans le sens passant (anode $\to$ cathode) ; la barre marque la cathode.}
+\end{figure}
 
 \begin{analogie}
 \textbf{Le clapet anti-retour.} Une diode est comme un clapet dans un tuyau d'eau :
@@ -9152,7 +9154,8 @@ LED blanche/bleue & $\sim\SI{3.0}{V}$ & Éclairage \\
 
 La courbe courant-tension d'une diode est \textbf{fortement non-linéaire} :
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{tikzpicture}[scale=1.0]
   % Axes
   \draw[-{Stealth[length=2.5mm]}] (-4.2,0) -- (4.5,0) node[right, font=\small]{$V_D$ (V)};
@@ -9205,7 +9208,8 @@ La courbe courant-tension d'une diode est \textbf{fortement non-linéaire} :
   \draw[->, thin, gray!50] (-1.5,-0.04) -- (-1.5,-0.6);
   \node[gray!50!black, font=\footnotesize] at (-1.5,-0.85) {$I_S$ (nA)};
 \end{tikzpicture}
-\end{center}
+\caption{Caractéristique $I(V)$ d'une diode. En direct : courant négligeable jusqu'à $V_F$, puis croissance exponentielle (la tension reste « bloquée » près de $V_F$). En inverse : courant de fuite $I_S$ infime, jusqu'au claquage à $-V_{BR}$.}
+\end{figure}
 
 \begin{intuition}
 \textbf{Ce qu'il faut retenir de cette courbe :}
@@ -9254,15 +9258,22 @@ Pour les calculs pratiques, on n'utilise \textit{jamais} l'équation exponentiel
 
 Le circuit le plus basique : une source $E$, une résistance $R$ et une diode en série.
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=0.85]
-  \draw (0,0) to[battery1, l=$E$, invert] (0,2.5) -- (0.8,2.5);
+  % Pile manuelle : trait long = +, en haut
+  \draw[very thick] (0,0) -- (0,1.05);
+  \draw[very thick] (-0.28,1.05) -- (0.28,1.05);
+  \draw[very thick] (-0.5,1.45) -- (0.5,1.45);
+  \draw[very thick] (0,1.45) -- (0,2.5);
+  \node[left, font=\small] at (-0.6,1.25) {$E$};
+  \draw (0,2.5) -- (0.8,2.5);
   \draw[-{Stealth[length=2.5mm]}, blue!70!black, thick] (0.2,2.5) -- (0.7,2.5);
   \node[blue!70!black, above, font=\small] at (0.45,2.55) {$I$};
-  \draw (0.8,2.5) to[R, l=$R$] (3,2.5)
-        to[D, l=$D$] (3,0) -- (0,0);
+  \draw (0.8,2.5) to[R, l=$R$] (3,2.5) to[D, l=$D$] (3,0) -- (0,0);
 \end{circuitikz}
-\end{center}
+\caption{Circuit fondamental : source, résistance de limitation et diode en série. La résistance fixe le courant une fois la diode passante.}
+\end{figure}
 
 \textbf{Avec le modèle à seuil :} si $E > V_F$ : la diode conduit.
 \[
@@ -9274,6 +9285,34 @@ Si $E < V_F$ : la diode est bloquée, $I = 0$.
 \textbf{Exemple :} $E = \SI{5}{V}$, $R = \SI{330}{\ohm}$, diode Si ($V_F = \SI{0.7}{V}$) :
 
 $I = (5 - 0{,}7)/330 = 4{,}3/330 = \SI{13}{mA}$.
+
+\begin{intuition}
+\textbf{Le point de fonctionnement (droite de charge).} La diode impose sa caractéristique exponentielle $I(V_D)$ ; le reste du circuit impose une contrainte linéaire, la \textbf{droite de charge} $I = (E - V_D)/R$. Le point de fonctionnement réel est leur \emph{intersection}.
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+  \draw[-{Stealth[length=2mm]}] (0,0) -- (5.2,0) node[right, font=\footnotesize]{$V_D$ (V)};
+  \draw[-{Stealth[length=2mm]}] (0,0) -- (0,3.6) node[above, font=\footnotesize]{$I_D$};
+  % Caractéristique diode : exponentielle douce, coude ~x=2.2, bornée sous 3.4
+  \draw[very thick, blue!70!black, domain=0:2.75, samples=120]
+    plot(\x, {min(3.4, 0.05*(exp(1.55*\x)-1))});
+  \node[blue!70!black, font=\footnotesize] at (1.15,2.75) {diode};
+  % Droite de charge : de (E,0)=(4.2,0) à (0,E/R)=(0,3.0)
+  \draw[very thick, red!70!black] (4.2,0) -- (0,3.0);
+  \node[red!70!black, font=\footnotesize, rotate=-33] at (3.15,1.05) {droite de charge};
+  \node[red!70!black, font=\footnotesize, below] at (4.2,0) {$E$};
+  \node[red!70!black, font=\footnotesize, left] at (0,3.0) {$E/R$};
+  % Point de fonctionnement Q : intersection reelle des deux courbes
+  % diode(x)=0.05*(exp(1.55x)-1) ; charge(x)=3.0-(3.0/4.2)x=3.0-0.714x
+  % intersection ~ x=2.28, y=1.37
+  \filldraw[black] (2.28,1.37) circle (2pt);
+  \node[font=\footnotesize, above right] at (2.33,1.42) {Q};
+  \draw[dashed, gray] (2.28,1.37) -- (2.28,0) node[below, font=\footnotesize, black]{$V_F$};
+  \draw[dashed, gray] (2.28,1.37) -- (0,1.37) node[left, font=\footnotesize, black]{$I$};
+\end{tikzpicture}
+\end{center}
+Le modèle à seuil revient à approximer l'intersection en supposant $V_D \approx V_F$ : on lit alors directement $I = (E - V_F)/R$ sur la droite de charge. C'est exact tant que le coude est raide, ce qui est presque toujours le cas.
+\end{intuition}
 
 \begin{attention}
 \textbf{La résistance est indispensable.} Sans elle, le courant n'est limité par rien : $I \to \infty$ (en théorie). En pratique, la diode et la source ont des résistances internes, mais le courant serait bien trop élevé et détruirait la diode. \textbf{Toujours limiter le courant dans une diode.}
@@ -9318,7 +9357,8 @@ Un semi-conducteur (comme le silicium) est un matériau dont la conductivité es
 
 Quand on met un matériau P en contact avec un matériau N, un phénomène spontané se produit :
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{tikzpicture}[scale=0.95]
   % Régions P et N
   \fill[red!12] (0,0) rectangle (3.2,3);
@@ -9362,13 +9402,15 @@ Quand on met un matériau P en contact avec un matériau N, un phénomène spont
   \node[font=\footnotesize, blue!60!black] at (6,-0.4) {électrons (majoritaires)};
   \node[font=\footnotesize, gray!60!black] at (3.75,-0.4) {ions fixes};
 \end{tikzpicture}
-\end{center}
+\caption{Jonction PN à l'équilibre. À l'interface, diffusion puis recombinaison créent une zone de charge d'espace (ZCE) vidée de porteurs mobiles, peuplée d'ions fixes. Le champ interne $\vec{E}_{\text{int}}$ qui en résulte s'oppose à la diffusion : c'est la barrière de potentiel.}
+\end{figure}
 
 \textbf{Mécanisme :} les électrons du côté N diffusent vers le P (où ils sont rares), et les trous du P diffusent vers le N. À l'interface, ils se \textbf{recombinent} et disparaissent, laissant derrière eux des \textbf{ions fixes} : ions négatifs côté P (bore ionisé), ions positifs côté N (phosphore ionisé). Ces ions créent un \textbf{champ électrique interne} $\vec{E}$ dirigé de N vers P, qui s'oppose à la diffusion et finit par l'arrêter. L'équilibre est atteint quand le courant de diffusion est exactement compensé par le courant de dérive (dû au champ).
 
 \subsubsection*{Polarisation directe et inverse}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{tikzpicture}[scale=0.85]
   % DIRECTE
   \begin{scope}[shift={(0,0)}]
@@ -9417,7 +9459,8 @@ Quand on met un matériau P en contact avec un matériau N, un phénomène spont
     \node[font=\small\bfseries] at (3,-1.2) {Polarisation inverse};
   \end{scope}
 \end{tikzpicture}
-\end{center}
+\caption{Effet de la polarisation sur la ZCE. En direct, la tension externe s'oppose au champ interne : la ZCE se rétrécit et le courant passe. En inverse, elle le renforce : la ZCE s'élargit et bloque tout porteur majoritaire.}
+\end{figure}
 
 \begin{formule}
 \textbf{Résumé physique :}
@@ -9469,17 +9512,23 @@ Au voisinage d'un point de fonctionnement $(V_D, I_D)$, la diode se comporte com
 
 Cette résistance dynamique est utilisée dans le modèle petit signal (circuits analogiques) et explique pourquoi la chute de tension ``augmente un peu'' quand le courant augmente.
 
+\begin{attention}
+\textbf{Ne pas confondre $r_d$ et $R_S$.} La résistance dynamique $r_d = nV_T/I_D$ est une pente \emph{locale} de la caractéristique : elle n'existe qu'autour d'un point de repos et \emph{diminue} quand le courant augmente. La résistance série $R_S$ (modèle SPICE, $\sim\SI{0.5}{\ohm}$) est au contraire une vraie résistance ohmique \emph{fixe}, celle du silicium massif et des contacts. À fort courant, c'est $R_S$ qui domine la chute additionnelle ; à faible courant, c'est $r_d$. Le modèle « seuil + résistance » du niveau Bases mélange les deux en une seule résistance équivalente.
+\end{attention}
+
 \subsection{Redressement simple alternance}
 
 La première application historique de la diode : convertir l'AC en DC.
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=0.85]
   \draw (0,0) to[sinusoidal voltage source, l=$v_{\text{AC}}$] (0,2.5)
         to[D, l=$D$] (3,2.5)
         to[R, l=$R$] (3,0) -- (0,0);
 \end{circuitikz}
-\end{center}
+\caption{Redressement simple alternance. La diode ne conduit que pendant les alternances positives.}
+\end{figure}
 
 La diode ne conduit que pendant les alternances positives. La tension aux bornes de $R$ est une succession de demi-sinusoïdes :
 
@@ -9490,53 +9539,67 @@ La diode ne conduit que pendant les alternances positives. La tension aux bornes
 
 La tension moyenne en sortie est : $V_{\text{moy}} = (\hat{V} - V_F)/\pi \approx \hat{V}/\pi$.
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Axe temps
+  \draw[-{Stealth[length=2mm]}] (0,0) -- (7.2,0) node[right, font=\footnotesize]{$t$};
+  \draw[-{Stealth[length=2mm]}] (0,-1.4) -- (0,1.6) node[above, font=\footnotesize]{$v$};
+  % Entrée : sinusoïde complète (gris pointillé)
+  \draw[gray, densely dashed, domain=0:6.6, samples=160]
+    plot(\x, {1.2*sin(180*\x)});
+  \node[gray, font=\footnotesize] at (0.55,1.35) {$v_{\text{AC}}$};
+  % Sortie : demi-sinusoïdes positives seulement (bleu épais), décalées de -VF (petit offset)
+  \draw[very thick, blue!70!black, domain=0:1, samples=40] plot(\x, {max(0,1.2*sin(180*\x)-0.15)});
+  \draw[very thick, blue!70!black] (1,0) -- (2,0);
+  \draw[very thick, blue!70!black, domain=2:3, samples=40] plot(\x, {max(0,1.2*sin(180*\x)-0.15)});
+  \draw[very thick, blue!70!black] (3,0) -- (4,0);
+  \draw[very thick, blue!70!black, domain=4:5, samples=40] plot(\x, {max(0,1.2*sin(180*\x)-0.15)});
+  \draw[very thick, blue!70!black] (5,0) -- (6,0);
+  \draw[very thick, blue!70!black, domain=6:6.6, samples=25] plot(\x, {max(0,1.2*sin(180*\x)-0.15)});
+  \node[blue!70!black, font=\footnotesize] at (6.3,1.15) {$v_{\text{out}}$};
+\end{tikzpicture}
+\caption{Formes d'onde du redressement simple alternance. Les alternances négatives sont supprimées (diode bloquée) ; il ne reste que les bosses positives, amputées de $V_F$. La sortie est unidirectionnelle mais très ondulée --- d'où la nécessité d'un condensateur de filtrage.}
+\end{figure}
+
 \subsection{Pont de Graetz (redressement double alternance)}
 
 Pour utiliser les \textit{deux} alternances, on utilise un pont de 4 diodes :
 
-\begin{center}
-\begin{circuitikz}[scale=0.9]
-  % AC source à gauche
-  \draw (0,0) to[sinusoidal voltage source, l=$v_{\text{AC}}$] (0,4);
-  
-  % Fil haut : de la source au noeud gauche-haut
-  \draw (0,4) -- (2,4);
-  % Fil bas : de la source au noeud gauche-bas
-  \draw (0,0) -- (2,0);
-  
-  % Branche gauche du pont
-  \draw (2,4) to[D, l=$D_1$] (2,2);    % D1 : haut vers milieu
-  \draw (2,2) to[D, l=$D_3$] (2,0);    % D3 : milieu vers bas
-  
-  % Branche droite du pont
-  \draw (5,4) to[D, l=$D_2$] (5,2);    % D2 : haut vers milieu
-  \draw (5,2) to[D, l=$D_4$] (5,0);    % D4 : milieu vers bas
-  
-  % Fil haut reliant les deux branches
-  \draw (2,4) -- (5,4);
-  % Fil bas reliant les deux branches
-  \draw (2,0) -- (5,0);
-  
-  % Sortie DC : noeud milieu-gauche (2,2) = -, noeud milieu-droit (5,2) = +
-  % On sort par le haut du pont (noeud commun D1-D2 côté cathode)
-  \draw (5,4) -- (7,4);
-  \draw (2,0) -- (7,0);
-  
-  % Charge
-  \draw (7,4) to[R, l=$R_L$] (7,0);
-  
-  % Labels DC
-  \node[font=\small] at (7.5,3.8) {$+$};
-  \node[font=\small] at (7.5,0.2) {$-$};
-  \node[font=\small, right] at (7.3,2) {$V_{\text{out}}$};
-  
-  % Noeuds
-  \filldraw (2,4) circle (1.5pt);
-  \filldraw (2,0) circle (1.5pt);
-  \filldraw (5,4) circle (1.5pt);
-  \filldraw (5,0) circle (1.5pt);
+\begin{figure}[h]
+\centering
+\begin{circuitikz}[scale=1.0]
+  % Pont en losange. Noeuds : H (haut, cathode commune = sortie +),
+  % B (bas, anode commune = sortie -), G et Dr (latéraux = entrée AC).
+  \coordinate (H) at (2.5,2.5);
+  \coordinate (B) at (2.5,-0.5);
+  \coordinate (G) at (1,1);
+  \coordinate (Dr) at (4,1);
+  % 4 diodes, toutes pointant vers la cathode commune H (en haut)
+  \draw (G) to[D] (H);      % D1 : G -> H
+  \draw (Dr) to[D] (H);     % D2 : Dr -> H
+  \draw (B) to[D] (G);      % D3 : B -> G
+  \draw (B) to[D] (Dr);     % D4 : B -> Dr
+  \node[font=\footnotesize] at (1.35,1.95) {$D_1$};
+  \node[font=\footnotesize] at (3.65,1.95) {$D_2$};
+  \node[font=\footnotesize] at (1.35,0.05) {$D_3$};
+  \node[font=\footnotesize] at (3.65,0.05) {$D_4$};
+  \filldraw (H) circle (1.5pt); \filldraw (B) circle (1.5pt);
+  \filldraw (G) circle (1.5pt); \filldraw (Dr) circle (1.5pt);
+  % Source AC entre les noeuds latéraux G et Dr, par un chemin extérieur sous le pont
+  \draw (G) -- (-0.6,1);
+  \draw (-0.6,1) to[sinusoidal voltage source, l=$v_{\text{AC}}$] (-0.6,-1.8);
+  \draw (-0.6,-1.8) -- (4,-1.8) -- (Dr);
+  % Charge entre H (+) et B (-)
+  \draw (H) -- (6,2.5);
+  \draw (6,2.5) to[R, l=$R_L$] (6,-0.5);
+  \draw (6,-0.5) -- (B);
+  \node[font=\small] at (5.75,2.75) {$+$};
+  \node[font=\small] at (5.75,-0.75) {$-$};
+  \node[font=\small, right] at (6.2,1) {$V_{\text{out}}$};
 \end{circuitikz}
-\end{center}
+\caption{Pont de Graetz (double alternance). L'entrée AC attaque les n\oe uds latéraux ; la sortie DC est prise entre la cathode commune ($+$, en haut) et l'anode commune ($-$, en bas). Quelle que soit la polarité d'entrée, deux diodes en diagonale conduisent et le courant traverse $R_L$ \emph{toujours dans le même sens}.}
+\end{figure}
 
 Les deux alternances sont redressées. La tension moyenne est : $V_{\text{moy}} = 2(\hat{V} - 2V_F)/\pi$.
 
@@ -9619,7 +9682,7 @@ Quand une diode passe de l'état passant à l'état bloqué, elle ne se bloque p
 \begin{itemize}[nosep]
 \item Diodes Schottky : pas de recouvrement (jonction métal-semi-conducteur, pas de charges stockées).
 \item Diodes ultrafast ($t_{rr} < \SI{50}{ns}$) : compromis pour les applications moyenne fréquence.
-\item Redressement synchrone (MOSFET) : élimine complètement le problème.
+\item Redressement synchrone (MOSFET, chapitre 17) : élimine complètement le problème.
 \end{itemize}
 \end{attention}
 
@@ -9651,9 +9714,19 @@ Comparaison avec une 1N4007 ($V_F = \SI{0.9}{V}$, $t_{rr} = \SI{30}{\micro s}$) 
 
 La diode Zener est conçue pour fonctionner en \textbf{claquage inverse contrôlé}. Contrairement à une diode classique (où le claquage est destructeur), la Zener est fabriquée pour supporter un courant inverse stable. Elle maintient une tension quasi constante $V_Z$ à ses bornes.
 
+\begin{intuition}
+\textbf{Deux mécanismes de claquage distincts} (le nom « Zener » les recouvre par abus) :
+\begin{itemize}[nosep]
+\item \textbf{Effet Zener} ($V_Z \lesssim \SI{5}{V}$) : dans une jonction fortement dopée, la ZCE est très mince ; le champ inverse y devient si intense qu'il arrache directement les électrons de leurs liaisons (effet tunnel). Coefficient de température \emph{négatif}.
+\item \textbf{Effet d'avalanche} ($V_Z \gtrsim \SI{6}{V}$) : les porteurs accélérés par le champ ionisent les atomes par chocs successifs, déclenchant une multiplication en cascade. Coefficient de température \emph{positif}.
+\end{itemize}
+Les deux se compensent vers $V_Z \approx \SI{5.6}{V}$, d'où le choix de cette valeur pour les références stables en température.
+\end{intuition}
+
 \textbf{Circuit de régulation Zener :}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{tikzpicture}[scale=0.95]
   % Circuit principal
   \draw (0,0) -- (0,3) -- (0.5,3);
@@ -9687,7 +9760,8 @@ La diode Zener est conçue pour fonctionner en \textbf{claquage inverse contrôl
   \filldraw (3,3) circle (1.5pt);
   \node[above right, font=\footnotesize] at (3.05,3.05) {A};
 \end{tikzpicture}
-\end{center}
+\caption{Régulateur Zener. $R$ limite le courant total ; la Zener absorbe l'excédent que la charge ne consomme pas, fixant $V_{\text{out}} = V_Z$. La régulation n'existe que tant que $I_Z > 0$.}
+\end{figure}
 
 \begin{formule}
 \textbf{Principe :} la résistance $R$ limite le courant total. La Zener ``absorbe'' l'excédent de courant que la charge ne consomme pas, maintenant ainsi $V_{\text{out}} = V_Z$ constant.
@@ -9722,9 +9796,9 @@ La méthode rigoureuse est identique à celle des circuits à diode :
 \begin{itemize}[nosep]
 \item \textbf{Rendement catastrophique} : toute la puissance excédentaire est dissipée dans $R$ et la Zener.
 \item \textbf{Régulation imparfaite} : la tension $V_Z$ n'est pas parfaitement constante --- elle varie légèrement avec $I_Z$ (résistance dynamique $r_Z \sim \SI{1}{\ohm}$ à \SI{50}{\ohm}).
-\item \textbf{Dérive en température} : les Zener de basse tension ($V_Z < \SI{5}{V}$, effet Zener pur) ont un coefficient négatif ; les hautes tensions ($V_Z > \SI{6}{V}$, effet avalanche) ont un coefficient positif. À $V_Z \approx \SI{5.6}{V}$, les deux effets se compensent $\Rightarrow$ dérive minimale. C'est pourquoi les références de tension Zener sont souvent à \SI{5.6}{V}.
+\item \textbf{Dérive en température} : les Zener de basse tension ($V_Z < \SI{5}{V}$, effet Zener pur) ont un coefficient négatif ; les hautes tensions ($V_Z > \SI{6}{V}$, effet avalanche) ont un coefficient positif. À $V_Z \approx \SI{5.6}{V}$, les deux effets se compensent $\Rightarrow$ dérive minimale. C'est pourquoi les références de tension Zener sont souvent à \SI{5.6}{V} (les références de précision modernes, elles, utilisent le principe bandgap, chapitre 30).
 \end{itemize}
-En pratique, la régulation Zener n'est utilisée que pour les \textbf{faibles courants} ($< \SI{50}{mA}$), comme référence de tension, ou comme protection (écrêtage). Pour les courants plus élevés, on utilise un \textbf{régulateur intégré} (LDO ou DC-DC).
+En pratique, la régulation Zener n'est utilisée que pour les \textbf{faibles courants} ($< \SI{50}{mA}$), comme référence de tension, ou comme protection (écrêtage). Pour les courants plus élevés, on utilise un \textbf{régulateur intégré} (LDO ou DC-DC, chapitres 30--31).
 \end{attention}
 
 % === EXERCICES DU CHAPITRE 15 ===
@@ -9857,12 +9931,21 @@ La tension de sortie n'est que \SI{1.875}{V} --- bien en dessous de $V_Z$. La Ze
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Pourquoi une diode a-t-elle une tension de seuil $V_F \neq 0$ ? Répondez en termes de barrière de potentiel de la jonction PN.
-\item On branche deux diodes en parallèle pour ``partager le courant''. Est-ce une bonne idée ? Pourquoi ? (Pensez à l'exponentielle et aux tolérances sur $V_F$.)
-\item Pourquoi les diodes Schottky ont-elles un $V_F$ plus bas que les diodes Si ? Quel est le compromis ?
-\item Une LED est-elle une diode ? Si oui, pourquoi émet-elle de la lumière alors qu'une diode Si ordinaire n'en émet pas ?
-\end{enumerate}
+\textbf{Q1.} Pourquoi une diode a-t-elle une tension de seuil $V_F \neq 0$ ?
+
+\textit{Réponse : à la jonction, la diffusion des porteurs crée une ZCE et une barrière de potentiel interne ($\sim\SI{0.7}{V}$ en Si). Tant que la tension externe ne compense pas ce champ interne, la ZCE reste large et bloque les majoritaires. $V_F$ n'est donc pas un « péage » arbitraire mais la tension nécessaire pour effondrer la barrière et rétablir l'injection. En toute rigueur le courant croît continûment (Shockley) : le « seuil » est le coude où l'exponentielle devient visible à l'échelle du circuit, pas une discontinuité physique.}
+
+\textbf{Q2.} Deux diodes en parallèle pour « partager le courant » : bonne idée ?
+
+\textit{Réponse : non, piège classique. La caractéristique est exponentielle : à $V_F$ commun, un écart de quelques mV (tolérance de fabrication) suffit à ce qu'une diode prenne l'essentiel du courant. Elle chauffe, or $V_F$ chute de $\SI{-2}{mV/°C}$ : sa tension baisse, elle attire encore plus de courant $\to$ emballement thermique, elle grille, puis la seconde suit. Le partage passif ne marche pas. Solutions : résistances de ballast en série (dégénérescence qui égalise), ou un seul composant correctement dimensionné. Même problème que les BJT en parallèle (chapitre 16).}
+
+\textbf{Q3.} Pourquoi les Schottky ont-elles un $V_F$ plus bas ? Quel compromis ?
+
+\textit{Réponse : la Schottky est une jonction métal--semi-conducteur, pas PN. La conduction se fait par les électrons majoritaires franchissant une barrière plus basse ($\sim\SI{0.3}{V}$), sans injection de minoritaires. D'où deux avantages : $V_F$ faible (moins de pertes) et surtout pas de charges stockées $\Rightarrow$ $t_{rr}$ quasi nul (commutation rapide). Compromis : courant de fuite inverse bien plus élevé et $V_{BR}$ limité (typiquement $<\SI{100}{V}$, quelques centaines de V pour les SiC). On les réserve au redressement basse tension et HF.}
+
+\textbf{Q4.} Une LED est-elle une diode ? Pourquoi émet-elle de la lumière, contrairement au Si ?
+
+\textit{Réponse : oui, c'est une jonction PN en direct. En conduction, électrons et trous se recombinent et libèrent l'énergie du gap. La différence est la nature du gap : le silicium est à gap \emph{indirect} --- la recombinaison exige l'assistance d'un phonon et l'énergie part majoritairement en chaleur. Les LED utilisent des semi-conducteurs à gap \emph{direct} (GaAs, GaN, InGaN\ldots) où la recombinaison émet directement un photon, avec un rendement radiatif élevé. La couleur est fixée par la largeur du gap ($E = h\nu$), d'où $V_F$ croissant du rouge au bleu.}
 
 % === RÉSUMÉ DU CHAPITRE 15 ===
 \section*{Résumé du chapitre}
@@ -9910,6 +9993,12 @@ Pertes totales & $P = V_F I_{\text{moy}} + f_{\text{sw}} E_{rr}$ --- Schottky é
 \end{tabular}
 \end{center}
 \end{ingenieur}
+
+\vspace{0.4cm}
+
+\begin{retenir}
+La diode, c'est \emph{une} jonction PN : elle conduit dans un sens, bloque dans l'autre. En accolant \emph{deux} jonctions PN dos à dos et en pilotant finement la jonction centrale, on obtient un composant capable de contrôler un fort courant avec un faible courant --- l'amplification. C'est le transistor bipolaire, brique fondamentale de l'électronique active, qui ouvre le chapitre 16.
+\end{retenir}
 
 % ============================================================================
 % CHAPITRE 16 : LE TRANSISTOR BIPOLAIRE (BJT)
