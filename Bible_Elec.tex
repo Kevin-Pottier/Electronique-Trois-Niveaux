@@ -9597,7 +9597,8 @@ Pour utiliser les \textit{deux} alternances, on utilise un pont de 4 diodes :
   \draw (6,-0.5) -- (B);
   \node[font=\small] at (5.75,2.75) {$+$};
   \node[font=\small] at (5.75,-0.75) {$-$};
-  \node[font=\small, right] at (6.2,1) {$V_{\text{out}}$};
+  \draw[-{Stealth[length=2.5mm]}] (6.45,-0.4) -- (6.45,2.4);
+  \node[font=\small, right] at (6.55,1) {$V_{\text{out}}$};
 \end{circuitikz}
 \caption{Pont de Graetz (double alternance). L'entrée AC attaque les n\oe uds latéraux ; la sortie DC est prise entre la cathode commune ($+$, en haut) et l'anode commune ($-$, en bas). Quelle que soit la polarité d'entrée, deux diodes en diagonale conduisent et le courant traverse $R_L$ \emph{toujours dans le même sens}.}
 \end{figure}
@@ -9807,8 +9808,11 @@ Les deux se compensent vers $V_Z \approx \SI{5.6}{V}$, d'où le choix de cette v
 \begin{figure}[h]
 \centering
 \begin{tikzpicture}[scale=0.95]
-  % Circuit principal
-  \draw (0,0) -- (0,3) -- (0.5,3);
+  % Circuit principal — source DC : pile manuelle (trait long = +, en haut)
+  \draw (0,0) -- (0,1.3);
+  \draw[very thick] (-0.28,1.3) -- (0.28,1.3);
+  \draw[very thick] (-0.5,1.7) -- (0.5,1.7);
+  \draw (0,1.7) -- (0,3) -- (0.5,3);
   \draw (0.5,3) to[R, l=$R$] (3,3);
   \draw (3,3) -- (3,2.5);
   \draw (3,2.5) to[zzD, l=$D_Z$, invert] (3,0.5);
@@ -9819,9 +9823,11 @@ Les deux se compensent vers $V_Z \approx \SI{5.6}{V}$, d'où le choix de cette v
   \draw (5.5,3) to[R, l_=$R_L$] (5.5,0);
   \draw (5.5,0) -- (3,0);
   
-  % Labels tension
-  \node[left] at (0,1.5) {$V_{\text{in}}$};
-  \node[right] at (5.8,1.5) {$V_{\text{out}}$};
+  % Labels tension (flèches pointant vers le +)
+  \draw[-{Stealth[length=2.5mm]}] (-0.85,0.2) -- (-0.85,2.8);
+  \node[left] at (-0.95,1.5) {$V_{\text{in}}$};
+  \draw[-{Stealth[length=2.5mm]}] (5.85,0.2) -- (5.85,2.8);
+  \node[right] at (5.95,1.5) {$V_{\text{out}}$};
   
   % Courant I_R sur le fil AVANT R (entre source et R)
   \draw[-{Stealth[length=2mm]}, blue!70!black, thick] (0.15,3) -- (0.45,3);
