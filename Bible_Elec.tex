@@ -9101,8 +9101,8 @@ Une diode est un composant à \textbf{deux bornes} (un dipôle) qui conduit le c
 \centering
 \begin{circuitikz}[scale=1.2]
   \draw (0,0) -- (0.8,0) to[D, l=$D$, v=$V_D$] (3.2,0) -- (4,0);
-  \draw[-{Stealth[length=2.5mm]}, blue!70!black, thick] (0,0.05) -- (0.6,0.05);
-  \node[blue!70!black, above, font=\small] at (0.3,0.1) {$I_D$};
+  \draw[-{Stealth[length=2.5mm]}, blue!70!black, thick] (0.05,0) -- (0.6,0);
+  \node[blue!70!black, above, font=\small] at (0.32,0.08) {$I_D$};
   \node[below, font=\small] at (0,-0.15) {A};
   \node[below, font=\small] at (4,-0.15) {K};
 \end{circuitikz}
@@ -9177,12 +9177,13 @@ La courbe courant-tension d'une diode est \textbf{fortement non-linéaire} :
   % Inverse : quasi 0 de -2.8 à 0
   \draw[very thick, blue!70!black, domain=-2.8:0, samples=80, smooth]
     plot(\x, {-0.04});
-  % Directe : exponentielle de 0 à ~2
-  \draw[very thick, blue!70!black, domain=0:2.0, samples=150, smooth]
-    plot(\x, {0.005*(exp(3.5*\x) - 1)});
-  % Directe au-delà : quasi verticale
-  \draw[very thick, blue!70!black, domain=2.0:2.8, samples=50, smooth]
-    plot(\x, {0.005*(exp(3.5*2.0)-1) + 5.5*(\x-2.0)});
+  % Directe : exponentielle unique, échelle vérifiée numériquement :
+  %   y(2,39) = exp(1,452) - 0,045 = 4,23 < 4,5 (pointe d'axe) ;
+  %   y(2,0)  = 0,455 (~2,3 mA) -> coude pile à V_F ;
+  %   y(0)    = -0,045 -> continuité avec le palier inverse ;
+  %   argument max de exp = 1,45 (aucun risque de Dimension too large)
+  \draw[very thick, blue!70!black, domain=0:2.39, samples=300]
+    plot(\x, {exp(5.5*(\x-2.126)) - 0.045});
   % Raccord inverse à 0 (petit trait pour fermer)
   \draw[very thick, blue!70!black] (-2.8,-0.04) -- (-3.3,-0.04);
   
@@ -9201,7 +9202,7 @@ La courbe courant-tension d'une diode est \textbf{fortement non-linéaire} :
   \node[blue!70!black, font=\small\bfseries] at (-1.8,0.6) {Inverse};
   
   % Annotation coude
-  \draw[->, thick, gray!60!black] (3.2,1.2) -- (2.15,0.55);
+  \draw[->, thick, gray!60!black] (3.2,1.2) -- (2.2,0.8);
   \node[gray!60!black, font=\footnotesize, right] at (3.2,1.2) {coude $\approx V_F$};
   
   % Courant de fuite
@@ -9592,7 +9593,7 @@ Pour utiliser les \textit{deux} alternances, on utilise un pont de 4 diodes :
   \draw (-0.6,-1.8) -- (4,-1.8) -- (Dr);
   % Charge entre H (+) et B (-)
   \draw (H) -- (6,2.5);
-  \draw (6,2.5) to[R, l=$R_L$] (6,-0.5);
+  \draw (6,2.5) to[R, l_=$R_L$] (6,-0.5);
   \draw (6,-0.5) -- (B);
   \node[font=\small] at (5.75,2.75) {$+$};
   \node[font=\small] at (5.75,-0.75) {$-$};
@@ -9815,7 +9816,7 @@ Les deux se compensent vers $V_Z \approx \SI{5.6}{V}$, d'où le choix de cette v
   
   % Charge
   \draw (3,3) -- (5.5,3);
-  \draw (5.5,3) to[R, l=$R_L$] (5.5,0);
+  \draw (5.5,3) to[R, l_=$R_L$] (5.5,0);
   \draw (5.5,0) -- (3,0);
   
   % Labels tension
@@ -9836,7 +9837,7 @@ Les deux se compensent vers $V_Z \approx \SI{5.6}{V}$, d'où le choix de cette v
   
   % Noeud A
   \filldraw (3,3) circle (1.5pt);
-  \node[above right, font=\footnotesize] at (3.05,3.05) {A};
+  \node[above left, font=\footnotesize] at (2.95,3.05) {A};
 \end{tikzpicture}
 \caption{Régulateur Zener. $R$ limite le courant total ; la Zener absorbe l'excédent que la charge ne consomme pas, fixant $V_{\text{out}} = V_Z$. La régulation n'existe que tant que $I_Z > 0$.}
 \end{figure}
