@@ -11708,16 +11708,18 @@ Outils pratiques pour résoudre les circuits à AOP : règles d'or, méthode de 
 
 Un AOP possède deux entrées et une sortie :
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=1.0, american]
   \draw (0,0) node[op amp, thick](AOP){};
-  \node[left, font=\small] at (AOP.+) {$V^+$};
-  \node[left, font=\small] at (AOP.-) {$V^-$};
-  \draw (AOP.out) -- ++(0.8,0) node[right, font=\small]{$V_{\text{out}}$};
+  \draw (AOP.+) -- ++(-0.8,0) node[ocirc]{} node[left, font=\small]{$V^+$};
+  \draw (AOP.-) -- ++(-0.8,0) node[ocirc]{} node[left, font=\small]{$V^-$};
+  \draw (AOP.out) -- ++(0.8,0) node[ocirc]{} node[right, font=\small]{$V_{\text{out}}$};
   \draw (AOP.up) -- ++(0,0.4) node[above, font=\footnotesize]{$+V_{CC}$};
   \draw (AOP.down) -- ++(0,-0.4) node[below, font=\footnotesize]{$-V_{EE}$};
 \end{circuitikz}
-\end{center}
+\caption{Symbole de l'AOP : deux entrées ($V^+$ non-inverseuse, $V^-$ inverseuse), une sortie, et les alimentations $\pm V_{CC}$ --- souvent omises sur les schémas, jamais sur la carte.}
+\end{figure}
 
 \begin{formule}
 \textbf{Relation fondamentale :}
@@ -11778,23 +11780,26 @@ Le résultat $V_{\text{out}}$ est-il entre $-V_{EE}$ et $+V_{CC}$ ? Si non : la 
 
 Appliquons la méthode sur l'amplificateur non-inverseur, en trois niveaux de complexité croissante.
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=0.85, american]
   \draw (0,0) node[op amp](AOP){};
-  \draw (AOP.+) -- ++(-1,0) node[left]{$V_{\text{in}}$};
-  \draw (AOP.out) -- ++(0.8,0) node[right]{$V_{\text{out}}$};
-  \draw (AOP.out) -- ++(0.5,0) -- ++(0,-1.8) coordinate(FB);
+  \draw (AOP.+) -- ++(-1,0) node[ocirc]{} node[left]{$V_{\text{in}}$};
+  \draw (AOP.out) -- ++(0.5,0) coordinate(T) -- ++(0.4,0) node[ocirc]{} node[right]{$V_{\text{out}}$};
+  \draw (T) -- ++(0,-1.8) coordinate(FB);
+  \filldraw (T) circle (1.5pt);
   \draw (FB) to[R, l=$R_2$] ++(-2.5,0) coordinate(J);
   \draw (J) to[R, l=$R_1$] ++(0,-1.5) node[ground]{};
   \draw (J) -- (J |- AOP.-) -- (AOP.-);
   \filldraw (J) circle (1.5pt);
 \end{circuitikz}
-\end{center}
+\caption{L'amplificateur non-inverseur : la sortie renvoie la fraction $\beta = R_1/(R_1+R_2)$ de $V_{\text{out}}$ sur l'entrée inverseuse. Gain $= 1 + R_2/R_1$.}
+\end{figure}
 
 \subsubsection*{Niveau 1 : calcul avec les règles d'or}
 
 \begin{pratique}
-\textbf{Étape 1 :} la sortie est reliée à $V^-$ via $R_2$ $\Rightarrow$ rétroaction négative. \checkmark
+\textbf{Étape 1 :} la sortie est reliée à $V^-$ via $R_2$ $\Rightarrow$ rétroaction négative --- vérifié.
 
 \textbf{Étape 2 :} $V^+ = V^-$. Or $V^+ = V_{\text{in}}$, donc $V^- = V_{\text{in}}$.
 
@@ -11811,7 +11816,7 @@ Appliquons la méthode sur l'amplificateur non-inverseur, en trois niveaux de co
 \boxed{A_{CL} = 1 + \frac{R_2}{R_1}}
 \]
 
-\textbf{Étape 6 :} avec $R_1 = \SI{1}{k\ohm}$, $R_2 = \SI{9}{k\ohm}$, $V_{\text{in}} = \SI{1}{V}$ : $V_{\text{out}} = 10\times1 = \SI{10}{V}$. Si l'alimentation est $\pm\SI{15}{V}$ : $\SI{10}{V} < \SI{15}{V}$, pas de saturation. \checkmark
+\textbf{Étape 6 :} avec $R_1 = \SI{1}{k\ohm}$, $R_2 = \SI{9}{k\ohm}$, $V_{\text{in}} = \SI{1}{V}$ : $V_{\text{out}} = 10\times1 = \SI{10}{V}$. Si l'alimentation est $\pm\SI{15}{V}$ : $\SI{10}{V} < \SI{15}{V}$, pas de saturation --- cohérent.
 \end{pratique}
 
 \subsubsection*{Niveau 2 : correction avec $A_{OL}$ fini}
@@ -11847,21 +11852,23 @@ Si $A_{OL}$ tombe à $100$ (par exemple à haute fréquence) : $A_{CL,\text{rée
 
 \textbf{Amplificateur inverseur :}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=0.85, american]
   \draw (0,0) node[op amp](AOP){};
   \draw (AOP.+) -- ++(-0.5,0) node[ground]{};
   \draw (AOP.-) -- ++(-0.3,0) coordinate(J);
-  \draw (J) to[R, l=$R_1$] ++(-2.5,0) node[left]{$V_{\text{in}}$};
+  \draw (J) to[R, l=$R_1$] ++(-2.5,0) node[ocirc]{} node[left]{$V_{\text{in}}$};
   \draw (AOP.out) -- ++(0.5,0) coordinate(OUT);
-  \draw (OUT) node[right]{$V_{\text{out}}$};
+  \draw (OUT) -- ++(0.4,0) node[ocirc]{} node[right]{$V_{\text{out}}$};
   \draw (J) -- ++(0,1.2) coordinate(FB);
   \draw (FB) to[R, l=$R_2$] (FB -| OUT);
   \draw (FB -| OUT) -- (OUT);
   \filldraw (J) circle (1.5pt);
   \filldraw (OUT) circle (1.5pt);
 \end{circuitikz}
-\end{center}
+\caption{L'amplificateur inverseur : le n\oe ud $V^-$ est une \textit{masse virtuelle} --- au potentiel de la masse sans y être connecté. Gain $= -R_2/R_1$, impédance d'entrée $= R_1$.}
+\end{figure}
 
 \begin{formule}
 \[
@@ -11930,7 +11937,8 @@ Architecture interne, origine physique du gain $A_{OL}$, théorie de la rétroac
 
 L'AOP n'est \textbf{pas un composant fondamental} comme le transistor. C'est une \textbf{architecture de circuit} composée de transistors. Un AOP typique comprend trois étages :
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{tikzpicture}[scale=0.8, >=Stealth, every node/.style={font=\small}]
   \draw[thick, fill=green!10] (0,0) rectangle (3,2.5);
   \node[font=\footnotesize, text width=2.5cm, align=center] at (1.5,1.8) {\textbf{Étage 1}\\Paire\\différentielle};
@@ -11947,7 +11955,8 @@ L'AOP n'est \textbf{pas un composant fondamental} comme le transistor. C'est une
   \draw[->, thick] (7,1.25) -- (8,1.25);
   \draw[->, thick] (11,1.25) -- (12,1.25) node[right]{$V_{\text{out}}$};
 \end{tikzpicture}
-\end{center}
+\caption{Architecture interne à trois étages : la paire différentielle (chapitre 16) reçoit la différence, l'étage de gain amplifie, le push-pull isole la charge. $A_{OL}$ est le produit des $g_m r_o$ des deux premiers étages.}
+\end{figure}
 
 \begin{formule}
 \textbf{Gain en boucle ouverte :}
@@ -11983,7 +11992,7 @@ $\beta$ : fraction de retour. $T = A_{OL}\beta$ : gain de boucle.
 \item \textbf{Réduit le gain} de $A_{OL}$ (instable) à $1/\beta$ (précis, stable).
 \item \textbf{Linéarise} : les non-linéarités sont divisées par $(1+T)$.
 \item \textbf{Stabilise} : les variations de $A_{OL}$ (température, vieillissement) sont divisées par $(1+T)$.
-\item \textbf{Réduit l'impédance de sortie} : $Z_{\text{out,BF}} = Z_{\text{out,BO}}/(1+T)$.
+\item \textbf{Réduit l'impédance de sortie} : $Z_{\text{out,fermée}} = Z_{\text{out,ouverte}}/(1+T)$.
 \item \textbf{Étend la bande passante} : le gain diminue mais la BP augmente, à produit constant (GBW).
 \end{enumerate}
 Le prix : risque d'\textbf{instabilité} si le déphasage dépasse $180°$ quand $|T| = 1$ (voir niveau ingénieur).
@@ -12004,6 +12013,37 @@ Le \textbf{produit gain-bande} est constant :
 \]
 Exemple (741) : $GBW = \SI{1}{MHz}$. En suiveur ($A_{CL} = 1$) : BP $= \SI{1}{MHz}$. En $\times 100$ : BP $= \SI{10}{kHz}$.
 \end{formule}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.95]
+  % Échelle : 1 unité = 1 décade (x), 20 dB (y). Droite A_OL : y = 6 - x, vérifiée :
+  % 100 dB à x=1 (f_p1 = 10 Hz), 40 dB à x=4 (10 kHz), 0 dB à x=6 (GBW = 1 MHz).
+  \draw[-{Stealth[length=2.5mm]}] (-0.3,0) -- (7.6,0) node[right, font=\small]{$f$ (Hz)};
+  \draw[-{Stealth[length=2.5mm]}] (0,-0.9) -- (0,5.7) node[above, font=\small]{Gain (dB)};
+  \foreach \x/\l in {0/1, 2/100, 4/{10 k}, 6/{1 M}} {
+    \draw (\x,0.06) -- (\x,-0.06);
+    \node[below, font=\tiny] at (\x,-0.12) {\l};
+  }
+  \foreach \y/\l in {1/20, 2/40, 3/60, 4/80, 5/100} {
+    \draw (0.06,\y) -- (-0.06,\y);
+    \node[left, font=\tiny] at (-0.1,\y) {\l};
+  }
+  \draw[very thick, blue!70!black] (0,5) -- (1,5) -- (6.35,-0.35);
+  \node[blue!70!black, font=\footnotesize, above] at (0.45,5.05) {$A_{OL}$};
+  \draw[dashed, gray!50] (1,0) -- (1,5);
+  \node[below, font=\tiny, gray!60!black] at (1,-0.45) {$f_{p1}$};
+  \node[rotate=-45, font=\footnotesize, gray!30!black] at (3.45,2.85) {$-\SI{20}{dB/déc}$};
+  \draw[very thick, red!70!black] (0,2) -- (4,2);
+  \node[red!70!black, font=\footnotesize, above] at (1.9,2.03) {$A_{CL} = \SI{40}{dB}$};
+  \draw[dashed, gray!50] (4,0) -- (4,2);
+  \filldraw[red!70!black] (4,2) circle (1.8pt);
+  \node[above right, font=\footnotesize, gray!30!black] at (4.02,2.1) {$f_{-3\text{dB}} = GBW/A_{CL}$};
+  \node[above right, font=\footnotesize, blue!70!black] at (6.02,0.12) {$GBW$};
+\end{tikzpicture}
+\caption{Réponse en boucle ouverte d'un AOP compensé (échelles logarithmiques) : gain plat $A_{OL,DC} = \SI{100}{dB}$ jusqu'au pôle dominant $f_{p1}$, puis $-\SI{20}{dB/déc}$ jusqu'au gain unité à $f = GBW$ (ici \SI{1}{MHz}). Bouclé à $A_{CL} = \SI{40}{dB}$, l'amplificateur suit la droite rouge jusqu'à $f_{-3\text{dB}} = GBW/A_{CL} = \SI{10}{kHz}$, puis retombe sur $A_{OL}$ : le produit gain $\times$ bande est constant.}
+\end{figure}
+
 
 \subsection{La compensation de Miller : le lien avec les transistors}
 
@@ -12118,7 +12158,7 @@ Transimpédance & $> \SI{1}{M\ohm}$ & JFET & $i_n$ faible \\
 \begin{formule}
 \begin{itemize}[nosep]
 \item \textbf{Offset} : dérive \SI{1}{\micro V/°C} (BJT) à \SI{10}{\micro V/°C} (CMOS). Chopper : $< \SI{0.05}{\micro V/°C}$.
-\item \textbf{$I_B$ (BJT)} : double tous les \SI{10}{°C}.
+\item \textbf{$I_B$} : pour les entrées JFET/CMOS (fuite de jonction), il double tous les \SI{10}{°C} --- piège classique à chaud. Pour les entrées BJT ($I_B = I_C/\beta$), il est quasi stable, $\beta$ augmentant avec $T$.
 \item \textbf{$g_m$} : diminue avec $T$ (MOSFET, $\mu \downarrow$), augmente (BJT, $V_T \downarrow$). $A_{OL}$ varie, mais la rétroaction absorbe ($\div(1+T)$).
 \item \textbf{GBW} : varie de $\pm 20\%$ sur la plage de température.
 \end{itemize}
@@ -12240,19 +12280,28 @@ Mais si $C_L = \SI{10}{nF}$ : $f_{p3} = \SI{159}{kHz}$, $\varphi_{p3} = -81°$ $
 \begin{pratique}
 \textbf{Solution :}
 
-$R_s = \SI{100}{\ohm}$ : BJT $\Rightarrow e_{\text{tot}} = \SI{3.3}{nV/\sqrt{Hz}}$. CMOS $\Rightarrow \SI{15.1}{nV/\sqrt{Hz}}$. \textbf{BJT gagne} ($\times 4{,}6$).
+$R_s = \SI{100}{\ohm}$ : $e_{R_s} = \sqrt{4kTR_s} = \SI{1.3}{nV/\sqrt{Hz}}$. BJT : $e_{\text{tot}} = \sqrt{3^2+0{,}1^2+1{,}3^2} = \SI{3.3}{nV/\sqrt{Hz}}$. CMOS : $e_{\text{tot}} = \SI{15.1}{nV/\sqrt{Hz}}$. \textbf{BJT gagne} ($\times 4{,}6$).
 
-$R_s = \SI{10}{M\ohm}$ : $e_{R_s} = \SI{12.9}{\micro V/\sqrt{Hz}}$ domine. BJT : $i_n R_s = \SI{10}{\micro V/\sqrt{Hz}}$, $e_{\text{tot}} = \SI{16.3}{\micro V/\sqrt{Hz}}$. CMOS : $i_n R_s \approx 0$, $e_{\text{tot}} = \SI{12.9}{\micro V/\sqrt{Hz}}$. \textbf{CMOS gagne} (le bruit en courant du BJT pénalise).
+$R_s = \SI{10}{M\ohm}$ : $e_{R_s} = \sqrt{4kT\times10^7} = \SI{0.41}{\micro V/\sqrt{Hz}}$. BJT : $i_n R_s = \SI{10}{\micro V/\sqrt{Hz}}$ écrase tout, $e_{\text{tot}} \approx \SI{10.0}{\micro V/\sqrt{Hz}}$. CMOS : $i_n R_s = \SI{0.1}{\micro V/\sqrt{Hz}}$, $e_{\text{tot}} \approx \SI{0.42}{\micro V/\sqrt{Hz}}$ --- dominé par le bruit thermique de $R_s$ lui-même. \textbf{CMOS gagne} ($\times 24$) : à haute impédance, c'est le bruit en courant qui condamne le BJT.
 \end{pratique}
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Pourquoi le slew rate est-il une limitation ``grand signal'' et pas ``petit signal'' ? Quelle grandeur physique le limite ?
-\item Un AOP rail-to-rail input utilise deux paires différentielles. Pourquoi le $g_m$ total n'est-il pas constant ?
-\item Expliquez le rôle du condensateur de compensation Miller dans la séparation des pôles.
-\item Calculez l'incertitude totale d'offset d'un AOP CMOS ($V_{OS} = \SI{5}{mV}$, $\SI{5}{\micro V/°C}$) sur $-40°$C à $+85°$C. Comparez avec un chopper ($V_{OS} < \SI{10}{\micro V}$, $< \SI{0.05}{\micro V/°C}$).
-\end{enumerate}
+\textbf{Q1.} Pourquoi le slew rate est-il une limitation ``grand signal'' et pas ``petit signal'' ? Quelle grandeur physique le limite ?
+
+\textit{Réponse : en petit signal, la pente demandée $2\pi f V_p$ reste inférieure à ce que l'étage d'entrée peut fournir : la réponse est linéaire, limitée par le GBW. En grand signal, la paire différentielle bascule complètement et ne peut délivrer que son courant de queue : $\mathrm{d}V_{\text{out}}/\mathrm{d}t$ plafonne à $SR = I_{\text{tail}}/C_C$. C'est donc le courant disponible pour charger le condensateur de compensation qui limite --- pas une bande passante.}
+
+\textbf{Q2.} Un AOP rail-to-rail input utilise deux paires différentielles. Pourquoi le $g_m$ total n'est-il pas constant ?
+
+\textit{Réponse : la paire PMOS travaille près du rail bas, la paire NMOS près du rail haut, et les deux au milieu. Selon la tension de mode commun, une seule ou les deux paires conduisent : $g_m$ passe du simple au double au croisement (sauf circuit d'égalisation dédié), et les offsets des deux paires, différents, créent un saut de $V_{OS}$ au même endroit.}
+
+\textbf{Q3.} Expliquez le rôle du condensateur de compensation Miller dans la séparation des pôles.
+
+\textit{Réponse : vu de l'entrée de l'étage 2, $C_C$ apparaît multiplié par $(1+|A_{v2}|)$ (effet Miller, chapitre 16) : le n\oe ud de sortie de la paire différentielle, à haute impédance, voit une capacité énorme --- le premier pôle descend en fréquence. Au n\oe ud de sortie de l'étage 2, $C_C$ crée une contre-réaction locale qui abaisse l'impédance vue à $\approx 1/g_{m2}$ --- le second pôle remonte à $g_{m2}/(2\pi C_L)$. Les pôles s'écartent (pole splitting) : le système se comporte en premier ordre jusqu'au-delà du gain unité.}
+
+\textbf{Q4.} Calculez l'incertitude totale d'offset d'un AOP CMOS ($V_{OS} = \SI{5}{mV}$, $\SI{5}{\micro V/°C}$) sur $-40°$C à $+85°$C. Comparez avec un chopper ($V_{OS} < \SI{10}{\micro V}$, $< \SI{0.05}{\micro V/°C}$).
+
+\textit{Réponse : pire cas depuis \SI{25}{°C} : $|\Delta T|_{\max} = 65$ (vers $-40°$C). CMOS : $5\,\text{mV} + \SI{5}{\micro V/°C} \times 65 = \SI{5.3}{mV}$. Chopper : $\SI{10}{\micro V} + \SI{0.05}{\micro V/°C} \times 65 = \SI{13}{\micro V}$. Le chopper est $\sim 400\times$ meilleur : c'est le choix obligé dès qu'on mesure des millivolts en DC (thermocouples, shunts, ponts de jauges).}
 
 % === RÉSUMÉ ===
 \section*{Résumé du chapitre}
@@ -12300,6 +12349,12 @@ Saturation & $V_{\text{out}} < V_{CC} - V_{\text{headroom}}$. Recovery time à l
 \end{tabular}
 \end{center}
 \end{ingenieur}
+
+\begin{retenir}
+\textbf{Ce qu'il faut emporter de ce chapitre :} l'AOP n'est pas un composant magique mais une architecture --- paire différentielle, étage de gain, push-pull --- dont la rétroaction négative fait un amplificateur précis : $V^+ \approx V^-$, gain fixé par les résistances, erreurs divisées par $(1+A_{OL}\beta)$. Ses limites ont toutes une cause physique : GBW (pôle dominant de compensation), slew rate ($I_{\text{tail}}/C_C$), bruit ($e_n$, $i_n$ selon la technologie d'entrée), stabilité (marge de phase).
+
+Ce sont exactement ces limites qui décident si un filtre actif tient ses promesses : le chapitre 19 confronte les topologies du chapitre 14 au GBW fini, au bruit et aux tolérances --- là où le filtre calculé rencontre le filtre réel.
+\end{retenir}
 
 % ============================================================================
 % CHAPITRE 19 : FILTRES ACTIFS — LIMITES, CONCEPTION ET RÉALITÉ
