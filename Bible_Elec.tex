@@ -11012,7 +11012,8 @@ Niveau intuitif : fonctionnement qualitatif, comparaison BJT, commutation. Prér
 \item \textbf{Source} (S) : la borne par laquelle sort le courant.
 \end{itemize}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=1.0, american]
   \begin{scope}[shift={(0,0)}]
     \draw (0,0) node[nmos](M1){};
@@ -11029,7 +11030,8 @@ Niveau intuitif : fonctionnement qualitatif, comparaison BJT, commutation. Prér
     \node[font=\bfseries] at (0,-2.2) {PMOS};
   \end{scope}
 \end{circuitikz}
-\end{center}
+\caption{Symboles du NMOS et du PMOS (à enrichissement). La flèche distingue le type ; dans les MOSFETs discrets, le substrat est relié en interne à la source.}
+\end{figure}
 
 Ce chapitre traite des MOSFETs \textbf{à enrichissement} (\textit{enhancement mode}), les plus courants. Les MOSFETs à déplétion (qui conduisent à $V_{GS} = 0$) sont rares et réservés à des niches (sources de courant JFET-like).
 
@@ -11056,7 +11058,7 @@ Ce chapitre traite des MOSFETs \textbf{à enrichissement} (\textit{enhancement m
 Commande & Tension $V_{BE}$ (courant $I_B$ conséquent) & Tension $V_{GS}$ (courant $\approx 0$ en statique) \\
 Impédance d'entrée & $r_\pi \sim \SI{1}{k\ohm}$--\SI{10}{k\ohm} & $> \SI{1e12}{\ohm}$ (BF), capacitif (HF) \\
 Chute en conduction & $V_{CE,\text{sat}}$ fixe ($\approx\SI{0.2}{V}$) & $R_{DS,\text{on}} \cdot I_D$ (proportionnelle) \\
-Stabilité thermique & Emballement ($I_S$ double/\SI{10}{°C}) & \textbf{Auto-stable} ($R_{DS,\text{on}}$ augmente avec $T$) \\
+Stabilité thermique & Emballement ($I_C$ double/\SI{10}{°C} à $V_{BE}$ fixé) & \textbf{Auto-stable} ($R_{DS,\text{on}}$ augmente avec $T$) \\
 Vitesse & $t_s$ (charges stockées en sat.) & Très rapide (pas de charges stockées) \\
 Bruit BF & Faible $1/f$ (transport volume) & Plus élevé $1/f$ (pièges interface) \\
 $g_m$ à même $I$ & $I_C/V_T$ (élevé) & $\sqrt{2k_nI_D}$ (plus faible) \\
@@ -11090,17 +11092,19 @@ Le mode interrupteur fermé du MOSFET est le régime \textbf{ohmique} (ou \texti
 
 \subsection{Le MOSFET en commutation}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=1.0, american]
   \draw (3,5) node[above]{$V_{DD}$};
   \draw (3,5) to[R, l=$R_{\text{charge}}$, i>=$I_D$] (3,2.8);
   \draw (3,2.8) -- (3,2.3);
   \draw (1.5,1.5) node[nmos, anchor=G](M){};
-  \draw (M.D) -- (3,2.3);
-  \draw (M.S) -- (1.5,-0.2) node[ground]{};
-  \draw (-2.5,1.5) node[left]{$V_{\text{cmd}}$} to[short] (M.G);
+  \draw (M.D) -| (3,2.3);
+  \draw (M.S) -- (M.S |- 0,-0.2) node[ground]{};
+  \draw (-2.5,1.5) node[ocirc]{} node[left]{$V_{\text{cmd}}$} to[short] (M.G);
 \end{circuitikz}
-\end{center}
+\caption{Le MOSFET en commutation : la charge est dans le drain, la commande attaque directement la grille en tension --- pas de résistance de base à dimensionner, mais un condensateur de grille à charger à chaque commutation.}
+\end{figure}
 
 \begin{formule}
 \textbf{En conduction} ($V_{GS} \gg V_{th}$, régime ohmique) :
@@ -11110,7 +11114,7 @@ Le mode interrupteur fermé du MOSFET est le régime \textbf{ohmique} (ou \texti
 
 \textbf{Avantage sur le BJT :} à \textbf{fort courant}, un MOSFET avec $R_{DS,\text{on}} = \SI{5}{m\ohm}$ à \SI{10}{A} dissipe $P = 0{,}005\times100 = \SI{0.5}{W}$. Un BJT ($V_{CE,\text{sat}} = \SI{0.2}{V}$) dissiperait $P = 0{,}2\times10 = \SI{2}{W}$.
 
-\textbf{Inconvénient :} à \textbf{très faible courant} ($I_D < V_{CE,\text{sat}}/R_{DS,\text{on}}$), le BJT peut être plus efficace car sa chute est fixe à \SI{0.2}{V}, tandis que celle du MOSFET est proportionnelle.
+\textbf{Inconvénient :} à \textbf{très fort courant} ($I_D > V_{CE,\text{sat}}/R_{DS,\text{on}}$, soit \SI{40}{A} ici), la chute $R_{DS,\text{on}}\,I_D$ du MOSFET dépasse la chute fixe du bipolaire : c'est le domaine où le BJT de puissance --- et surtout son héritier l'IGBT --- redevient compétitif.
 \end{formule}
 
 \begin{retenir}
@@ -11133,7 +11137,8 @@ Modèle ingénieur : structure physique, équations du courant (hypothèse long 
 
 \subsection{Structure physique}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{tikzpicture}[scale=0.85]
   \fill[red!8] (0,0) rectangle (8,2);
   \node[font=\small, red!60!black] at (4,0.5) {Substrat P};
@@ -11157,7 +11162,8 @@ Modèle ingénieur : structure physique, équations du courant (hypothèse long 
   \draw[<->] (2.5,1.4) -- (5.5,1.4);
   \node[font=\footnotesize, below] at (4,1.3) {$L$ (longueur du canal)};
 \end{tikzpicture}
-\end{center}
+\caption{Structure du NMOS : deux îlots $N^+$ (source, drain) dans un substrat P. La grille, isolée par l'oxyde SiO$_2$ d'épaisseur $t_{ox}$, crée sous elle le canal d'inversion quand $V_{GS} > V_{th}$.}
+\end{figure}
 
 \begin{intuition}
 \textbf{Mécanisme de création du canal :}
@@ -11222,13 +11228,16 @@ Conséquence directe : le $g_m$ du MOSFET est plus faible que celui du BJT à m�
 
 \subsection{Caractéristique $I_D(V_{DS})$}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{tikzpicture}[scale=0.85]
   \draw[-{Stealth[length=2.5mm]}] (0,0) -- (8,0) node[right, font=\small]{$V_{DS}$};
   \draw[-{Stealth[length=2.5mm]}] (0,0) -- (0,5.5) node[above, font=\small]{$I_D$};
-  \draw[dashed, gray!50, thick, domain=0:2.8, samples=80, smooth]
-    plot(\x, {0.65*\x*\x});
-  \node[gray!50, font=\tiny, rotate=55] at (2.2,4) {$V_{DS} = V_{\text{ov}}$};
+  % Frontière saturation : y = 0,8 x² --- même coefficient que les paraboles,
+  % donc passe exactement par les coudes (1;0,8), (1,6;2,05), (2,2;3,87)
+  \draw[dashed, gray!50, thick, domain=0:2.5, samples=80]
+    plot(\x, {0.8*\x*\x});
+  \node[gray!60!black, font=\tiny, right] at (2.55,5.15) {$V_{DS} = V_{\text{ov}}$};
   % VGS1
   \draw[thick, blue!60!black, domain=0:1.0, samples=50, smooth]
     plot(\x, {0.8*(2*1*\x - \x*\x)});
@@ -11250,7 +11259,8 @@ Conséquence directe : le $g_m$ du MOSFET est plus faible que celui du BJT à m�
   \draw[<->, thin, gray] (5,2.15) -- (7.3,2.32);
   \node[font=\tiny, gray, above] at (6.2,2.35) {pente $= 1/r_o$ (CLM)};
 \end{tikzpicture}
-\end{center}
+\caption{Réseau de caractéristiques $I_D(V_{DS})$ pour trois valeurs de $V_{GS}$. La parabole en pointillé ($V_{DS} = V_{\text{ov}}$) passe par les coudes et sépare le régime ohmique de la saturation ; la légère pente en saturation traduit la modulation de longueur de canal ($1/r_o$).}
+\end{figure}
 
 \subsection{Modèle petit signal du MOSFET}
 
@@ -11288,7 +11298,8 @@ avec $V_A = 1/\lambda$ : ``tension d'Early'' du MOSFET. Typiquement $V_A \sim \S
 
 \subsubsection*{Le schéma équivalent}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=1.0, american]
   \node[left, font=\small] at (0,0) {G};
   \node[right, font=\small] at (8,0) {D};
@@ -11297,20 +11308,18 @@ avec $V_A = 1/\lambda$ : ``tension d'Early'' du MOSFET. Typiquement $V_A \sim \S
   \draw (0,0) -- (2,0);
   \draw (0,-3) -- (8,-3);
   \draw (4.5,0) to[american controlled current source, l_=$g_m\,v_{gs}$] (4.5,-3);
-  \draw (2,0) -- (4.5,0);
   \draw (7,0) to[R, l=$r_o$] (7,-3);
   \draw (4.5,0) -- (7,0);
   \draw (7,0) -- (8,0);
-  \filldraw (2,0) circle (1.5pt);
-  \filldraw (4.5,0) circle (1.5pt);
   \filldraw (4.5,-3) circle (1.5pt);
   \filldraw (7,0) circle (1.5pt);
   \filldraw (7,-3) circle (1.5pt);
-  \draw[{Stealth[length=2.5mm]}-{Stealth[length=2.5mm]}, thick] (1,-0.15) -- (1,-2.85);
+  \draw[-{Stealth[length=2.5mm]}, thick] (1,-2.85) -- (1,-0.15);
   \node[font=\small, left] at (0.95,-1.5) {$v_{gs}$};
-  \node[font=\tiny, red!70!black, right] at (2.1,0.25) {$i_g \approx 0$ (BF)};
+  \node[font=\tiny, red!70!black] at (1.0,0.28) {$i_g \approx 0$ (BF)};
 \end{circuitikz}
-\end{center}
+\caption{Modèle petit signal du MOSFET : la grille est un circuit ouvert en basse fréquence ($i_g \approx 0$) --- pas de $r_\pi$ --- et la sortie est la source commandée $g_m v_{gs}$ en parallèle avec $r_o$. Rien ne relie G à D en statique ; le couplage haute fréquence viendra de $C_{GD}$.}
+\end{figure}
 
 \begin{intuition}
 \textbf{Différence structurelle avec le BJT :} pas de $r_\pi$. La grille est un circuit ouvert en BF (impédance infinie). Le MOSFET est un pur convertisseur \textbf{tension $\to$ courant}. En HF, il faut ajouter $C_{GS}$ (entre G et S) et $C_{GD}$ (entre G et D), et l'impédance d'entrée devient $Z_G(j\omega) = 1/[j\omega(C_{GS}+C_{GD}(1+g_m R_D))]$ (effet Miller sur $C_{GD}$).
@@ -11348,6 +11357,36 @@ $R_{DS,\text{on}}$ dépend de trois facteurs indépendants :
 \end{center}
 \end{pratique}
 
+\subsection{La diode intrinsèque (body diode)}
+
+Dans un MOSFET discret, le substrat P est relié en interne à la source. La jonction substrat--drain forme donc une \textbf{diode parasite antiparallèle}, dite \textit{body diode}, toujours présente :
+
+\begin{figure}[h]
+\centering
+\begin{circuitikz}[scale=1.0, american]
+  \draw (0,0) node[nmos](M){};
+  \draw (M.D) -- ++(0,0.6) node[above, font=\small]{D};
+  \draw (M.S) -- ++(0,-0.6) node[below, font=\small]{S};
+  \draw (M.G) -- ++(-0.6,0) node[left, font=\small]{G};
+  \draw (M.S) ++(0,-0.35) -- ++(1.1,0) coordinate(bd);
+  \draw (bd) to[D] (bd |- M.D) -- ++(0,0.25) -| ([yshift=9.5pt]M.D);
+  \filldraw ([yshift=-0.35cm]M.S) circle (1.5pt);
+  \filldraw ([yshift=9.5pt]M.D) circle (1.5pt);
+  \node[right, font=\footnotesize] at (1.35,0.1) {body diode};
+\end{circuitikz}
+\caption{La diode intrinsèque du NMOS : la jonction substrat(P)--drain(N) est une diode antiparallèle entre source et drain, passante dès que $V_{DS} < 0$. Elle est structurelle : impossible de la supprimer.}
+\end{figure}
+
+\begin{formule}
+\textbf{Conséquences pratiques :}
+\begin{itemize}[nosep]
+\item Le MOSFET \textbf{ne bloque jamais en inverse} : si $V_{DS} < \SI{-0.7}{V}$, la body diode conduit. Pour bloquer dans les deux sens (commutateurs AC), il faut deux MOSFETs tête-bêche.
+\item Dans les demi-ponts et convertisseurs (chapitre 31), elle sert de \textbf{roue libre} gratuite pendant les temps morts. Mais c'est une diode de puissance \textit{lente} : son recouvrement inverse $t_{rr}$ (chapitre 15) crée des pertes et des surintensités à chaque commutation.
+\item Le \textbf{redressement synchrone} contourne le problème : on ré-enclenche le canal ($R_{DS,\text{on}}$) pendant la conduction inverse, la diode ne portant le courant que pendant les brefs temps morts.
+\item Les HEMT \textbf{GaN} n'ont pas de body diode : la conduction inverse passe par le canal, \textbf{sans recouvrement} ($Q_{rr} \approx 0$) --- un avantage décisif à haute fréquence.
+\end{itemize}
+\end{formule}
+
 \subsection{Capacités parasites et plateau de Miller}
 
 \begin{formule}
@@ -11363,6 +11402,34 @@ Notation datasheet : $C_{iss} = C_{GS}+C_{GD}$, $C_{oss} = C_{DS}+C_{GD}$, $C_{r
 \subsubsection*{Le plateau de Miller}
 
 Lors de la commutation ON, la tension de grille $V_{GS}$ ne monte pas linéairement. Elle présente un \textbf{plateau} à $V_{GS} \approx V_{th} + I_D/g_m$ pendant lequel \textit{toute} l'énergie du driver charge $C_{GD}$ pour faire chuter $V_{DS}$. Pendant ce plateau, $V_{GS}$ est quasi constante :
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.95]
+  % Échelle qualitative. Vérifié : v_GS(7,5)=4,54 < 5,5 ; libellés hors trajectoires.
+  \draw[-{Stealth[length=2.5mm]}] (-0.2,0) -- (8,0) node[right, font=\small]{$t$};
+  \draw[-{Stealth[length=2.5mm]}] (0,-0.2) -- (0,5.6) node[above, font=\small]{tensions};
+  % Niveaux
+  \draw[dashed, gray!50] (0,4.8) -- (7.5,4.8); \node[left, font=\footnotesize, gray!60!black] at (0,4.8) {$V_{\text{drv}}$};
+  \draw[dashed, gray!50] (0,2.2) -- (2.2,2.2); \node[left, font=\footnotesize, gray!60!black] at (0,2.2) {$V_{th}{+}I_D/g_m$};
+  \draw[dashed, gray!50] (0,1.5) -- (1.5,1.5); \node[left, font=\footnotesize, gray!60!black] at (0,1.5) {$V_{th}$};
+  % Séparateurs de phases
+  \foreach \t/\n in {1.5/, 2.2/, 4.5/} \draw[dotted, gray!60] (\t,0) -- (\t,5.25);
+  \foreach \x/\n in {0.75/1, 1.85/2, 3.35/3, 6.0/4} \node[font=\footnotesize, gray!60!black] at (\x,5.05) {\n};
+  % v_DS (rouge) : haut, chute pendant le plateau, puis R_DSon*I_D
+  \draw[very thick, red!70!black] (0,4.4) -- (2.2,4.4) -- (4.5,0.15) -- (7.5,0.15);
+  \node[red!70!black, font=\footnotesize, above] at (0.7,4.42) {$v_{DS}$};
+  % v_GS (bleu) : montée, plateau, montée finale
+  \draw[very thick, blue!70!black, domain=0.02:1.5, samples=80] plot(\x, {1.5*exp(0.7*ln(\x/1.5))});
+  \draw[very thick, blue!70!black] (1.5,1.5) -- (2.2,2.2) -- (4.5,2.2);
+  \draw[very thick, blue!70!black, domain=4.5:7.5, samples=100] plot(\x, {2.2+2.6*(1-exp(-(\x-4.5)/1.3))});
+  \node[blue!70!black, font=\footnotesize, above] at (7.0,4.55) {$v_{GS}$};
+  % Annotation plateau
+  \node[gray!30!black, font=\footnotesize] at (6.3,2.9) {plateau de Miller};
+  \draw[->, thick, gray!60!black] (5.25,2.85) -- (3.9,2.32);
+\end{tikzpicture}
+\caption{Commutation ON : $v_{GS}(t)$ marque un plateau --- le plateau de Miller --- pendant lequel tout le courant du driver charge $C_{GD}$ pour faire chuter $v_{DS}$ (phase 3). C'est la phase la plus dissipative : $v_{DS}$ et $i_D$ sont simultanément élevés. D'où les drivers de grille capables de plusieurs ampères.}
+\end{figure}
 
 \begin{intuition}
 \textbf{Chronologie d'une commutation ON :}
@@ -11420,22 +11487,24 @@ Trois paramètres varient avec la température :
 
 \subsection{L'inverseur CMOS}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=0.9, american]
   \draw (2,5) node[above]{$V_{DD}$} -- (2,4.5);
   \draw (2,4.5) -- (2,4);
   \draw (0.5,3.2) node[pmos, anchor=G](MP){};
-  \draw (MP.S) -- (2,4);
-  \draw (MP.D) -- (2,2);
+  \draw (MP.S) -| (2,4);
+  \draw (MP.D) -| (2,2);
   \draw (0.5,1) node[nmos, anchor=G](MN){};
-  \draw (MN.D) -- (2,2);
-  \draw (MN.S) -- (2,-0.5) node[ground]{};
+  \draw (MN.D) -| (2,2);
+  \draw (MN.S) -- (MN.S |- 0,-0.5) node[ground]{};
   \draw (MP.G) -- (MN.G);
-  \draw (MP.G) -- ++(-1,0) node[left]{$V_{\text{in}}$};
-  \draw (2,2) -- ++(1.5,0) node[right]{$V_{\text{out}}$};
+  \draw (MP.G) -- ++(-1,0) node[ocirc]{} node[left]{$V_{\text{in}}$};
+  \draw (2,2) -- ++(1.5,0) node[ocirc]{} node[right]{$V_{\text{out}}$};
   \filldraw (2,2) circle (1.5pt);
 \end{circuitikz}
-\end{center}
+\caption{Inverseur CMOS : le PMOS tire la sortie vers $V_{DD}$ quand l'entrée est basse, le NMOS la tire vers la masse quand elle est haute. Un seul des deux conduit à l'état établi : aucun courant statique (hors fuites).}
+\end{figure}
 
 \begin{formule}
 \textbf{Puissance dynamique CMOS :}
@@ -11507,7 +11576,7 @@ Les pertes de commutation (\SI{2.4}{W}) dominent largement les pertes de conduct
 $P_{\text{dyn}} = \alpha C_L V_{DD}^2 f = 0{,}1\times50\times10^{-15}\times3{,}24\times10^9 = \SI{16.2}{\micro W}$ par porte.
 \end{pratique}
 
-\textbf{Exercice 17.6 ---} NMOS ($k_n = \SI{5}{mA/V^2}$, $V_{th} = \SI{1}{V}$, $\lambda = \SI{0.02}{V^{-1}}$) en source commune, $R_D = \SI{2}{k\ohm}$, $V_{DD} = \SI{10}{V}$, $V_{GS,Q} = \SI{2.5}{V}$. Le point de repos est-il en saturation ?
+\textbf{Exercice 17.6 ---} NMOS ($k_n = \SI{5}{mA/V^2}$, $V_{th} = \SI{1}{V}$, $\lambda = \SI{0.02}{V^{-1}}$) en source commune, $R_D = \SI{2}{k\ohm}$, $V_{DD} = \SI{10}{V}$, $V_{GS,Q} = \SI{2.5}{V}$. Le point de repos est-il en saturation ? Si non, reprenez avec $V_{GS,Q} = \SI{2}{V}$ et calculez alors $g_m$, $r_o$ et $A_v$.
 
 \begin{pratique}
 \textbf{Solution :} $V_{\text{ov}} = 1{,}5$. $I_D \approx 5\times10^{-3}\times2{,}25/2 = \SI{5.625}{mA}$. $V_{DS} = 10 - 5{,}625\times2 = \SI{-1.25}{V}$ : \textbf{impossible} ($V_{DS} < 0$). Le MOSFET est en \textbf{triode}, pas en saturation.
@@ -11519,12 +11588,21 @@ $g_m = \SI{5}{mA/V}$. $r_o = 1/(0{,}02\times2{,}5\times10^{-3}) = \SI{20}{k\ohm}
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Pourquoi le MOSFET est-il thermiquement stable alors que le BJT ne l'est pas ? Quel paramètre physique ($\mu$ vs $I_S$) est responsable ?
-\item Pourquoi le bruit $1/f$ du MOSFET est-il plus élevé que celui du BJT ? Quel paramètre de conception réduit ce bruit ?
-\item Expliquez physiquement le plateau de Miller lors d'une commutation ON. Pourquoi $V_{GS}$ reste-t-il quasi constant pendant que $V_{DS}$ chute ?
-\item Pourquoi $R_{DS,\text{on}} \propto V_{BR}^{2{,}5}$ (loi de Baliga) ? Qu'est-ce que le GaN change à cette relation ?
-\end{enumerate}
+\textbf{Q1.} Pourquoi le MOSFET est-il thermiquement stable alors que le BJT ne l'est pas ? Quel paramètre physique ($\mu$ vs $I_S$) est responsable ?
+
+\textit{Réponse : dans le MOSFET, c'est la mobilité $\mu$ qui pilote le courant, et elle diminue avec la température ($\mu \propto T^{-1{,}5}$ à $T^{-2{,}5}$) : $R_{DS,\text{on}}$ augmente, le courant baisse, la boucle est stabilisante. Dans le BJT, c'est $I_S$ qui domine, et il croît exponentiellement avec $T$ : à $V_{BE}$ fixé, $I_C$ double tous les $\sim$\SI{10}{°C} --- boucle déstabilisante, d'où l'emballement.}
+
+\textbf{Q2.} Pourquoi le bruit $1/f$ du MOSFET est-il plus élevé que celui du BJT ? Quel paramètre de conception réduit ce bruit ?
+
+\textit{Réponse : le canal du MOSFET est plaqué contre l'interface Si/SiO$_2$, riche en pièges qui capturent et relâchent lentement les porteurs. Le bruit en $1/f$ est proportionnel à $1/(C_{ox}WL)$ : on le réduit en augmentant la surface de grille $W \times L$ du transistor.}
+
+\textbf{Q3.} Expliquez physiquement le plateau de Miller lors d'une commutation ON. Pourquoi $V_{GS}$ reste-t-il quasi constant pendant que $V_{DS}$ chute ?
+
+\textit{Réponse : pendant la chute de $v_{DS}$, la capacité $C_{GD}$ voit une variation $\mathrm{d}v_{DS}/\mathrm{d}t$ énorme et absorbe donc tout le courant du driver : $i_{\text{drv}} \approx C_{GD}\,|\mathrm{d}v_{DS}/\mathrm{d}t|$. Il ne reste rien pour charger $C_{GS}$, donc $v_{GS}$ ne bouge plus. C'est une contre-réaction : si $v_{GS}$ montait, $i_D$ augmenterait, $v_{DS}$ chuterait plus vite, et le courant dérobé par $C_{GD}$ ramènerait $v_{GS}$ vers $V_{th} + I_D/g_m$.}
+
+\textbf{Q4.} Pourquoi $R_{DS,\text{on}} \propto V_{BR}^{2{,}5}$ (loi de Baliga) ? Qu'est-ce que le GaN change à cette relation ?
+
+\textit{Réponse : pour tenir une tension $V_{BR}$ élevée, la zone de drift doit être à la fois plus longue et moins dopée --- deux facteurs qui augmentent sa résistance, d'où la croissance sur-linéaire en $V_{BR}^{2{,}5}$. Le GaN possède un champ critique environ $10\times$ supérieur au silicium : à tenue égale, la zone de drift est $10\times$ plus courte et bien plus dopée, ce qui réduit le produit $R_{DS,\text{on}} \times$ surface de deux à trois ordres de grandeur (figure de mérite de Baliga $\propto \varepsilon\mu E_c^3$).}
 
 % === RÉSUMÉ ===
 \section*{Résumé du chapitre}
@@ -11568,13 +11646,19 @@ Modèle petit signal & Source $g_m v_{gs}$ + $r_o$, \textbf{pas de $r_\pi$} \\
 $R_{DS,\text{on}}$ & $\propto V_{BR}^{2{,}5}$ (Baliga), augmente avec $T$ \\
 Capacités & $C_{GS}$, $C_{GD}$ (Miller, non-linéaire), $C_{DS}$ \\
 Plateau Miller & Phase à $V_{GS}$ constante pendant laquelle $V_{DS}$ chute \\
-Pertes & Conduction ($RI^2D$) + commutation ($EfN$) + capacitives \\
+Pertes & Conduction ($R_{DS,\text{on}} I_D^2\,D$) + commutation ($(E_{\text{on}}{+}E_{\text{off}})\,f_{sw}$) + capacitives \\
 Bruit & Thermique ($4kT\gamma g_m$) + $1/f$ ($K_F/(C_{ox}WLf)$) \\
 GaN / SiC & Champ critique $10\times$ Si, $f_{sw} > \SI{1}{MHz}$, $T_j > \SI{200}{°C}$ \\
 \bottomrule
 \end{tabular}
 \end{center}
 \end{ingenieur}
+
+\begin{retenir}
+\textbf{Ce qu'il faut emporter de ce chapitre :} le MOSFET est l'interrupteur et l'amplificateur commandé en tension --- grille isolée, aucun courant statique de commande, loi quadratique $I_D = k_n V_{\text{ov}}^2/2$, et un $R_{DS,\text{on}}$ qui fait de lui le roi de la commutation de puissance. Ses points durs sont dynamiques : charger la grille (plateau de Miller), et composer avec la body diode.
+
+Avec le BJT du chapitre 16, nous disposons maintenant de toutes les briques analogiques : paire différentielle en entrée, miroirs de courant pour polariser et charger, push-pull en sortie. Le chapitre 18 les assemble en un seul composant devenu universel : l'amplificateur opérationnel.
+\end{retenir}
 
 % ============================================================================
 % CHAPITRE 18 : L'AMPLIFICATEUR OPÉRATIONNEL — VERSION PEER-REVIEW
