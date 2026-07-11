@@ -12434,6 +12434,10 @@ Q = \frac{\text{énergie stockée par cycle}}{\text{énergie dissipée par cycle
 Le filtre Butterworth ($Q = 0{,}707$) est au seuil critique : juste assez d'amortissement pour ne pas faire de pic.
 \end{intuition}
 
+\begin{retenir}
+Un pôle est un réservoir d'énergie ($-\SI{20}{dB/déc}$, $-90°$) ; un zéro, un chemin qui compense ou court-circuite. $Q$ --- énergie stockée sur énergie dissipée --- pilote \textit{à la fois} le pic fréquentiel et le dépassement temporel : deux visages du même phénomène de résonance (chapitre 12). La suite du chapitre transforme ces briques en démarche complète : gabarit $\to$ type $\to$ ordre $\to$ cellules $\to$ composants $\to$ vérification.
+\end{retenir}
+
 % ============================================================================
 \section{Approfondissement --- Méthodologie de conception}
 
@@ -12459,6 +12463,31 @@ Avant tout calcul, définir précisément :
 \item \textbf{Contraintes système} : alimentation disponible, gamme de température, bruit maximal admissible, impédance source et charge.
 \end{enumerate}
 \end{pratique}
+
+Ces spécifications se résument graphiquement en un \textbf{gabarit} que la réponse du filtre devra respecter :
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.95]
+  % 1 unité = 20 dB. Zones grisées = interdites. Courbe : -3,1 u (-62 dB) à f_s, sous -A_min = -3 u.
+  \fill[gray!15] (0,-1.55) rectangle (2.5,-0.15);
+  \fill[gray!15] (4.5,-3) rectangle (7,0);
+  \draw[-{Stealth[length=2.5mm]}] (0,-3.5) -- (0,0.65) node[above, font=\small]{$|H|$ (dB)};
+  \draw[-{Stealth[length=2.5mm]}] (-0.2,0) -- (7.4,0) node[right, font=\small]{$f$};
+  \node[left, font=\tiny] at (-0.08,0) {0};
+  \draw[dashed, gray!70] (0,-0.15) -- (2.5,-0.15);
+  \node[left, font=\tiny] at (-0.08,-0.35) {$-A_{\max}$};
+  \draw[dashed, gray!70] (4.5,-3) -- (7,-3);
+  \node[left, font=\tiny] at (-0.08,-3) {$-A_{\min}$};
+  \draw (2.5,0.06) -- (2.5,-0.06); \node[below, font=\footnotesize] at (2.5,-0.1) {$f_c$};
+  \draw (4.5,0.06) -- (4.5,-0.06); \node[below, font=\footnotesize] at (4.5,-0.1) {$f_s$};
+  \node[font=\footnotesize, gray!30!black] at (1.25,0.35) {bande passante};
+  \node[font=\footnotesize, gray!30!black] at (3.5,0.35) {transition};
+  \node[font=\footnotesize, gray!30!black] at (5.9,0.35) {bande coupée};
+  \draw[very thick, blue!70!black] (0,-0.05) -- (1.9,-0.09) .. controls (2.5,-0.2) and (2.7,-0.45) .. (3.0,-0.9) -- (4.5,-3.1) -- (5.9,-3.4);
+\end{tikzpicture}
+\caption{Le gabarit d'un filtre passe-bas : la réponse doit rester dans le couloir $[-A_{\max}, 0]$ jusqu'à $f_c$, et sous $-A_{\min}$ au-delà de $f_s$ (zones grisées interdites). Le couple $(f_s/f_c, A_{\min})$ détermine l'ordre ; $A_{\max}$ autorise ou non l'ondulation (Tchebychev).}
+\end{figure}
 
 \subsection{Étape 2 : choix du type de filtre}
 
@@ -12567,6 +12596,24 @@ C_1 = 2Q \cdot C_{\text{ref}} \qquad C_2 = \frac{C_{\text{ref}}}{2Q} \qquad \tex
 Vérification : $C_1 \times C_2 = C_{\text{ref}}^2$ et $\sqrt{C_1/C_2} = 2Q$.
 \end{formule}
 
+\begin{figure}[h]
+\centering
+\begin{circuitikz}[scale=0.9, american]
+  \draw (0,0) node[ocirc]{} node[left]{$V_{\text{in}}$} to[R, l=$R_1$] (2.4,0) coordinate(A) to[R, l=$R_2$] (4.8,0) coordinate(B);
+  \draw (B) node[op amp, anchor=+](OA){};
+  \draw (B) to[C, l_=$C_2$] (B |- 0,-1.7) node[ground]{};
+  \draw (OA.out) -- ++(0.45,0) coordinate(T) -- ++(0.55,0) node[ocirc]{} node[right]{$V_{\text{out}}$};
+  \draw (T) -- (T |- 0,2.3) -- (A |- 0,2.3);
+  \draw (OA.- |- 0,2.3) -- (OA.-);
+  \draw (A) to[C, l=$C_1$] (A |- 0,2.3);
+  \filldraw (A) circle (1.5pt);
+  \filldraw (B) circle (1.5pt);
+  \filldraw (T) circle (1.5pt);
+  \filldraw (OA.- |- 0,2.3) circle (1.5pt);
+\end{circuitikz}
+\caption{Cellule Sallen-Key passe-bas à gain unitaire (convention du chapitre 14) : $C_1$ relie le n\oe ud milieu $R_1$--$R_2$ à la sortie --- c'est cette rétroaction dosée qui fabrique le $Q$ --- et $C_2$ ferme le passe-bas vers la masse. Pour $R_1 = R_2 = R$ : $f_0 = 1/(2\pi R\sqrt{C_1 C_2})$ et $Q = \tfrac{1}{2}\sqrt{C_1/C_2}$.}
+\end{figure}
+
 \begin{pratique}
 Arrondir les valeurs aux séries normalisées E24 ($\pm 5\%$) ou E96 ($\pm 1\%$). Chaque arrondi décale légèrement $f_0$ et $Q$ : c'est inévitable, mais la simulation finale le vérifiera.
 \end{pratique}
@@ -12603,13 +12650,36 @@ $Q$ détermine \textbf{simultanément} la réponse en fréquence et la réponse 
 \midrule
 Bessel (ordre 2) & $0{,}577$ & $0$ & $0{,}4$ \\
 Butterworth & $0{,}707$ & $0$ & $4{,}3$ \\
-Tchebychev $\SI{0.5}{dB}$ & $0{,}864$ & $0{,}5$ & $13$ \\
-Tchebychev $\SI{1}{dB}$ & $0{,}957$ & $1$ & $21$ \\
-Tchebychev $\SI{3}{dB}$ & $1{,}306$ & $3$ & $39$ \\
+Tchebychev $\SI{0.5}{dB}$ & $0{,}864$ & $0{,}5$ & $10{,}8$ \\
+Tchebychev $\SI{1}{dB}$ & $0{,}957$ & $1$ & $14{,}6$ \\
+Tchebychev $\SI{3}{dB}$ & $1{,}306$ & $3$ & $27{,}2$ \\
 \bottomrule
 \end{tabular}
 \end{center}
 \end{formule}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=0.5cm, y=2.3cm]
+  % omega_n = 1 ; s(t) = 1 - e^{-zt}(cos wd t + (z/wd) sin wd t).
+  % Pics vérifiés : Q=1,306 -> 1,272 (t=3,40) ; Q=0,707 -> 1,043 (t=4,44) ; Q=0,577 -> 1,004.
+  \draw[-{Stealth[length=2.5mm]}] (0,0) -- (13,0) node[right, font=\small]{$t$ (en $1/\omega_0$)};
+  \draw[-{Stealth[length=2.5mm]}] (0,0) -- (0,1.5) node[above, font=\small]{$s(t)$};
+  \draw[dashed, gray!60] (0,1) -- (12.4,1);
+  \draw (0.1,1) -- (-0.1,1); \node[left, font=\tiny] at (-0.15,1) {1};
+  \draw (0.1,0.5) -- (-0.1,0.5); \node[left, font=\tiny] at (-0.15,0.5) {0,5};
+  \draw[very thick, green!45!black, domain=0:12.4, samples=300]
+    plot(\x, {1 - exp(-0.8666*\x)*(cos(deg(0.4990*\x)) + 1.7367*sin(deg(0.4990*\x)))});
+  \draw[very thick, blue!70!black, domain=0:12.4, samples=300]
+    plot(\x, {1 - exp(-0.7071*\x)*(cos(deg(0.7071*\x)) + 1.0*sin(deg(0.7071*\x)))});
+  \draw[very thick, red!70!black, domain=0:12.4, samples=300]
+    plot(\x, {1 - exp(-0.3828*\x)*(cos(deg(0.9238*\x)) + 0.4143*sin(deg(0.9238*\x)))});
+  \node[red!70!black, font=\footnotesize] at (3.6,1.4) {Tchebychev \SI{3}{dB} ($Q{=}1{,}31$) : $+27\,\%$};
+  \node[blue!70!black, font=\footnotesize] at (8.3,1.14) {Butterworth ($Q{=}0{,}71$) : $+4{,}3\,\%$};
+  \node[green!45!black, font=\footnotesize] at (9.4,0.85) {Bessel ($Q{=}0{,}58$) : $+0{,}4\,\%$};
+\end{tikzpicture}
+\caption{Réponse à un échelon d'une cellule du 2\textsuperscript{e} ordre pour les trois $Q$ du tableau : le dépassement suit exactement $D\% = 100\,e^{-\pi/\sqrt{4Q^2-1}}$. Plus la transition fréquentielle est raide ($Q$ élevé), plus le signal ``sonne'' dans le temps --- on ne peut pas gagner sur les deux tableaux.}
+\end{figure}
 
 \begin{intuition}
 \textbf{Pourquoi $Q$ élevé donne un dépassement :} un $Q$ élevé signifie que les condensateurs stockent \textit{beaucoup d'énergie} par rapport à ce que les résistances dissipent à chaque cycle. Quand un échelon arrive, l'énergie s'accumule dans les condensateurs et ne peut pas être dissipée assez vite $\Rightarrow$ le signal ``dépasse'' la valeur finale et oscille avant de se stabiliser. C'est exactement le même phénomène que la résonance du chapitre 12 : un circuit RLC à fort $Q$ ``sonne'' longtemps après une excitation.
@@ -12640,7 +12710,7 @@ Le filtre repose sur le \textbf{gain de boucle} de l'AOP pour maintenir $f_0$ et
 \[
 \boxed{GBW_{\text{AOP}} > 10 \cdot Q \cdot f_0}
 \]
-Le facteur $10$ garantit une erreur $< 1\%$ sur $f_0$ et $Q$. Pour des applications de précision, utiliser un facteur $100$.
+Le facteur $10$ est le minimum vital : il limite la dérive de $Q$ à quelques pour cent. Pour une erreur $< 1\%$ (instrumentation, mesure), prendre un facteur $100$.
 \end{formule}
 
 \begin{pratique}
@@ -12787,7 +12857,7 @@ Chaque cellule ajoute son propre bruit. Le bruit des \textbf{premières cellules
 
 \textbf{Ordre :} $n \geq \log(10^6)/(2\log153{,}6) = 6/4{,}37 = 1{,}37$. $\Rightarrow$ $n = 2$ suffit ! (grâce au suréchantillonnage, le ratio $f_s/f_c$ est très favorable).
 
-Un \textbf{Butterworth d'ordre 2} ($Q = 0{,}707$) donne $\SI{-80}{dB}$ à \SI{3}{MHz} ($= 150\times f_c$, soit $40\log150 = \SI{87}{dB}$). Largement suffisant.
+Un \textbf{Butterworth d'ordre 2} ($Q = 0{,}707$) donne $40\log(153{,}6) \approx \SI{87}{dB}$ d'atténuation à $f_s/2 = \SI{3.07}{MHz}$ --- largement au-delà des \SI{60}{dB} requis.
 
 \textbf{Topologie :} Sallen-Key gain unitaire (simple, $Q = 0{,}707$ modéré).
 
@@ -12811,7 +12881,7 @@ $SR$ : $V_{\text{in,max}} = \SI{2}{V_{rms}} \approx \SI{2.83}{V_{crête}}$. $SR_
 \begin{attention}
 \textbf{Les erreurs à ne pas commettre dans cet exemple :}
 \begin{enumerate}[nosep]
-\item \textbf{Calculer l'ordre sans le suréchantillonnage} : sans suréchantillonnage ($f_s = \SI{48}{kHz}$, Nyquist à $\SI{24}{kHz}$), il faudrait $\SI{60}{dB}$ en seulement $1{,}2\times f_c$ $\Rightarrow$ ordre $> 25$ en analogique. Totalement irréaliste. Le suréchantillonnage est \textbf{indispensable}.
+\item \textbf{Calculer l'ordre sans le suréchantillonnage} : sans suréchantillonnage ($f_s = \SI{48}{kHz}$, Nyquist à $\SI{24}{kHz}$), il faudrait $\SI{60}{dB}$ en seulement $1{,}2\times f_c$ $\Rightarrow$ ordre $\approx 38$ en analogique. Totalement irréaliste. Le suréchantillonnage est \textbf{indispensable}.
 \item \textbf{Utiliser des condensateurs X7R} : un X7R de \SI{3.3}{nF} sous \SI{3}{V} DC peut valoir \SI{2.5}{nF} $\Rightarrow$ $f_c$ décalé de $+15\%$.
 \item \textbf{Oublier le bruit du circuit} : avec un AOP bruyant ($e_n = \SI{30}{nV/\sqrt{Hz}}$), le bruit serait $\SI{4.2}{\micro V_{rms}}$ --- toujours acceptable ici, mais critique pour un ADC 32 bits.
 \item \textbf{Négliger le layout} : un filtre anti-aliasing mal routé (boucle de masse, couplage capacitif) peut injecter du bruit HF directement dans l'ADC, annulant le bénéfice du filtre.
@@ -12883,7 +12953,7 @@ $GBW = \SI{100}{kHz}$ : insuffisant ($< 130{,}7$). Le $Q$ effectif sera $> 1{,}3
 
 (b) Pic de résonance : $V_{\text{out}} = Q\times V_{\text{in}} = 5\times1 = \SI{5}{V}$ crête. $SR_{\min} = 2\pi\times10^5\times5 = \SI{3.14}{V/\micro s}$. $SR = \SI{2}{V/\micro s}$ : \textbf{insuffisant} aussi.
 
-(c) Il faut $GBW > \SI{5}{MHz}$ et $SR > \SI{3.14}{V/\micro s}$ (prendre une marge $\times 3$ : $SR > \SI{10}{V/\micro s}$). Par exemple : OPA1612 ($GBW = \SI{80}{MHz}$, $SR = \SI{27}{V/\micro s}$) ou AD8065 ($GBW = \SI{145}{MHz}$, $SR = \SI{180}{V/\micro s}$).
+(c) Il faut $GBW > \SI{5}{MHz}$ et $SR > \SI{3.14}{V/\micro s}$ (prendre une marge $\times 3$ : $SR > \SI{10}{V/\micro s}$). Par exemple : OPA1612 ($GBW = \SI{40}{MHz}$, $SR = \SI{27}{V/\micro s}$) ou AD8065 ($GBW = \SI{145}{MHz}$, $SR = \SI{180}{V/\micro s}$).
 \end{pratique}
 
 \textbf{Exercice 19.6 ---} Un filtre anti-aliasing pour un ADC à $f_s = \SI{1}{MHz}$ ($f_s/2 = \SI{500}{kHz}$) doit atténuer $> \SI{80}{dB}$ à $f_s/2$. La bande passante utile est de \SI{0}{Hz} à \SI{50}{kHz}.
@@ -12910,12 +12980,21 @@ $GBW = \SI{100}{kHz}$ : insuffisant ($< 130{,}7$). Le $Q$ effectif sera $> 1{,}3
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Un condensateur X7R de \SI{10}{nF}/\SI{10}{V} perd $25\%$ de sa capacité sous \SI{5}{V} DC. Si ce condensateur est $C_2$ dans un Sallen-Key avec $Q = 0{,}707$ nominal, quel est le $Q$ réel ? Le filtre est-il encore Butterworth ?
-\item Pourquoi le suréchantillonnage simplifie-t-il drastiquement le filtre anti-aliasing analogique ? Quelle est la contrepartie (où la complexité est-elle transférée) ?
-\item Un filtre state-variable permet de réaliser $Q > 100$ avec une sensibilité raisonnable. Pourquoi un Sallen-Key ne le peut-il pas ? (Pensez à la structure de la rétroaction.)
-\item Pourquoi placer la cellule de plus haut $Q$ en dernier dans une cascade ? Que se passerait-il si on la plaçait en premier ?
-\end{enumerate}
+\textbf{Q1.} Un condensateur X7R de \SI{10}{nF}/\SI{10}{V} perd $25\%$ de sa capacité sous \SI{5}{V} DC. Si ce condensateur est $C_2$ dans un Sallen-Key avec $Q = 0{,}707$ nominal, quel est le $Q$ réel ? Le filtre est-il encore Butterworth ?
+
+\textit{Réponse : $Q = \tfrac{1}{2}\sqrt{C_1/C_2}$, donc $C_2 \to 0{,}75\,C_2$ donne $Q' = 0{,}707/\sqrt{0{,}75} = 0{,}82$ --- un pic d'environ $\SI{0.3}{dB}$ apparaît, et $f_0 \propto 1/\sqrt{C_1 C_2}$ monte de $+15\,\%$. Le filtre n'est plus maximalement plat : ce n'est plus un Butterworth. D'où le C0G obligatoire.}
+
+\textbf{Q2.} Pourquoi le suréchantillonnage simplifie-t-il drastiquement le filtre anti-aliasing analogique ? Quelle est la contrepartie (où la complexité est-elle transférée) ?
+
+\textit{Réponse : il repousse $f_s/2$ très loin de la bande utile : la transition passe de $1{,}2\times f_c$ à $150\times f_c$, et l'ordre requis s'effondre (de $\sim 38$ à $2$). La complexité migre dans le numérique : filtre de décimation (FIR) intégré à l'ADC, horloge rapide, consommation --- du silicium bon marché et parfaitement reproductible à la place de composants analogiques de précision.}
+
+\textbf{Q3.} Un filtre state-variable permet de réaliser $Q > 100$ avec une sensibilité raisonnable. Pourquoi un Sallen-Key ne le peut-il pas ? (Pensez à la structure de la rétroaction.)
+
+\textit{Réponse : dans le Sallen-Key, $Q$ naît d'une compensation fine entre les éléments d'un même réseau RC : c'est une \textit{différence} de termes voisins, et la sensibilité de $Q$ aux composants croît avec $Q$ lui-même. Dans le state-variable, deux intégrateurs fixent $\omega_0$ et une branche d'amortissement dédiée fixe $Q$ séparément : chaque paramètre dépend de son propre composant, les sensibilités restent de l'ordre de 1 quel que soit $Q$.}
+
+\textbf{Q4.} Pourquoi placer la cellule de plus haut $Q$ en dernier dans une cascade ? Que se passerait-il si on la plaçait en premier ?
+
+\textit{Réponse : autour de $f_0$, la cellule à fort $Q$ amplifie de $20\log Q$ ; placée en tête, elle présenterait ce signal amplifié aux étages suivants, au risque de les saturer (et elle amplifierait aussi son propre apport au voisinage du pic avant toute atténuation). En dernier, elle reçoit un signal déjà atténué par les cellules douces dans la zone du pic : la dynamique est préservée. Symétriquement, pour le bruit, la cellule douce en tête n'amplifie pas le bruit des étages amont.}
 
 % === RÉALITÉ DES COMPOSANTS ===
 \subsection*{Réalité des composants : au-delà du schéma}
@@ -12989,6 +13068,12 @@ Composants & \textbf{C0G/NP0} obligatoires. X7R/X5R \textbf{interdits} en filtra
 \end{tabular}
 \end{center}
 \end{ingenieur}
+
+\begin{retenir}
+\textbf{Ce qu'il faut emporter de ce chapitre :} un filtre réel se conçoit, il ne se calcule pas seulement --- gabarit, type (Butterworth par défaut, Bessel pour la phase, Tchebychev pour la raideur), ordre, tables de $Q$, cellules, puis vérification. Trois verrous physiques gouvernent le passage au réel : le GBW de l'AOP ($> 10\,Q f_0$, sinon le $Q$ dérive jusqu'à l'oscillation), le slew rate ($> 2\pi f_0 Q V_{\text{crête}}$, car le pic amplifie de $Q$), et les composants eux-mêmes (C0G obligatoire, X7R interdit). Au-delà de $Q \approx 10$, changer de topologie.
+
+Le filtre anti-aliasing de notre cas d'étude est la dernière ligne analogique avant l'ADC. La partie qui s'ouvre change de monde : la tension cesse d'être une grandeur pour devenir un symbole. Le chapitre 20 pose la première brique de cet édifice --- la logique combinatoire.
+\end{retenir}
 
 % ############################################################################
 \part{Électronique Numérique}
