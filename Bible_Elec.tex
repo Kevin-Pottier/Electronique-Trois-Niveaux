@@ -13805,23 +13805,23 @@ La différence fondamentale : le circuit séquentiel contient une \textbf{boucle
 
 Deux portes NOR (ou NAND) croisées forment un \textbf{verrou SR} (\textit{Set-Reset latch}) :
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=0.85, american]
-  % NOR1
   \draw (2,2) node[nor port](NOR1){};
-  % NOR2
   \draw (2,0) node[nor port](NOR2){};
-  % Entrées
-  \draw (NOR1.in 1) -- ++(-1,0) node[left]{$S$ (Set)};
-  \draw (NOR2.in 2) -- ++(-1,0) node[left]{$R$ (Reset)};
-  % Sorties
-  \draw (NOR1.out) -- ++(1.5,0) node[right]{$Q$};
-  \draw (NOR2.out) -- ++(1.5,0) node[right]{$\overline{Q}$};
-  % Rétroaction croisée
+  \draw (NOR1.in 1) -- ++(-1,0) node[ocirc]{} node[left]{$S$ (Set)};
+  \draw (NOR2.in 2) -- ++(-1,0) node[ocirc]{} node[left]{$R$ (Reset)};
+  \draw (NOR1.out) -- ++(1.5,0) node[ocirc]{} node[right]{$Q$};
+  \draw (NOR2.out) -- ++(1.5,0) node[ocirc]{} node[right]{$\overline{Q}$};
+  % Rétroaction croisée (un croisement sans connexion, au centre)
   \draw (NOR1.out) -- ++(0.5,0) -- ++(0,-1.2) -- ++(-3.5,0) |- (NOR2.in 1);
   \draw (NOR2.out) -- ++(0.8,0) -- ++(0,1.2) -- ++(-3.8,0) |- (NOR1.in 2);
+  \filldraw ([xshift=0.5cm]NOR1.out) circle (1.5pt);
+  \filldraw ([xshift=0.8cm]NOR2.out) circle (1.5pt);
 \end{circuitikz}
-\end{center}
+\caption{Le verrou SR en portes NOR croisées : chaque sortie revient sur l'entrée de l'autre porte. C'est cette boucle qui mémorise --- tant que $S = R = 0$, l'état s'auto-entretient.}
+\end{figure}
 
 \begin{formule}
 \begin{center}
@@ -13875,6 +13875,22 @@ La bascule D (\textit{D flip-flop}) est constituée de \textbf{deux verrous D en
 \boxed{Q(n+1) = D(n)} \qquad \text{(capturé au front montant de CLK)}
 \]
 \end{formule}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=0.95cm, y=0.72cm]
+  \node[left, font=\small] at (-0.25,5.0) {CLK};
+  \draw[very thick] (0,4.6) -- (1,4.6) -- (1,5.4) -- (2,5.4) -- (2,4.6) -- (3,4.6) -- (3,5.4) -- (4,5.4) -- (4,4.6) -- (5,4.6) -- (5,5.4) -- (6,5.4) -- (6,4.6) -- (7,4.6) -- (7,5.4) -- (8,5.4) -- (8,4.6) -- (9,4.6);
+  \node[left, font=\small] at (-0.25,3.0) {$D$};
+  \draw[very thick, blue!70!black] (0,2.6) -- (0.5,2.6) -- (0.5,3.4) -- (2.4,3.4) -- (2.4,2.6) -- (4.3,2.6) -- (4.3,3.4) -- (5.8,3.4) -- (5.8,2.6) -- (6.2,2.6) -- (6.2,3.4) -- (6.6,3.4) -- (6.6,2.6) -- (9,2.6);
+  \node[left, font=\small] at (-0.25,1.0) {$Q$};
+  \draw[very thick, red!70!black] (0,0.6) -- (1.2,0.6) -- (1.2,1.4) -- (3.2,1.4) -- (3.2,0.6) -- (5.2,0.6) -- (5.2,1.4) -- (7.2,1.4) -- (7.2,0.6) -- (9,0.6);
+  \foreach \t in {1,3,5,7} \draw[dotted, gray!60] (\t,0.4) -- (\t,5.6);
+  \draw[->, gray!30!black] (5.95,2.1) -- (6.15,2.5);
+  \node[font=\scriptsize, gray!30!black, below] at (5.6,2.1) {impulsion ignorée};
+\end{tikzpicture}
+\caption{La bascule D n'échantillonne $D$ qu'aux fronts montants de CLK (pointillés) : $Q$ recopie la valeur présente à cet instant, avec un léger retard $t_{cq}$, puis reste stable quoi qu'il arrive sur $D$ --- y compris l'impulsion parasite entre le 3\textsuperscript{e} et le 4\textsuperscript{e} front, purement et simplement ignorée.}
+\end{figure}
 
 \begin{intuition}
 \textbf{Pourquoi la bascule D est universelle :}
@@ -14079,6 +14095,24 @@ La bascule D ne capture pas l'entrée ``instantanément'' au front d'horloge. Ph
 Typiquement : $t_{su} \sim \SI{0.1}{ns}$ à $\SI{1}{ns}$ et $t_h \sim \SI{0.05}{ns}$ à $\SI{0.5}{ns}$ selon la technologie.
 \end{formule}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=1.05cm, y=0.8cm]
+  \fill[red!12] (2.8,0.1) rectangle (4.7,4.7);
+  \node[left, font=\small] at (-0.2,3.6) {CLK};
+  \draw[very thick] (0,3.2) -- (4,3.2) -- (4,4.0) -- (7.5,4.0);
+  \node[left, font=\small] at (-0.2,1.6) {$D$};
+  \draw[very thick, blue!70!black] (0,1.2) -- (1.6,1.2) -- (1.6,2.0) -- (6.5,2.0) -- (6.5,1.2) -- (7.5,1.2);
+  \draw[dotted, gray!60] (4,0.1) -- (4,4.7);
+  \draw[{Stealth[length=2mm]}-{Stealth[length=2mm]}, thick, gray!30!black] (2.8,0.55) -- (4,0.55);
+  \node[font=\footnotesize, gray!30!black, below] at (3.4,0.5) {$t_{su}$};
+  \draw[{Stealth[length=2mm]}-{Stealth[length=2mm]}, thick, gray!30!black] (4,0.55) -- (4.7,0.55);
+  \node[font=\footnotesize, gray!30!black, below] at (4.35,0.5) {$t_h$};
+  \node[font=\scriptsize, red!60!black] at (3.75,4.95) {$D$ doit être stable ici};
+\end{tikzpicture}
+\caption{La fenêtre de capture : $D$ doit être stable pendant $t_{su}$ avant le front et $t_h$ après (zone rosée). Ici les deux transitions de $D$ sont bien à l'extérieur : la capture est fiable. Toute transition à l'intérieur de la fenêtre expose à la métastabilité.}
+\end{figure}
+
 \begin{intuition}
 \textbf{Origine physique :} le setup time correspond au temps nécessaire pour que la boucle de rétroaction du verrou maître ``se décide'' --- que les tensions internes atteignent des niveaux logiques francs ($> V_{IH}$ ou $< V_{IL}$). C'est fondamentalement un délai $RC$ des transistors CMOS internes. Le hold time est le délai entre le front d'horloge et le moment où le signal de la bascule maître est effectivement isolé de l'entrée.
 \end{intuition}
@@ -14115,6 +14149,44 @@ La fréquence maximale est :
 \boxed{f_{\max} = \frac{1}{t_{cq} + t_{\text{comb}} + t_{su}}}
 \]
 \end{formule}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=1cm, y=1cm]
+  % Bascule source
+  \draw[thick] (0,0) rectangle (1.6,2);
+  \node[font=\small] at (0.8,1.65) {FF$_1$};
+  \node[font=\scriptsize, left] at (0.55,1.2) {D};
+  \node[font=\scriptsize, right] at (1.05,1.2) {Q};
+  \draw (0.65,0)  ++(0,0) coordinate(w1);
+  \draw (0.65,0.28) -- (0.8,0.05) -- (0.95,0.28);
+  % Bascule destination
+  \draw[thick] (6.4,0) rectangle (8,2);
+  \node[font=\small] at (7.2,1.65) {FF$_2$};
+  \node[font=\scriptsize, left] at (6.95,1.2) {D};
+  \node[font=\scriptsize, right] at (7.45,1.2) {Q};
+  \draw (7.05,0.28) -- (7.2,0.05) -- (7.35,0.28);
+  % Nuage combinatoire
+  \draw[thick, fill=gray!8] (4,1.2) ellipse (1.25 and 0.85);
+  \node[font=\scriptsize, align=center] at (4,1.2) {logique\\combinatoire};
+  % Fils de données
+  \draw (-0.8,1.2) -- (0,1.2);
+  \draw (1.6,1.2) -- (2.75,1.2);
+  \draw (5.25,1.2) -- (6.4,1.2);
+  \draw (8,1.2) -- (8.8,1.2);
+  % Horloge
+  \draw (-0.8,-0.8) node[left, font=\small]{CLK} -- (8.5,-0.8);
+  \draw (0.8,-0.8) -- (0.8,0);
+  \draw (7.2,-0.8) -- (7.2,0);
+  \filldraw (0.8,-0.8) circle (1.5pt);
+  \filldraw (7.2,-0.8) circle (1.5pt);
+  % Budget temporel
+  \node[font=\footnotesize, blue!70!black, below] at (2.15,1.05) {$t_{cq}$};
+  \node[font=\footnotesize, blue!70!black] at (4,0.05) {$t_{\text{comb}}$};
+  \node[font=\footnotesize, blue!70!black, below] at (5.85,1.05) {$t_{su}$};
+\end{tikzpicture}
+\caption{Le chemin de timing élémentaire : au front d'horloge, FF$_1$ lance sa nouvelle valeur ($t_{cq}$), qui traverse la logique combinatoire ($t_{\text{comb}}$) et doit arriver stabilisée $t_{su}$ avant le front \textit{suivant} sur FF$_2$. La somme des trois fixe la période minimale --- c'est le chemin le plus lent du circuit qui impose $f_{\max}$.}
+\end{figure}
 
 \begin{formule}
 \textbf{Contrainte de hold (chemin le plus rapide) :}
@@ -14163,6 +14235,28 @@ P_{\text{meta}} = T_w \cdot f_{\text{data}} \cdot e^{-t_{\text{résolution}}/\ta
 \]
 où $T_w$ est la fenêtre de vulnérabilité ($\approx t_{su} + t_h$), $f_{\text{data}}$ la fréquence des transitions d'entrée, $t_{\text{résolution}}$ le temps disponible pour la résolution, et $\tau$ la constante de temps de la boucle de rétroaction (liée au $g_m$ et $C_L$ des transistors internes).
 \end{formule}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=1cm, y=0.8cm]
+  \fill[red!12] (2.5,2.2) rectangle (3.4,5.9);
+  \node[left, font=\small] at (-0.2,4.8) {CLK};
+  \draw[very thick] (0,4.4) -- (3,4.4) -- (3,5.2) -- (8.6,5.2);
+  \node[left, font=\small] at (-0.2,2.9) {$D$};
+  \draw[very thick, blue!70!black] (0,2.5) -- (2.95,2.5) -- (2.95,3.3) -- (8.6,3.3);
+  \node[font=\scriptsize, red!60!black, above] at (2.95,5.95) {transition dans la fenêtre !};
+  \node[left, font=\small] at (-0.2,0.9) {$Q$};
+  \draw[dashed, gray!50] (0,0.9) -- (8.6,0.9);
+  \node[right, font=\tiny, gray!60!black] at (8.6,0.9) {$V_{DD}/2$};
+  \draw[very thick, red!70!black] (0,0.3) -- (3.15,0.3) -- (3.35,0.9);
+  \draw[very thick, red!70!black, domain=3.35:6.2, samples=120] plot(\x, {0.9 + 0.07*sin(deg(9*(\x-3.35)))});
+  \draw[very thick, red!70!black, dashed] (6.2,0.93) .. controls (6.7,1.2) .. (7.2,1.5) -- (8.6,1.5);
+  \draw[very thick, red!70!black, dashed] (6.2,0.87) .. controls (6.7,0.6) .. (7.2,0.3) -- (8.6,0.3);
+  \node[font=\scriptsize, red!70!black] at (4.8,1.55) {état métastable};
+  \node[font=\scriptsize, red!70!black, right] at (7.3,0.95) {résolution aléatoire};
+\end{tikzpicture}
+\caption{Métastabilité : $D$ bascule à l'intérieur de la fenêtre setup/hold (zone rosée). La boucle interne du verrou se retrouve au point d'équilibre instable de la VTC : $Q$ stationne près de $V_{DD}/2$ pendant un temps imprévisible, puis se résout aléatoirement vers ``0'' ou ``1''. Le temps de résolution suit une loi exponentielle en $e^{-t/\tau}$.}
+\end{figure}
 
 \begin{pratique}
 \textbf{Quand la métastabilité est critique :} la traversée de \textbf{domaines d'horloge} (\textit{clock domain crossing}, CDC). Quand un signal issu d'une horloge $A$ doit être lu par une horloge $B$ (non synchrone), la violation de setup/hold est \textbf{inévitable} à certains moments.
@@ -14264,9 +14358,13 @@ $Q_2$ & $Q_1$ & $Q_0$ & $D_2$ & $D_1$ & $D_0$ \\
 
 Par Karnaugh (les états 110 et 111 sont ``don't care'') :
 
-$D_0 = \overline{Q_0}$ (sauf quand il faut revenir à 000). Plus précisément, $D_0 = \overline{Q_2 Q_0} \cdot \overline{Q_0} + \ldots$ --- à simplifier par Karnaugh complet.
+\[
+D_0 = \overline{Q_0} \qquad D_1 = \overline{Q_2}\,(Q_1 \oplus Q_0) \qquad D_2 = Q_1 Q_0 + Q_2\overline{Q_0}
+\]
 
-Résultat simplifié : $D_0 = \overline{Q_0}\,\overline{Q_2 Q_1}$, $D_1 = Q_1 \oplus Q_0$, $D_2 = Q_1 Q_0 + Q_2\overline{Q_0}$, avec reset asynchrone sur détection de l'état 110 (si les ``don't care'' ne suffisent pas).
+$D_0 = \overline{Q_0}$ tient pour les six états utiles (colonne $D_0$ = complément de $Q_0$ partout). Pour $D_1$, le facteur $\overline{Q_2}$ est indispensable : sans lui, l'état $101$ donnerait $D_1 = 1$ au lieu de $0$ et le compteur passerait par $010$ au lieu de revenir à $000$.
+
+\textbf{Bonus --- auto-rattrapage :} avec ces équations, les états parasites se résorbent seuls : $110 \to 101$ et $111 \to 100$ (vérifiable en les injectant dans les équations). Aucun reset asynchrone n'est nécessaire pour la robustesse au démarrage.
 \end{pratique}
 
 \subsection*{Niveau ingénieur}
@@ -14284,10 +14382,10 @@ Résultat simplifié : $D_0 = \overline{Q_0}\,\overline{Q_2 Q_1}$, $D_1 = Q_1 \o
 
 (b) À $\SI{2}{GHz}$ : $T = \SI{0.5}{ns}$. Budget pour la logique : $0{,}5 - 0{,}3 - 0{,}2 - 0{,}1 - 0{,}05 = -\SI{0.15}{ns}$. \textbf{Impossible} même avec 0 logique ! Il faut aussi réduire $t_{cq}$ et $t_{su}$ (technologie plus rapide) ou $t_{\text{skew}}$ (meilleur arbre d'horloge).
 
-En gardant $t_{cq} = \SI{0.15}{ns}$, $t_{su} = \SI{0.1}{ns}$ (technologie $\SI{7}{nm}$), $t_{\text{skew}} = \SI{0.02}{ns}$ : budget logique $= 0{,}5 - 0{,}15 - 0{,}1 - 0{,}02 - 0{,}02 = \SI{0.21}{ns}$. $k = 1{,}5/0{,}21 \approx 8$ étages de pipeline.
+En prenant $t_{cq} = \SI{0.15}{ns}$, $t_{su} = \SI{0.1}{ns}$ (technologie $\SI{7}{nm}$), $t_{\text{skew}} = \SI{0.02}{ns}$ et $t_j = \SI{0.02}{ns}$ : budget logique $= 0{,}5 - 0{,}15 - 0{,}1 - 0{,}02 - 0{,}02 = \SI{0.21}{ns}$. $k = 1{,}5/0{,}21 \approx 8$ étages de pipeline.
 \end{pratique}
 
-\textbf{Exercice 21.6 ---} Un signal asynchrone ($f_{\text{data}} = \SI{10}{MHz}$) doit être synchronisé dans un domaine d'horloge à $\SI{200}{MHz}$. Le synchroniseur est un double flip-flop avec $T_w = \SI{0.1}{ns}$ et $\tau = \SI{0.03}{ns}$.
+\textbf{Exercice 21.6 ---} Un signal asynchrone ($f_{\text{data}} = \SI{10}{MHz}$) doit être synchronisé dans un domaine d'horloge à $\SI{200}{MHz}$. Le synchroniseur est un double flip-flop avec $T_w = \SI{0.1}{ns}$, $\tau = \SI{0.03}{ns}$ et $t_{su} = \SI{0.2}{ns}$.
 
 (a) Calculez le MTBF avec un synchroniseur simple (1 bascule) et avec un synchroniseur double (2 bascules).
 
@@ -14307,12 +14405,21 @@ MTBF $= 1/(P_{\text{meta}} \times f_{\text{clk}}) = 1/(10^{-72}\times2\times10^8
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Pourquoi un verrou D crée-t-il des problèmes de ``courses'' que la bascule D élimine ? Reliez votre réponse à la différence entre ``transparent'' et ``front d'horloge''.
-\item Expliquez physiquement pourquoi la violation du temps de hold ne peut \textbf{pas} être corrigée en réduisant la fréquence d'horloge.
-\item Un compteur asynchrone 8 bits à $\SI{100}{MHz}$ a des bascules avec $t_p = \SI{5}{ns}$. Le délai total de propagation de la retenue est $8\times5 = \SI{40}{ns}$, soit $4$ périodes d'horloge. Pourquoi cela crée-t-il des glitches sur les bits de poids fort ?
-\item Le pipeline augmente le débit mais pas la latence. Pourquoi est-ce quand même utile pour un processeur qui exécute des milliards d'instructions ?
-\end{enumerate}
+\textbf{Q1.} Pourquoi un verrou D crée-t-il des problèmes de ``courses'' que la bascule D élimine ? Reliez votre réponse à la différence entre ``transparent'' et ``front d'horloge''.
+
+\textit{Réponse : pendant toute la demi-période où $E = 1$, le verrou est un fil : un signal peut traverser plusieurs verrous ouverts \textbf{en cascade} dans le même niveau d'horloge, et le nombre d'étages franchis dépend des délais --- comportement imprévisible, c'est la course. La bascule D réduit la fenêtre de transparence à un instant (le front) : un signal ne franchit qu'\textbf{un} étage par cycle, quelle que soit sa vitesse.}
+
+\textbf{Q2.} Expliquez physiquement pourquoi la violation du temps de hold ne peut \textbf{pas} être corrigée en réduisant la fréquence d'horloge.
+
+\textit{Réponse : la violation de hold se joue autour d'un \textbf{seul et même front} : la nouvelle donnée lancée par ce front (via un chemin combinatoire trop court) arrive sur la bascule aval avant que celle-ci ait fini de verrouiller l'ancienne. Baisser la fréquence éloigne les fronts \textit{suivants}, mais ne change rien à ce qui se passe dans la nanoseconde entourant le front fautif. Le remède est spatial, pas temporel : insérer du délai (buffers) sur le chemin court.}
+
+\textbf{Q3.} Un compteur asynchrone 8 bits à $\SI{100}{MHz}$ a des bascules avec $t_p = \SI{5}{ns}$. Le délai total de propagation de la retenue est $8\times5 = \SI{40}{ns}$, soit $4$ périodes d'horloge. Pourquoi cela crée-t-il des glitches sur les bits de poids fort ?
+
+\textit{Réponse : les bits basculent en dominos, chacun $t_p$ après le précédent : pendant la propagation, le mot de sortie traverse des \textbf{codes transitoires faux} (ex. $01111111 \to 01111110 \to \ldots \to 10000000$). Pire, ici la propagation ($\SI{40}{ns}$) dure 4 périodes : de nouveaux fronts arrivent alors que la vague précédente court encore --- la sortie n'est \textbf{jamais} cohérente à un instant d'échantillonnage. Un ripple 8 bits exige $f < 1/(8\,t_p) = \SI{25}{MHz}$ ; au-delà, compteur synchrone obligatoire.}
+
+\textbf{Q4.} Le pipeline augmente le débit mais pas la latence. Pourquoi est-ce quand même utile pour un processeur qui exécute des milliards d'instructions ?
+
+\textit{Réponse : ce qui compte pour un programme n'est pas le temps de traversée d'une instruction isolée, mais le nombre d'instructions \textbf{terminées par seconde}. Tant que le pipeline reste plein, une instruction sort à chaque cycle : la latence individuelle (quelques cycles) est payée une fois, puis amortie sur des milliards d'instructions. Le prix réel du pipeline est ailleurs : branchements et dépendances qui le vident (aléas de pipeline), d'où les prédicteurs de branchement.}
 
 % === RÉSUMÉ ===
 \section*{Résumé du chapitre}
@@ -14361,6 +14468,12 @@ Clock skew/jitter & Consomment le budget de timing. Arbre d'horloge équilibré 
 \end{tabular}
 \end{center}
 \end{ingenieur}
+
+\begin{retenir}
+\textbf{Ce qu'il faut emporter de ce chapitre :} la mémoire naît de la rétroaction (verrou SR), et la discipline naît du front d'horloge (bascule D) : calcul combinatoire entre deux fronts, capture simultanée au front --- ce rythme en deux temps est le c\oe ur de tout système numérique, des registres aux machines d'état. La vitesse, elle, se paie en physique : $f_{\max} = 1/(t_{cq} + t_{\text{comb}} + t_{su} + t_{\text{skew}} + t_j)$, la violation de hold est un bug de conception incorrigible par la fréquence, et toute traversée de domaine d'horloge flirte avec la métastabilité.
+
+Nous n'avons fait qu'entrouvrir cette porte : le chapitre 22 fait de ces contraintes temporelles une discipline à part entière --- analyse de timing statique, synchronisation entre domaines, et l'art de fermer le timing d'un système réel.
+\end{retenir}
 
 % ============================================================================
 % CHAPITRE 22 : CONTRAINTES TEMPORELLES ET SYNCHRONISATION
