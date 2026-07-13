@@ -13153,17 +13153,36 @@ Toute opération logique peut être construite à partir de trois opérations é
 \renewcommand{\arraystretch}{1.4}
 \begin{tabular}{lcccp{5cm}}
 \toprule
-\textbf{Porte} & \textbf{Symbole} & \textbf{Équation} & \textbf{Table de vérité} & \textbf{Physiquement} \\
+\textbf{Porte} & \textbf{Notation} & \textbf{Équation} & \textbf{Table de vérité} & \textbf{Physiquement} \\
 \midrule
 \textbf{NON} (NOT) & $\overline{A}$ & $Y = \overline{A}$ & $0 \to 1,\; 1 \to 0$ & Inverseur CMOS (Ch.17) \\
-\textbf{ET} (AND) & $A \cdot B$ & $Y = A \cdot B$ & $1$ ssi $A=B=1$ & Série de NMOS \\
-\textbf{OU} (OR) & $A + B$ & $Y = A + B$ & $1$ ssi $A=1$ ou $B=1$ & Parallèle de NMOS \\
+\textbf{ET} (AND) & $A \cdot B$ & $Y = A \cdot B$ & $1$ ssi $A=B=1$ & NMOS en série ($\to$ NAND) \\
+\textbf{OU} (OR) & $A + B$ & $Y = A + B$ & $1$ ssi $A=1$ ou $B=1$ & NMOS en parallèle ($\to$ NOR) \\
 \bottomrule
 \end{tabular}
 \end{center}
 
 En pratique, on utilise surtout les portes \textbf{NAND} ($\overline{A \cdot B}$) et \textbf{NOR} ($\overline{A+B}$) car elles sont plus simples à réaliser en CMOS (un seul étage d'inversion).
 \end{formule}
+
+\begin{figure}[h]
+\centering
+\begin{circuitikz}[scale=0.85]
+  \node[not port] (N1) at (0,3) {};
+  \node[and port] (N2) at (4,3) {};
+  \node[or port]  (N3) at (8,3) {};
+  \node[nand port] (N4) at (0,0.6) {};
+  \node[nor port]  (N5) at (4,0.6) {};
+  \node[xor port]  (N6) at (8,0.6) {};
+  \node[below, font=\footnotesize] at (0,2.35)  {NON --- $Y=\overline{A}$};
+  \node[below, font=\footnotesize] at (4,2.35)  {ET --- $Y=A\cdot B$};
+  \node[below, font=\footnotesize] at (8,2.35)  {OU --- $Y=A+B$};
+  \node[below, font=\footnotesize] at (0,-0.05)  {NAND --- $Y=\overline{A\cdot B}$};
+  \node[below, font=\footnotesize] at (4,-0.05)  {NOR --- $Y=\overline{A+B}$};
+  \node[below, font=\footnotesize] at (8,-0.05)  {XOR --- $Y=A\oplus B$};
+\end{circuitikz}
+\caption{Les symboles des portes logiques (norme américaine, utilisée dans tout le livre). Le petit rond sur la sortie note l'inversion : NAND et NOR --- les portes natives du CMOS --- sont un ET et un OU dont l'inversion est \textit{gratuite}.}
+\end{figure}
 
 \begin{attention}
 \textbf{NAND et NOR sont ``universelles'' :} n'importe quelle fonction logique peut être réalisée en utilisant \textit{uniquement} des portes NAND (ou uniquement des NOR). C'est un résultat fondamental de l'algèbre de Boole. En pratique, les bibliothèques de cellules CMOS sont construites autour de ces portes universelles.
@@ -13210,7 +13229,7 @@ Le tableau de Karnaugh est une méthode \textbf{graphique} pour simplifier des f
 \item On cherche le minimum de groupes couvrant tous les ``1''.
 \end{enumerate}
 
-\textbf{Exemple :} $F(A,B,C) = \sum m(0,2,4,5,6)$.
+\textbf{Exemple :} $F(A,B,C) = \sum m(0,2,4,6,7)$.
 
 \begin{center}
 \begin{tabular}{c|cc}
@@ -13251,21 +13270,24 @@ Réalisation CMOS des portes, circuits combinatoires standards (multiplexeurs, d
 
 Le chapitre 17 a présenté l'inverseur CMOS : un PMOS en haut (relié à $V_{DD}$) et un NMOS en bas (relié à la masse). C'est la \textbf{porte NOT} :
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=0.85, american]
   \draw (2,4.5) node[above]{$V_{DD}$} -- (2,4);
   \draw (0.5,3.2) node[pmos, anchor=G](MP){};
-  \draw (MP.S) -- (2,4);
-  \draw (MP.D) -- (2,2);
+  \draw (MP.S) -| (2,4);
+  \draw (MP.D) -| (2,2);
   \draw (0.5,1) node[nmos, anchor=G](MN){};
-  \draw (MN.D) -- (2,2);
-  \draw (MN.S) -- (2,-0.2) node[ground]{};
+  \draw (MN.D) -| (2,2);
+  \draw (MN.S) -| (2,-0.2) node[ground]{};
   \draw (MP.G) -- (MN.G);
-  \draw (MP.G) -- ++(-1,0) node[left]{$A$};
-  \draw (2,2) -- ++(1.2,0) node[right]{$Y = \overline{A}$};
+  \filldraw (MP.G) circle (1.5pt);
+  \draw (MP.G) -- ++(-1,0) node[ocirc]{} node[left]{$A$};
+  \draw (2,2) -- ++(1.2,0) node[ocirc]{} node[right]{$Y = \overline{A}$};
   \filldraw (2,2) circle (1.5pt);
 \end{circuitikz}
-\end{center}
+\caption{L'inverseur CMOS (chapitre 17) est la porte NON. Un seul des deux transistors conduit à l'état établi : la sortie est tirée franchement vers $V_{DD}$ ou vers la masse, sans consommation statique.}
+\end{figure}
 
 \begin{formule}
 \begin{itemize}[nosep]
@@ -13288,34 +13310,36 @@ Le chapitre 17 a présenté l'inverseur CMOS : un PMOS en haut (relié à $V_{DD
 
 \textbf{Porte NAND à 2 entrées :}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=0.75, american]
-  % VDD
-  \draw (3,6) node[above]{$V_{DD}$};
-  % PMOS en parallèle
+  \draw (3,6.2) node[above]{$V_{DD}$} -- (3,5.5);
+  % PMOS en parallèle (MP2 miroité : grille à droite)
   \draw (1,4.5) node[pmos, anchor=G](MP1){};
-  \draw (MP1.S) -- (2.5,5.5) -- (3,5.5) -- (3,6);
-  \draw (MP1.D) -- (2.5,3.2);
-  \draw (4,4.5) node[pmos, anchor=G](MP2){};
-  \draw (MP2.S) -- (3.5,5.5) -- (3,5.5);
-  \draw (MP2.D) -- (3.5,3.2) -- (2.5,3.2);
-  % Sortie
-  \draw (2.5,3.2) -- ++(1.8,0) node[right]{$Y = \overline{A \cdot B}$};
-  \filldraw (2.5,3.2) circle (1.5pt);
-  % NMOS en série
+  \draw (4.9,4.5) node[pmos, xscale=-1, anchor=G](MP2){};
+  \draw (MP1.S) -- (MP1.S |- 0,5.5) -- (MP2.S |- 0,5.5) -- (MP2.S);
+  \filldraw (3,5.5) circle (1.5pt);
+  \draw (MP1.D) -- (MP1.D |- 0,3.2) -- (MP2.D |- 0,3.2) -- (MP2.D);
+  \draw (MP2.D |- 0,3.2) -- ++(1.55,0) node[ocirc]{} node[right]{$Y = \overline{A \cdot B}$};
+  \filldraw (MP2.D |- 0,3.2) circle (1.5pt);
+  % NMOS en série (MN2 miroité : grille à droite, chaîne alignée)
   \draw (1,2) node[nmos, anchor=G](MN1){};
-  \draw (MN1.D) -- (2.5,3.2);
-  \draw (MN1.S) -- (2.5,0.8);
-  \draw (1,0) node[nmos, anchor=G](MN2){};
-  \draw (MN2.D) -- (2.5,0.8);
-  \draw (MN2.S) -- (2.5,-0.7) node[ground]{};
+  \draw (2.12,0) node[nmos, xscale=-1, anchor=G](MN2){};
+  \draw (MN1.D) -| (2.95,3.2);
+  \filldraw (2.95,3.2) circle (1.5pt);
+  \draw (MN1.S) -- (MN2.D);
+  \draw (MN2.S) -- ++(0,-0.35) node[ground]{};
   % Entrées
   \draw (MP1.G) -- (MN1.G);
-  \draw (MP1.G) -- ++(-0.8,0) node[left]{$A$};
-  \draw (MP2.G) -- ++(0,0) |- (MN2.G);
-  \draw (MP2.G) -- ++(0.8,0) node[right]{$B$};
+  \filldraw (MP1.G) circle (1.5pt);
+  \draw (MP1.G) -- ++(-0.8,0) node[ocirc]{} node[left]{$A$};
+  \draw (MP2.G) -- ++(0.55,0) coordinate(Bt);
+  \draw (Bt) -- (Bt |- 0,0) -- (MN2.G);
+  \filldraw (Bt) circle (1.5pt);
+  \draw (Bt) -- ++(0.55,0) node[ocirc]{} node[right]{$B$};
 \end{circuitikz}
-\end{center}
+\caption{Porte NAND CMOS : les deux PMOS en parallèle tirent la sortie à ``1'' dès qu'une entrée est à ``0'' ; les deux NMOS en série ne la tirent à ``0'' que si $A$ \textbf{et} $B$ valent ``1''. Quatre transistors, un seul étage : c'est la porte native du CMOS.}
+\end{figure}
 
 \begin{intuition}
 \textbf{Pourquoi NAND et non AND ?} En CMOS, la sortie est toujours connectée soit à $V_{DD}$ (via les PMOS) soit à la masse (via les NMOS). Elle est donc naturellement \textit{inversée} par rapport à la fonction des NMOS. Pour obtenir un AND, il faudrait ajouter un inverseur en sortie (2 transistors supplémentaires), ce qui augmente la complexité, le délai et la consommation. C'est pourquoi les circuits CMOS sont conçus en logique NAND/NOR, pas en AND/OR.
@@ -13478,6 +13502,37 @@ NM_H = V_{OH} - V_{IH} = 3{,}2 - 2{,}0 = \SI{1.2}{V} \qquad NM_L = V_{IL} - V_{O
 Un parasite de moins de $\SI{0.7}{V}$ ne peut pas provoquer d'erreur logique. C'est la \textbf{robustesse} du numérique.
 \end{formule}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[y=1.05cm, x=1cm]
+  \draw[thick] (0,0) rectangle (1.4,3.3);
+  \draw[thick] (3.4,0) rectangle (4.8,3.3);
+  \node[above, font=\small] at (0.7,3.35) {Sortie};
+  \node[above, font=\small] at (4.1,3.35) {Entrée};
+  \fill[green!20] (0.03,3.2) rectangle (1.37,3.27);
+  \fill[green!20] (0.03,0.03) rectangle (1.37,0.1);
+  \fill[green!20] (3.43,2.0) rectangle (4.77,3.27);
+  \fill[green!20] (3.43,0.03) rectangle (4.77,0.8);
+  \fill[gray!25] (3.43,0.8) rectangle (4.77,2.0);
+  \node[font=\scriptsize, gray!30!black] at (4.1,1.4) {zone interdite};
+  \node[font=\scriptsize] at (4.1,2.6) {``1'' garanti};
+  \node[font=\scriptsize] at (4.1,0.42) {``0'' garanti};
+  \draw[dashed, gray!60] (1.4,3.2) -- (3.4,3.2);
+  \node[left, font=\footnotesize] at (0,3.2) {$V_{OH} = \SI{3.2}{V}$};
+  \draw[dashed, gray!60] (1.4,0.1) -- (3.4,0.1);
+  \node[left, font=\footnotesize] at (0,0.1) {$V_{OL} = \SI{0.1}{V}$};
+  \draw[dashed, gray!60] (2.15,2.0) -- (3.4,2.0);
+  \node[right, font=\footnotesize] at (4.8,2.0) {$V_{IH} = \SI{2.0}{V}$};
+  \draw[dashed, gray!60] (2.15,0.8) -- (3.4,0.8);
+  \node[right, font=\footnotesize] at (4.8,0.8) {$V_{IL} = \SI{0.8}{V}$};
+  \draw[{Stealth[length=2mm]}-{Stealth[length=2mm]}, thick, blue!70!black] (2.15,2.0) -- (2.15,3.2);
+  \node[blue!70!black, font=\footnotesize, right] at (2.17,2.62) {$NM_H$};
+  \draw[{Stealth[length=2mm]}-{Stealth[length=2mm]}, thick, blue!70!black] (2.15,0.1) -- (2.15,0.8);
+  \node[blue!70!black, font=\footnotesize, right] at (2.17,0.45) {$NM_L$};
+\end{tikzpicture}
+\caption{Niveaux logiques du CMOS \SI{3.3}{V} : ce qu'une sortie \textit{garantit} ($V_{OH}$, $V_{OL}$) est plus strict que ce qu'une entrée \textit{exige} ($V_{IH}$, $V_{IL}$). L'écart est la marge de bruit : $NM_H = \SI{1.2}{V}$, $NM_L = \SI{0.7}{V}$ --- un parasite plus petit ne peut pas créer d'erreur logique.}
+\end{figure}
+
 \subsection{Fan-out et charge capacitive}
 
 \begin{formule}
@@ -13505,6 +13560,25 @@ Le fan-out est donc limité par le \textbf{délai} ($t_p \propto C_L$) et non pa
 \item \textbf{Synchronisation par horloge} : en logique séquentielle (chapitre 21), les sorties sont échantillonnées par une bascule qui ne ``voit'' le signal qu'à un instant précis, ignorant les glitches transitoires.
 \end{itemize}
 \end{attention}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=0.85cm, y=0.85cm]
+  \node[left, font=\small] at (-0.2,4.8) {$A$};
+  \draw[very thick, blue!70!black] (0,4.4) -- (2,4.4) -- (2,5.2) -- (8,5.2);
+  \node[left, font=\small] at (-0.2,2.8) {$\overline{A}$ (via inverseur)};
+  \draw[very thick, blue!70!black] (0,3.2) -- (2.8,3.2) -- (2.8,2.4) -- (8,2.4);
+  \node[left, font=\small] at (-0.2,0.8) {$Y = A\cdot\overline{A}$};
+  \draw[very thick, red!70!black] (0,0.4) -- (2,0.4) -- (2,1.2) -- (2.8,1.2) -- (2.8,0.4) -- (8,0.4);
+  \draw[dotted, gray!60] (2,0.2) -- (2,5.45);
+  \draw[dotted, gray!60] (2.8,0.2) -- (2.8,5.45);
+  \draw[{Stealth[length=2mm]}-{Stealth[length=2mm]}, gray!30!black] (2,5.6) -- (2.8,5.6);
+  \node[above, font=\scriptsize, gray!30!black] at (2.4,5.62) {$t_p$ (inverseur)};
+  \draw[->, thick, red!70!black] (4.6,1.6) -- (2.95,1.05);
+  \node[right, font=\footnotesize, red!70!black] at (4.55,1.68) {glitch : impulsion parasite};
+\end{tikzpicture}
+\caption{L'aléa combinatoire sur $Y = A\cdot\overline{A}$ : à la montée de $A$, l'inverseur met $t_p$ à réagir. Pendant cet intervalle, $A$ et l'\textit{ancienne} valeur de $\overline{A}$ valent toutes deux ``1'' : la sortie, théoriquement toujours nulle, émet une impulsion de largeur $t_p$. Inoffensif si la sortie est échantillonnée par une horloge (chapitre 21), fatal si elle pilote directement une horloge ou un reset.}
+\end{figure}
 
 \subsection{Familles logiques et interfaçage}
 
@@ -13545,7 +13619,7 @@ LVTTL & \SI{3.3}{V} & \SI{5}{ns} & CMOS/BiCMOS & Legacy, compatible TTL \\
 
 En NAND : $\overline{A} = \overline{A \cdot A}$ (NAND avec entrées reliées). $\overline{B} + \overline{C} = \overline{\overline{\overline{B} + \overline{C}}} = \overline{B \cdot C}$ (par De Morgan : $\overline{B}+\overline{C} = \overline{BC}$, qui est directement un NAND).
 
-Donc $F = \overline{A} \cdot \overline{BC}$. En NAND : $F = \overline{\overline{\overline{A} \cdot \overline{BC}}}$, soit NAND($\overline{A}$, NAND($B$,$C$)), puis NAND du résultat avec lui-même pour re-complémenter. Trois portes NAND suffisent.
+Donc $F = \overline{A} \cdot \overline{BC}$. En NAND : $F = \overline{\overline{\overline{A} \cdot \overline{BC}}}$, soit NAND($\overline{A}$, NAND($B$,$C$)), puis NAND du résultat avec lui-même pour re-complémenter. Quatre portes NAND à 2 entrées suffisent.
 \end{pratique}
 
 \subsection*{Niveau intermédiaire}
@@ -13566,11 +13640,11 @@ $AB \backslash CD$ & 00 & 01 & 11 & 10 \\
 \end{tabular}
 \end{center}
 
-Groupes : $\{0,1,8,9\}$ = $\overline{B}\,\overline{D}$... Non, reprenons. Cases 0,2,8,10 (coins) $\Rightarrow$ $\overline{B}\,\overline{D}$. Cases 0,1,8,9 $\Rightarrow$ $\overline{B}\,\overline{C}$. Case 5 isolée $\Rightarrow$ $\overline{A}B\overline{C}D$.
+Groupes : les quatre coins $\{0,2,8,10\} \Rightarrow \overline{B}\,\overline{D}$. Cases $\{0,1,8,9\} \Rightarrow \overline{B}\,\overline{C}$. La case 5 n'est \textbf{pas} isolée : elle s'apparie verticalement avec la case 1 ($\{1,5\}$, seul $B$ change) $\Rightarrow \overline{A}\,\overline{C}D$.
 
-$F = \overline{B}\,\overline{C} + \overline{B}\,\overline{D} + \overline{A}B\overline{C}D$. On peut simplifier : $\overline{B}\,\overline{C} + \overline{B}\,\overline{D} = \overline{B}(\overline{C}+\overline{D}) = \overline{B}\,\overline{CD}$.
+$F = \overline{B}\,\overline{C} + \overline{B}\,\overline{D} + \overline{A}\,\overline{C}D$. On peut regrouper les deux premiers termes : $\overline{B}\,\overline{C} + \overline{B}\,\overline{D} = \overline{B}(\overline{C}+\overline{D}) = \overline{B}\,\overline{CD}$.
 
-$F = \overline{B}\,\overline{CD} + \overline{A}B\overline{C}D$.
+$F = \overline{B}\,\overline{CD} + \overline{A}\,\overline{C}D$.
 \end{pratique}
 
 \textbf{Exercice 20.4 ---} Un MUX 4:1 a les entrées $I_0 = 1$, $I_1 = 0$, $I_2 = 1$, $I_3 = 0$ et les sélecteurs $S_1 S_0$. Écrivez l'expression de $Y$ en fonction de $S_1$, $S_0$. Quelle fonction logique cela réalise-t-il ?
@@ -13615,12 +13689,21 @@ Pour un circuit de $10^6$ portes : $P \approx \SI{26}{W}$. C'est l'ordre de gran
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Pourquoi les portes NAND et NOR sont-elles plus ``naturelles'' en CMOS que les portes AND et OR ? (Pensez à la structure complémentaire NMOS/PMOS.)
-\item Pourquoi $P_{\text{dyn}} \propto V_{DD}^2$ ? Reliez votre réponse à l'énergie stockée dans un condensateur ($E = \frac{1}{2}CV^2$).
-\item Un circuit CMOS en technologie \SI{7}{nm} a $10^{10}$ transistors. Si $I_{\text{off}} = \SI{10}{nA}$ par transistor et $V_{DD} = \SI{0.7}{V}$, quelle est la puissance de fuite ? Comparez avec un TDP typique de \SI{100}{W}.
-\item Pourquoi les glitches ne posent-ils pas de problème en logique synchrone (chapitre 21) mais sont critiques en logique asynchrone ?
-\end{enumerate}
+\textbf{Q1.} Pourquoi les portes NAND et NOR sont-elles plus ``naturelles'' en CMOS que les portes AND et OR ? (Pensez à la structure complémentaire NMOS/PMOS.)
+
+\textit{Réponse : le réseau NMOS tire la sortie à ``0'' quand sa condition est vraie, le réseau PMOS complémentaire la tire à ``1'' dans le cas contraire : toute structure complémentaire produit donc, en un seul étage, la fonction \textbf{inversée} de son réseau de pull-down. NAND et NOR sortent en 4 transistors et un étage ; AND et OR exigent d'y ajouter un inverseur (6 transistors, deux étages, plus de délai et d'énergie).}
+
+\textbf{Q2.} Pourquoi $P_{\text{dyn}} \propto V_{DD}^2$ ? Reliez votre réponse à l'énergie stockée dans un condensateur ($E = \frac{1}{2}CV^2$).
+
+\textit{Réponse : à chaque transition $0 \to 1$, l'alimentation fournit $Q \cdot V_{DD} = C_L V_{DD}^2$ : la moitié ($\frac{1}{2}C_L V_{DD}^2$) est stockée dans $C_L$, l'autre moitié est dissipée dans le PMOS pendant la charge. À la transition $1 \to 0$, l'énergie stockée est dissipée dans le NMOS. Bilan : $C_L V_{DD}^2$ dissipé par cycle complet, d'où $P_{\text{dyn}} = \alpha C_L V_{DD}^2 f$ --- et le carré explique pourquoi baisser $V_{DD}$ est le levier énergétique le plus puissant.}
+
+\textbf{Q3.} Un circuit CMOS en technologie \SI{7}{nm} a $10^{10}$ transistors. Si $I_{\text{off}} = \SI{10}{nA}$ par transistor et $V_{DD} = \SI{0.7}{V}$, quelle est la puissance de fuite ? Comparez avec un TDP typique de \SI{100}{W}.
+
+\textit{Réponse : $P_{\text{stat}} = 10^{10} \times \SI{10}{nA} \times \SI{0.7}{V} = \SI{70}{W}$ --- de l'ordre du TDP complet, avant même la première commutation ! C'est pourquoi les technologies avancées combinent transistors multi-$V_{th}$ (rapides et fuyards sur le chemin critique, lents et étanches ailleurs), \textit{power gating} (couper l'alimentation des blocs inactifs) et polarisation de substrat.}
+
+\textbf{Q4.} Pourquoi les glitches ne posent-ils pas de problème en logique synchrone (chapitre 21) mais sont critiques en logique asynchrone ?
+
+\textit{Réponse : en synchrone, la bascule n'échantillonne la sortie combinatoire qu'au front d'horloge, une fois tous les chemins stabilisés (contrainte de setup) : les impulsions entre deux fronts sont simplement ignorées. En asynchrone, tout front est un événement : un glitch sur une horloge dérivée, un set/reset ou une entrée de latch peut être capturé et changer l'état --- de façon rare, dépendante de la température et de la tension, donc quasi indébogable.}
 
 % === RÉSUMÉ ===
 \section*{Résumé du chapitre}
@@ -13668,6 +13751,12 @@ Glitches & Dus aux différences de $t_p$. Résolus par synchronisation (Ch.21) \
 \end{tabular}
 \end{center}
 \end{ingenieur}
+
+\begin{retenir}
+\textbf{Ce qu'il faut emporter de ce chapitre :} la logique combinatoire, c'est le présent pur --- la sortie ne dépend que des entrées de l'instant. Trois étages de compréhension : l'abstraction (Boole, De Morgan, Karnaugh), le silicium (réseaux complémentaires NMOS/PMOS, d'où NAND et NOR natives et une consommation statique quasi nulle), et le temps (chaque porte est un $RC$ : chemin critique, $P = \alpha C_L V_{DD}^2 f$, marges de bruit qui régénèrent le signal à chaque étage).
+
+Les aléas rappellent la limite de ce monde sans mémoire : ces circuits vivent dans le temps continu et leurs chemins ne sont jamais parfaitement synchrones. Pour dompter le temps --- compter, mémoriser, séquencer --- il faut une horloge et des éléments à état : c'est la logique séquentielle du chapitre 21.
+\end{retenir}
 
 % ============================================================================
 % CHAPITRE 21 : LOGIQUE SÉQUENTIELLE — VERSION FINALISÉE
