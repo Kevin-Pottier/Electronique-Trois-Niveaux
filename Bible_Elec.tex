@@ -15109,10 +15109,12 @@ Un diagramme d'états représente graphiquement la FSM :
 \item Chaque \textbf{flèche} = une transition, étiquetée par la condition d'entrée (et la sortie en Mealy).
 \item L'état initial est marqué par une flèche entrante sans origine.
 \end{itemize}
+\end{formule}
 
 \textbf{Exemple : détecteur de séquence ``101'' (Moore).}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{tikzpicture}[>=Stealth, scale=0.9]
   % States as circles
   \node[draw, circle, thick, minimum size=1.2cm] (S0) at (0,0) {$S_0$};
@@ -15137,10 +15139,11 @@ Un diagramme d'états représente graphiquement la FSM :
   \draw[->, thick] (S3) to[bend left=25] node[below, font=\footnotesize]{0} (S2);
   \draw[->, thick] (S3) to[bend right=55] node[above, font=\footnotesize]{1} (S1);
 \end{tikzpicture}
-\end{center}
+\caption{Diagramme d'états du détecteur de séquence ``101'' (Moore) : chaque bulle porte son nom et sa sortie, chaque flèche la condition d'entrée. Noter les reprises depuis $S_3$ : l'historique utile (``1'' ou ``10'') est conservé --- le détecteur gère les recouvrements.}
+\end{figure}
 
 La machine détecte la séquence ``1-0-1'' dans un flux de bits. La sortie passe à 1 pendant un cycle quand la séquence complète est reconnue ($S_3$).
-\end{formule}
+
 
 \begin{retenir}
 \textbf{L'essentiel :}
@@ -15177,7 +15180,8 @@ Codage des états, implémentation physique, méthodologie complète de concepti
 \end{itemize}
 \end{formule}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{tikzpicture}[>=Stealth, scale=0.85]
   % Registre
   \draw[thick, fill=blue!8] (5,0) rectangle (7,3);
@@ -15205,7 +15209,8 @@ Codage des états, implémentation physique, méthodologie complète de concepti
   \draw[->, thick] (3.5,0.5) -- (4.5,0.5) -- (4.5,-0.5) -- (9,-0.5);
   \node[font=\footnotesize, right] at (9,-0.5) {Sorties $O$};
 \end{tikzpicture}
-\end{center}
+\caption{L'implémentation universelle d'une FSM : un registre d'état ($n$ bascules D) cadencé par l'horloge, et un nuage combinatoire qui calcule l'état suivant et les sorties à partir de l'état courant et des entrées. Toute la vitesse de la machine se joue dans l'épaisseur de ce nuage.}
+\end{figure}
 
 \begin{attention}
 \textbf{Le timing de la FSM est directement lié au nuage combinatoire.}
@@ -15300,6 +15305,31 @@ Implémenter en HDL (VHDL ou Verilog) ou en portes discrètes. Simuler fonctionn
 \end{itemize}
 Chaque transition ne dépend que d'une bascule et d'un comparateur $\Rightarrow$ logique très simple, $t_{\text{comb}}$ minimal.
 \end{pratique}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[>=Stealth, scale=0.95]
+  \node[draw, circle, thick, minimum size=1.35cm, fill=green!12]  (V)  at (0,0)     {$S_V$};
+  \node[draw, circle, thick, minimum size=1.35cm, fill=orange!18] (O)  at (4.6,0)   {$S_O$};
+  \node[draw, circle, thick, minimum size=1.35cm, fill=red!14]    (R)  at (4.6,-3.4){$S_R$};
+  \node[draw, circle, thick, minimum size=1.35cm, fill=red!28]    (RO) at (0,-3.4)  {$S_{RO}$};
+  \node[font=\tiny, below=0.1cm] at (V.south)  {V=1};
+  \node[font=\tiny, below=0.1cm] at (O.south)  {O=1};
+  \node[font=\tiny, above=0.1cm] at (R.north)  {R=1};
+  \node[font=\tiny, above=0.1cm] at (RO.north) {R=O=1};
+  \draw[->, thick] (-1.7,0.9) -- (V);
+  \node[font=\scriptsize, above] at (-1.4,0.85) {reset};
+  \draw[->, thick] (V)  -- (O)  node[midway, above, font=\footnotesize]{cnt $=$ 30};
+  \draw[->, thick] (O)  -- (R)  node[midway, right, font=\footnotesize]{cnt $=$ 5};
+  \draw[->, thick] (R)  -- (RO) node[midway, below, font=\footnotesize]{cnt $=$ 30};
+  \draw[->, thick] (RO) -- (V)  node[midway, left,  font=\footnotesize]{cnt $=$ 2};
+  \draw[->, thick] (V)  to[loop above, looseness=4] node[above, font=\scriptsize]{sinon} (V);
+  \draw[->, thick] (O)  to[loop above, looseness=4] node[above, font=\scriptsize]{sinon} (O);
+  \draw[->, thick] (R)  to[loop below, looseness=4] node[below, font=\scriptsize]{sinon} (R);
+  \draw[->, thick] (RO) to[loop below, looseness=4] node[below, font=\scriptsize]{sinon} (RO);
+\end{tikzpicture}
+\caption{Le contrôleur de feu tricolore : quatre états en cycle, chaque transition conditionnée par le compteur de durée partagé (remis à zéro à chaque changement d'état). Machine de Moore pure --- les lampes ne dépendent que de l'état.}
+\end{figure}
 
 % ============================================================================
 \section{Niveau Ingénieur}
@@ -15456,7 +15486,13 @@ $Q_1$ & $Q_0$ & $X$ & $D_1$ & $D_0$ & $Z$ \\
 \end{tabular}
 \end{center}
 
-Par Karnaugh : $D_1 = Q_0 X + Q_1\overline{X}$, $D_0 = \overline{Q_1}\,\overline{Q_0}\,X + Q_1\,\overline{X}$, $Z = Q_1 Q_0$.
+Par Karnaugh (mintermes $Q_1Q_0X$ : $D_1$ sur $\{011, 100, 101\}$, $D_0$ sur $\{001, 100, 111\}$) :
+\[
+D_1 = \overline{Q_1}\,Q_0\,X + Q_1\,\overline{Q_0} \qquad
+D_0 = \overline{Q_1}\,\overline{Q_0}\,X + Q_1\,\overline{Q_0}\,\overline{X} + Q_1\,Q_0\,X \qquad
+Z = Q_1 Q_0
+\]
+Le terme $Q_1\overline{Q_0}$ regroupe les lignes $100$ et $101$ ($S_2$ garde $Q_1 = 1$ quelle que soit l'entrée). $D_0$ n'a que trois mintermes isolés ; on peut le compacter en $D_0 = \overline{Q_1}\,\overline{Q_0}\,X + Q_1\,\overline{(Q_0 \oplus X)}$.
 \end{pratique}
 
 \textbf{Exercice 23.4 ---} Reprenez l'exercice 23.3 en codage one-hot ($S_0$, $S_1$, $S_2$, $S_3$ = 4 bascules). Donnez les équations de $D_{S_0}$, $D_{S_1}$, $D_{S_2}$, $D_{S_3}$. Comparez la profondeur logique avec le codage binaire.
@@ -15468,7 +15504,7 @@ $D_{S_0} = S_0\,\overline{X} + S_1\,\overline{X} + S_3\,\overline{X}$ (transitio
 
 $D_{S_1} = S_0\,X + S_3\,X$.
 
-$D_{S_2} = S_1\,X$.
+$D_{S_2} = S_1\,X + S_2\,X = (S_1 + S_2)\,X$ --- sans le terme d'auto-maintien $S_2 X$ (transition $S_2 \xrightarrow{1} S_2$), la machine tomberait dans l'état tout-à-zéro au second ``1'' consécutif.
 
 $D_{S_3} = S_2\,\overline{X}$.
 
@@ -15513,12 +15549,21 @@ Profondeur logique : chaque $D$ est une somme de produits de 2 termes (1 porte A
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Pourquoi le codage one-hot produit-il une logique combinatoire moins profonde que le codage binaire ? Reliez votre réponse au fait qu'en one-hot, identifier l'état courant ne nécessite aucun décodage.
-\item Une FSM de Mealy peut produire des glitches sur ses sorties. Pourquoi ? Comment les éliminer sans revenir à une machine de Moore ?
-\item Expliquez pourquoi l'inférence d'un latch dans une FSM en HDL est un bug grave. Quel est l'impact sur le timing et la fiabilité ?
-\item Un contrôleur DDR4 a 48 états. En codage binaire (6 bascules), la logique de transition a 8 niveaux de portes. En one-hot, elle en a 2. Pourquoi ne choisit-on pas toujours le one-hot ?
-\end{enumerate}
+\textbf{Q1.} Pourquoi le codage one-hot produit-il une logique combinatoire moins profonde que le codage binaire ? Reliez votre réponse au fait qu'en one-hot, identifier l'état courant ne nécessite aucun décodage.
+
+\textit{Réponse : en one-hot, chaque bascule \textbf{est} l'indicateur de son état : la condition ``on est dans $S_k$'' est un simple fil. L'équation de chaque $D$ se réduit à un OU des transitions entrantes (produit bascule source $\times$ condition) : deux niveaux, quel que soit $N$. En binaire, il faut d'abord \textbf{décoder} l'état courant --- un ET de $\lceil\log_2 N\rceil$ littéraux par état --- avant de combiner : la profondeur croît avec $\log N$ et le fan-in des portes, et le nuage s'épaissit.}
+
+\textbf{Q2.} Une FSM de Mealy peut produire des glitches sur ses sorties. Pourquoi ? Comment les éliminer sans revenir à une machine de Moore ?
+
+\textit{Réponse : les sorties Mealy sont combinatoires en fonction de l'état \textbf{et des entrées} : tout changement d'entrée entre deux fronts se propage directement, et les transitions multi-bits du registre d'état ajoutent leurs propres aléas de décodage (chapitre 20). Remède sans changer de modèle : \textbf{registrer les sorties} --- une rangée de bascules D en aval fige les sorties au front. On garde le nombre d'états de Mealy, au prix d'un cycle de latence : c'est le ``Mealy à sorties registrées'' de la pratique.}
+
+\textbf{Q3.} Expliquez pourquoi l'inférence d'un latch dans une FSM en HDL est un bug grave. Quel est l'impact sur le timing et la fiabilité ?
+
+\textit{Réponse : un chemin d'affectation incomplet (un \texttt{if} sans \texttt{else}, un \texttt{case} sans \texttt{default}) force le synthétiseur à \textbf{mémoriser} la valeur précédente : il insère un verrou transparent. On obtient un élément de mémoire \textit{hors discipline d'horloge} : fenêtre de transparence que la STA ne sait pas contraindre proprement, sensibilité aux aléas combinatoires (un glitch pendant la transparence est mémorisé), et divergence simulation/synthèse. C'est un bug de conception, pas une optimisation.}
+
+\textbf{Q4.} Un contrôleur DDR4 a 48 états. En codage binaire (6 bascules), la logique de transition a 8 niveaux de portes. En one-hot, elle en a 2. Pourquoi ne choisit-on pas toujours le one-hot ?
+
+\textit{Réponse : 48 bascules au lieu de 6, c'est de la surface, de la consommation et du routage d'horloge --- coûteux en ASIC. Surtout, $2^{48} - 48$ combinaisons sont invalides : un basculement de bit (SEU, bruit) produit un état ``deux-hot'' ou ``zéro-hot'' qu'il faut détecter et rattraper (checker + reset), là où un code binaire dense retombe au pire dans un autre état... qu'on peut borner. Le choix est un arbitrage vitesse (one-hot, FPGA) contre surface, énergie et robustesse (binaire/Gray, ASIC, systèmes critiques).}
 
 % === RÉSUMÉ ===
 \section*{Résumé du chapitre}
@@ -15565,6 +15610,12 @@ HDL & 3 blocs (registre, transition, sortie). Toujours couvrir tous les cas (\te
 \end{tabular}
 \end{center}
 \end{ingenieur}
+
+\begin{retenir}
+\textbf{Ce qu'il faut emporter de ce chapitre :} toute intelligence séquentielle se ramène à un motif unique --- un registre d'état et un nuage combinatoire --- et toute la conception tient en sept étapes, du diagramme aux équations. Moore par défaut pour des sorties propres, Mealy registré quand la latence compte ; le codage est le levier de l'ingénieur : binaire pour la densité, one-hot pour la vitesse, Gray pour les frontières. Et la moitié de la fiabilité se joue hors du cas nominal : états invalides couverts, \texttt{default} systématique, reset ``async assert, sync deassert''.
+
+Nos machines savent maintenant décider et séquencer. Mais un état de quelques bascules ne fait pas un système : il faut stocker --- des octets, des mégaoctets, des gigaoctets. Le chapitre 24 descend au bit physique et remonte jusqu'à la hiérarchie mémoire complète.
+\end{retenir}
 
 % ============================================================================
 % CHAPITRE 24 : MÉMOIRE — DU BIT PHYSIQUE AU SYSTÈME
