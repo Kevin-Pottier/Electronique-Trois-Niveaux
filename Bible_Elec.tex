@@ -14578,6 +14578,31 @@ $t_j$ & \SI{15}{ps} & Jitter PLL (crête-à-crête) \\
 La marge de $\SI{15}{ps}$ ($3\%$) est typique des circuits modernes. Il suffit d'une variation de procédé de fabrication, d'une hausse de température de $\SI{30}{°C}$, ou d'une tension $V_{DD}$ $5\%$ trop basse pour la consommer entièrement.
 \end{pratique}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=1.32cm, y=1cm]
+  % 1 unité = 50 ps ; barre = T_clk = 500 ps = 10 u. Largeurs : 1/5.6/1.6/0.6/0.6/0.3/0.3.
+  \fill[blue!25]   (0,0)   rectangle (1,0.8);
+  \fill[blue!12]   (1,0)   rectangle (6.6,0.8);
+  \fill[orange!25] (6.6,0) rectangle (8.2,0.8);
+  \fill[blue!25]   (8.2,0) rectangle (8.8,0.8);
+  \fill[red!20]    (8.8,0) rectangle (9.4,0.8);
+  \fill[red!35]    (9.4,0) rectangle (9.7,0.8);
+  \fill[green!30]  (9.7,0) rectangle (10,0.8);
+  \draw (0,0) rectangle (10,0.8);
+  \foreach \x in {1,6.6,8.2,8.8,9.4,9.7} \draw (\x,0) -- (\x,0.8);
+  \foreach \x/\t in {0.5/{$t_{cq}$ (50)}, 3.8/{$t_{\text{comb}}$ (280)}, 7.4/{$t_{\text{wire}}$ (80)}, 8.5/{$t_{su}$ (30)}, 9.1/{skew (30)}, 9.55/{$t_j$ (15)}, 9.95/{marge (15)}}
+    \node[font=\tiny, rotate=-50, anchor=north east] at (\x,-0.08) {\t};
+  \draw[{Stealth[length=2mm]}-{Stealth[length=2mm]}] (0,1.15) -- (10,1.15);
+  \node[above, font=\footnotesize] at (5,1.18) {$T_{\text{clk}} = \SI{500}{ps}$ (\SI{2}{GHz})};
+\end{tikzpicture}
+\caption{Où part la période : décomposition du budget de timing du tableau ci-dessus. La logique utile ($t_{\text{comb}}$) n'occupe qu'un peu plus de la moitié du cycle --- le reste est consommé par les bascules, le câblage, l'horloge elle-même... et il ne reste que $3\,\%$ de marge.}
+\end{figure}
+
+\begin{retenir}
+Le timing se lit comme un budget : une période $T_{\text{clk}}$, des postes de dépense ($t_{cq}$, $t_{\text{comb}}$, $t_{\text{wire}}$, $t_{su}$, skew, jitter), et une marge résiduelle de quelques pour cent. La violation de setup se négocie (fréquence, pipeline) ; la violation de hold, elle, est un défaut de conception, incorrigible par l'horloge --- elle se joue sur le chemin le plus \textit{court}, autour d'un seul et même front.
+\end{retenir}
+
 % ============================================================================
 \section{Approfondissement}
 
@@ -14704,6 +14729,29 @@ Le temps de résolution nécessaire diminue exponentiellement la probabilité de
 \textbf{MTBF typique :} $> 10^{10}$ heures à $\SI{200}{MHz}$ avec un synchroniseur 2 étages.
 \end{formule}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=1cm, y=1cm]
+  \fill[blue!6] (-2.3,-1.5) rectangle (0.1,2.6);
+  \fill[orange!8] (0.1,-1.5) rectangle (8.9,2.6);
+  \node[font=\scriptsize, blue!50!black] at (-1.3,2.35) {domaine $A$};
+  \node[font=\scriptsize, orange!60!black] at (7.4,2.35) {domaine $B$};
+  \draw[dashed, gray!60] (0.1,-1.5) -- (0.1,2.6);
+  \draw[thick] (1.2,0) rectangle (2.8,1.8); \node[font=\small] at (2,1.45) {FF$_1$};
+  \draw[thick] (4.8,0) rectangle (6.4,1.8); \node[font=\small] at (5.6,1.45) {FF$_2$};
+  \draw (1.85,0.25) -- (2,0.05) -- (2.15,0.25);
+  \draw (5.45,0.25) -- (5.6,0.05) -- (5.75,0.25);
+  \draw (-2,1.1) node[left, font=\small]{signal async} -- (1.2,1.1);
+  \draw (2.8,1.1) -- (4.8,1.1);
+  \node[font=\scriptsize, red!60!black, above] at (3.8,1.15) {peut être métastable};
+  \draw (6.4,1.1) -- (8.6,1.1) node[right, font=\small]{synchronisé};
+  \draw (0.9,-0.9) node[left, font=\small]{CLK$_B$} -- (7.4,-0.9);
+  \draw (2,-0.9) -- (2,0);  \filldraw (2,-0.9) circle (1.5pt);
+  \draw (5.6,-0.9) -- (5.6,0);
+\end{tikzpicture}
+\caption{Le synchroniseur double bascule : FF$_1$ encaisse la violation de setup/hold et dispose d'un cycle entier de CLK$_B$ pour résoudre son éventuelle métastabilité avant que FF$_2$ n'échantillonne. Prix : deux cycles de latence --- et un seul bit à la fois.}
+\end{figure}
+
 \begin{attention}
 \textbf{Limitations du synchroniseur double bascule :}
 \begin{itemize}[nosep]
@@ -14731,6 +14779,39 @@ La \textbf{FIFO asynchrone} (\textit{First In, First Out}) est la structure stan
 \end{itemize}
 \end{formule}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=1cm, y=1cm, font=\scriptsize]
+  \fill[blue!6] (-2.6,-3.4) rectangle (3.5,3.1);
+  \fill[orange!8] (3.5,-3.4) rectangle (9.6,3.1);
+  \draw[dashed, gray!60] (3.5,-3.4) -- (3.5,3.1);
+  \node[blue!50!black] at (-1.5,2.85) {domaine écriture ($f_W$)};
+  \node[orange!60!black] at (8.2,2.85) {domaine lecture ($f_R$)};
+  % RAM
+  \draw[thick, fill=gray!10] (2.2,1.4) rectangle (4.8,2.6);
+  \node[align=center] at (3.5,2.0) {RAM\\double port};
+  \draw (-2.3,2.3) node[left]{data\_in} -- (2.2,2.3);
+  \draw (4.8,2.3) -- (9.3,2.3) node[right]{data\_out};
+  % Pointeurs
+  \draw[thick] (-1.6,-0.2) rectangle (0.6,0.7); \node at (-0.5,0.25) {$W_{\text{ptr}}$ (Gray)};
+  \draw[thick] (6.4,-0.2) rectangle (8.6,0.7); \node at (7.5,0.25) {$R_{\text{ptr}}$ (Gray)};
+  \draw (-0.5,0.7) -- (-0.5,1.7) -- (2.2,1.7);
+  \draw (7.5,0.7) -- (7.5,1.7) -- (4.8,1.7);
+  % Synchroniseurs croisés
+  \draw[thick, fill=white] (2.6,-1.3) rectangle (4.4,-0.6); \node at (3.5,-0.95) {sync 2FF};
+  \draw (0.6,0.25) -- (1.6,0.25) -- (1.6,-0.95) -- (2.6,-0.95);
+  \draw (4.4,-0.95) -- (5.6,-0.95) -- (5.6,-1.6);
+  \draw[thick] (4.7,-2.5) rectangle (6.5,-1.6); \node[align=center] at (5.6,-2.05) {compare\\$\Rightarrow$ \textbf{empty}};
+  \draw (7.5,-0.2) -- (7.5,-2.05) -- (6.5,-2.05);
+  \draw[thick, fill=white] (2.6,-3.1) rectangle (4.4,-2.4); \node at (3.5,-2.75) {sync 2FF};
+  \draw (7.5,-2.75) -- (4.4,-2.75);
+  \draw (2.6,-2.75) -- (1.4,-2.75) -- (1.4,-2.05) -- (0.5,-2.05);
+  \draw[thick] (-1.3,-2.5) rectangle (0.5,-1.6); \node[align=center] at (-0.4,-2.05) {compare\\$\Rightarrow$ \textbf{full}};
+  \draw (-0.5,-0.2) -- (-0.5,-1.6);
+\end{tikzpicture}
+\caption{La FIFO asynchrone : chaque domaine tient son pointeur en code Gray et reçoit celui de l'autre à travers un synchroniseur double bascule. \textit{Empty} se calcule côté lecture (avec $W_{\text{ptr}}$ synchronisé --- donc en retard : la FIFO peut paraître vide alors qu'elle ne l'est plus, jamais l'inverse), \textit{full} côté écriture, symétriquement. Les erreurs sont toujours du côté sûr.}
+\end{figure}
+
 \begin{intuition}
 \textbf{Pourquoi le code Gray ?}
 
@@ -14755,7 +14836,7 @@ Le code Gray est un codage binaire où \textbf{un seul bit change} entre deux va
 \begin{enumerate}[nosep]
 \item \textbf{Jamais de logique combinatoire} entre deux domaines sans synchronisation. Chaque signal traversant une frontière d'horloge \textbf{doit} passer par un synchroniseur.
 \item \textbf{Un seul bit à la fois} à travers un synchroniseur double bascule. Pour les bus : utiliser une FIFO asynchrone ou un handshake.
-\item \textbf{Signaux de contrôle} (enable, valid, reset) : synchroniseur double bascule, signal actif pendant \textbf{au moins 1 cycle} de l'horloge la plus lente (sinon il peut être ``manqué'').
+\item \textbf{Signaux de contrôle} (enable, valid) : synchroniseur double bascule, signal actif pendant \textbf{au moins $1{,}5$ cycle de l'horloge de destination} (la plus lente) --- sinon le pulse peut tomber entre deux fronts et être manqué. Pour un pulse plus court : synchroniseur à bascule T (\textit{toggle}) ou handshake.
 \item \textbf{Reset asynchrone, dé-assertion synchrone} : le reset peut être appliqué à tout moment (asynchrone), mais sa \textit{désactivation} doit être synchronisée pour éviter que certaines bascules sortent du reset un cycle avant les autres.
 \item \textbf{Vérification CDC automatique} : les outils (Synopsys SpyGlass, Cadence Conformal) analysent le RTL et détectent les traversées de domaine non protégées. C'est une étape \textbf{obligatoire} avant la synthèse.
 \end{enumerate}
@@ -14819,9 +14900,9 @@ $k = 400/238 \approx 1{,}68$ $\Rightarrow$ $k = 2$ étages de pipeline minimum. 
 \textbf{Exercice 22.4 ---} Un signal de contrôle (1 bit) doit traverser d'un domaine à $\SI{100}{MHz}$ vers un domaine à $\SI{50}{MHz}$. Le signal est actif pendant 1 cycle du domaine source ($\SI{10}{ns}$). Sera-t-il détecté de manière fiable par un synchroniseur double bascule dans le domaine destination ?
 
 \begin{pratique}
-\textbf{Solution :} le domaine destination a $T_{\text{clk}} = \SI{20}{ns}$. Le signal est actif pendant $\SI{10}{ns} = T_{\text{clk,dest}}/2$. Le synchroniseur échantillonne à chaque front de l'horloge destination, donc il verra le signal actif pendant \textbf{au moins un} front $\Rightarrow$ OK.
+\textbf{Solution :} le domaine destination a $T_{\text{clk,dest}} = \SI{20}{ns}$, et le pulse ne dure que $\SI{10}{ns}$ : il peut tomber \textbf{entièrement entre deux fronts} de l'horloge de destination $\Rightarrow$ capture \textbf{non garantie}. La règle de fiabilité exige une durée d'au moins $1{,}5 \times T_{\text{clk,dest}} = \SI{30}{ns}$ (un front tombe alors nécessairement dans le pulse, avec marge pour setup/hold).
 
-Mais si le domaine source était à $\SI{200}{MHz}$ ($T = \SI{5}{ns}$) et le signal actif 1 cycle ($\SI{5}{ns}$) : l'horloge destination à $\SI{50}{MHz}$ pourrait ``rater'' le pulse si les phases sont défavorables ($\SI{5}{ns} < T_{\text{clk,dest}}/2 = \SI{10}{ns}$... en fait le risque est que le pulse tombe entre deux fronts). Règle : le signal doit être actif pendant au moins $1{,}5 \times T_{\text{clk,dest}}$ pour garantir la capture.
+Remèdes : étirer le pulse à $\geq 3$ cycles source ($\SI{30}{ns}$), ou --- plus robuste --- passer par un \textbf{synchroniseur à bascule T} : le pulse source fait basculer un niveau, et c'est le \textit{changement de niveau} (permanent) qui est synchronisé puis détecté par front dans le domaine de destination. Aucun pulse ne peut plus être manqué, quelle que soit la disproportion des horloges.
 \end{pratique}
 
 \subsection*{Niveau ingénieur}
@@ -14857,17 +14938,26 @@ Mais si le domaine source était à $\SI{200}{MHz}$ ($T = \SI{5}{ns}$) et le sig
 
 Le remplissage net par cycle d'écriture : la FIFO se remplit d'un mot toutes les $1/(f_W - f_R) = 1/(150-100)\times10^6 = \SI{20}{ns}$, soit $150/50 = 3$ cycles d'écriture pour un mot ``en excès''. Pendant 64 cycles d'écriture ($\SI{426.7}{ns}$), la FIFO écrit 64 mots et lit $426{,}7/10 = 42{,}7 \approx 42$ mots. Occupation maximale : $64 - 42 = 22$ mots.
 
-(b) Profondeur minimale : \textbf{22 mots} (prendre 32 pour la marge, puissance de 2).
+(b) Profondeur minimale : \textbf{22 mots}. En pratique, la synchronisation des pointeurs (2 bascules dans chaque sens) retarde la vision que chaque domaine a de l'autre de 2--3 cycles, ce qui ajoute quelques mots d'occupation apparente : prendre \textbf{32} (puissance de 2, exigée par le codage Gray des pointeurs).
 \end{pratique}
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Pourquoi la violation de hold ne peut-elle pas être corrigée en changeant la fréquence d'horloge ? Reliez votre réponse à la formule de la contrainte.
-\item En technologie $\SI{7}{nm}$, les délais d'interconnexion dominent les délais de portes. Pourquoi les fils deviennent-ils ``plus lents'' quand la technologie progresse ? (Pensez à la résistance des fils fins et au couplage capacitif.)
-\item Pourquoi utilise-t-on le code Gray pour les pointeurs de FIFO asynchrone ? Que se passerait-il avec du binaire naturel ?
-\item Un oscillateur en anneau de 5 inverseurs a un jitter de $\SI{10}{ps}$ RMS. Si on passe à 11 inverseurs (fréquence plus basse), le jitter augmente-t-il ou diminue-t-il ? Pourquoi ? (Pensez à l'accumulation de bruit.)
-\end{enumerate}
+\textbf{Q1.} Pourquoi la violation de hold ne peut-elle pas être corrigée en changeant la fréquence d'horloge ? Reliez votre réponse à la formule de la contrainte.
+
+\textit{Réponse : la contrainte de hold, $t_{cq,\min} + t_{\text{comb,min}} \geq t_h + t_{\text{skew,hold}}$, ne contient pas $T_{\text{clk}}$ : lancement et capture sont déclenchés par le \textbf{même} front. Changer la fréquence déplace les fronts suivants, pas ce qui se passe autour de celui-là. Le remède est d'allonger le chemin court (buffers de délai) ou de réduire le skew.}
+
+\textbf{Q2.} En technologie $\SI{7}{nm}$, les délais d'interconnexion dominent les délais de portes. Pourquoi les fils deviennent-ils ``plus lents'' quand la technologie progresse ? (Pensez à la résistance des fils fins et au couplage capacitif.)
+
+\textit{Réponse : la résistance linéique explose --- la section diminue au carré du facteur d'échelle, et sous $\sim\SI{30}{nm}$ de largeur s'ajoutent la diffusion aux joints de grains, aux surfaces, et les barrières de diffusion qui mangent la section utile de cuivre. La capacité, elle, ne baisse pas : les fils se rapprochent et le couplage latéral augmente. Le produit $RC$ par unité de longueur croît donc, alors que les portes accélèrent : le mur du délai de câblage.}
+
+\textbf{Q3.} Pourquoi utilise-t-on le code Gray pour les pointeurs de FIFO asynchrone ? Que se passerait-il avec du binaire naturel ?
+
+\textit{Réponse : en Gray, un seul bit change entre deux valeurs consécutives : si l'échantillonnage tombe pendant la transition, on lit soit l'ancienne valeur, soit la nouvelle --- deux valeurs \textbf{valides}. En binaire naturel, une transition comme $011 \to 100$ change 3 bits : selon les délais de chaque bit, le domaine d'en face peut lire $000$, $111$, $110$\ldots{} des pointeurs aberrants qui font conclure à tort ``pleine'' ou ``vide'' --- corruption ou perte de données garanties à terme.}
+
+\textbf{Q4.} Un oscillateur en anneau de 5 inverseurs a un jitter de $\SI{10}{ps}$ RMS. Si on passe à 11 inverseurs (fréquence plus basse), le jitter augmente-t-il ou diminue-t-il ? Pourquoi ? (Pensez à l'accumulation de bruit.)
+
+\textit{Réponse : chaque inverseur ajoute une incertitude temporelle indépendante ; sur une période (deux tours de l'anneau, $2N$ étages), les variances s'additionnent : $\sigma_T \propto \sqrt{N}$. Le jitter \textbf{absolu} augmente donc ($10 \times \sqrt{11/5} \approx \SI{15}{ps}$ RMS). Mais la période croît en $N$ : le jitter \textbf{relatif} $\sigma_T/T \propto 1/\sqrt{N}$ s'améliore. Marche aléatoire en $\sqrt{N}$ contre période en $N$ : tout dépend de la métrique qui compte pour l'application.}
 
 % === RÉSUMÉ ===
 \section*{Résumé du chapitre}
@@ -14916,7 +15006,11 @@ FPGA vs ASIC & FPGA : routage contraint. ASIC : PVT multi-coins, marge $\sim 3\%
 \end{center}
 \end{ingenieur}
 
+\begin{retenir}
+\textbf{Ce qu'il faut emporter de ce chapitre :} le timing est un budget --- une période, des postes ($t_{cq}$, logique, câblage, $t_{su}$, skew, jitter), une marge de quelques pour cent que la STA vérifie sur tous les chemins et tous les coins PVT. Le setup se négocie, le hold non. Et dès qu'un système a plusieurs horloges, la métastabilité devient inévitable : on ne l'élimine pas, on la confine --- synchroniseur double bascule pour un bit, FIFO asynchrone à pointeurs Gray pour les données, règles CDC vérifiées par outil.
 
+Avec des bascules disciplinées et des frontières d'horloge maîtrisées, on peut enfin construire de l'intelligence séquentielle : le chapitre 23 reprend les machines à états esquissées au chapitre 21 et en fait une méthode de conception complète.
+\end{retenir}
 
 % ============================================================================
 % CHAPITRE 23 : MACHINES À ÉTATS (FSM)
