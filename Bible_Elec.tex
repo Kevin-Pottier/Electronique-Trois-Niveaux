@@ -16196,7 +16196,7 @@ Représentation des nombres en binaire, addition et soustraction multi-bits, com
 \begin{itemize}[nosep]
 \item $5 = 0101$, $3 = 0011$.
 \item $-3 = \overline{0011} + 1 = 1100 + 1 = 1101$.
-\item $5 + (-3) = 0101 + 1101 = 10010$. On garde les 4 bits de poids faible : $0010 = 2$. \checkmark
+\item $5 + (-3) = 0101 + 1101 = 10010$. On garde les 4 bits de poids faible : $0010 = 2$ --- le compte est bon.
 \item Le bit qui ``déborde'' (bit 5) est ignoré : il représente la retenue finale, qui n'a pas de sens en arithmétique signée.
 \end{itemize}
 \end{intuition}
@@ -16205,7 +16205,37 @@ Représentation des nombres en binaire, addition et soustraction multi-bits, com
 
 L'additionneur le plus simple est le \textbf{ripple carry adder} (RCA) : on met en cascade $n$ additionneurs complets (chapitre 20), la retenue de chaque étage devenant la retenue d'entrée du suivant.
 
-\begin{center}
+\begin{figure}[h]
+\centering
+\begin{circuitikz}[scale=0.9]
+  \node[xor port] (X1) at (2.3,3.3) {};
+  \node[xor port] (X2) at (5.6,3.0) {};
+  \node[and port] (A2) at (5.6,1.5) {};
+  \node[and port] (A1) at (2.3,0.4) {};
+  \node[or port]  (O1) at (8.2,1.1) {};
+  \draw (X1.in 1) -- ++(-0.6,0) coordinate(a1) -- ++(-1.3,0) node[ocirc]{} node[left]{$A$};
+  \draw (X1.in 2) -- ++(-1.0,0) coordinate(b1) -- ++(-0.9,0) node[ocirc]{} node[left]{$B$};
+  \filldraw (a1) circle (1.5pt); \filldraw (b1) circle (1.5pt);
+  \draw (a1) |- (A1.in 1);
+  \draw (b1) |- (A1.in 2);
+  \draw (X1.out) -- ++(0.5,0) coordinate(p);
+  \filldraw (p) circle (1.5pt);
+  \draw (p) |- (X2.in 1);
+  \draw (p) |- (A2.in 1);
+  \draw (4.2,-0.5) node[ocirc]{} node[below]{$C_{\text{in}}$} -- (4.2,1.23) coordinate(c1);
+  \filldraw (c1) circle (1.5pt);
+  \draw (c1) -- (A2.in 2);
+  \draw (4.2,1.23) -- (4.2,2.73) -- (X2.in 2);
+  \draw (A1.out) -- ++(0.4,0) |- (O1.in 2);
+  \draw (A2.out) -- ++(0.3,0) |- (O1.in 1);
+  \draw (X2.out) -- ++(0.7,0) node[ocirc]{} node[right]{$S$};
+  \draw (O1.out) -- ++(0.5,0) node[ocirc]{} node[right]{$C_{\text{out}}$};
+\end{circuitikz}
+\caption{Le full adder au niveau portes : $S = A \oplus B \oplus C_{\text{in}}$ et $C_{\text{out}} = A\cdot B + (A \oplus B)\cdot C_{\text{in}}$. Les signaux intermédiaires sont déjà le Generate ($A \cdot B$) et le Propagate ($A \oplus B$) du carry lookahead.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
 \begin{tikzpicture}[scale=0.85, >=Stealth]
   % 4 full adders
   \foreach \i/\x in {0/0, 1/2.5, 2/5, 3/7.5} {
@@ -16228,7 +16258,8 @@ L'additionneur le plus simple est le \textbf{ripple carry adder} (RCA) : on met 
   \draw[->, thick, red!70!black] (6.5,0.75) -- (7.5,0.75);
   \draw[->, thick, red!70!black] (9,0.75) -- (10,0.75) node[right, font=\footnotesize]{$C_{\text{out}}$};
 \end{tikzpicture}
-\end{center}
+\caption{L'additionneur ripple carry 4 bits : la retenue (en rouge) traverse les étages un à un. Le délai croît linéairement avec $n$ --- c'est toute la limite de l'architecture, et tout l'enjeu de la suite du chapitre.}
+\end{figure}
 
 \begin{formule}
 \textbf{Délai du RCA :} la retenue doit ``traverser'' tous les étages. Si chaque additionneur complet a un délai $t_{FA}$ pour propager la retenue :
@@ -16251,6 +16282,14 @@ A - B = A + (-B) = A + \overline{B} + 1
 \]
 Réalisation : on inverse les bits de $B$ (XOR avec ``1'') et on injecte $C_{\text{in}} = 1$ dans le premier additionneur. Le même circuit additionneur réalise donc \textbf{addition et soustraction} avec une seule ligne de contrôle (XOR sur $B$, $C_{\text{in}}$). C'est l'élégance du complément à deux.
 \end{formule}
+
+\begin{attention}
+\textbf{Le débordement signé (overflow).} Ignorer la retenue finale est correct\ldots{} tant que le résultat tient dans la plage. Mais sur 8 bits, $127 + 1 = 01111111 + 00000001 = 10000000 = -128$ ! Détection matérielle :
+\[
+V = C_n \oplus C_{n-1}
+\]
+--- la retenue \textit{entrante} et \textit{sortante} du bit de signe diffèrent. Formulation équivalente : deux opérandes de même signe qui produisent un résultat de signe opposé. C'est l'origine du drapeau $V$ de tous les processeurs ; la retenue $C_{\text{out}}$, elle, signale le débordement \textit{non signé}. Deux drapeaux, deux arithmétiques --- un seul additionneur.
+\end{attention}
 
 \begin{retenir}
 \textbf{L'essentiel :}
@@ -16465,6 +16504,25 @@ bfloat16 & 16 & 1 & 8 & 7 & $\sim 2$ chiffres (large gamme) \\
 \end{enumerate}
 \end{formule}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=0.31cm, y=1cm]
+  \draw[thick, fill=red!15]    (0,0) rectangle (1,0.85);
+  \draw[thick, fill=orange!15] (1,0) rectangle (9,0.85);
+  \draw[thick, fill=blue!10]   (9,0) rectangle (32,0.85);
+  \node[font=\footnotesize] at (0.5,0.42) {S};
+  \node[font=\footnotesize] at (5,0.42) {exposant (8)};
+  \node[font=\footnotesize] at (20.5,0.42) {mantisse (23)};
+  \node[font=\tiny, above] at (0.5,0.9) {31};
+  \node[font=\tiny, above] at (1.7,0.9) {30};
+  \node[font=\tiny, above] at (8.3,0.9) {23};
+  \node[font=\tiny, above] at (9.7,0.9) {22};
+  \node[font=\tiny, above] at (31.3,0.9) {0};
+  \node[font=\footnotesize, below] at (16,-0.2) {$x = (-1)^S \times 1{,}m \times 2^{\,e - 127}$};
+\end{tikzpicture}
+\caption{Le format FP32 : signe, exposant biaisé ($e - 127$) et mantisse à bit implicite (le ``1,'' de tête n'est pas stocké). Un flottant n'est qu'un entier découpé en trois champs --- et toute l'arithmétique flottante consiste à aligner, opérer, renormaliser et arrondir ces champs.}
+\end{figure}
+
 \begin{attention}
 \textbf{Pièges de l'arithmétique flottante :}
 \begin{itemize}[nosep]
@@ -16516,7 +16574,7 @@ Dans un processeur moderne, le chemin critique de l'ALU est souvent l'\textbf{ad
 \begin{pratique}
 \textbf{Solution :} $42 = 00101010$. $\overline{42} = 11010101$. $+1 = 11010110 = -42$.
 
-Vérification : $00101010 + 11010110 = 100000000$. On garde les 8 bits LSB : $00000000 = 0$. \checkmark
+Vérification : $00101010 + 11010110 = 100000000$. On garde les 8 bits LSB : $00000000 = 0$ --- vérifié.
 \end{pratique}
 
 \textbf{Exercice 25.2 ---} Un microcontrôleur à $\SI{100}{MHz}$ utilise un additionneur ripple carry 16 bits avec $t_{FA} = \SI{200}{ps}$. L'addition tient-elle dans un cycle ?
@@ -16527,7 +16585,7 @@ Vérification : $00101010 + 11010110 = 100000000$. On garde les 8 bits LSB : $00
 
 \subsection*{Niveau intermédiaire}
 
-\textbf{Exercice 25.3 ---} Un processeur à $\SI{3}{GHz}$ doit faire une addition 64 bits par cycle. Quel délai max pour l'additionneur ? Quelle architecture choisir entre RCA, CLA et Kogge-Stone ?
+\textbf{Exercice 25.3 ---} Un processeur à $\SI{3}{GHz}$ doit faire une addition 64 bits par cycle ($t_{FA} = \SI{50}{ps}$ ; cellule préfixée $\sim\SI{30}{ps}$/niveau). Quel délai max pour l'additionneur ? Quelle architecture choisir entre RCA, CLA et Kogge-Stone ?
 
 \begin{pratique}
 \textbf{Solution :} $T_{\text{clk}} = \SI{333}{ps}$. En retirant $t_{cq}$, $t_{su}$, skew et marge ($\sim\SI{100}{ps}$), budget logique $\sim\SI{233}{ps}$.
@@ -16556,7 +16614,7 @@ Réseau : $15 t_{FA}$. Wallace est $\sim 20\%$ plus rapide. Pour des multiplieur
 \begin{pratique}
 \textbf{Solution :}
 
-Ordre $(a + b) + c$ : $a + b = 0$ exact. $0 + 1 = 1$. \checkmark
+Ordre $(a + b) + c$ : $a + b = 0$ exact, puis $0 + 1 = 1$ --- le bon résultat.
 
 Ordre $a + (b + c)$ : $b + c = -10^{20} + 1$. Mais $10^{20}$ a un exposant binaire $\sim 67$, et la mantisse FP32 n'a que $24$ bits utiles (24 chiffres binaires). Le ``1'' est perdu dans l'arrondi : $b + c = -10^{20}$ exactement. Puis $a + (-10^{20}) = 0$.
 
@@ -16578,17 +16636,26 @@ Ordre $a + (b + c)$ : $b + c = -10^{20} + 1$. Mais $10^{20}$ a un exposant binai
 
 (b) $P = 1024 \times 30\times10^{-12} \times 1{,}5\times10^9 = \SI{46}{W}$. Ordre de grandeur d'un GPU mobile.
 
-(c) bfloat16 / int8 : multiplieurs $\sim 4\times$ à $16\times$ plus petits (la complexité de la multiplication est $\propto n^2$). Plus de MAC par mm$^2$, moins d'énergie par opération. L'IA tolère cette précision réduite car les réseaux sont robustes au bruit numérique. Une carte qui fait \SI{300}{TFLOPS} en FP16 peut faire \SI{1.2}{TOPS} en int8.
+(c) bfloat16 / int8 : multiplieurs $\sim 4\times$ à $16\times$ plus petits (la complexité de la multiplication est $\propto n^2$). Plus de MAC par mm$^2$, moins d'énergie par opération. L'IA tolère cette précision réduite car les réseaux sont robustes au bruit numérique. Une carte qui fait $300$ TFLOPS en FP16 dépasse $1200$ TOPS en int8 : opérandes $4\times$ plus courts (multiplieurs $\propto n^2$), et la parcimonie structurée double encore la cadence.
 \end{pratique}
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Pourquoi le complément à deux n'a-t-il qu'une seule représentation du zéro alors que le signe-magnitude en a deux (+0 et $-0$) ? Quel avantage matériel ?
-\item Un additionneur Kogge-Stone a $n \log_2 n$ cellules contre $n$ pour le RCA. Pourquoi accepter ce coût en surface ?
-\item L'addition flottante n'est pas associative à cause des arrondis. Pourquoi est-ce un problème majeur pour le calcul scientifique parallèle ?
-\item Un compilateur remplace $x/8$ par $x \gg 3$ (décalage à droite de 3 bits). Pourquoi cette optimisation est-elle si importante ? Que se passe-t-il pour $x = -1$ en complément à deux ?
-\end{enumerate}
+\textbf{Q1.} Pourquoi le complément à deux n'a-t-il qu'une seule représentation du zéro alors que le signe-magnitude en a deux (+0 et $-0$) ? Quel avantage matériel ?
+
+\textit{Réponse : le complément à deux est une arithmétique modulo $2^n$ : chaque motif de bits est un résidu unique, et $-x \equiv 2^n - x$. Le zéro n'a qu'un antécédent ($\overline{0}+1 = 0$ après repli), au prix d'une plage asymétrique ($-128$ sans $+128$). Avantage matériel décisif : un \textbf{seul additionneur}, sans logique de signe ni cas particulier, fait addition, soustraction et comparaison --- et le test ``$= 0$'' est un simple NOR de tous les bits, sans avoir à reconnaître deux zéros.}
+
+\textbf{Q2.} Un additionneur Kogge-Stone a $n \log_2 n$ cellules contre $n$ pour le RCA. Pourquoi accepter ce coût en surface ?
+
+\textit{Réponse : l'additionneur est sur le chemin critique de \textbf{chaque cycle} : son délai plafonne la fréquence du c\oe ur entier. La surface se paie une fois, le délai se paie des milliards de fois par seconde. Le Kogge-Stone atteint la profondeur minimale ($\log_2 n$ niveaux) avec un fan-out borné à 2 et un câblage régulier : c'est l'architecture qui achète le plus de gigahertz par mm$^2$ --- un échange surface contre temps typique de toute l'électronique numérique.}
+
+\textbf{Q3.} L'addition flottante n'est pas associative à cause des arrondis. Pourquoi est-ce un problème majeur pour le calcul scientifique parallèle ?
+
+\textit{Réponse : paralléliser une somme, c'est changer l'ordre d'association --- donc les arrondis intermédiaires, donc le résultat. Le même programme donne des valeurs différentes selon le nombre de threads, la machine, voire l'exécution : reproductibilité perdue, validation et débogage cauchemardesques, et les algorithmes sensibles (résidus, convergences) peuvent diverger. Parades : sommes compensées (Kahan), accumulateurs en précision étendue, ou ordres de réduction figés --- toutes payées en performance.}
+
+\textbf{Q4.} Un compilateur remplace $x/8$ par $x \gg 3$ (décalage à droite de 3 bits). Pourquoi cette optimisation est-elle si importante ? Que se passe-t-il pour $x = -1$ en complément à deux ?
+
+\textit{Réponse : une division prend 20--80 cycles, un décalage un seul : le gain est massif. Mais pour $x = -1$ : le décalage arithmétique réinjecte le bit de signe, $111\ldots1 \gg 3 = 111\ldots1 = -1$, alors que la division C tronque vers zéro : $-1/8 = 0$. Le décalage calcule un arrondi vers $-\infty$, pas vers zéro. Les compilateurs corrigent en ajoutant un biais ($x + 7$ si $x < 0$) avant de décaler --- l'optimisation reste rentable, mais elle n'est pas gratuite pour les signés.}
 
 % === RÉSUMÉ ===
 \section*{Résumé du chapitre}
@@ -16639,6 +16706,13 @@ ALU = chemin critique & Additionneur 64b limite $f_{\text{CPU}}$ à $\sim\SI{4}{
 \end{ingenieur}
 
 % ============================================================================
+
+\begin{retenir}
+\textbf{Ce qu'il faut emporter de ce chapitre :} toute l'arithmétique matérielle découle d'un choix (le complément à deux, qui unifie addition, soustraction et comparaison dans un seul circuit) et d'un combat (briser la dépendance séquentielle de la retenue : lookahead, select, préfixes). La multiplication se parallélise en arbre, la division reste rétive, et le flottant achète sa dynamique au prix de l'associativité --- avec les drapeaux $C$ et $V$ pour surveiller les deux arithmétiques d'un même additionneur.
+
+Nous disposons maintenant de toutes les briques : logique, séquentiel, timing, machines d'état, mémoire, calcul. Le chapitre 26 les assemble --- bus, registres, chemins de données, contrôle --- pour construire un système numérique complet.
+\end{retenir}
+
 % ============================================================================
 % CHAPITRE 26 : ARCHITECTURE NUMÉRIQUE
 % VERSION PEER-REVIEW
