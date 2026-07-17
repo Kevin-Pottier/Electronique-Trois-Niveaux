@@ -15684,35 +15684,36 @@ Aucune technologie ne satisfait tout : c'est pourquoi les systèmes utilisent un
 
 La cellule SRAM est un \textbf{verrou croisé} : deux inverseurs CMOS connectés tête-bêche, formant une boucle de rétroaction positive qui maintient un état binaire stable.
 
-\begin{center}
-\begin{tikzpicture}[scale=0.8, >=Stealth]
-  % Inverseur 1
-  \draw[thick, fill=blue!8] (0,0) rectangle (1.5,2);
-  \node[font=\footnotesize] at (0.75,1) {INV$_1$};
-  % Inverseur 2
-  \draw[thick, fill=blue!8] (4,0) rectangle (5.5,2);
-  \node[font=\footnotesize] at (4.75,1) {INV$_2$};
-  % Rétroaction croisée
-  \draw[->, thick] (1.5,1.5) -- (4,0.5);
-  \draw[->, thick] (4,1.5) -- (1.5,0.5);
-  % Noeud Q
-  \filldraw (2.5,1.5) circle (2pt);
-  \node[above, font=\small] at (2.5,1.5) {$Q$};
-  % Noeud Qbar
-  \filldraw (3,0.5) circle (2pt);
-  \node[below, font=\small] at (3,0.5) {$\overline{Q}$};
-  % Transistors d'accès
-  \draw[thick] (2.5,1.5) -- (2.5,3);
-  \draw (2.5,3) node[nmos, anchor=S, rotate=90, xscale=-1](T1){};
-  \draw (T1.D) -- ++(0.8,0) node[right, font=\small]{BL};
-  \draw (T1.G) -- ++(0,0.5) node[above, font=\small]{WL};
-  %
-  \draw[thick] (3,0.5) -- (3,-1);
-  \draw (3,-1) node[nmos, anchor=D, rotate=90](T2){};
-  \draw (T2.S) -- ++(0.8,0) node[right, font=\small]{$\overline{\text{BL}}$};
-  \draw (T2.G) -- ++(0,-0.5) node[below, font=\small]{WL};
-\end{tikzpicture}
-\end{center}
+\begin{figure}[h]
+\centering
+\begin{circuitikz}[scale=0.9, american]
+  % Anneau des deux inverseurs tête-bêche
+  \node[not port] (I1) at (2.1,1.7) {};
+  \node[not port, xscale=-1] (I2) at (2.1,0) {};
+  \draw (I1.out) -- (4.0,1.7) -- (4.0,0) -- (I2.in);
+  \draw (I2.out) -- (0.2,0) -- (0.2,1.7) -- (I1.in);
+  \filldraw (4.0,0.85) circle (1.5pt);
+  \node[above left, font=\small] at (4.0,0.9) {$Q$};
+  \filldraw (0.2,0.85) circle (1.5pt);
+  \node[above right, font=\small] at (0.2,0.9) {$\overline{Q}$};
+  % Transistors d'accès (grille vers le haut -> WL)
+  \draw (4.75,0.85) node[nmos, rotate=-90, anchor=S](T1){};
+  \draw (4.0,0.85) -- (T1.S);
+  \draw (T1.D) -- ++(0.45,0) coordinate(bl);
+  \draw ([yshift=1.9cm]bl) node[above, font=\small]{BL} -- ([yshift=-0.9cm]bl);
+  \filldraw (bl) circle (1.5pt);
+  \draw (-0.55,0.85) node[nmos, rotate=-90, anchor=D](T2){};
+  \draw (T2.D) -- (0.2,0.85);
+  \draw (T2.S) -- ++(-0.45,0) coordinate(blb);
+  \draw ([yshift=1.9cm]blb) node[above, font=\small]{$\overline{\text{BL}}$} -- ([yshift=-0.9cm]blb);
+  \filldraw (blb) circle (1.5pt);
+  % Word line commune
+  \draw (T1.G) -- (T1.G |- 0,3.1);
+  \draw (T2.G) -- (T2.G |- 0,3.1);
+  \draw (T2.G |- 0,3.1) -- (T1.G |- 0,3.1) node[midway, above, font=\small]{WL};
+\end{circuitikz}
+\caption{La cellule SRAM 6T : deux inverseurs tête-bêche forment l'anneau de rétroaction qui tient le bit ($Q$, $\overline{Q}$), et deux NMOS d'accès, commandés par la ligne de mot WL, relient ces n\oe uds à la paire différentielle de lignes de bit BL/$\overline{\text{BL}}$.}
+\end{figure}
 
 \begin{formule}
 \textbf{Structure : la cellule 6T.}
@@ -15753,6 +15754,20 @@ Un \textbf{sense amplifier} (rétroaction positive, essentiellement un verrou SR
 \textbf{La lecture est destructive :} le partage de charge vide partiellement le condensateur. Après chaque lecture, il faut \textbf{réécrire} la donnée (``restore'').
 \end{formule}
 
+\begin{figure}[h]
+\centering
+\begin{circuitikz}[scale=0.95, american]
+  \draw (2.0,0.9) node[nmos, rotate=-90, anchor=S](T){};
+  \draw (T.G) -- (T.G |- 0,2.6);
+  \draw (T.G |- 0,2.6) -- ++(-1.6,0) node[left, font=\small]{WL};
+  \draw (T.D) -- ++(0.55,0) coordinate(bl);
+  \draw ([yshift=1.7cm]bl) node[above, font=\small]{BL ($C_{BL} \sim 10\,C_{\text{cell}}$)} -- ([yshift=-1.1cm]bl);
+  \filldraw (bl) circle (1.5pt);
+  \draw (T.S) -- ++(-0.4,0) coordinate(a) to[C, l_=$C_{\text{cell}}$] (a |- 0,-1.1) node[ground]{};
+\end{circuitikz}
+\caption{La cellule DRAM 1T1C : un transistor d'accès et un condensateur. À la lecture, la charge se partage avec la ligne de bit ($C_{BL} \gg C_{\text{cell}}$) : il ne reste qu'une bosse de $\sim\SI{100}{mV}$ que le sense amplifier doit trancher --- et la lecture a vidé la cellule, qu'il faut réécrire.}
+\end{figure}
+
 \begin{attention}
 \textbf{Le problème fondamental de la DRAM : la fuite.}
 
@@ -15765,7 +15780,7 @@ Le condensateur de stockage fuit à cause :
 
 Un condensateur de $\SI{20}{fF}$ chargé à $\SI{1}{V}$ stocke $Q = \SI{20}{fC}$. Avec un courant de fuite total de $\sim\SI{1}{fA}$, la charge se vide en $\tau = Q/I = \SI{20}{s}$. Mais la marge de détection du sense amplifier impose de lire \textit{avant} que la tension ne chute de plus de $\sim 30\%$ $\Rightarrow$ temps de rétention réel $\sim\SI{64}{ms}$.
 
-\textbf{Solution : le rafraîchissement} (\textit{refresh}). Toutes les $\SI{64}{ms}$ (standard JEDEC), \textbf{chaque ligne} de la DRAM doit être lue et réécrite, même si personne ne la demande. Le refresh consomme de l'énergie et de la bande passante mémoire ($\sim 5\%$--$10\%$ du débit total).
+\textbf{Solution : le rafraîchissement} (\textit{refresh}). Toutes les $\SI{64}{ms}$ (standard JEDEC), \textbf{chaque ligne} de la DRAM doit être lue et réécrite, même si personne ne la demande. Le refresh consomme de l'énergie et de la bande passante mémoire ($\sim 3\%$--$7\%$ du débit total selon la température).
 \end{attention}
 
 \subsection{La Flash : la mémoire par piégeage de charge}
@@ -15795,6 +15810,30 @@ La cellule Flash est un MOSFET modifié avec \textbf{deux grilles} :
 
 \textbf{Endurance :} chaque cycle d'écriture/effacement dégrade l'oxyde tunnel (création de pièges). Après $10^3$ à $10^5$ cycles, l'oxyde est trop dégradé pour retenir les électrons $\Rightarrow$ \textbf{usure}. Les contrôleurs SSD utilisent le ``wear leveling'' pour répartir les écritures.
 \end{formule}
+
+Ces trois technologies ne se concurrencent pas : elles s'empilent en une \textbf{hiérarchie}, du plus rapide au plus vaste :
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[y=0.92cm, x=1cm]
+  \foreach \i/\w/\c/\n/\lat/\cap in {
+    4/2.6/blue!30/{Registres}/{$<\SI{1}{ns}$}/{$\sim$ ko},
+    3/4.2/blue!22/{Cache SRAM}/{1--\SI{5}{ns}}/{Mo},
+    2/5.8/blue!15/{DRAM}/{$\sim\SI{50}{ns}$}/{Go},
+    1/7.4/orange!22/{SSD (Flash)}/{$\sim\SI{50}{\micro s}$}/{To},
+    0/9.0/gray!20/{HDD / bande}/{$\sim\SI{10}{ms}$}/{To+}}{
+    \draw[thick, fill=\c] (-\w/2,\i) rectangle (\w/2,\i+0.82);
+    \node[font=\footnotesize] at (0,\i+0.41) {\n};
+    \node[font=\scriptsize, left] at (-4.9,\i+0.41) {\lat};
+    \node[font=\scriptsize, right] at (4.9,\i+0.41) {\cap};
+  }
+  \node[font=\scriptsize, gray!30!black, above] at (-4.55,4.95) {latence};
+  \node[font=\scriptsize, gray!30!black, above] at (4.75,4.95) {capacité};
+  \draw[->, thick, gray!60] (-5.6,0.3) -- (-5.6,4.6) node[midway, left, font=\scriptsize, rotate=90, yshift=6pt]{vitesse, coût/bit};
+  \draw[->, thick, gray!60] (5.75,4.6) -- (5.75,0.3) node[midway, right, font=\scriptsize, rotate=-90, yshift=6pt]{densité};
+\end{tikzpicture}
+\caption{La hiérarchie mémoire : chaque étage échange de la latence contre de la capacité. Le cache SRAM masque les $\sim\SI{50}{ns}$ de la DRAM, la DRAM masque les $\SI{50}{\micro s}$ du SSD --- tout l'art des architectures est de garder les données chaudes en haut de la pyramide.}
+\end{figure}
 
 \begin{retenir}
 \textbf{L'essentiel :}
@@ -15865,9 +15904,9 @@ soit $\sim 100$ cycles d'horloge à $\SI{3}{GHz}$. C'est pourquoi le cache (SRAM
 \begin{attention}
 \textbf{Le refresh consomme de la bande passante.}
 
-Standard JEDEC DDR4 : toutes les lignes doivent être rafraîchies toutes les $\SI{64}{ms}$. Pour une puce de $\SI{8}{Gb}$ avec $2^{17}$ lignes : $2^{17}/64\times10^{-3} = 2048$ refresh par ms, soit un refresh toutes les $\SI{488}{ns}$.
+Standard JEDEC DDR4 : toutes les lignes doivent être rafraîchies toutes les $\SI{64}{ms}$ --- mais une commande REF ne traite pas \textit{une} ligne : elle en rafraîchit un \textbf{lot} en interne. Le standard impose $8192$ commandes par fenêtre, soit une toutes les $t_{\text{REFI}} = 64\,\text{ms}/8192 = \SI{7.8}{\micro s}$ ; pour $2^{17}$ lignes, chaque REF traite $2^{17}/8192 = 16$ lignes.
 
-Chaque refresh occupe le bus pendant $t_{\text{RFC}} \approx \SI{260}{ns}$ (DDR4). Bande passante perdue : $260/488 = 53\%$ $\ldots$ Non : les refreshes sont répartis dans le temps (``distributed refresh''). En pratique, $\sim 5\%$--$10\%$ de la bande passante est perdue au refresh.
+Chaque REF occupe la puce pendant $t_{\text{RFC}} \approx \SI{260}{ns}$ (DDR4 \SI{8}{Gb}). Bande passante perdue : $t_{\text{RFC}}/t_{\text{REFI}} = 260/7812 \approx 3{,}3\,\%$. (Le calcul naïf ``une ligne $=$ un REF'' donnerait $53\,\%$ --- c'est le regroupement qui rend le refresh viable.)
 
 À haute température ($> \SI{85}{°C}$), les fuites augmentent exponentiellement et la fréquence de refresh doit \textbf{doubler} (passage à $\SI{32}{ms}$). Les serveurs en datacenter doivent prévoir cette pénalité.
 \end{attention}
@@ -15938,7 +15977,7 @@ En réduisant la longueur de grille du transistor d'accès, $I_{\text{off}}$ aug
 \begin{formule}
 Le \textbf{sense amplifier} est le circuit critique qui fait le lien entre la physique analogique de la cellule mémoire et le monde numérique. C'est essentiellement un verrou SR (chapitre 21) avec un gain très élevé, conçu pour amplifier une différence de tension de $\sim\SI{50}{mV}$--$\SI{200}{mV}$ en un signal rail-à-rail ($0$ à $V_{DD}$) en un temps très court ($\sim\SI{1}{ns}$).
 
-\textbf{Le sens amplifier de la DRAM est un amplificateur analogique :}
+\textbf{Le sense amplifier de la DRAM est un amplificateur analogique :}
 \begin{itemize}[nosep]
 \item Il doit détecter une charge de $\sim\SI{20}{fC}$ sur un fond de bruit de $\sim\SI{5}{fC}$ (rapport signal/bruit $\sim 4$).
 \item Son offset de transistor (dû aux variations de $V_{th}$, chapitre 17) doit être $< \SI{30}{mV}$, sinon il lit le bit à l'envers.
@@ -15997,7 +16036,7 @@ Mais si $C_{\text{cell}}$ descend à $\SI{10}{fF}$ : $\Delta V_{BL} = \SI{52}{mV
 \begin{pratique}
 \textbf{Solution :} 16 niveaux dans $\SI{4}{V}$ : espacement $= 4/15 = \SI{267}{mV}$ entre centres. Marge entre distributions $\approx 267 - 2\times\text{largeur de distribution}$.
 
-Si le bruit est gaussien ($\sigma = \SI{100}{mV}$) : la marge est $267/(2\sigma) \approx 1{,}33\sigma$. $P_{\text{erreur}} \approx \text{erfc}(1{,}33/\sqrt{2})/2 \approx 9\%$ par niveau, soit un BER brut $\sim 10^{-1}$. C'est \textbf{catastrophique} sans ECC. Avec LDPC : le BER corrigé descend à $< 10^{-15}$.
+Si le bruit est gaussien ($\sigma = \SI{100}{mV}$) : la marge est $267/(2\sigma) \approx 1{,}33\sigma$. $P_{\text{erreur}} \approx \text{erfc}(1{,}33/\sqrt{2})/2 \approx 9\,\%$ d'un côté --- un niveau intérieur a deux voisins, soit $\sim 18\,\%$ --- d'où un BER brut $\sim 10^{-1}$. C'est \textbf{catastrophique} sans ECC. Avec LDPC : le BER corrigé descend à $< 10^{-15}$.
 \end{pratique}
 
 \subsection*{Niveau ingénieur}
@@ -16011,13 +16050,9 @@ Si le bruit est gaussien ($\sigma = \SI{100}{mV}$) : la marge est $267/(2\sigma)
 \begin{pratique}
 \textbf{Solution :}
 
-(a) $\SI{25}{°C}$ : $2^{17}/64\times10^{-3} = 131072/0{,}064 = 2{,}05\times10^6$ refresh/s. $\SI{85}{°C}$ : $\times 2 = 4{,}1\times10^6$ refresh/s.
+(a) Une commande REF rafraîchit un \textbf{lot} de lignes, pas une seule : le standard impose $8192$ commandes par fenêtre de $\SI{64}{ms}$, chacune traitant $2^{17}/8192 = 16$ lignes. Cadence : $8192/0{,}064 = 128\,000$ REF/s à $\SI{25}{°C}$ ($t_{\text{REFI}} = \SI{7.8}{\micro s}$) ; fenêtre $\SI{32}{ms}$ à $\SI{85}{°C}$ $\Rightarrow$ $256\,000$ REF/s ($t_{\text{REFI}} = \SI{3.9}{\micro s}$).
 
-(b) Temps passé en refresh par seconde :
-
-$\SI{25}{°C}$ : $2{,}05\times10^6 \times 260\times10^{-9} = \SI{0.533}{s/s} = 53\%$. Mais les refreshes sont \textit{distribués} sur 8 rangs et pipelinés : en pratique $\sim 5\%$--$7\%$.
-
-$\SI{85}{°C}$ : $\times 2 \Rightarrow \sim 10\%$--$14\%$ de bande passante perdue. Impact significatif pour les serveurs HPC.
+(b) Bande passante perdue $= t_{\text{RFC}}/t_{\text{REFI}}$ : $260/7812 \approx 3{,}3\,\%$ à $\SI{25}{°C}$, $260/3906 \approx 6{,}7\,\%$ à $\SI{85}{°C}$. (Le calcul naïf ``une ligne $=$ une commande de $\SI{260}{ns}$'' donnerait $53\,\%$ : c'est le regroupement de $16$ lignes par REF qui rend la DRAM viable.) En datacenter chaud, la pénalité double --- un vrai poste de performance pour le HPC.
 \end{pratique}
 
 \textbf{Exercice 24.6 ---} Une cellule SRAM en technologie $\SI{7}{nm}$ a une SNM de $\SI{120}{mV}$ nominale. La variabilité de $V_{th}$ ($\sigma_{V_{th}} = \SI{30}{mV}$) réduit la SNM. Si la SNM suit une distribution gaussienne centrée sur $\SI{120}{mV}$ avec $\sigma = \SI{40}{mV}$ :
@@ -16040,12 +16075,21 @@ $\SI{85}{°C}$ : $\times 2 \Rightarrow \sim 10\%$--$14\%$ de bande passante perd
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Pourquoi la cellule DRAM est-elle destructive en lecture alors que la SRAM ne l'est pas ? Reliez votre réponse au mécanisme de stockage (charge vs rétroaction).
-\item La Flash NAND 3D empile 200+ couches. Pourquoi cette approche contourne-t-elle les limites de scaling que la Flash planaire a rencontrées ?
-\item Le sense amplifier est décrit comme un ``verrou SR avec un gain élevé''. Pourquoi a-t-il besoin de gain pour fonctionner, et quel lien cela a-t-il avec l'AOP du chapitre 18 ?
-\item Un rayon cosmique dépose $\SI{50}{fC}$ dans une cellule SRAM dont la capacité critique est $\SI{1}{fF}$. Quelle variation de tension cela provoque-t-il ? Est-ce suffisant pour retourner le bit ?
-\end{enumerate}
+\textbf{Q1.} Pourquoi la cellule DRAM est-elle destructive en lecture alors que la SRAM ne l'est pas ? Reliez votre réponse au mécanisme de stockage (charge vs rétroaction).
+
+\textit{Réponse : la DRAM stocke une charge \textbf{passive} : la connecter à la ligne de bit ($C_{BL} \gg C_{\text{cell}}$), c'est la partager --- la tension de cellule s'effondre vers la valeur commune, l'information est consommée par l'acte même de la lire, d'où le restore. La SRAM stocke un état \textbf{activement régénéré} : la boucle d'inverseurs refournit en permanence le courant ; les transistors d'accès ne font qu'échantillonner des n\oe uds que la rétroaction maintient.}
+
+\textbf{Q2.} La Flash NAND 3D empile 200+ couches. Pourquoi cette approche contourne-t-elle les limites de scaling que la Flash planaire a rencontrées ?
+
+\textit{Réponse : les murs de la Flash planaire sont tous liés au rétrécissement \textbf{latéral} : oxyde tunnel incompressible sous $\sim\SI{6}{nm}$, $\sim 100$ électrons par cellule, couplage entre voisines. La 3D cesse de rétrécir : chaque cellule reste ``grosse'' ($\sim\SI{40}{nm}$, marges physiques restaurées) et la densité vient de l'empilement vertical --- avec un bonus économique : une même séquence de gravure traverse toutes les couches d'un coup.}
+
+\textbf{Q3.} Le sense amplifier est décrit comme un ``verrou SR avec un gain élevé''. Pourquoi a-t-il besoin de gain pour fonctionner, et quel lien cela a-t-il avec l'AOP du chapitre 18 ?
+
+\textit{Réponse : le déséquilibre initial est de quelques dizaines de mV ; la rétroaction positive du verrou l'amplifie exponentiellement, avec une constante de temps $\tau \sim C_{BL}/g_m$ : sans gain ($g_m$), pas de régénération --- et un offset supérieur au signal ferait basculer du mauvais côté. C'est exactement la paire différentielle d'entrée de l'AOP (chapitre 18), mêmes limites ($g_m$, offset de $V_{th}$, $C$), mais bouclée en \textbf{positif} pour trancher au lieu de négatif pour asservir.}
+
+\textbf{Q4.} Un rayon cosmique dépose $\SI{50}{fC}$ dans une cellule SRAM dont la capacité critique est $\SI{1}{fF}$. Quelle variation de tension cela provoque-t-il ? Est-ce suffisant pour retourner le bit ?
+
+\textit{Réponse : $\Delta V = Q/C = 50\,\text{fC}/1\,\text{fF} = \SI{50}{V}$ en théorie --- en pratique le n\oe ud est écrêté par les jonctions bien avant, mais l'ordre de grandeur dit tout : la charge critique de basculement est $Q_{\text{crit}} \approx C \times V_{DD}/2 \approx \SI{0.5}{fC}$, et le dépôt la dépasse de deux ordres de grandeur. Le bit est retourné à coup sûr --- et la charge diffusée peut toucher plusieurs cellules voisines (erreur multi-bits), ce qui impose l'entrelacement physique des mots protégés par ECC.}
 
 % === RÉSUMÉ ===
 \section*{Résumé du chapitre}
@@ -16072,7 +16116,7 @@ Fil rouge & Toute mémoire numérique repose sur un phénomène analogique \\
 \toprule
 SNM (SRAM) & Marge de stabilité du verrou. Dégradée par $V_{DD}\downarrow$, $T\uparrow$, variabilité \\
 Timing DRAM & $t_{\text{accès}} \approx t_{RP}+t_{RCD}+t_{CAS} \approx \SI{30}{ns}$--$\SI{50}{ns}$ ($100\times$ plus lent que SRAM) \\
-Refresh & Toutes les $\SI{64}{ms}$, $\times 2$ au-dessus de $\SI{85}{°C}$. Consomme $5$--$10\%$ de BP \\
+Refresh & Toutes les $\SI{64}{ms}$, $\times 2$ au-dessus de $\SI{85}{°C}$. Consomme $3$--$7\%$ de BP \\
 Flash MLC/TLC/QLC & Plus de bits/cellule $=$ marge $\downarrow$ $=$ ECC obligatoire \\
 \bottomrule
 \end{tabular}
@@ -16096,6 +16140,13 @@ Soft errors & $\sim 1$ bit flip/$\SI{1}{Gb}$/1000\,h. ECC obligatoire en serveur
 
 
 % ============================================================================
+
+\begin{retenir}
+\textbf{Ce qu'il faut emporter de ce chapitre :} il n'existe pas de mémoire parfaite, seulement trois compromis --- la rétroaction (SRAM : rapide, chère), la charge (DRAM : dense, fuyante, à rafraîchir), le piégeage (Flash : persistante, usable) --- que l'architecture empile en hiérarchie pour donner l'illusion d'une mémoire à la fois vaste et rapide. Et sous chaque bit, de l'analogique pur : partage de charge, sense amplifier à $g_m$, marges de bruit statistiques, ECC pour rattraper la physique.
+
+Nos systèmes savent désormais séquencer et stocker. Reste à \textbf{calculer} : le chapitre 25 construit les circuits arithmétiques --- additionneurs, comparateurs, multiplieurs --- où la propagation de la retenue redevient, elle aussi, une affaire de nanosecondes.
+\end{retenir}
+
 % ============================================================================
 % CHAPITRE 25 : CIRCUITS ARITHMÉTIQUES
 % VERSION PEER-REVIEW
