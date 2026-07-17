@@ -17373,6 +17373,21 @@ Une fois replié, le parasite est \textbf{indiscernable} d'un vrai signal à $\S
 \textbf{L'image de la roue de chariot :} dans les westerns, les roues semblent tourner à l'envers : la caméra (24 images/s) échantillonne une rotation trop rapide, et le mouvement se ``replie'' en rotation lente inverse. C'est exactement l'aliasing : un phénomène rapide échantillonné trop lentement devient un phénomène lent --- et faux.
 \end{intuition}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=3.1cm, y=1.05cm]
+  % Signal réel à 7f0, échantillonné à 8f0 -> alias exact à f0, inversé (vérifié : sin(2π·7k/8) = -sin(2πk/8))
+  \draw[-{Stealth[length=2mm]}] (-0.05,0) -- (2.15,0) node[right, font=\small]{$t$};
+  \draw[-{Stealth[length=2mm]}] (0,-1.35) -- (0,1.45);
+  \draw[thin, blue!45, domain=0:2, samples=800] plot(\x, {sin(\x*2520)});
+  \draw[very thick, red!70!black, dashed, domain=0:2, samples=200] plot(\x, {-sin(\x*360)});
+  \foreach \k in {0,...,16} \filldraw[red!70!black] ({\k/8}, {-sin(\k*45)}) circle (1.6pt);
+  \node[blue!55!black, font=\footnotesize] at (0.62,1.25) {signal réel ($7f_0$)};
+  \node[red!70!black, font=\footnotesize] at (1.62,1.25) {alias reconstruit ($f_0$)};
+\end{tikzpicture}
+\caption{Le repliement en images : un signal à $7f_0$ échantillonné à $f_s = 8f_0$ (points rouges). Les échantillons tombent \textit{exactement} sur une sinusoïde lente à $f_0$ --- inversée --- et rien, dans les points, ne permet de deviner le signal d'origine. L'information est détruite à l'instant de l'échantillonnage : seul un filtre analogique en amont pouvait l'empêcher.}
+\end{figure}
+
 \subsection{La quantification et son bruit}
 
 \begin{formule}
@@ -17387,6 +17402,30 @@ L'erreur d'arrondi est au pire $\pm q/2$. Si le signal est suffisamment ``actif'
 \boxed{\sigma_q = \frac{q}{\sqrt{12}}}
 \]
 \end{formule}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=0.98cm, y=0.5cm]
+  \draw[-{Stealth[length=2mm]}] (-0.3,0) -- (8.6,0) node[right, font=\small]{$V_{\text{in}}$};
+  \draw[-{Stealth[length=2mm]}] (0,-0.4) -- (0,8.3) node[above, font=\small]{code};
+  \draw[dashed, gray!60] (0,0) -- (8,8);
+  \foreach \k in {0,...,7}{
+    \draw[very thick, blue!70!black] ({max(0,\k-0.5)},\k) -- ({min(8,\k+0.5)},\k);
+    \draw[dotted, blue!40] ({\k+0.5},\k) -- ({\k+0.5},{\k+1});
+  }
+  \draw[{Stealth[length=1.6mm]}-{Stealth[length=1.6mm]}, gray!30!black] (5.5,4) -- (5.5,5);
+  \node[right, font=\scriptsize, gray!30!black] at (5.6,4.5) {$q$ (1 LSB)};
+  % erreur de quantification
+  \begin{scope}[yshift=-2.6cm]
+  \draw[-{Stealth[length=2mm]}] (-0.3,0) -- (8.6,0);
+  \node[left, font=\scriptsize] at (-0.35,0.5) {$+q/2$};
+  \node[left, font=\scriptsize] at (-0.35,-0.5) {$-q/2$};
+  \foreach \k in {0,...,7} \draw[red!70!black, thick] ({max(0,\k-0.5)},{max(0,\k-0.5)-\k}) -- ({min(8,\k+0.5)},{min(8,\k+0.5)-\k});
+  \node[right, font=\scriptsize, red!70!black] at (8.35,0.55) {erreur $e = V_{\text{in}} - \text{code}$};
+  \end{scope}
+\end{tikzpicture}
+\caption{La caractéristique d'un quantificateur 3 bits (bleu) autour de la droite idéale (pointillé) : chaque marche vaut $q$. En dessous, l'erreur en dents de scie, uniforme sur $[-q/2, +q/2]$ --- c'est elle qui, pour un signal actif, se comporte comme un bruit blanc de valeur efficace $q/\sqrt{12}$.}
+\end{figure}
 
 \begin{formule}
 \textbf{Le SNR idéal d'un ADC :} pour une sinusoïde pleine échelle, le rapport signal/bruit de quantification vaut :
@@ -17451,6 +17490,30 @@ Un seul comparateur + un DAC interne + une FSM (chapitre 23) qui joue à ``plus 
 \end{enumerate}
 Excellent compromis : 8--18 bits, $\SI{100}{kS/s}$ à $\SI{10}{MS/s}$, très faible consommation. \textbf{C'est l'ADC des microcontrôleurs} (celui du nRF52 ou des STM32 est un SAR 12 bits) et de l'instrumentation générale.
 \end{formule}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=1.5cm, y=4.1cm]
+  % V_in = 0,6367·FS ; essais vérifiés : 0,5(1) 0,75(0) 0,625(1) 0,6875(0) 0,65625(0) -> code 10100
+  \draw[-{Stealth[length=2mm]}] (0,0) -- (5.9,0) node[right, font=\small]{cycle};
+  \draw[-{Stealth[length=2mm]}] (0,0) -- (0,1.12) node[above, font=\small]{$V_{\text{DAC}}$};
+  \foreach \i in {1,...,5} \node[below, font=\scriptsize] at (\i-0.5,-0.02) {\i};
+  \node[left, font=\scriptsize] at (-0.05,1.0) {$V_{FS}$};
+  \node[left, font=\scriptsize] at (-0.05,0.5) {$V_{FS}/2$};
+  \draw (0.04,1.0) -- (-0.04,1.0); \draw (0.04,0.5) -- (-0.04,0.5);
+  \draw[dashed, red!70!black] (0,0.6367) -- (5.6,0.6367) node[right, font=\scriptsize]{$V_{\text{in}}$};
+  \foreach \a/\b/\y/\bit/\c in {0/1/0.5/1/green!45!black, 1/2/0.75/0/red!70!black, 2/3/0.625/1/green!45!black, 3/4/0.6875/0/red!70!black, 4/5/0.65625/0/red!70!black}{
+    \draw[very thick, blue!70!black] (\a,\y) -- (\b,\y);
+    \node[font=\scriptsize, \c, above] at ({(\a+\b)/2},\y) {\bit};
+  }
+  \draw[thin, gray!50] (1,0.5) -- (1,0.75);
+  \draw[thin, gray!50] (2,0.75) -- (2,0.625);
+  \draw[thin, gray!50] (3,0.625) -- (3,0.6875);
+  \draw[thin, gray!50] (4,0.6875) -- (4,0.65625);
+  \node[font=\scriptsize, gray!30!black, below] at (2.8,-0.13) {code final : $10100 \Rightarrow 0{,}625\,V_{FS}$, erreur $< q$};
+\end{tikzpicture}
+\caption{La dichotomie du SAR sur 5 bits pour $V_{\text{in}} = 0{,}637\,V_{FS}$ : à chaque cycle, le DAC interne propose le milieu de l'intervalle restant ; le comparateur garde (1, vert) ou rejette (0, rouge) le bit. Cinq comparaisons suffisent là où un flash exigerait 31 comparateurs.}
+\end{figure}
 
 \begin{formule}
 \textbf{3. ADC pipeline : la chaîne de montage.}
@@ -17613,7 +17676,7 @@ Flash : 1 conversion par cycle $\Rightarrow$ $\SI{16}{MS/s}$, soit $16\times$ pl
 \begin{pratique}
 \textbf{Solution :} $\text{OSR} = 256 = 2^8$, soit 8 doublements. Gain de mise en forme + suréchantillonnage : $8 \times (2+0{,}5) \times 6 = \SI{120}{dB}$.
 
-$SNR \approx 7{,}78 + 120 = \SI{128}{dB}$ théorique $\Rightarrow$ $ENOB = (128-1{,}76)/6{,}02 \approx 21$ bits. En pratique 18--20 bits après pertes (bruit thermique, non-idéalités de l'intégrateur) : c'est bien l'ordre de grandeur des ADC audio et de pesage.
+$SNR \approx 7{,}78 + 120 = \SI{128}{dB}$ théorique $\Rightarrow$ $ENOB = (128-1{,}76)/6{,}02 \approx 21$ bits. La formule complète retranche encore le facteur de forme du modulateur, $10\log(\pi^4/5) \approx \SI{12.9}{dB}$ pour $L=2$, soit $\sim 2$ bits : on retombe sur les \textbf{18--20 bits} effectivement atteints (avant même le bruit thermique et les non-idéalités de l'intégrateur) --- c'est bien l'ordre de grandeur des ADC audio et de pesage.
 \end{pratique}
 
 \subsection*{Niveau ingénieur}
@@ -17650,12 +17713,21 @@ L'appariement brut en fabrication ($\sim 0{,}1\%$) est $\sim 8\times$ insuffisan
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Pourquoi le filtre anti-aliasing doit-il être \textit{analogique} et placé \textit{avant} l'ADC ? Que peut faire (et ne pas faire) un filtre numérique après conversion ?
-\item Le SAR utilise une recherche dichotomique. Combien de comparaisons pour 16 bits ? Pourquoi le flash, qui fait tout en 1 cycle, est-il pourtant impraticable à 16 bits ?
-\item Le sigma-delta atteint 24 bits avec un quantificateur 1 bit. D'où vient la précision ? Faites le parallèle avec l'AOP contre-réactionné du chapitre 18.
-\item Le SNR limité par le jitter se dégrade de $\SI{6}{dB}$ par octave de $f_{\text{in}}$, mais ne dépend pas de $f_s$. Expliquez pourquoi physiquement (pensez à la pente $dV/dt$ du signal au moment de la capture).
-\end{enumerate}
+\textbf{Q1.} Pourquoi le filtre anti-aliasing doit-il être \textit{analogique} et placé \textit{avant} l'ADC ? Que peut faire (et ne pas faire) un filtre numérique après conversion ?
+
+\textit{Réponse : après échantillonnage, la composante repliée occupe une fréquence de la bande utile et y est mathématiquement \textbf{indiscernable} d'un vrai signal --- aucun traitement numérique ne peut la séparer. Le seul endroit où le parasite existe encore à sa vraie fréquence, c'est avant l'ADC : là, un filtre analogique peut l'atténuer. Le numérique, lui, excelle en aval : filtrer le bruit dans la bande, décimer après suréchantillonnage (et ainsi relâcher radicalement les exigences du filtre analogique, chapitre 19) --- mais jamais ``déplier''.}
+
+\textbf{Q2.} Le SAR utilise une recherche dichotomique. Combien de comparaisons pour 16 bits ? Pourquoi le flash, qui fait tout en 1 cycle, est-il pourtant impraticable à 16 bits ?
+
+\textit{Réponse : 16 comparaisons --- une par bit, c'est la recherche binaire. Un flash 16 bits exigerait $2^{16}-1 = 65\,535$ comparateurs, chacun avec un seuil précis à mieux que $1$ LSB $= V_{FS}/65\,536 \approx \SI{50}{\micro V}$ : or l'offset d'un comparateur (dispersion des $V_{th}$, chapitre 24) se compte en millivolts, vingt fois trop. Surface et consommation en $2^N$, plus une calibration individuelle impossible à cette échelle : la force brute s'arrête vers 8 bits.}
+
+\textbf{Q3.} Le sigma-delta atteint 24 bits avec un quantificateur 1 bit. D'où vient la précision ? Faites le parallèle avec l'AOP contre-réactionné du chapitre 18.
+
+\textit{Réponse : de la \textbf{boucle}, pas du quantificateur. L'intégrateur accumule l'erreur entre l'entrée et la sortie reconstruite, et la rétroaction force la moyenne du flux 1 bit à suivre l'entrée : dans la bande utile, l'erreur de quantification est divisée par le gain de boucle (mise en forme du bruit). C'est l'AOP du chapitre 18 transposé : gain brut énorme et imprécis, précision héritée des éléments de la boucle --- ici un DAC 1 bit, parfaitement linéaire par construction (deux niveaux définissent toujours une droite), et une horloge.}
+
+\textbf{Q4.} Le SNR limité par le jitter se dégrade de $\SI{6}{dB}$ par octave de $f_{\text{in}}$, mais ne dépend pas de $f_s$. Expliquez pourquoi physiquement (pensez à la pente $dV/dt$ du signal au moment de la capture).
+
+\textit{Réponse : l'erreur commise à chaque capture vaut $\Delta V = (dV/dt) \cdot t_j$ : elle ne dépend que de la \textbf{pente du signal} à l'instant précis de l'échantillonnage. Pour une sinusoïde, la pente crête vaut $2\pi f_{\text{in}} A$ : doubler $f_{\text{in}}$ double l'erreur ($-\SI{6}{dB}$). La fréquence d'échantillonnage, elle, ne change pas la pente du signal au moment de la prise --- elle change combien de prises on fait, pas la qualité de chacune.}
 
 % === RÉSUMÉ ===
 \section*{Résumé du chapitre}
@@ -17706,6 +17778,13 @@ Référence & La précision absolue est celle de la référence (ppm/°C) \\
 \end{ingenieur}
 
 % ============================================================================
+
+\begin{retenir}
+\textbf{Ce qu'il faut emporter de ce chapitre :} convertir, c'est perdre de façon contrôlée --- Shannon borne le temps ($f_s > 2f_{\max}$, et le repliement est irréversible), la quantification borne l'amplitude ($6{,}02N + 1{,}76$ dB). Quatre architectures se partagent le plan vitesse-résolution (flash, SAR, pipeline, sigma-delta), et la réalité se lit dans l'ENOB, pas dans le $N$ nominal : mésappariements, bruit thermique, et surtout le jitter d'horloge, plafond absolu en $-20\log(2\pi f_{\text{in}} t_j)$. La chaîne complète --- anti-aliasing, S/H, ADC, référence --- vaut ce que vaut son maillon le plus faible.
+
+Le monde analogique entre et sort désormais du système numérique. Reste à faire voyager ces échantillons entre les puces, les cartes et les machines : le chapitre 28 ouvre les protocoles de communication.
+\end{retenir}
+
 % ============================================================================
 % CHAPITRE 28 : PROTOCOLES DE COMMUNICATION
 % VERSION PEER-REVIEW
