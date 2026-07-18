@@ -17832,7 +17832,16 @@ Quand le débit monte, $t_{\text{skew}}$ devient comparable à $T_{\text{bit}}$ 
 
 \textbf{La trame :}
 
-\begin{center}
+
+
+\begin{itemize}[nosep]
+\item \textbf{Repos} : ligne à l'état haut.
+\item \textbf{Bit de start} (passage à 0) : c'est \textit{ce front descendant} qui synchronise le récepteur. Il échantillonne ensuite chaque bit \textit{au milieu} de son temps bit.
+\item 8 bits de données (LSB en premier), parité optionnelle, 1--2 bits de stop (retour à 1).
+\end{itemize}
+\end{formule}
+\begin{figure}[h]
+\centering
 \begin{tikzpicture}[scale=0.78]
   % Ligne au repos (haut)
   \draw[thick] (-1.2,1) -- (0,1);
@@ -17854,14 +17863,8 @@ Quand le débit monte, $t_{\text{skew}}$ devient comparable à $T_{\text{bit}}$ 
   \draw[->] (-1.2,-1.2) -- (10.4,-1.2) node[right, font=\footnotesize]{$t$};
   \node[font=\footnotesize, above] at (5,1.45) {1 trame = 10 temps bit (8N1) $\Rightarrow$ rendement utile $= 80\%$};
 \end{tikzpicture}
-\end{center}
-
-\begin{itemize}[nosep]
-\item \textbf{Repos} : ligne à l'état haut.
-\item \textbf{Bit de start} (passage à 0) : c'est \textit{ce front descendant} qui synchronise le récepteur. Il échantillonne ensuite chaque bit \textit{au milieu} de son temps bit.
-\item 8 bits de données (LSB en premier), parité optionnelle, 1--2 bits de stop (retour à 1).
-\end{itemize}
-\end{formule}
+\caption{La trame UART 8N1 : la ligne repose à 1, le front descendant du start synchronise le récepteur, puis huit bits de données (LSB en premier) et un stop ramènent au repos. Dix temps bit pour huit utiles : rendement $80\,\%$.}
+\end{figure}
 
 \begin{attention}
 \textbf{La contrainte cachée : la tolérance d'horloge.} Le récepteur compte les temps bit avec \textit{sa propre} horloge. L'erreur s'accumule du start jusqu'au dernier bit ($\sim 9{,}5$ temps bit). Pour échantillonner le dernier bit encore dans sa fenêtre ($\pm 1/2$ temps bit), il faut :
@@ -17934,6 +17937,24 @@ Open-drain et calcul de pull-up (RC, chapitre 9), modes SPI (CPOL/CPHA), arbitra
 \end{itemize}
 \end{formule}
 
+\begin{figure}[h]
+\centering
+\begin{circuitikz}[scale=0.85, american]
+  \draw (4.2,3.7) node[above]{$V_{DD}$} to[R, l=$R_p$] (4.2,1.8);
+  \draw (0,1.8) -- (7.9,1.8) node[right, font=\small]{SDA};
+  \filldraw (4.2,1.8) circle (1.5pt);
+  \draw (1.4,1.8) node[nmos, anchor=D](M1){};
+  \filldraw (1.4,1.8) circle (1.5pt);
+  \draw (M1.S) -- ++(0,-0.25) node[ground]{};
+  \draw (M1.G) -- ++(-0.7,0) node[ocirc]{} node[left, font=\small]{cmd$_1$};
+  \draw (6.3,1.8) node[nmos, anchor=D](M2){};
+  \filldraw (6.3,1.8) circle (1.5pt);
+  \draw (M2.S) -- ++(0,-0.25) node[ground]{};
+  \draw (M2.G) -- ++(-0.7,0) node[ocirc]{} node[left, font=\small]{cmd$_2$};
+\end{circuitikz}
+\caption{Le bus open-drain : chaque sortie n'a que son NMOS de pull-down, et le niveau haut n'est fourni que par $R_p$. N'importe quel n\oe ud peut tirer la ligne à 0 (ET câblé, sans conflit destructif) --- mais la remontée est un $RC$ : c'est elle qui plafonne le débit.}
+\end{figure}
+
 \begin{attention}
 \textbf{Le prix de l'open-drain : le front montant est un RC.}
 
@@ -17976,6 +17997,34 @@ Deux paramètres définissent \textit{quand} les bits sont posés et capturés :
 
 Le mode est imposé par \textit{chaque périphérique} (datasheet). Les modes 0 et 3 dominent en pratique. \textbf{90\% des ``SPI qui ne marche pas'' sont un mauvais couple CPOL/CPHA} : à l'oscilloscope, on voit les données décalées d'un demi-bit ou lues sur le mauvais front.
 \end{formule}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=0.8cm, y=0.55cm]
+  \node[left, font=\scriptsize] at (-0.25,9.80) {Mode 0 (CPOL$=$0, CPHA$=$0)};
+  \draw[thick] (0.00,9.30) -- (1.00,9.30) -- (1.00,10.35) -- (2.00,10.35) -- (2.00,9.30) -- (3.00,9.30) -- (3.00,10.35) -- (4.00,10.35) -- (4.00,9.30) -- (5.00,9.30) -- (5.00,10.35) -- (6.00,10.35) -- (6.00,9.30) -- (7.00,9.30);
+  \draw[->, very thick, green!45!black] (1,8.75) -- (1,9.25);
+  \draw[->, very thick, green!45!black] (3,8.75) -- (3,9.25);
+  \draw[->, very thick, green!45!black] (5,8.75) -- (5,9.25);
+  \node[left, font=\scriptsize] at (-0.25,6.70) {Mode 1 (CPOL$=$0, CPHA$=$1)};
+  \draw[thick] (0.00,6.20) -- (1.00,6.20) -- (1.00,7.25) -- (2.00,7.25) -- (2.00,6.20) -- (3.00,6.20) -- (3.00,7.25) -- (4.00,7.25) -- (4.00,6.20) -- (5.00,6.20) -- (5.00,7.25) -- (6.00,7.25) -- (6.00,6.20) -- (7.00,6.20);
+  \draw[->, very thick, green!45!black] (2,5.65) -- (2,6.15);
+  \draw[->, very thick, green!45!black] (4,5.65) -- (4,6.15);
+  \draw[->, very thick, green!45!black] (6,5.65) -- (6,6.15);
+  \node[left, font=\scriptsize] at (-0.25,3.60) {Mode 2 (CPOL$=$1, CPHA$=$0)};
+  \draw[thick] (0.00,4.15) -- (1.00,4.15) -- (1.00,3.10) -- (2.00,3.10) -- (2.00,4.15) -- (3.00,4.15) -- (3.00,3.10) -- (4.00,3.10) -- (4.00,4.15) -- (5.00,4.15) -- (5.00,3.10) -- (6.00,3.10) -- (6.00,4.15) -- (7.00,4.15);
+  \draw[->, very thick, green!45!black] (1,2.55) -- (1,3.05);
+  \draw[->, very thick, green!45!black] (3,2.55) -- (3,3.05);
+  \draw[->, very thick, green!45!black] (5,2.55) -- (5,3.05);
+  \node[left, font=\scriptsize] at (-0.25,0.50) {Mode 3 (CPOL$=$1, CPHA$=$1)};
+  \draw[thick] (0.00,1.05) -- (1.00,1.05) -- (1.00,0.00) -- (2.00,0.00) -- (2.00,1.05) -- (3.00,1.05) -- (3.00,0.00) -- (4.00,0.00) -- (4.00,1.05) -- (5.00,1.05) -- (5.00,0.00) -- (6.00,0.00) -- (6.00,1.05) -- (7.00,1.05);
+  \draw[->, very thick, green!45!black] (2,-0.55) -- (2,-0.05);
+  \draw[->, very thick, green!45!black] (4,-0.55) -- (4,-0.05);
+  \draw[->, very thick, green!45!black] (6,-0.55) -- (6,-0.05);
+  \node[font=\scriptsize, green!45!black] at (5.6,-1.5) {$\uparrow$ = instant de capture};
+\end{tikzpicture}
+\caption{Les quatre modes SPI sur trois périodes d'horloge : CPOL fixe le niveau de repos, CPHA choisit le premier ou le second front pour la capture (flèches vertes). Les modes 0 et 3 capturent tous deux sur front montant --- mais pas au même instant de la période : c'est toute la nuance de l'exercice 28.4.}
+\end{figure}
 
 \subsection{I\textsuperscript{2}C avancé : arbitrage et clock stretching}
 
@@ -18032,6 +18081,26 @@ UART, SPI et I\textsuperscript{2}C sont \textit{single-ended} : le niveau est me
 
 \textbf{Robustesse :} CRC 15 bits, acquittement par \textit{tous} les récepteurs, \textit{bit stuffing} (un bit inverse inséré après 5 bits identiques pour maintenir la synchronisation), et confinement automatique des nœuds défaillants (compteurs d'erreurs TEC/REC). Débit : \SI{1}{Mbit/s} (classique), \SI{8}{Mbit/s} (CAN FD).
 \end{formule}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=1.02cm, y=0.62cm]
+  \fill[red!10] (5.10,-0.5) rectangle (5.95,6.7);
+  \node[font=\tiny, gray!40!black] at (0.42,6.35) {0};\node[font=\tiny, gray!40!black] at (1.27,6.35) {0};\node[font=\tiny, gray!40!black] at (2.12,6.35) {1};\node[font=\tiny, gray!40!black] at (2.97,6.35) {0};\node[font=\tiny, gray!40!black] at (3.82,6.35) {0};\node[font=\tiny, gray!40!black] at (4.67,6.35) {1};\node[font=\tiny, gray!40!black] at (5.52,6.35) {0};\node[font=\tiny, gray!40!black] at (6.38,6.35) {1};\node[font=\tiny, gray!40!black] at (7.22,6.35) {1};\node[font=\tiny, gray!40!black] at (8.07,6.35) {0};\node[font=\tiny, gray!40!black] at (8.93,6.35) {0};
+  \node[left, font=\scriptsize] at (-0.2,5.6) {n\oe ud A (0x12C)};
+  \draw[very thick, blue!70!black] (0.00,5.20) -- (1.70,5.20) -- (1.70,6.00) -- (2.55,6.00) -- (2.55,5.20) -- (4.25,5.20) -- (4.25,6.00) -- (5.10,6.00) -- (5.10,5.20) -- (5.95,5.20) -- (5.95,6.00) -- (7.65,6.00) -- (7.65,5.20) -- (9.35,5.20);
+  \node[left, font=\scriptsize] at (-0.2,3.0) {n\oe ud B (0x130)};
+  \draw[very thick, red!70!black] (0.00,2.60) -- (1.70,2.60) -- (1.70,3.40) -- (2.55,3.40) -- (2.55,2.60) -- (4.25,2.60) -- (4.25,3.40) -- (5.95,3.40);
+  \draw[very thick, red!70!black, dashed] (5.95,3.40) -- (9.35,3.40);
+  \node[font=\scriptsize, red!70!black, above] at (7.6,3.45) {B retiré (récessif)};
+  \node[left, font=\scriptsize] at (-0.2,0.4) {bus (ET câblé)};
+  \draw[very thick, gray!30!black] (0.00,0.00) -- (1.70,0.00) -- (1.70,0.80) -- (2.55,0.80) -- (2.55,0.00) -- (4.25,0.00) -- (4.25,0.80) -- (5.10,0.80) -- (5.10,0.00) -- (5.95,0.00) -- (5.95,0.80) -- (7.65,0.80) -- (7.65,0.00) -- (9.35,0.00);
+  \foreach \k in {1,...,10} \draw[dotted, gray!40] ({0.85*\k},-0.5) -- ({0.85*\k},6.7);
+  \draw[->, thick, red!70!black] (6.6,2.0) -- (5.6,2.55);
+  \node[font=\scriptsize, red!70!black, right] at (6.55,1.9) {B émet 1, relit 0 $\Rightarrow$ se retire};
+\end{tikzpicture}
+\caption{L'arbitrage CAN de l'exercice 28.5, bit à bit : A (0x12C) et B (0x130) émettent ensemble, identiques pendant six bits. Au septième (zone rosée), B émet récessif mais lit le dominant de A sur le bus : il se retire instantanément, sans corrompre la trame --- A continue comme s'il avait toujours été seul.}
+\end{figure}
 
 \begin{intuition}
 \textbf{La contrainte cachée du CAN : la longueur du bus.} L'arbitrage exige que \textit{tous} les nœuds voient le même bit \textit{pendant} le temps bit : un nœud à l'autre bout doit recevoir le dominant, et sa réponse doit revenir, en moins d'un temps bit. À \SI{1}{Mbit/s} ($T_{\text{bit}} = \SI{1}{\micro s}$, propagation $\sim\SI{5}{ns/m}$ aller-retour $\times 2$), la limite est $\sim\SI{40}{m}$. À \SI{125}{kbit/s} : $\sim\SI{500}{m}$. \textbf{Le produit débit $\times$ longueur est borné par la vitesse de la lumière} --- aucune astuce de protocole n'y échappe.
@@ -18164,12 +18233,21 @@ Identiques jusqu'au bit 5 inclus. \textbf{Au bit 4} : A émet 0 (dominant), B é
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Pourquoi le front montant de l'I\textsuperscript{2}C est-il lent alors que le front descendant est rapide ? Reliez chaque front à son ``moteur'' électrique ($R_p$ vs NMOS).
-\item Le CAN et l'I\textsuperscript{2}C utilisent tous deux un état dominant et un état récessif. Quel mécanisme cela rend-il possible dans les deux cas, et pourquoi est-il \textit{non destructif} ?
-\item Le SPI n'a ni adresse, ni ACK, ni CRC. Dans quelles conditions est-ce acceptable, et qu'est-ce qui doit compenser quand ça ne l'est plus ?
-\item Pourquoi le produit débit $\times$ longueur d'un bus CAN est-il physiquement borné ? Que se passerait-il si on violait cette limite pendant l'arbitrage ?
-\end{enumerate}
+\textbf{Q1.} Pourquoi le front montant de l'I\textsuperscript{2}C est-il lent alors que le front descendant est rapide ? Reliez chaque front à son ``moteur'' électrique ($R_p$ vs NMOS).
+
+\textit{Réponse : la descente est pilotée par un NMOS qui conduit --- quelques dizaines d'ohms, $\tau$ de l'ordre de la nanoseconde. La montée, elle, n'a pas de moteur actif : personne ne pousse, seul $R_p$ (le kiloohm) recharge la capacité du bus, d'où $\tau = R_p C_b$ de centaines de nanosecondes. Cette asymétrie est structurelle à l'open-drain : c'est le front montant qui fixe la limite de débit, et $R_p$ qui arbitre entre vitesse et consommation.}
+
+\textbf{Q2.} Le CAN et l'I\textsuperscript{2}C utilisent tous deux un état dominant et un état récessif. Quel mécanisme cela rend-il possible dans les deux cas, et pourquoi est-il \textit{non destructif} ?
+
+\textit{Réponse : l'\textbf{arbitrage bit à bit sur le média lui-même} --- et l'acquittement, qui n'est qu'un dominant imposé par le récepteur. C'est non destructif parce que le récessif n'est pas un état ``poussé'' : c'est une absence de pilotage (pull-up ou repos différentiel). Quand un dominant l'écrase, aucun courant de contention ne circule entre étages de sortie ; le perdant, qui relit le bus en émettant, constate l'écart et se retire --- la trame du gagnant traverse intacte, sans avoir perdu un seul temps bit.}
+
+\textbf{Q3.} Le SPI n'a ni adresse, ni ACK, ni CRC. Dans quelles conditions est-ce acceptable, et qu'est-ce qui doit compenser quand ça ne l'est plus ?
+
+\textit{Réponse : c'est acceptable là où le SPI vit naturellement --- quelques centimètres de PCB, point à point, maître unique, environnement contrôlé : le CS tient lieu d'adresse et l'intégrité est celle du routage. Dès que le lien s'allonge, se partage ou traverse du bruit, la couche applicative doit compenser : CRC logiciel, relecture des registres écrits, numéros de séquence, timeouts --- ou, plus honnêtement, changer de bus pour un protocole qui intègre ces protections (CAN, RS-485 avec trame).}
+
+\textbf{Q4.} Pourquoi le produit débit $\times$ longueur d'un bus CAN est-il physiquement borné ? Que se passerait-il si on violait cette limite pendant l'arbitrage ?
+
+\textit{Réponse : l'arbitrage exige que chaque bit soit un \textbf{consensus} : le dominant émis à un bout doit atteindre l'autre bout, et son effet revenir, à l'intérieur du même temps bit --- soit un aller-retour de propagation ($\sim\SI{10}{ns/m}$) plus les délais des transceivers, inférieurs à $T_{\text{bit}}$. D'où $\text{débit} \times \text{longueur} \approx$ constante. En violation, deux n\oe uds éloignés émettant ensemble peuvent chacun lire leur propre dominant avant de voir celui de l'autre : chacun se croit gagnant, les deux trames se superposent réellement --- collision destructrice, détectée seulement au CRC, et un bus qui s'écroule sous les retransmissions.}
 
 % === RÉSUMÉ ===
 \section*{Résumé du chapitre}
@@ -18218,6 +18296,11 @@ CDC & Tout récepteur série $=$ synchroniseur (Ch.22) $+$ FSM (Ch.23) $+$ couch
 \end{center}
 \end{ingenieur}
 
+\begin{retenir}
+\textbf{Ce qu'il faut emporter de ce chapitre :} trois manières de partager le temps --- l'asynchrone qui le reconstruit (UART et sa tolérance d'horloge), le synchrone qui le transporte (SPI et ses quatre modes), le partagé qui l'arbitre (I\textsuperscript{2}C, CAN, et leur couple dominant/récessif). Et sous chaque protocole, de l'électronique nue : un $RC$ de pull-up qui plafonne l'I\textsuperscript{2}C, deux registres à décalage face à face pour le SPI, une paire différentielle du chapitre 16 comme récepteur CAN, la propagation qui borne le produit débit $\times$ longueur.
+
+Ce dernier point n'est pas un détail : c'est un aperçu. Bruit, propagation, énergie par bit --- le numérique a des murs, et ils sont analogiques. Le chapitre 29 les regarde en face : jusqu'où l'abstraction du bit peut-elle tenir ?
+\end{retenir}
 
 % ============================================================================
 % CHAPITRE 29 : LIMITES PHYSIQUES DU NUMÉRIQUE
