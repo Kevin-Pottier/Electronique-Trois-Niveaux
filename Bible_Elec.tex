@@ -18355,6 +18355,26 @@ L' = kL, \quad V'_{DD} = kV_{DD}, \quad C' = kC
 $V_{DD}$ est bloquée autour de $0{,}7$--$\SI{1}{V}$ depuis 15 ans. Conséquence : chaque génération ajoute des transistors \textbf{sans} réduire leur énergie d'autant $\Rightarrow$ la densité de puissance \textit{augmente}. C'est la cause directe du plafonnement des fréquences à $\sim\SI{4}{}$--$\SI{5}{GHz}$ (le Pentium 4 en a été la première victime, chapitre 26) et de la bascule vers le multicœur.
 \end{attention}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=1cm, y=1cm]
+  % x : V_GS (0,125 V/u), y : log10(I_D) (2 décades/u). Vérifié : 7 décades sur 0,42 V à 60 mV/déc.
+  \draw[-{Stealth[length=2mm]}] (-0.3,0) -- (6.7,0) node[right, font=\small]{$V_{GS}$};
+  \draw[-{Stealth[length=2mm]}] (0,-0.4) -- (0,5.1) node[above, font=\small]{$I_D$ (log)};
+  \foreach \y/\l in {0/{$10^{-12}$}, 1.5/{$10^{-9}$}, 3/{$10^{-6}$}, 4.5/{$10^{-3}$}}{
+    \draw (0.06,\y) -- (-0.06,\y); \node[left, font=\tiny] at (-0.1,\y) {\l};}
+  \draw[very thick, blue!70!black] (0,0) -- (3.36,3.5);
+  \draw[very thick, blue!70!black] (3.36,3.5) .. controls (4.3,4.25) and (5.1,4.35) .. (6.2,4.42);
+  \draw[dashed, gray!60] (3.36,0) -- (3.36,3.5);
+  \node[below, font=\footnotesize] at (3.36,-0.05) {$V_{th}$};
+  \node[rotate=46, font=\footnotesize, blue!70!black] at (1.35,1.95) {\SI{60}{mV/déc}};
+  \draw[dashed, gray!60] (0,0) -- (-0.8,0);
+  \node[left, font=\footnotesize, red!60!black] at (-0.85,0) {$I_{\text{off}}$};
+  \node[right, font=\footnotesize] at (6.25,4.42) {$I_{\text{on}}$};
+\end{tikzpicture}
+\caption{La caractéristique $I_D(V_{GS})$ en échelle logarithmique : sous le seuil, le courant est une émission thermoïonique par-dessus une barrière --- pente bornée à $kT/q \cdot \ln 10 = \SI{60}{mV}$ par décade à \SI{300}{K}, quelle que soit la technologie. Garder $\sim 7$ décades entre $I_{\text{on}}$ et $I_{\text{off}}$ exige donc $\sim\SI{0.42}{V}$ rien que pour le seuil : voilà pourquoi $V_{DD}$ ne descend plus.}
+\end{figure}
+
 \subsection{Le plancher : le bruit}
 
 \begin{formule}
@@ -18417,6 +18437,22 @@ Plus le transistor est \textbf{petit}, plus il est \textbf{dispersé}. À surfac
 \textbf{Conséquences déjà rencontrées :} l'offset du sense amplifier (chapitre 24), les cellules SRAM faibles (chapitre 24, exercice 24.6), le mésappariement des DAC (chapitre 27, exercice 27.6). \textbf{La variabilité est le même phénomène partout.}
 \end{formule}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=0.95cm, y=1cm]
+  \draw[-{Stealth[length=2mm]}] (-4,0) -- (4.3,0) node[right, font=\small]{$V_{th}$};
+  \fill[red!25] plot[domain=3:3.7, samples=30] (\x,{2.6*exp(-\x*\x/2)}) -- (3.7,0) -- (3,0) -- cycle;
+  \fill[red!25] plot[domain=-3.7:-3, samples=30] (\x,{2.6*exp(-\x*\x/2)}) -- (-3,0) -- (-3.7,0) -- cycle;
+  \draw[very thick, blue!70!black, domain=-3.7:3.7, samples=200] plot(\x, {2.6*exp(-\x*\x/2)});
+  \draw[dashed, gray!60] (-3,0) -- (-3,1.2); \node[below, font=\footnotesize] at (-3,-0.05) {$-3\sigma$};
+  \draw[dashed, gray!60] (3,0) -- (3,1.2);   \node[below, font=\footnotesize] at (3,-0.05) {$+3\sigma$};
+  \node[below, font=\footnotesize] at (0,-0.05) {$V_{th,\text{nominal}}$};
+  \draw[->, thick, red!60!black] (3.9,1.05) -- (3.25,0.16);
+  \node[font=\footnotesize, red!60!black, align=left] at (4.7,1.45) {$2{,}7\times10^{-3}$ hors $\pm3\sigma$\\$\Rightarrow$ 173\,000 cellules / 64 Mb};
+\end{tikzpicture}
+\caption{La loi de Pelgrom en action (chiffres de l'exercice 29.3) : les $V_{th}$ d'une matrice se répartissent en gaussienne de largeur $\sigma = A_{VT}/\sqrt{WL}$. Les queues au-delà de $\pm3\sigma$ semblent négligeables --- jusqu'à ce qu'on les multiplie par 64 millions de cellules. La statistique des grands nombres transforme l'improbable en certitude.}
+\end{figure}
+
 \subsection{PVT : concevoir pour le pire cas}
 
 \begin{formule}
@@ -18478,6 +18514,25 @@ Doubler la densité de courant $J$ divise la durée de vie par $\sim 4$ ; $+\SI{
 Dès \SI{8}{nm}, des études (Esmaeilzadeh et al., 2011) prédisaient que \textbf{plus de 50\% de la puce doit rester éteinte} à tout instant à fréquence nominale : c'est le \textbf{dark silicon}.
 \end{formule}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=1.05cm, y=1.05cm]
+  \foreach \i in {0,...,4}
+    \foreach \j in {0,...,3}{
+      \pgfmathparse{int(mod(\i+\j,2))}
+      \ifnum\pgfmathresult=0
+        \draw[fill=green!25] (\i,\j) rectangle ++(0.92,0.92);
+      \else
+        \draw[fill=black!70] (\i,\j) rectangle ++(0.92,0.92);
+      \fi
+    }
+  \node[font=\scriptsize, white] at (1.46,3.46) {éteint};
+  \node[font=\scriptsize] at (0.46,3.46) {actif};
+  \node[font=\footnotesize, align=center] at (2.45,-0.75) {20 blocs $\times$ \SI{2.5}{W} --- budget \SI{25}{W} $\Rightarrow$ 50\,\% de la puce noire en permanence};
+\end{tikzpicture}
+\caption{Le dark silicon de l'exercice 29.6, vu du dessus : à tout instant, la moitié des blocs doit rester éteinte pour tenir le budget thermique. La surface est devenue abondante, les watts sont devenus rares --- et l'architecture s'est réorganisée autour de cette inversion.}
+\end{figure}
+
 \begin{intuition}
 \textbf{Comment l'industrie a transformé la contrainte en stratégie :} si on ne peut pas tout allumer, autant remplir la puce de blocs \textbf{spécialisés} dont un seul s'allume à la fois --- chacun étant 10--100$\times$ plus efficace qu'un CPU généraliste sur \textit{sa} tâche. C'est exactement l'anatomie d'un SoC de smartphone : CPU + GPU + NPU + ISP (image) + codecs vidéo + DSP audio + modem\ldots Le dark silicon explique l'explosion des \textbf{accélérateurs} (chapitre 25 : tensor cores, NPU) et le déclin du ``tout-CPU''. La sobriété imposée par la physique a redessiné l'architecture (chapitre 26).
 \end{intuition}
@@ -18516,7 +18571,7 @@ La physique du transistor (chapitre 17 : $I_{\text{off}}$, $\SI{60}{mV/dec}$, po
 
 À \SI{400}{K} : $\times\sqrt{400/300} = \SI{3.3}{mV}$.
 
-Marge $100/2{,}9 \approx 34\sigma$ : confortable. Mais à $C = \SI{0.01}{fF}$ : $\sigma = \SI{20}{mV}$, soit $5\sigma$ seulement --- des erreurs apparaissent ($P(5\sigma) \sim 3\times10^{-7}$ par échantillonnage, des milliers par seconde à \SI{1}{GHz}).
+Marge $100/2{,}9 \approx 34\sigma$ : confortable. Mais à $C = \SI{0.01}{fF}$ : $\sigma = \SI{20}{mV}$, soit $5\sigma$ seulement --- des erreurs apparaissent ($P(|x|>5\sigma) \approx 6\times10^{-7}$ par échantillonnage, soit quelques \textbf{centaines par seconde} à \SI{1}{GHz}).
 \end{pratique}
 
 \textbf{Exercice 29.2 ---} Un SoC a $N = 5\times10^9$ transistors avec $I_{\text{off}} = \SI{10}{nA}$ chacun à \SI{25}{°C}, sous $V_{DD} = \SI{0.8}{V}$. Calculez la puissance statique à \SI{25}{°C} et à \SI{85}{°C} ($I_{\text{off}}$ double tous les \SI{10}{°C}).
@@ -18542,7 +18597,7 @@ Hors $\pm3\sigma$ : $P = 2{,}7\times10^{-3}$. Sur $64\times10^6$ : $\approx 173\
 \textbf{Exercice 29.4 ---} Un rail d'alimentation en cuivre ($J_{\max} = \SI{1.5}{MA/cm^2}$ pour la durée de vie visée) doit porter \SI{2}{A}. L'épaisseur du métal est \SI{0.5}{\micro m}. Quelle largeur minimale ? Que devient le MTTF si un rétrécissement local double $J$ ($n = 2$ dans Black) ?
 
 \begin{pratique}
-\textbf{Solution :} section requise $S = I/J_{\max} = 2/(1{,}5\times10^6\times10^{4}\,\text{A/m}^2)$\ldots en unités cohérentes : $J_{\max} = 1{,}5\times10^{10}\,\si{A/m^2}$. $S = 2/1{,}5\times10^{10} = 1{,}33\times10^{-10}\,\si{m^2}$.
+\textbf{Solution :} $J_{\max} = \SI{1.5}{MA/cm^2} = 1{,}5\times10^{10}\,\si{A/m^2}$. Section requise : $S = I/J_{\max} = 2/(1{,}5\times10^{10}) = 1{,}33\times10^{-10}\,\si{m^2}$.
 
 Largeur $= S/e = 1{,}33\times10^{-10}/0{,}5\times10^{-6} = 2{,}67\times10^{-4}\,\si{m} = \SI{267}{\micro m}$ --- les rails de puissance sont \textit{larges}, c'est pour ça.
 
@@ -18579,12 +18634,21 @@ Si $J \times 2$ : $MTTF \propto 1/J^2 \Rightarrow \div 4$. Un simple via sous-di
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Pourquoi la pente sous-seuil de \SI{60}{mV/décade} est-elle une limite \textit{thermodynamique} et non technologique ? Qu'est-ce que cela implique pour $V_{DD}$ ?
-\item La loi de Pelgrom dit $\sigma_{V_{th}} \propto 1/\sqrt{WL}$. Pourquoi les circuits analogiques de précision (chapitres 18, 27) utilisent-ils de \textit{gros} transistors alors que le numérique les veut minuscules ?
-\item L'électromigration suit $MTTF \propto J^{-2}e^{E_a/kT}$. Pourquoi un même design est-il fiable en datacenter climatisé et risqué sous le capot d'une voiture ?
-\item Le dark silicon était une mauvaise nouvelle ; il a pourtant accéléré l'innovation architecturale. Expliquez le mécanisme économique et physique de ce paradoxe.
-\end{enumerate}
+\textbf{Q1.} Pourquoi la pente sous-seuil de \SI{60}{mV/décade} est-elle une limite \textit{thermodynamique} et non technologique ? Qu'est-ce que cela implique pour $V_{DD}$ ?
+
+\textit{Réponse : sous le seuil, le courant est une émission thermoïonique : la fraction de porteurs capables de franchir la barrière suit la statistique de Boltzmann, $e^{qV/kT}$. La pente vaut donc au mieux $kT/q \cdot \ln 10 = \SI{60}{mV/déc}$ à \SI{300}{K} --- c'est une propriété de la distribution d'énergie des électrons, pas du matériau ni de la géométrie (les non-idéalités ne peuvent que l'empirer). Conséquence : garder $6$--$7$ décades entre $I_{\text{on}}$ et $I_{\text{off}}$ fige $V_{th}$, donc $V_{DD}$, vers $0{,}7$--$\SI{1}{V}$. Pour passer dessous, il faut changer la physique d'injection (tunnel FET) ou la température.}
+
+\textbf{Q2.} La loi de Pelgrom dit $\sigma_{V_{th}} \propto 1/\sqrt{WL}$. Pourquoi les circuits analogiques de précision (chapitres 18, 27) utilisent-ils de \textit{gros} transistors alors que le numérique les veut minuscules ?
+
+\textit{Réponse : en analogique, la grandeur utile est un \textbf{appariement} --- offset d'une paire différentielle, égalité des sources d'un DAC, seuil d'un sense amplifier : elle vaut directement $\sigma_{V_{th}}$, et la surface est la seule monnaie qui l'achète ($\times 10$ de surface $\Rightarrow$ offset $\div 3{,}2$). En numérique, il suffit de franchir des seuils avec des marges de centaines de mV : la dispersion se noie dans la marge de bruit, et la petitesse paie en vitesse et en énergie ($C \downarrow$). Même transistor, fonctions de coût opposées.}
+
+\textbf{Q3.} L'électromigration suit $MTTF \propto J^{-2}e^{E_a/kT}$. Pourquoi un même design est-il fiable en datacenter climatisé et risqué sous le capot d'une voiture ?
+
+\textit{Réponse : l'exponentielle d'Arrhenius est impitoyable : entre une jonction à \SI{55}{°C} (datacenter) et \SI{125}{°C} (sous capot), $e^{E_a/k\,(1/T_1 - 1/T_2)} \approx 150$ pour $E_a = \SI{0.8}{eV}$ --- deux ordres de grandeur de durée de vie envolés, avant même de compter le cyclage thermique (dilatations répétées) et la dérive NBTI accélérée. Un design taillé pour 10 ans au frais n'en promet plus que quelques mois au chaud : l'automobile impose ses propres règles de courant, ses n\oe uds matures et ses qualifications (AEC-Q100) --- la fiabilité est une fonction exponentielle de la température, pas un attribut du schéma.}
+
+\textbf{Q4.} Le dark silicon était une mauvaise nouvelle ; il a pourtant accéléré l'innovation architecturale. Expliquez le mécanisme économique et physique de ce paradoxe.
+
+\textit{Réponse : Moore continue de livrer des transistors, mais le budget thermique interdit de les allumer tous : la surface devient \textbf{abondante} et les watts \textbf{rares}. Le coût d'opportunité d'un bloc spécialisé rarement actif tombe alors à zéro --- il occupe de la surface qui aurait de toute façon été noire. Et comme la spécialisation est le dernier grand levier physique disponible ($10$--$100\times$ en énergie par opération), l'économie bascule : on ne maximise plus l'utilisation de la surface, on maximise le travail par watt. Résultat : l'explosion cambrienne des accélérateurs (GPU, NPU, ISP, codecs) --- la contrainte a littéralement dessiné le SoC moderne.}
 
 % === RÉSUMÉ ===
 \section*{Résumé du chapitre}
@@ -18633,6 +18697,12 @@ Transition & La gestion d'énergie est partout $\Rightarrow$ partie VII : les al
 \end{center}
 \end{ingenieur}
 
+
+\begin{retenir}
+\textbf{Ce qu'il faut emporter de ce chapitre --- et de toute la partie :} le numérique bute sur trois murs. Un mur thermodynamique : la pente sous-seuil fige $V_{DD}$, et Dennard est mort. Un mur statistique : Pelgrom et $kT/C$ font de chaque transistor un individu, et des marges une taxe permanente. Un mur thermique : le budget est fixe, les fuites croissent, et plus de la moitié de la puce reste éteinte. Toute la partie VI se relit à cette lumière : le timing, les marges PVT, le multic\oe ur, la hiérarchie mémoire, la spécialisation ne sont pas des choix d'informaticiens --- ce sont les conséquences directes de la physique du chapitre 17.
+
+Une variable domine désormais tout : l'\textbf{énergie} --- la produire proprement, la distribuer sans chute, l'adapter à la microseconde. C'est l'objet de la partie qui s'ouvre : les alimentations, en commençant par la régulation linéaire.
+\end{retenir}
 
 % ============================================================================
 \part{Alimentations}
