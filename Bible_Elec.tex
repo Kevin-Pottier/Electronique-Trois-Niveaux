@@ -19328,7 +19328,8 @@ Cette seule équation donne le rapport de conversion de \textit{tous} les conver
 
 \subsection{Le convertisseur abaisseur (buck)}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=0.95, american]
   % Entrée
   \draw (0,0) node[ground]{} to[V, l=$V_{\text{in}}$] (0,3);
@@ -19355,7 +19356,8 @@ Cette seule équation donne le rapport de conversion de \textit{tous} les conver
   \draw (0,0) -- (7.4,0);
   \draw (3.2,0) node[below]{} ;
 \end{circuitikz}
-\end{center}
+\caption{Le convertisseur buck : l'interrupteur hache $V_{\text{in}}$, la diode de roue libre recueille le courant de bobine pendant les phases OFF, et le filtre $LC$ ne laisse passer que la moyenne $D\,V_{\text{in}}$. Trois éléments, une règle --- l'équilibre des volt-secondes.}
+\end{figure}
 
 \begin{formule}
 \textbf{Fonctionnement en deux phases :}
@@ -19370,6 +19372,29 @@ Cette seule équation donne le rapport de conversion de \textit{tous} les conver
 \]
 Le buck \textbf{abaisse} la tension, avec un rendement réel de 85--95\,\%.
 \end{formule}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=1.15cm, y=0.85cm]
+  % D = 0,4 ; pentes iL : +ΔiL/DT = 1,0 et -ΔiL/(1-D)T = 0,67 (vérifiées)
+  \node[left, font=\small] at (-0.2,4.4) {$V_{sw}$};
+  \draw[very thick, blue!70!black] (0,3.9) -- (0,4.9) -- (0.8,4.9) -- (0.8,3.9) -- (2,3.9) -- (2,4.9) -- (2.8,4.9) -- (2.8,3.9) -- (4,3.9) -- (4,4.9) -- (4.8,4.9) -- (4.8,3.9) -- (6,3.9);
+  \node[right, font=\scriptsize, gray!40!black] at (6.05,4.9) {$V_{\text{in}}$};
+  \node[right, font=\scriptsize, gray!40!black] at (6.05,3.9) {$0$};
+  \node[left, font=\small] at (-0.2,1.8) {$i_L$};
+  \draw[dashed, gray!50] (0,1.8) -- (6,1.8);
+  \node[right, font=\scriptsize, gray!40!black] at (6.05,1.8) {$I_{\text{out}}$};
+  \draw[very thick, red!70!black] (0,1.4) -- (0.8,2.2) -- (2,1.4) -- (2.8,2.2) -- (4,1.4) -- (4.8,2.2) -- (6,1.4);
+  \draw[{Stealth[length=1.8mm]}-{Stealth[length=1.8mm]}, gray!40!black] (2.42,1.4) -- (2.42,2.2);
+  \node[right, font=\scriptsize, gray!40!black] at (2.48,1.8) {$\Delta i_L$};
+  \foreach \t in {0.8,2,2.8,4,4.8} \draw[dotted, gray!40] (\t,0.9) -- (\t,5.1);
+  \draw[{Stealth[length=1.8mm]}-{Stealth[length=1.8mm]}, gray!40!black] (0,0.55) -- (0.8,0.55);
+  \node[below, font=\scriptsize, gray!40!black] at (0.4,0.5) {$DT$};
+  \draw[{Stealth[length=1.8mm]}-{Stealth[length=1.8mm]}, gray!40!black] (0.8,0.55) -- (2,0.55);
+  \node[below, font=\scriptsize, gray!40!black] at (1.4,0.5) {$(1-D)T$};
+\end{tikzpicture}
+\caption{Les formes d'onde du buck en CCM : le n\oe ud $V_{sw}$ est un carré entre $V_{\text{in}}$ et $0$, et la bobine le convertit en triangle de courant --- montée en $(V_{\text{in}}-V_{\text{out}})/L$ pendant $DT$, descente en $V_{\text{out}}/L$ pendant le reste. La charge ne voit que la moyenne, plus l'ondulation $\Delta i_L$ que le condensateur transforme en quelques millivolts.}
+\end{figure}
 
 \begin{intuition}
 \textbf{La diode de roue libre est l'élément vital.} Sans elle, ouvrir l'interrupteur couperait brutalement $i_L$ : $V_L = L\,di/dt$ avec $di/dt \to \infty$ produirait une surtension destructrice (le même phénomène que la bobine du chapitre 8, ici à chaque cycle). La diode offre un chemin au courant : elle ``recueille'' la bobine. Dans les convertisseurs modernes synchrones, cette diode est remplacée par un second MOSFET (meilleur rendement) --- mais le rôle est identique.
@@ -19398,7 +19423,8 @@ Convertisseur élévateur, abaisseur-élévateur, conduction continue/discontinu
 
 \subsection{Le convertisseur élévateur (boost)}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=0.95, american]
   \draw (0,0) node[ground]{} to[V, l=$V_{\text{in}}$] (0,3);
   % Bobine en entrée
@@ -19418,7 +19444,8 @@ Convertisseur élévateur, abaisseur-élévateur, conduction continue/discontinu
   \node[above, font=\footnotesize] at (5.7,3.15) {$V_{\text{out}}$};
   \draw (0,0) -- (6.4,0);
 \end{circuitikz}
-\end{center}
+\caption{Le convertisseur boost : la bobine est côté entrée. Phase ON, elle accumule ($V_L = V_{\text{in}}$) ; phase OFF, elle se met \textit{en série} avec la source et pousse le tout vers la sortie à travers la diode --- d'où $V_{\text{out}} = V_{\text{in}}/(1-D)$.}
+\end{figure}
 
 \begin{formule}
 \textbf{Bobine en entrée, interrupteur vers la masse :}
@@ -19439,6 +19466,25 @@ Le boost \textbf{élève} la tension : $D = 0{,}5 \Rightarrow \times 2$ ; $D = 0
 \end{attention}
 
 \subsection{Le convertisseur abaisseur-élévateur (buck-boost)}
+
+\begin{figure}[h]
+\centering
+\begin{circuitikz}[scale=0.95, american]
+  \draw (0,0) node[ground]{} to[V, l=$V_{\text{in}}$] (0,3);
+  \draw (0,3) to[switch, l=$S$] (2.6,3);
+  \filldraw (2.6,3) circle (1.5pt);
+  \node[above, font=\footnotesize] at (2.6,3.55) {$V_{sw}$};
+  \draw (2.6,3) to[L, l=$L$, i=$i_L$] (2.6,0);
+  \draw (5.0,3) to[D, l_=$D$] (2.6,3);
+  \filldraw (5.0,3) circle (1.5pt);
+  \draw (5.0,3) to[C, l=$C$] (5.0,0);
+  \draw (6.4,3) to[R, l=$R_L$] (6.4,0);
+  \draw (5.0,3) -- (6.4,3);
+  \node[above, font=\footnotesize] at (5.7,3.15) {$V_{\text{out}} < 0$};
+  \draw (0,0) -- (6.4,0);
+\end{circuitikz}
+\caption{Le buck-boost inverseur : mêmes trois éléments, réarrangés. Phase ON, la bobine se charge directement sur $V_{\text{in}}$ ; phase OFF, son courant --- qui ne peut que continuer vers le bas --- \textit{aspire} la sortie à travers la diode : $V_{\text{out}}$ est négative, et son amplitude franchit $V_{\text{in}}$ dès que $D > 0{,}5$.}
+\end{figure}
 
 \begin{formule}
 En réarrangeant les trois mêmes éléments (interrupteur, bobine, diode), on obtient un convertisseur qui peut \textbf{à la fois} abaisser et élever :
@@ -19480,6 +19526,20 @@ Selon la charge, le courant de la bobine peut ou non s'annuler à chaque cycle :
 
 \textbf{La frontière} dépend de l'ondulation de courant $\Delta i_L = \frac{V_L \cdot t_{\text{on}}}{L}$ : on passe en DCM quand le courant moyen de charge tombe sous $\Delta i_L / 2$. Augmenter $L$ ou $f_{\text{sw}}$ réduit $\Delta i_L$ et repousse la frontière DCM.
 \end{formule}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=1.15cm, y=0.9cm]
+  \node[left, font=\small] at (-0.2,3.6) {$i_L$ (CCM)};
+  \draw[dashed, gray!50] (0,3.6) -- (6,3.6);
+  \draw[very thick, blue!70!black] (0,3.2) -- (0.8,4.0) -- (2,3.2) -- (2.8,4.0) -- (4,3.2) -- (4.8,4.0) -- (6,3.2);
+  \node[left, font=\small] at (-0.2,1.0) {$i_L$ (DCM)};
+  \draw[very thick, red!70!black] (0,0.4) -- (0.6,1.6) -- (1.3,0.4) -- (2,0.4) -- (2.6,1.6) -- (3.3,0.4) -- (4,0.4) -- (4.6,1.6) -- (5.3,0.4) -- (6,0.4);
+  \node[font=\scriptsize, red!70!black] at (1.65,0.72) {$i_L = 0$};
+  \draw[->, red!70!black] (1.65,0.6) -- (1.65,0.44);
+\end{tikzpicture}
+\caption{CCM contre DCM : à forte charge, le triangle de courant flotte au-dessus de zéro et le rapport de conversion ne dépend que de $D$. À faible charge, le courant s'annule et \textit{reste} nul une fraction du cycle --- le convertisseur change de lois, et la boucle de régulation doit le savoir.}
+\end{figure}
 
 \begin{intuition}
 \textbf{Pourquoi le mode compte en pratique :} beaucoup de convertisseurs basculent volontairement en DCM (ou en \textit{pulse-skipping}) à faible charge pour économiser l'énergie (moins de commutations $\Rightarrow$ moins de pertes de commutation, crucial en veille --- lien direct avec le chapitre 29). Mais cela complique la régulation et génère un bruit à fréquence variable, gênant pour les circuits analogiques voisins. Les bons contrôleurs offrent un choix : \textbf{mode forcé CCM} (bruit propre à $f_{\text{sw}}$ fixe) ou \textbf{mode automatique} (rendement maximal en veille). C'est un réglage de conception, pas un détail.
@@ -19630,12 +19690,21 @@ En dessous de \SI{400}{mA}, le convertisseur entre en DCM : le rapport de conver
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Expliquez, sans formule, pourquoi un interrupteur idéal ne dissipe aucune puissance dans ses deux états. Pourquoi la commutation \textit{réelle} dissipe-t-elle quand même ?
-\item L'équilibre des volt-secondes ($\langle V_L\rangle = 0$) suffit à trouver le rapport de conversion des trois topologies. Pourquoi cette tension moyenne est-elle nécessairement nulle en régime permanent ?
-\item Le condensateur de sortie d'un buck veut un ESR \textit{faible}, alors que certains LDO (chapitre 30) veulent un ESR \textit{minimal garanti}. Expliquez cette opposition.
-\item Pourquoi le layout d'un découpage (surface de la boucle chaude) est-il aussi critique que le schéma lui-même ? Reliez à $V = L\,di/dt$ sur les inductances parasites.
-\end{enumerate}
+\textbf{Q1.} Expliquez, sans formule, pourquoi un interrupteur idéal ne dissipe aucune puissance dans ses deux états. Pourquoi la commutation \textit{réelle} dissipe-t-elle quand même ?
+
+\textit{Réponse : la puissance est le produit $V \times I$, et l'interrupteur idéal annule toujours l'un des deux facteurs --- ouvert, aucun courant ne le traverse ; fermé, aucune tension ne subsiste à ses bornes. Le réel dissipe pour trois raisons : pendant la \textbf{transition}, tension et courant coexistent quelques nanosecondes (le croisement, d'où $P_{\text{sw}} \propto f_{\text{sw}}$) ; fermé, il reste $R_{DS,\text{on}}$ ; et chaque cycle paie la charge de grille $Q_g$. L'idéal est approché, jamais atteint --- et c'est la transition qui coûte le plus cher à haute fréquence.}
+
+\textbf{Q2.} L'équilibre des volt-secondes ($\langle V_L\rangle = 0$) suffit à trouver le rapport de conversion des trois topologies. Pourquoi cette tension moyenne est-elle nécessairement nulle en régime permanent ?
+
+\textit{Réponse : par définition, $i_L(T) - i_L(0) = \frac{1}{L}\int_0^T V_L\,dt = \frac{\langle V_L\rangle T}{L}$. Si la moyenne n'était pas nulle, le courant de bobine gagnerait (ou perdrait) la même quantité à \textbf{chaque} cycle : il dériverait sans borne --- ce qui contredit l'hypothèse même de régime permanent. $\langle V_L\rangle = 0$ n'est donc pas une approximation : c'est la traduction intégrale de ``le cycle se referme'', et c'est pour cela qu'elle donne le rapport de conversion de n'importe quelle topologie en une ligne.}
+
+\textbf{Q3.} Le condensateur de sortie d'un buck veut un ESR \textit{faible}, alors que certains LDO (chapitre 30) veulent un ESR \textit{minimal garanti}. Expliquez cette opposition.
+
+\textit{Réponse : dans le buck, l'ESR est un défaut : le triangle $\Delta i_L$ le traverse et l'ondulation de sortie vaut essentiellement $\Delta i_L \times ESR$ --- on le veut donc aussi bas que possible (céramiques, polymères). Dans le LDO classique, l'ESR est un \textbf{outil} : le zéro $f_z = 1/(2\pi\,ESR\,C)$ qu'il crée rattrape la phase de la boucle avant le croisement --- trop peu d'ESR et le zéro monte hors de portée, la marge s'évanouit. Même paramètre, rôles opposés : filtrage contre compensation. (Les LDO modernes ``any-cap'', compensés en interne, ont levé la contrainte --- lire la datasheet, pas la légende.)}
+
+\textbf{Q4.} Pourquoi le layout d'un découpage (surface de la boucle chaude) est-il aussi critique que le schéma lui-même ? Reliez à $V = L\,di/dt$ sur les inductances parasites.
+
+\textit{Réponse : la boucle chaude porte le courant \textbf{discontinu} --- des ampères qui apparaissent et disparaissent en nanosecondes. Chaque millimètre de piste vaut $\sim\SI{1}{nH}$, et $V = L\,di/dt$ avec $di/dt$ en A/ns transforme ces nanohenrys en volts de surtension et de ringing sur $V_{sw}$ ; la boucle elle-même rayonne comme une antenne-cadre, proportionnellement à sa surface. Réduire l'aire de la boucle chaude divise \textit{à la fois} les surtensions, les pertes de ringing et l'EMI : c'est le seul paramètre qui améliore tout en même temps --- et il n'apparaît sur aucun schéma. D'où la règle : $C_{\text{in}}$ collé aux interrupteurs, $V_{sw}$ compact, retours séparés.}
 
 % === RÉSUMÉ ===
 \section*{Résumé du chapitre}
@@ -19682,6 +19751,12 @@ Layout & Minimiser la boucle chaude ($di/dt$ énorme). Le dessin fait la moitié
 \end{tabular}
 \end{center}
 \end{ingenieur}
+
+\begin{retenir}
+\textbf{Ce qu'il faut emporter de ce chapitre :} le découpage tient sur une idée (un interrupteur ne dissipe rien), trois éléments (interrupteur, bobine, diode --- ou son MOSFET synchrone) et une règle ($\langle V_L\rangle = 0$, qui donne le rapport de conversion de toutes les topologies en une ligne). Le rendement se gagne en arbitrant conduction contre commutation, la compacité se paie en fréquence, et le succès final se joue sur le layout --- la boucle chaude ne pardonne pas.
+
+Deux boîtes noires restent fermées : la bobine elle-même --- saturation, pertes fer, ce qui fait qu'un noyau ``tient'' ou pas --- et la boucle de régulation qui pilote $D$ sans osciller. Le chapitre 32 ouvre les deux : composants magnétiques et stabilité des alimentations.
+\end{retenir}
 
 % ============================================================================
 % CHAPITRE 32 : COMPOSANTS MAGNÉTIQUES ET STABILITÉ DES ALIMENTATIONS
