@@ -20231,7 +20231,8 @@ Boucle ouverte contre boucle fermée, les éléments d'un asservissement, et pou
 
 \subsection{Les éléments d'une boucle d'asservissement}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{tikzpicture}[>=Stealth, scale=1.15, every node/.style={font=\small}, transform shape]
   % Sommateur
   \draw (0,0) circle (0.32);
@@ -20261,13 +20262,14 @@ Boucle ouverte contre boucle fermée, les éléments d'un asservissement, et pou
   \coordinate (tap) at (8.1,0);
   \filldraw (tap) circle (1.6pt);
   % Retour par le capteur
-  \draw (tap) -- (8.1,-1.9);
-  \draw[thick] (6.7,-2.5) rectangle (8.5,-1.3);
-  \node[align=center] at (7.6,-1.9) {Capteur\\[2pt] $H(s)$};
-  \draw[->] (6.7,-1.9) -- (0,-1.9) -- (0,-0.32);
+  \draw (tap) -- (8.1,-1.9) -- (7.9,-1.9);
+  \draw[thick] (6.2,-2.5) rectangle (7.9,-1.3);
+  \node[align=center] at (7.05,-1.9) {Capteur\\[2pt] $H(s)$};
+  \draw[->] (6.2,-1.9) -- (0,-1.9) -- (0,-0.32);
   \node[below, font=\footnotesize] at (3.2,-1.9) {mesure $H(s)\,Y(s)$};
 \end{tikzpicture}
-\end{center}
+\caption{L'anatomie universelle de la boucle : la consigne est comparée à la mesure, l'erreur $\varepsilon$ passe au correcteur qui commande le procédé, et le capteur referme le cercle. Tout ce que ce livre a asservi --- AOP, LDO, buck, PLL --- tient dans ce schéma.}
+\end{figure}
 
 \begin{formule}
 \begin{itemize}[nosep]
@@ -20358,6 +20360,43 @@ H(s) = K\,\frac{(s - z_1)(s - z_2)\cdots}{(s - p_1)(s - p_2)\cdots}
 Un pôle $p = \sigma + j\omega$ correspond à une réponse en $e^{\sigma t}\cos(\omega t)$. Si $\sigma < 0$ : l'oscillation s'amortit (stable). Si $\sigma > 0$ : elle diverge (instable). Si $\sigma = 0$ : oscillation entretenue (marginal). \textbf{La stabilité se lit directement dans la position des pôles dans le plan complexe} --- c'est tout l'enjeu du chapitre 34.
 \end{formule}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=1cm, y=1cm]
+  \fill[green!9] (-4.2,-3.0) rectangle (0,3.0);
+  \fill[red!8] (0,-3.0) rectangle (4.0,3.0);
+  \draw[-{Stealth[length=2mm]}] (-4.2,0) -- (4.2,0) node[right, font=\small]{$\sigma$};
+  \draw[-{Stealth[length=2mm]}] (0,-3.05) -- (0,3.25) node[above, font=\small]{$j\omega$};
+  \node[green!40!black, font=\small, align=center] at (-2.9,2.62) {\textbf{stable} --- $\sigma<0$\\[-2pt]\scriptsize tous les modes s'éteignent};
+  \node[red!60!black, font=\small, align=center] at (2.35,2.62) {\textbf{instable} --- $\sigma>0$\\[-2pt]\scriptsize un seul pôle suffit};
+  % (1) pôle réel rapide
+  \node[blue!70!black, font=\large] at (-2.6,0) {$\times$};
+  \draw[rounded corners=2pt, gray!55, fill=white] (-4.05,0.5) rectangle (-2.5,1.62);
+  \draw[thin, gray!60] (-3.95,0.78) -- (-2.62,0.78);
+  \draw[thick, blue!70!black, domain=0:1.25, samples=40] plot({-3.95+\x}, {0.78+0.6*exp(-3.5*\x)});
+  \node[font=\tiny, gray!25!black] at (-3.27,1.44) {retour exponentiel, sans oscillation};
+  \draw[dashed, gray!55, -{Stealth[length=1.6mm]}] (-3.0,0.48) -- (-2.66,0.12);
+  % (2) paire complexe amortie
+  \node[blue!70!black, font=\large] at (-1.0,1.7) {$\times$};
+  \node[blue!70!black, font=\large] at (-1.0,-1.7) {$\times$};
+  \draw[rounded corners=2pt, gray!55, fill=white] (-2.75,-2.1) rectangle (-1.25,-0.95);
+  \draw[thin, gray!60] (-2.65,-1.52) -- (-1.35,-1.52);
+  \draw[thick, blue!70!black, domain=0:1.24, samples=90] plot({-2.65+\x}, {-1.52+0.5*exp(-1.8*\x)*cos(\x*800)});
+  \node[font=\tiny, gray!25!black] at (-2.0,-1.13) {oscille à $\omega$, s'amortit en $e^{\sigma t}$};
+  \draw[dashed, gray!55, -{Stealth[length=1.6mm]}] (-1.27,-1.62) -- (-1.06,-1.68);
+  % (3) paire complexe instable
+  \node[red!70!black, font=\large] at (1.6,1.3) {$\times$};
+  \node[red!70!black, font=\large] at (1.6,-1.3) {$\times$};
+  \draw[rounded corners=2pt, gray!55, fill=white] (0.5,-2.8) rectangle (2.15,-1.65);
+  \draw[thin, gray!60] (0.6,-2.25) -- (2.05,-2.25);
+  \draw[thick, red!70!black, domain=0:1.38, samples=100] plot({0.6+\x}, {-2.25+0.032*exp(1.85*\x)*cos(\x*800)});
+  \node[font=\tiny, red!60!black] at (1.32,-1.8) {la même oscillation\ldots{} qui diverge};
+  \draw[dashed, gray!55, -{Stealth[length=1.6mm]}] (1.58,-1.63) -- (1.6,-1.42);
+  \node[font=\scriptsize, gray!30!black] at (0,-3.3) {$\times$ = pôle $\sigma + j\omega$ \quad;\quad encadrés = le mode $e^{\sigma t}\cos(\omega t)$ que chaque pôle impose \quad;\quad axe $j\omega$ = la frontière};
+\end{tikzpicture}
+\caption{Le plan des pôles, mode d'emploi : chaque croix est un pôle $p = \sigma + j\omega$, et l'encadré relié en pointillé montre le mode temporel $e^{\sigma t}\cos(\omega t)$ qu'il impose à la réponse. Sur l'axe réel, pas d'oscillation --- juste une exponentielle, d'autant plus rapide que le pôle est loin. Une paire complexe ajoute l'oscillation à $\omega$ ; passée à droite de l'axe, la même oscillation enfle au lieu de s'éteindre. La position des pôles \textit{est} la dynamique.}
+\end{figure}
+
 \subsection{Le système du premier ordre}
 
 \begin{formule}
@@ -20405,6 +20444,27 @@ $\zeta = 0$ (non amorti) & 2 pôles imaginaires purs & Oscillation entretenue (i
 \begin{intuition}
 \textbf{Le compromis rapidité/dépassement en une image.} Un $\zeta$ faible donne un système rapide mais qui ``dépasse'' la cible et oscille avant de se stabiliser (pensez à une suspension de voiture trop souple qui rebondit). Un $\zeta$ élevé ne dépasse jamais mais est lent (suspension trop dure). L'amortissement critique $\zeta = 1$ est la frontière : le plus rapide \textit{sans} dépassement. En pratique on vise souvent $\zeta \approx 0{,}7$ --- un dépassement modéré ($\sim 5\,\%$) pour gagner en rapidité. C'est exactement le réglage d'un correcteur (chapitre 34) et la signature de la résonance LC d'un découpage (chapitre 32).
 \end{intuition}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=1cm, y=1cm]
+  \draw[-{Stealth[length=2mm]}] (-0.15,0) -- (5.35,0) node[right, font=\small]{$\omega_0 t$};
+  \draw[-{Stealth[length=2mm]}] (0,-0.15) -- (0,3.75) node[above, font=\small]{$y(t)$};
+  \draw[dashed, gray!55] (0,2.2) -- (5.1,2.2);
+  \node[left, font=\scriptsize] at (-0.08,2.2) {consigne};
+  \draw[very thick, red!70!black] plot coordinates {(0.000,0.000) (0.050,0.016) (0.101,0.061) (0.151,0.136) (0.202,0.237) (0.252,0.361) (0.302,0.507) (0.353,0.672) (0.403,0.852) (0.454,1.044) (0.504,1.245) (0.554,1.453) (0.605,1.663) (0.655,1.873) (0.706,2.080) (0.756,2.280) (0.806,2.473) (0.857,2.654) (0.907,2.822) (0.958,2.975) (1.008,3.111) (1.058,3.230) (1.109,3.329) (1.159,3.409) (1.210,3.469) (1.260,3.508) (1.310,3.528) (1.361,3.529) (1.411,3.510) (1.462,3.474) (1.512,3.421) (1.562,3.353) (1.613,3.271) (1.663,3.177) (1.714,3.073) (1.764,2.960) (1.814,2.841) (1.865,2.717) (1.915,2.590) (1.966,2.463) (2.016,2.337) (2.066,2.213) (2.117,2.094) (2.167,1.981) (2.218,1.875) (2.268,1.778) (2.318,1.690) (2.369,1.613) (2.419,1.546) (2.470,1.492) (2.520,1.450) (2.570,1.419) (2.621,1.401) (2.671,1.395) (2.722,1.400) (2.772,1.417) (2.822,1.444) (2.873,1.480) (2.923,1.526) (2.974,1.579) (3.024,1.639) (3.074,1.705) (3.125,1.775) (3.175,1.849) (3.226,1.925) (3.276,2.001) (3.326,2.078) (3.377,2.154) (3.427,2.228) (3.478,2.298) (3.528,2.364) (3.578,2.426) (3.629,2.482) (3.679,2.532) (3.730,2.576) (3.780,2.612) (3.830,2.642) (3.881,2.664) (3.931,2.679) (3.982,2.686) (4.032,2.686) (4.082,2.680) (4.133,2.667) (4.183,2.647) (4.234,2.622) (4.284,2.593) (4.334,2.558) (4.385,2.520) (4.435,2.479) (4.486,2.436) (4.536,2.390) (4.586,2.344) (4.637,2.297) (4.687,2.251) (4.738,2.206) (4.788,2.162) (4.838,2.121) (4.889,2.082) (4.939,2.046) (4.990,2.014) (5.040,1.986)};
+  \draw[very thick, orange!85!black] plot coordinates {(0.000,0.000) (0.050,0.015) (0.101,0.058) (0.151,0.126) (0.202,0.213) (0.252,0.318) (0.302,0.437) (0.353,0.565) (0.403,0.702) (0.454,0.843) (0.504,0.987) (0.554,1.131) (0.605,1.273) (0.655,1.412) (0.706,1.546) (0.756,1.673) (0.806,1.793) (0.857,1.905) (0.907,2.009) (0.958,2.103) (1.008,2.188) (1.058,2.263) (1.109,2.329) (1.159,2.386) (1.210,2.434) (1.260,2.474) (1.310,2.505) (1.361,2.528) (1.411,2.545) (1.462,2.555) (1.512,2.559) (1.562,2.557) (1.613,2.551) (1.663,2.541) (1.714,2.527) (1.764,2.511) (1.814,2.492) (1.865,2.471) (1.915,2.449) (1.966,2.427) (2.016,2.403) (2.066,2.380) (2.117,2.356) (2.167,2.334) (2.218,2.312) (2.268,2.291) (2.318,2.271) (2.369,2.252) (2.419,2.235) (2.470,2.219) (2.520,2.205) (2.570,2.192) (2.621,2.181) (2.671,2.172) (2.722,2.163) (2.772,2.157) (2.822,2.151) (2.873,2.147) (2.923,2.144) (2.974,2.142) (3.024,2.142) (3.074,2.142) (3.125,2.142) (3.175,2.144) (3.226,2.146) (3.276,2.149) (3.326,2.152) (3.377,2.155) (3.427,2.158) (3.478,2.162) (3.528,2.166) (3.578,2.170) (3.629,2.174) (3.679,2.177) (3.730,2.181) (3.780,2.184) (3.830,2.188) (3.881,2.191) (3.931,2.194) (3.982,2.196) (4.032,2.199) (4.082,2.201) (4.133,2.203) (4.183,2.204) (4.234,2.206) (4.284,2.207) (4.334,2.208) (4.385,2.208) (4.435,2.209) (4.486,2.209) (4.536,2.209) (4.586,2.210) (4.637,2.209) (4.687,2.209) (4.738,2.209) (4.788,2.208) (4.838,2.208) (4.889,2.207) (4.939,2.207) (4.990,2.206) (5.040,2.206)};
+  \draw[very thick, blue!70!black] plot coordinates {(0.000,0.000) (0.050,0.015) (0.101,0.056) (0.151,0.120) (0.202,0.201) (0.252,0.296) (0.302,0.401) (0.353,0.514) (0.403,0.631) (0.454,0.751) (0.504,0.871) (0.554,0.990) (0.605,1.107) (0.655,1.219) (0.706,1.327) (0.756,1.430) (0.806,1.527) (0.857,1.618) (0.907,1.702) (0.958,1.780) (1.008,1.851) (1.058,1.916) (1.109,1.974) (1.159,2.026) (1.210,2.073) (1.260,2.113) (1.310,2.149) (1.361,2.180) (1.411,2.206) (1.462,2.228) (1.512,2.246) (1.562,2.261) (1.613,2.272) (1.663,2.281) (1.714,2.288) (1.764,2.292) (1.814,2.294) (1.865,2.295) (1.915,2.295) (1.966,2.293) (2.016,2.290) (2.066,2.287) (2.117,2.282) (2.167,2.278) (2.218,2.273) (2.268,2.268) (2.318,2.263) (2.369,2.258) (2.419,2.252) (2.470,2.247) (2.520,2.243) (2.570,2.238) (2.621,2.233) (2.671,2.229) (2.722,2.225) (2.772,2.222) (2.822,2.218) (2.873,2.215) (2.923,2.212) (2.974,2.210) (3.024,2.208) (3.074,2.206) (3.125,2.204) (3.175,2.202) (3.226,2.201) (3.276,2.200) (3.326,2.199) (3.377,2.198) (3.427,2.197) (3.478,2.197) (3.528,2.196) (3.578,2.196) (3.629,2.196) (3.679,2.196) (3.730,2.196) (3.780,2.196) (3.830,2.196) (3.881,2.196) (3.931,2.196) (3.982,2.196) (4.032,2.197) (4.082,2.197) (4.133,2.197) (4.183,2.197) (4.234,2.198) (4.284,2.198) (4.334,2.198) (4.385,2.198) (4.435,2.198) (4.486,2.199) (4.536,2.199) (4.586,2.199) (4.637,2.199) (4.687,2.199) (4.738,2.199) (4.788,2.199) (4.838,2.200) (4.889,2.200) (4.939,2.200) (4.990,2.200) (5.040,2.200)};
+  \draw[very thick, green!45!black] plot coordinates {(0.000,0.000) (0.050,0.015) (0.101,0.054) (0.151,0.113) (0.202,0.185) (0.252,0.268) (0.302,0.358) (0.353,0.452) (0.403,0.549) (0.454,0.646) (0.504,0.742) (0.554,0.837) (0.605,0.928) (0.655,1.017) (0.706,1.101) (0.756,1.182) (0.806,1.258) (0.857,1.330) (0.907,1.398) (0.958,1.462) (1.008,1.521) (1.058,1.577) (1.109,1.629) (1.159,1.676) (1.210,1.721) (1.260,1.762) (1.310,1.800) (1.361,1.835) (1.411,1.867) (1.462,1.896) (1.512,1.923) (1.562,1.948) (1.613,1.971) (1.663,1.992) (1.714,2.011) (1.764,2.028) (1.814,2.044) (1.865,2.059) (1.915,2.072) (1.966,2.084) (2.016,2.095) (2.066,2.105) (2.117,2.114) (2.167,2.122) (2.218,2.130) (2.268,2.136) (2.318,2.143) (2.369,2.148) (2.419,2.153) (2.470,2.158) (2.520,2.162) (2.570,2.166) (2.621,2.169) (2.671,2.172) (2.722,2.175) (2.772,2.177) (2.822,2.180) (2.873,2.182) (2.923,2.183) (2.974,2.185) (3.024,2.187) (3.074,2.188) (3.125,2.189) (3.175,2.190) (3.226,2.191) (3.276,2.192) (3.326,2.193) (3.377,2.194) (3.427,2.194) (3.478,2.195) (3.528,2.195) (3.578,2.196) (3.629,2.196) (3.679,2.197) (3.730,2.197) (3.780,2.197) (3.830,2.198) (3.881,2.198) (3.931,2.198) (3.982,2.198) (4.032,2.198) (4.082,2.199) (4.133,2.199) (4.183,2.199) (4.234,2.199) (4.284,2.199) (4.334,2.199) (4.385,2.199) (4.435,2.199) (4.486,2.199) (4.536,2.199) (4.586,2.200) (4.637,2.200) (4.687,2.200) (4.738,2.200) (4.788,2.200) (4.838,2.200) (4.889,2.200) (4.939,2.200) (4.990,2.200) (5.040,2.200)};
+  \filldraw[red!70!black] (1.336,3.531) circle (1.5pt);
+  \node[font=\scriptsize, red!70!black, above] at (1.336,3.571) {dépassement 60\,\%};
+  \node[font=\scriptsize, red!70!black] at (4.6,3.0) {$\zeta = 0{,}16$};
+  \node[font=\scriptsize, orange!85!black] at (4.6,2.62) {$\zeta = 0{,}5$};
+  \node[font=\scriptsize, blue!70!black] at (4.6,1.9) {$\zeta = 0{,}7$};
+  \node[font=\scriptsize, green!45!black] at (4.6,1.52) {$\zeta = 1$};
+\end{tikzpicture}
+\caption{Réponses à l'échelon du second ordre selon l'amortissement (courbes calculées, $\omega_0 = 1$) : $\zeta = 0{,}16$ --- le RLC de l'exercice 33.4 --- dépasse de 60\,\% et sonne longuement ; $\zeta = 0{,}7$ offre le compromis classique ($\sim 5\,\%$ de dépassement, établissement rapide) ; $\zeta = 1$ est le plus rapide sans dépasser. Régler un asservissement, c'est choisir sa place sur cette famille.}
+\end{figure}
 
 % ============================================================================
 \section{Niveau Ingénieur}
@@ -20544,12 +20604,21 @@ $\zeta = \frac{10}{2}\sqrt{10^{-6}/10^{-3}} = 5\times\sqrt{10^{-3}} = 5\times0{,
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item En quoi une commande en boucle fermée est-elle fondamentalement supérieure à une boucle ouverte face aux perturbations et aux erreurs de modèle ? Donnez l'intuition, pas la formule.
-\item La transformée de Laplace change la dérivation en multiplication par $s$. Pourquoi cette simple propriété rend-elle les équations différentielles solubles par algèbre ?
-\item Pourquoi la stabilité se lit-elle dans le signe de la partie réelle des pôles ? Reliez un pôle $\sigma + j\omega$ à une réponse temporelle $e^{\sigma t}\cos(\omega t)$.
-\item Un intégrateur annule l'erreur statique mais dégrade la stabilité. Expliquez ce double effet et pourquoi il motive l'ajout d'un terme dérivé dans un PID.
-\end{enumerate}
+\textbf{Q1.} En quoi une commande en boucle fermée est-elle fondamentalement supérieure à une boucle ouverte face aux perturbations et aux erreurs de modèle ? Donnez l'intuition, pas la formule.
+
+\textit{Réponse : la boucle ouverte est un pari sur un modèle --- elle calcule la commande en supposant connaître le procédé, et toute erreur de modèle, toute perturbation, passe intégralement en sortie sans que rien ne le signale. La boucle fermée ne prédit pas : elle \textbf{constate}. Elle mesure le résultat réel, le compare à la cible, et corrige l'écart --- peu importe d'où il vient. Les causes d'erreur n'ont plus besoin d'être connues, ni même connaissables : seul l'écart compte. On remplace la connaissance a priori par de l'information en temps réel. Le prix de ce miracle : la boucle a sa propre dynamique, et peut osciller --- tout le reste de la partie VIII.}
+
+\textbf{Q2.} La transformée de Laplace change la dérivation en multiplication par $s$. Pourquoi cette simple propriété rend-elle les équations différentielles solubles par algèbre ?
+
+\textit{Réponse : parce qu'elle transforme un \textbf{opérateur} (la dérivation, qui agit sur des fonctions) en un simple \textbf{nombre} qui multiplie. Une équation différentielle linéaire à coefficients constants --- une combinaison de dérivées --- devient alors un polynôme en $s$ facteur de $Y(s)$ : on isole $Y(s)$ par une division, comme on résout $ax = b$. Au passage, la convolution temporelle (la mémoire du système) devient un produit, et les conditions initiales entrent comme de simples termes additifs. Résoudre se réduit à manipuler des fractions rationnelles, les décomposer, et relire la table dans l'autre sens.}
+
+\textbf{Q3.} Pourquoi la stabilité se lit-elle dans le signe de la partie réelle des pôles ? Reliez un pôle $\sigma + j\omega$ à une réponse temporelle $e^{\sigma t}\cos(\omega t)$.
+
+\textit{Réponse : la réponse libre d'un système linéaire est une somme de \textbf{modes}, un par pôle, chacun de la forme $e^{\sigma t}\cos(\omega t + \varphi)$ : le pôle est littéralement la ``fréquence complexe'' du mode --- $\omega$ dit à quelle vitesse il tourne, $\sigma$ dit s'il enfle ou s'éteint. Si tous les $\sigma$ sont négatifs, chaque mode décroît et le système revient au repos ; il suffit d'un seul $\sigma > 0$ pour qu'un mode croisse exponentiellement et emporte tout, quelles que soient les conditions initiales. L'axe imaginaire est la frontière exacte : $\sigma = 0$, l'oscillation ne meurt ni ne croît. La carte des pôles est donc la carte du destin dynamique du système.}
+
+\textbf{Q4.} Un intégrateur annule l'erreur statique mais dégrade la stabilité. Expliquez ce double effet et pourquoi il motive l'ajout d'un terme dérivé dans un PID.
+
+\textit{Réponse : l'intégrateur est un gain infini en continu (un pôle en $s = 0$) : aucune erreur statique ne peut subsister, car tant qu'elle existe, la commande continue de croître --- l'équilibre n'est possible qu'à erreur nulle. Mais ce même pôle inflige $-\SI{90}{°}$ de phase à \textbf{toutes} les fréquences, y compris au croisement, où chaque degré de marge compte : la boucle devient nerveuse, puis oscillante. Le terme dérivé fait l'inverse : une avance de phase (jusqu'à $+\SI{90}{°}$) précisément dans la zone du croisement, qui rend la marge que l'intégrateur a prise. Le PID est cet attelage : le I paie la précision, le D paie la stabilité, le P dose l'ensemble --- chapitre 34.}
 
 % === RÉSUMÉ ===
 \section*{Résumé du chapitre}
@@ -20597,6 +20666,12 @@ Vision unifiée & AOP, régulateur, SMPS, PLL, sigma-delta : tous des asservisse
 \end{tabular}
 \end{center}
 \end{ingenieur}
+
+\begin{retenir}
+\textbf{Ce qu'il faut emporter de ce chapitre :} asservir, c'est mesurer, comparer, corriger --- et échanger du gain contre de la précision, de l'insensibilité et du rejet de perturbation. Laplace en est le langage : dériver devient multiplier par $s$, les systèmes deviennent des fractions rationnelles, et leurs pôles racontent toute la dynamique --- stabilité à gauche de l'axe, rapidité dans la distance, amortissement dans l'angle. Premier ordre monotone, second ordre réglé par $\zeta$, précision réglée par la classe : les briques y sont toutes.
+
+Il reste à passer de l'analyse à la \textbf{conception} : régler $C(s)$ pour placer les pôles de la boucle fermée là où on les veut. Le correcteur PID, le lieu des racines et les marges de stabilité --- chapitre 34.
+\end{retenir}
 
 % ============================================================================
 % CHAPITRE 34 : CORRECTEUR PID, LIEU DES RACINES ET MARGES DE STABILITÉ
