@@ -118,13 +118,18 @@
 
 % === LIENS ===
 \usepackage{hyperref}
+\hypersetup{unicode=true,
+  pdftitle={Bible de l'Électronique - Du débutant absolu à l'ingénieur confirmé},
+  pdfauthor={Kévin Pottier},
+  pdfsubject={Électronique analogique, numérique et de puissance},
+  pdfkeywords={électronique, analogique, numérique, alimentations, asservissement, CEM, PCB, intégrité du signal}}
 \hypersetup{
   colorlinks=true,
   linkcolor=blue!70!black,
   urlcolor=blue!50!black,
   citecolor=green!50!black,
-  pdftitle={Bible de l'Électronique},
-  pdfauthor={Projet Open Source},
+  pdftitle={Bible de l'Électronique - Du débutant absolu à l'ingénieur confirmé},
+  pdfauthor={Kévin Pottier},
 }
 
 % === DIVERS ===
@@ -147,35 +152,63 @@
 % === PAGE DE TITRE ===
 \begin{titlepage}
 \centering
-\vspace*{2cm}
+\vspace*{1.6cm}
 
 {\Huge\bfseries\color{blue!70!black} BIBLE DE L'ÉLECTRONIQUE}
 
-\vspace{0.5cm}
-{\Large\color{gray} Du débutant absolu à l'ingénieur confirmé}
+\vspace{0.35cm}
+{\color{blue!70!black}\rule{0.62\textwidth}{0.9pt}}
 
-\vspace{2cm}
+\vspace{0.55cm}
+{\Large\color{gray!40!black} Du débutant absolu à l'ingénieur confirmé}
 
-\begin{tikzpicture}[scale=1.2]
-  % Symbole stylisé : circuit simple
-  \draw[very thick, blue!60!black] (0,0) to[battery1, l=$E$] (0,3)
-        to[R, l=$R$] (3,3)
-        to[C, l=$C$] (3,0) -- (0,0);
-  \draw[very thick, blue!60!black, ->, >=Stealth] (1.5,3.3) -- (2.2,3.3) node[midway, above]{$i$};
-\end{tikzpicture}
+\vspace{1.8cm}
 
-\vspace{2cm}
+\begin{circuitikz}[scale=1.0, blue!60!black]
+  \node[op amp] (A) at (2.6,0) {};
+  \draw[very thick] (A.+) -- ++(-1.3,0) node[ocirc]{} node[left]{$v_e$};
+  \draw[very thick] (A.out) -- ++(1.0,0) node[ocirc]{} node[right]{$v_s$};
+  \coordinate (fb) at ($(A.out)+(0.5,0)$);
+  \filldraw (fb) circle (1.6pt);
+  \draw[very thick] (A.-) -- ++(-0.5,0) coordinate(n1);
+  \filldraw (n1) circle (1.6pt);
+  \draw[very thick] (n1) -- ++(0,1.55) coordinate(t1);
+  \draw[very thick] (t1) to[R, l=$R_2$] (t1 -| fb);
+  \draw[very thick] (t1 -| fb) -- (fb);
+  \draw[very thick] (n1) to[R, l_=$R_1$] ++(0,-2.1) node[ground]{};
+\end{circuitikz}
+
+\vspace{1.8cm}
 
 {\large\itshape « Un bébé doit pouvoir comprendre les bases,\\
 un ingénieur doit pouvoir s'y référer comme source de qualité. »}
 
-\vspace{1.5cm}
+\vspace{1.4cm}
 
-{\large Projet Open Source — Distribution libre et gratuite}
+{\LARGE Kévin \textsc{Pottier}}
 
 \vfill
-{\small Version 0.1 — Avril 2026}
+{\small Distribué librement sous licence CC BY-NC-SA 4.0}\\[1mm]
+{\small Version 0.75 --- Juillet 2026}
 \end{titlepage}
+
+% === COLOPHON / LICENCE ===
+\thispagestyle{empty}
+\null\vfill
+\begin{center}
+\begin{minipage}{0.86\textwidth}
+\small
+\noindent\textcopyright{} 2026 Kévin \textsc{Pottier}.\\[2mm]
+Cet ouvrage est mis à disposition selon les termes de la licence \textbf{Creative Commons Attribution --- Pas d'Utilisation Commerciale --- Partage dans les Mêmes Conditions 4.0 International} (CC BY-NC-SA 4.0).\\[1.5mm]
+Vous êtes libres de \textbf{partager} (copier, redistribuer) et d'\textbf{adapter} (modifier, transformer, améliorer) ce document, sous trois conditions : \textbf{créditer l'auteur}, \textbf{ne pas en faire un usage commercial}, et \textbf{rediffuser toute version modifiée sous cette même licence}. Texte intégral : \url{https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr}\\[4mm]
+Composé en \LaTeX{} (pdflatex) ; schémas et figures en CircuiTikZ et TikZ.\\
+Version 0.75 --- compilé le \today.\\
+Corrections, suggestions et contributions : \texttt{kevin.pottier@eseo.fr}
+\end{minipage}
+\end{center}
+\vfill
+\newpage
+
 
 % === TABLE DES MATIÈRES ===
 \tableofcontents
