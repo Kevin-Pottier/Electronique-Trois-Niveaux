@@ -18754,7 +18754,8 @@ Une \textbf{alimentation régulée} doit maintenir sa tension de sortie $V_{\tex
 
 Le réflexe naïf : ``il me faut \SI{3.3}{V} depuis du \SI{5}{V} ; or $V_{\text{out}} = V_{\text{in}}\frac{R_2}{R_1+R_2}$ (chapitre 3) ; donc un pont $R_1$-$R_2$ fait l'affaire''. \textbf{Non} --- et le théorème de Thévenin (chapitre 6) dit immédiatement pourquoi.
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=0.9, american]
   % Pont diviseur
   \draw (0,4.4) node[left]{$V_{\text{in}} = \SI{5}{V}$} to[R, l=$R_1$] (0,2.2);
@@ -18769,7 +18770,8 @@ Le réflexe naïf : ``il me faut \SI{3.3}{V} depuis du \SI{5}{V} ; or $V_{\text{
   \node[font=\small, align=left] at (7.0,2.2) {$V_{\text{th}} = V_{\text{in}}\dfrac{R_2}{R_1+R_2}$};
   \node[font=\small, align=left] at (7.0,1.0) {$Z_{\text{out}} = R_1 \parallel R_2$};
 \end{circuitikz}
-\end{center}
+\caption{Le diviseur vu de la charge : un Thévenin dont l'impédance interne vaut $R_1 \parallel R_2$ --- des centaines d'ohms là où une alimentation en exige des milli. Il mesure, il n'alimente pas.}
+\end{figure}
 
 \begin{attention}
 \textbf{Les trois condamnations du diviseur-alimentation :}
@@ -18789,7 +18791,8 @@ Exemple : $R_1 = \SI{1}{k\ohm}$, $R_2 = \SI{2}{k\ohm}$ ($V_{\text{th}} = \SI{3.3
 
 \subsection{Première vraie régulation : la Zener (shunt)}
 
-\begin{center}
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=1.0, american]
   % Rail haut : Vin -> Rs -> noeud sortie
   \draw (0,2.4) node[left]{$V_{\text{in}}$} to[short, i=$I_s$] (1.0,2.4);
@@ -18806,7 +18809,8 @@ Exemple : $R_1 = \SI{1}{k\ohm}$, $R_2 = \SI{2}{k\ohm}$ ($V_{\text{th}} = \SI{3.3
   \draw (0,2.4) -- (0,0) -- (5.2,0);
   \node[ground] at (3.4,0) {};
 \end{circuitikz}
-\end{center}
+\caption{La régulation shunt : $R_s$ encaisse l'écart de tension, la Zener écrête au n\oe ud de sortie. $Z_{\text{out}} \approx r_Z$ (quelques ohms), mais tout le courant que la charge ne prend pas brûle dans la Zener.}
+\end{figure}
 
 \begin{formule}
 La diode Zener (chapitre 15) maintient $V_Z$ quasi constante tant qu'elle est polarisée en avalanche. Le montage : une résistance série $R_s$ depuis $V_{\text{in}}$, la Zener en parallèle avec la charge.
@@ -18825,7 +18829,18 @@ La Zener \textbf{absorbe} le courant que la charge ne prend pas : régulation \t
 
 Version minimale : émetteur suiveur (chapitre 16 !) dont la base est tenue par une Zener :
 
-\begin{center}
+
+
+\[
+V_{\text{out}} = V_Z - V_{BE} \qquad Z_{\text{out}} \approx \frac{r_Z + 1/g_m}{\beta + 1} \;\;(\text{quelques ohms})
+\]
+Le suiveur fait ce qu'il sait faire : recopier une tension de référence en divisant l'impédance par $\beta+1$. La Zener ne fournit plus que le courant de base ($I_L/\beta$) : le rendement de la \textit{référence} ne pèse plus.
+
+\textbf{Il manque encore la précision} : $V_{BE}$ dérive ($\SI{-2}{mV/°C}$, chapitre 16) et rien ne compense. La solution : fermer une vraie boucle --- section suivante.
+\end{formule}
+
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=1.0, american]
   % Rail d'entrée haut
   \draw (0,3.6) node[left]{$V_{\text{in}}$} -- (5.4,3.6);
@@ -18851,15 +18866,8 @@ Version minimale : émetteur suiveur (chapitre 16 !) dont la base est tenue par 
   \draw (0,3.6) -- (0,0) -- (5.8,0);
   \node[ground] at (1.6,0) {};
 \end{circuitikz}
-\end{center}
-
-\[
-V_{\text{out}} = V_Z - V_{BE} \qquad Z_{\text{out}} \approx \frac{r_Z + 1/g_m}{\beta + 1} \;\;(\text{quelques ohms})
-\]
-Le suiveur fait ce qu'il sait faire : recopier une tension de référence en divisant l'impédance par $\beta+1$. La Zener ne fournit plus que le courant de base ($I_L/\beta$) : le rendement de la \textit{référence} ne pèse plus.
-
-\textbf{Il manque encore la précision} : $V_{BE}$ dérive ($\SI{-2}{mV/°C}$, chapitre 16) et rien ne compense. La solution : fermer une vraie boucle --- section suivante.
-\end{formule}
+\caption{Le régulateur série : le ballast NPN en suiveur (chapitre 16) recopie $V_Z - V_{BE}$ et ne prélève sur la référence que $I_L/(\beta+1)$. La Zener ne voit plus la charge --- la régulation et la référence sont découplées.}
+\end{figure}
 
 \begin{retenir}
 \textbf{L'essentiel :}
@@ -18892,7 +18900,17 @@ Tout régulateur linéaire moderne contient quatre blocs :
 \item \textbf{Un amplificateur d'erreur} (un AOP, chapitre 18) qui compare $V_{\text{ref}}$ à la mesure.
 \item \textbf{Le ballast} (BJT ou MOSFET de puissance) commandé par l'erreur.
 \end{enumerate}
-\begin{center}
+
+
+La boucle force $V_{\text{out}}\frac{R_b}{R_a+R_b} = V_{\text{ref}}$, d'où :
+\[
+\boxed{V_{\text{out}} = V_{\text{ref}}\left(1 + \frac{R_a}{R_b}\right)}
+\]
+\textbf{C'est exactement l'amplificateur non-inverseur du chapitre 18}, dont l'``entrée'' est la référence et dont l'étage de sortie est un transistor de puissance. La précision vient de la boucle (gain d'erreur élevé), pas du ballast --- le même principe que l'AOP contre-réactionné et le sigma-delta (chapitre 27).
+\end{formule}
+
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=1.0, american]
   % Rail d'entrée haut
   \draw (0,4.2) node[left]{$V_{\text{in}}$} -- (6.4,4.2);
@@ -18921,14 +18939,8 @@ Tout régulateur linéaire moderne contient quatre blocs :
   \draw (0,4.2) -- (0,-0.8) -- (6.4,-0.8);
   \node[ground] at (3.2,-0.8) {};
 \end{circuitikz}
-\end{center}
-
-La boucle force $V_{\text{out}}\frac{R_b}{R_a+R_b} = V_{\text{ref}}$, d'où :
-\[
-\boxed{V_{\text{out}} = V_{\text{ref}}\left(1 + \frac{R_a}{R_b}\right)}
-\]
-\textbf{C'est exactement l'amplificateur non-inverseur du chapitre 18}, dont l'``entrée'' est la référence et dont l'étage de sortie est un transistor de puissance. La précision vient de la boucle (gain d'erreur élevé), pas du ballast --- le même principe que l'AOP contre-réactionné et le sigma-delta (chapitre 27).
-\end{formule}
+\caption{L'architecture complète : l'amplificateur d'erreur (chapitre 18) compare l'image $\frac{R_b}{R_a+R_b}V_{\text{out}}$ à la référence et pilote le ballast. C'est un non-inverseur dont l'étage de sortie est un transistor de puissance : $V_{\text{out}} = V_{\text{ref}}(1+R_a/R_b)$, et $Z_{\text{out}}$ est divisée par $1+A\beta$.}
+\end{figure}
 
 \begin{intuition}
 \textbf{L'impédance de sortie ``magique'' :} en boucle ouverte, le ballast suiveur a $Z_{\text{out,BO}} \sim$ quelques ohms. La rétroaction la divise par le gain de boucle $|A\beta|$ :
@@ -18949,9 +18961,21 @@ V_{DO} \approx 2\,V_{BE} + V_{CE,\text{sat}} \approx \SI{2}{V}
 \]
 Un 7805 exige $V_{\text{in}} \geq \SI{7}{V}$. Robuste, stable sans précaution, mais inutilisable sur batterie.
 
-\textbf{LDO (Low DropOut)} : ballast \textbf{PMOS} (ou PNP) monté en \textbf{source commune} : la sortie est au drain, et il suffit que le transistor reste saturé :
+\textbf{LDO (Low DropOut)} : ballast \textbf{PMOS} (ou PNP) monté en \textbf{source commune} : la sortie est au drain, et il suffit que le transistor reste saturé (schéma ci-après).
 
-\begin{center}
+
+
+\textbf{Noter l'inversion des entrées de l'ampli d'erreur} par rapport au schéma précédent : le PMOS source commune est un étage \textit{inverseur} (tirer la grille vers le bas \textit{augmente} la conduction), donc la boucle doit s'inverser aussi pour rester une contre-réaction --- le retour arrive sur l'entrée $+$. Le dropout devient simplement :
+\[
+V_{DO} = R_{DS,\text{on}} \cdot I_L \approx 50\text{--}\SI{300}{mV}
+\]
+Idéal sur batterie : une Li-ion (4,2 $\to$ \SI{3.0}{V}) peut alimenter du \SI{2.8}{V} jusqu'au bout de la décharge.
+
+\textbf{Le revers de la médaille :} le PMOS source commune est un étage \textit{inverseur à gain} (chapitre 17), pas un suiveur. La boucle contient donc \textbf{un étage de gain de plus} et son pôle de sortie dépend de la charge $\Rightarrow$ la stabilité devient un vrai sujet.
+\end{formule}
+
+\begin{figure}[h]
+\centering
 \begin{circuitikz}[scale=1.0, american]
   % Rail d'entrée haut
   \draw (0,4.2) node[left]{$V_{\text{in}}$} -- (6.4,4.2);
@@ -18980,16 +19004,8 @@ Un 7805 exige $V_{\text{in}} \geq \SI{7}{V}$. Robuste, stable sans précaution, 
   \draw (0,4.2) -- (0,-0.8) -- (6.4,-0.8);
   \node[ground] at (3.2,-0.8) {};
 \end{circuitikz}
-\end{center}
-
-\textbf{Noter l'inversion des entrées de l'ampli d'erreur} par rapport au schéma précédent : le PMOS source commune est un étage \textit{inverseur} (tirer la grille vers le bas \textit{augmente} la conduction), donc la boucle doit s'inverser aussi pour rester une contre-réaction --- le retour arrive sur l'entrée $+$. Le dropout devient simplement :
-\[
-V_{DO} = R_{DS,\text{on}} \cdot I_L \approx 50\text{--}\SI{300}{mV}
-\]
-Idéal sur batterie : une Li-ion (4,2 $\to$ \SI{3.0}{V}) peut alimenter du \SI{2.8}{V} jusqu'au bout de la décharge.
-
-\textbf{Le revers de la médaille :} le PMOS source commune est un étage \textit{inverseur à gain} (chapitre 17), pas un suiveur. La boucle contient donc \textbf{un étage de gain de plus} et son pôle de sortie dépend de la charge $\Rightarrow$ la stabilité devient un vrai sujet.
-\end{formule}
+\caption{Le LDO : ballast PMOS en \textit{source commune} --- le dropout tombe à $R_{DS,\text{on}} I_L$. L'étage étant inverseur, les entrées de l'ampli d'erreur sont échangées pour garder une contre-réaction ; et sa sortie à haute impédance crée le pôle mobile qui fait de la stabilité l'affaire du condensateur de sortie.}
+\end{figure}
 
 \subsection{La stabilité du LDO : le piège du condensateur de sortie}
 
@@ -19013,6 +19029,25 @@ PSRR = 20\log_{10}\frac{\Delta V_{\text{in}}}{\Delta V_{\text{out}}}
 \]
 Typiquement \SI{60}{}--\SI{80}{dB} en DC\ldots mais le PSRR \textbf{s'effondre avec la fréquence} (il suit le gain de boucle) : souvent $< \SI{20}{dB}$ à \SI{1}{MHz}. Conséquence pratique majeure : un LDO placé \textit{après} un convertisseur à découpage (chapitre 31) n'atténue l'ondulation de découpage (100 kHz--MHz) que de 10--20 dB --- le filtrage LC et le placement font le reste. Le LDO n'est pas un filtre magique.
 \end{formule}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=1.05cm, y=1cm]
+  % x : log f (1 u/décade, 10 Hz à x=0) ; y : 20 dB/1,2 u. Point exo 30.5 : (500 kHz ; 18 dB) = (4,7 ; 1,08).
+  \draw[-{Stealth[length=2mm]}] (-0.3,0) -- (6.9,0) node[right, font=\small]{$f$};
+  \draw[-{Stealth[length=2mm]}] (0,-0.3) -- (0,5.2) node[above, font=\small]{PSRR (dB)};
+  \foreach \x/\l in {0/{10}, 1/{100}, 2/{1 k}, 3/{10 k}, 4/{100 k}, 5/{1 M}, 6/{10 M}}{
+    \draw (\x,0.05) -- (\x,-0.05); \node[below, font=\tiny] at (\x,-0.1) {\l};}
+  \foreach \y/\l in {1.2/20, 2.4/40, 3.6/60, 4.8/80}{
+    \draw (0.05,\y) -- (-0.05,\y); \node[left, font=\tiny] at (-0.08,\y) {\l};}
+  \draw[very thick, blue!70!black] (0,4.2) -- (2,4.2) -- (4.7,1.08) -- (5.5,1.0) .. controls (6.2,1.1) .. (6.6,1.55);
+  \node[blue!70!black, font=\footnotesize, right] at (0.35,4.55) {suit le gain de boucle};
+  \filldraw[red!70!black] (4.7,1.08) circle (1.8pt);
+  \draw[dashed, gray!50] (4.7,0) -- (4.7,1.08);
+  \node[red!70!black, font=\scriptsize, above right] at (4.45,1.35) {\SI{18}{dB} à \SI{500}{kHz} (exo 30.5)};
+\end{tikzpicture}
+\caption{Le PSRR d'un LDO en fréquence : excellent tant que la boucle a du gain, il s'effondre en $-\SI{20}{dB/déc}$ au-delà du pôle dominant, touche son minimum vers le croisement, puis remonte un peu grâce au condensateur de sortie. Le plancher tombe précisément dans la plage des fréquences de découpage --- d'où le filtre LC \textit{avant} le LDO.}
+\end{figure}
 
 % ============================================================================
 \section{Niveau Ingénieur}
@@ -19110,7 +19145,7 @@ Complexité / coût & 3 broches + 2 condensateurs & Inductance, diode/FET, contr
 \textbf{Solution :} pire cas pour la régulation : $V_{\text{in,min}} = \SI{8}{V}$, $I_L = \SI{20}{mA}$ :
 $R_s \leq (8-5{,}1)/(5+20)\,\text{mA} = \SI{116}{\ohm}$ $\to$ \textbf{\SI{110}{\ohm}} (E12).
 
-Pire cas pour la Zener : $V_{\text{in,max}} = \SI{10}{V}$, $I_L = 0$ : $I_Z = (10-5{,}1)/110 = \SI{44.5}{mA}$, $P_Z = 5{,}1\times0{,}0445 = \SI{0.23}{W} < \SI{0.5}{W}$ \checkmark{} (mais déjà chaud : on voit la limite du shunt).
+Pire cas pour la Zener : $V_{\text{in,max}} = \SI{10}{V}$, $I_L = 0$ : $I_Z = (10-5{,}1)/110 = \SI{44.5}{mA}$, $P_Z = 5{,}1\times0{,}0445 = \SI{0.23}{W} < \SI{0.5}{W}$ --- dans les clous, mais déjà chaud : on voit la limite du shunt.
 \end{pratique}
 
 \subsection*{Niveau intermédiaire}
@@ -19134,7 +19169,7 @@ Pire cas pour la Zener : $V_{\text{in,max}} = \SI{10}{V}$, $I_L = 0$ : $I_Z = (1
 
 (a) $V_{DO,\max} = 3{,}0 - 2{,}8 = \SI{200}{mV}$.
 
-(b) $V_{DO} = 0{,}6\times0{,}15 = \SI{90}{mV} < 200$ \checkmark{} (un 78xx à \SI{2}{V} de dropout aurait abandonné la batterie à $V_{\text{bat}} = \SI{4.8}{V}$\ldots c'est-à-dire jamais utilisable).
+(b) $V_{DO} = 0{,}6\times0{,}15 = \SI{90}{mV} < \SI{200}{mV}$ --- validé (un 78xx à \SI{2}{V} de dropout aurait abandonné la batterie à $V_{\text{bat}} = \SI{4.8}{V}$\ldots c'est-à-dire jamais utilisable).
 
 (c) Début : $\eta = 2{,}8/4{,}2 = 67\%$. Fin : $2{,}8/3{,}0 = 93\%$. Moyenne pondérée $\sim 75$--$80\%$ : tout à fait honorable pour un circuit 3 broches silencieux.
 \end{pratique}
@@ -19167,12 +19202,21 @@ Pire cas pour la Zener : $V_{\text{in,max}} = \SI{10}{V}$, $I_L = 0$ : $I_Z = (1
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Reformulez avec Thévenin pourquoi ``rigidifier'' un diviseur (baisser $R_1, R_2$) est une impasse énergétique. Quel est le seul contexte où le diviseur est l'outil correct ?
-\item Le régulateur série utilise un émetteur suiveur, le LDO un PMOS source commune. Pourquoi ce changement de montage abaisse-t-il le dropout \textit{et} complique-t-il la stabilité ? (Reliez aux chapitres 16--18.)
-\item Le PSRR d'un LDO suit son gain de boucle. Déduisez-en pourquoi il est excellent en DC et médiocre à \SI{1}{MHz}, et ce que cela implique pour le post-filtrage d'un découpage.
-\item Un régulateur en limitation de courant devient une source de courant constant. Que devient alors la puissance dissipée dans le ballast en court-circuit, et pourquoi le foldback existe-t-il ?
-\end{enumerate}
+\textbf{Q1.} Reformulez avec Thévenin pourquoi ``rigidifier'' un diviseur (baisser $R_1, R_2$) est une impasse énergétique. Quel est le seul contexte où le diviseur est l'outil correct ?
+
+\textit{Réponse : pour que $Z_{\text{out}} = R_1\parallel R_2 \ll R_L$, il faut faire circuler en permanence dans le pont un courant très supérieur à $I_L$ : le rendement s'effondre en proportion --- et la tension à vide reste $\propto V_{\text{in}}$, donc rien n'est \textit{régulé}. Le diviseur est l'outil correct quand le courant prélevé est quasi nul : point de mesure, polarisation, et surtout\ldots{} le réseau de retour $R_a$/$R_b$ d'un régulateur, où il redevient ce qu'il est --- un capteur au service d'une boucle.}
+
+\textbf{Q2.} Le régulateur série utilise un émetteur suiveur, le LDO un PMOS source commune. Pourquoi ce changement de montage abaisse-t-il le dropout \textit{et} complique-t-il la stabilité ? (Reliez aux chapitres 16--18.)
+
+\textit{Réponse : le suiveur impose $V_{\text{out}} = V_{\text{base}} - V_{BE}$, et sa commande doit tenir sous $V_{\text{in}}$ : le dropout embarque un ou deux $V_{BE}$ ($\sim\SI{2}{V}$). En source commune, le drain peut frôler la source : il ne reste que $R_{DS,\text{on}} I_L$. Mais on a troqué un étage docile (gain $\approx 1$, sortie basse impédance en $1/g_m$) contre un étage \textit{inverseur à gain} et à sortie haute impédance : un pôle de sortie bas, mobile avec la charge, s'ajoute dans la boucle --- deux pôles avant le croisement, marge de phase en péril (chapitre 18). Le dropout s'achète en marge de phase, et c'est le zéro ESR (ou la compensation interne) qui paie la note.}
+
+\textbf{Q3.} Le PSRR d'un LDO suit son gain de boucle. Déduisez-en pourquoi il est excellent en DC et médiocre à \SI{1}{MHz}, et ce que cela implique pour le post-filtrage d'un découpage.
+
+\textit{Réponse : au premier ordre, $PSRR \approx 1 + A\beta$ : en DC, le gain d'erreur énorme donne 60--80 dB ; puis $A\beta$ chute en $-\SI{20}{dB/déc}$ après le pôle dominant (chapitre 18), et le PSRR le suit fidèlement. Au-delà du croisement, il ne reste que le diviseur passif ballast/condensateur : 10--20 dB. Or les fréquences de découpage (100 kHz--2 MHz) tombent exactement dans ce creux : le LDO est le plus sourd là où le buck crie. D'où la règle : filtre LC ou perle + condensateur \textit{en amont} du LDO --- et un LDO choisi pour son PSRR haute fréquence, pas pour son chiffre DC de datasheet.}
+
+\textbf{Q4.} Un régulateur en limitation de courant devient une source de courant constant. Que devient alors la puissance dissipée dans le ballast en court-circuit, et pourquoi le foldback existe-t-il ?
+
+\textit{Réponse : en court-circuit, $V_{\text{out}} = 0$ : tout $V_{\text{in}}$ se retrouve aux bornes du ballast, qui dissipe $P = V_{\text{in}} \times I_{\text{lim}}$ --- le pire cas thermique, supérieur au fonctionnement nominal. Le foldback \textit{replie} la limite de courant quand $V_{\text{out}}$ chute : la puissance de court-circuit est divisée par 3 à 5, et le ballast survit sans radiateur de crise. Le prix : des zones de non-démarrage sur les charges qui exigent un fort courant à basse tension (moteurs, capacités massives) --- la protection thermique reste le filet ultime.}
 
 % === RÉSUMÉ ===
 \section*{Résumé du chapitre}
@@ -19220,6 +19264,12 @@ Choix & Faible écart/bruit $\to$ LDO ; gros écart/courant $\to$ découpage ; \
 \end{tabular}
 \end{center}
 \end{ingenieur}
+
+\begin{retenir}
+\textbf{Ce qu'il faut emporter de ce chapitre :} une alimentation linéaire, c'est une boucle du chapitre 18 refermée sur un ballast des chapitres 16--17 : la référence donne la valeur, le diviseur la mesure, l'ampli d'erreur corrige, le transistor exécute. Le LDO pousse le dropout à $R_{DS,\text{on}} I_L$ au prix de la stabilité, le PSRR suit le gain de boucle, et l'exercice thermique n'est jamais optionnel. Mais la limite est structurelle : $\eta \approx V_{\text{out}}/V_{\text{in}}$ --- le ballast est une résistance intelligente, et l'écart de tension part en chaleur, toujours.
+
+Pour casser cette limite, il faut refuser le compromis lui-même : un interrupteur idéal ne dissipe rien, ni fermé ($V = 0$) ni ouvert ($I = 0$). Hacher, stocker dans une inductance, lisser --- c'est le chapitre 31 : les alimentations à découpage.
+\end{retenir}
 
 % ============================================================================
 % CHAPITRE 31 : ALIMENTATIONS À DÉCOUPAGE
