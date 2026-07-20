@@ -210,9 +210,79 @@ Corrections, suggestions et contributions : \texttt{kevin.pottier@eseo.fr}
 \newpage
 
 
+% === AVANT-PROPOS ===
+\chapter*{Avant-propos}
+\addcontentsline{toc}{chapter}{Avant-propos}
+
+Ce livre est né d'un constat fait des deux côtés du bureau. Ingénieur en électronique, j'ai appris mon métier dans des ouvrages qui se répartissent presque toujours en deux familles : les livres d'initiation, clairs mais qui s'arrêtent au seuil des choses sérieuses, et les traités de référence, complets mais qui supposent acquis précisément ce qu'un débutant vient y chercher. Enseignant, je retrouve chaque année des étudiants coincés dans cet entre-deux : assez curieux pour vouloir comprendre vraiment, pas encore armés pour lire les grands traités dans le texte.
+
+La phrase qui figure en page de garde résume l'ambition : \emph{« un bébé doit pouvoir comprendre les bases, un ingénieur doit pouvoir s'y référer comme source de qualité »}. Ces deux exigences ne sont contradictoires qu'en apparence, et la réponse retenue ici est structurelle : chaque chapitre est écrit \textbf{trois fois}, à trois altitudes --- \emph{les Bases}, qui ne supposent rien ; l'\emph{Approfondissement}, qui outille ; le \emph{Niveau Ingénieur}, qui va au fond, ordres de grandeur et pièges de conception compris. On peut lire cet ouvrage comme trois livres emboîtés, et y revenir à mesure que l'on grandit.
+
+Le parcours va du courant électrique au circuit imprimé : trente-sept chapitres en neuf parties, du premier électron à l'intégrité du signal. Le fil conducteur est celui que je m'efforce de suivre en cours : ne jamais donner une formule sans son intuition, jamais une intuition sans un chiffre, jamais un chiffre sans dire d'où il vient. Tous les exercices sont corrigés en regard, et toutes les valeurs numériques de ce livre ont été vérifiées par le calcul.
+
+Enfin, ce livre est \textbf{libre} (licence CC BY-NC-SA) : copiez-le, distribuez-le à vos étudiants, améliorez-le --- il vous appartient aussi. C'est le produit d'un artisanat, pas d'une industrie ; il contient donc des défauts. Chaque erreur signalée à l'adresse donnée en colophon rendra la version suivante meilleure.
+
+\vspace{0.6cm}
+\begin{flushright}
+Kévin \textsc{Pottier}\\
+Angers, juillet 2026
+\end{flushright}
+
+\section*{Remerciements}
+
+Mes premiers remerciements vont à mes étudiants de BTS Systèmes Numériques : leurs questions, leurs blocages et leurs déclics sont la matière première de ce livre --- c'est en cherchant à leur expliquer que j'ai compris ce qui manquait aux explications. Merci à mes collègues enseignants et ingénieurs pour les discussions qui ont affûté nombre de ces pages, et d'avance aux relecteurs et contributeurs que ce projet libre trouvera en chemin. Merci enfin à vous, lecteur : un ouvrage libre ne vit que s'il est lu, critiqué et transmis.
+
+\newpage
+
+% === COMMENT LIRE CE LIVRE ===
+\chapter*{Comment lire ce livre}
+\addcontentsline{toc}{chapter}{Comment lire ce livre}
+
+\section*{Trois niveaux par chapitre}
+
+Chaque chapitre est découpé en trois sections de difficulté croissante, signalées par un encadré d'ouverture qui annonce le contenu et les prérequis :
+\begin{itemize}[itemsep=2pt]
+\item \textbf{Les Bases} --- aucune connaissance préalable supposée : les concepts, les ordres de grandeur, le vocabulaire. Ce niveau se suffit à lui-même pour une première culture solide.
+\item \textbf{Approfondissement} --- les outils quantitatifs : les modèles, les calculs, les montages classiques. C'est le c\oe ur d'une formation de technicien ou de licence.
+\item \textbf{Niveau Ingénieur} --- les limites, les compromis et les pièges réels : ce que l'on découvre d'ordinaire en bureau d'études, au prix de quelques cartes fumées.
+\end{itemize}
+
+\section*{Les encadrés}
+
+Le texte s'appuie sur des encadrés récurrents, toujours les mêmes : \textbf{formule} (le résultat et d'où il vient), \textbf{intuition} (l'image mentale qui fait tenir la formule), \textbf{attention} (le piège classique), \textbf{pratique} (l'application chiffrée --- c'est là que vivent les solutions d'exercices), et \textbf{retenir} (la synthèse à emporter). En fin de chapitre : six exercices corrigés (deux par niveau), quatre questions de compréhension avec réponses rédigées, trois résumés tabulaires --- un par niveau --- et un dernier encadré qui tisse le lien vers le chapitre suivant.
+
+\section*{Trois parcours possibles}
+
+\begin{itemize}[itemsep=2pt]
+\item \textbf{Grand débutant} : lire \emph{Les Bases} de tous les chapitres d'une partie avant d'y revenir pour l'Approfondissement. Rien ne presse ; les niveaux supérieurs attendront.
+\item \textbf{Étudiant (BTS, BUT, licence, école)} : lecture linéaire Bases + Approfondissement, le Niveau Ingénieur en seconde lecture ou en préparation de projet.
+\item \textbf{Ingénieur en exercice} : accès direct par chapitre ; les résumés et les encadrés \emph{retenir} servent de rappels rapides, les renvois croisés permettent de remonter aux fondements au besoin.
+\end{itemize}
+
+\section*{Historique des versions}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{p{1.6cm}p{2.6cm}p{8.6cm}}
+\toprule
+\textbf{Version} & \textbf{Date} & \textbf{Contenu} \\
+\midrule
+0.1 & avril 2026 & Rédaction initiale des 37 chapitres. \\
+0.5 & juillet 2026 & Relecture technique intégrale : trois passes par chapitre, tous les exercices vérifiés par le calcul, une soixantaine de figures créées ou refaites. \\
+0.75 & juillet 2026 & Appareil éditorial : page de garde, licence, avant-propos, guide de lecture. \\
+1.0 & à venir & Listes, annexes, bibliographie commentée, glossaires, index, passe typographique finale. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\newpage
+
 % === TABLE DES MATIÈRES ===
 \tableofcontents
 \newpage
+
+
+
 
 % ============================================================================
 % PARTIE I : FONDAMENTAUX
