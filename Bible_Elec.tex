@@ -19819,6 +19819,25 @@ B_{\text{sat}} \text{ atteint pour } I_{\text{sat}} \quad\text{tel que}\quad L\,
 \textbf{L'entrefer : sacrifier de la perméabilité pour gagner en courant.} En insérant un petit \textbf{entrefer} (\textit{air gap}) dans le circuit magnétique, on réduit $\mu_r$ effectif (donc $L$) mais on \textbf{repousse} la saturation : le noyau encaisse plus de courant avant $B_{\text{sat}}$. C'est pourquoi les inductances de puissance ont presque toujours un entrefer, visible ou réparti (poudre de fer). On échange de l'inductance contre de la tenue en courant --- un compromis de conception fondamental.
 \end{intuition}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=1.05cm, y=1.0cm]
+  \draw[-{Stealth[length=2mm]}] (-0.3,0) -- (6.6,0) node[right, font=\small]{$H \propto N I$};
+  \draw[-{Stealth[length=2mm]}] (0,-0.3) -- (0,3.75) node[above, font=\small]{$B$};
+  \draw[dashed, gray!55] (0,3) -- (6.2,3);
+  \node[left, font=\footnotesize] at (-0.08,3) {$B_{\text{sat}}$};
+  \draw[very thick, blue!70!black, domain=0:6.1, samples=120] plot(\x, {3*tanh(\x/1.1)});
+  \draw[very thick, red!70!black, domain=0:6.1, samples=120] plot(\x, {3*tanh(\x/3.2)});
+  \node[blue!70!black, font=\footnotesize, align=left] at (1.15,3.45) {sans entrefer\\($\mu$ élevé, $L$ élevée)};
+  \node[red!70!black, font=\footnotesize, align=left] at (5.1,2.05) {avec entrefer\\($L$ réduite)};
+  \draw[dashed, gray!50] (1.62,0) -- (1.62,2.7);
+  \draw[dashed, gray!50] (4.71,0) -- (4.71,2.7);
+  \draw[->, thick, gray!30!black] (1.72,0.55) -- (4.61,0.55);
+  \node[font=\scriptsize, gray!30!black, above] at (3.16,0.57) {$I_{\text{sat}}$ repoussé};
+\end{tikzpicture}
+\caption{La courbe $B$-$H$ du noyau : même plafond $B_{\text{sat}}$ dans les deux cas, mais l'entrefer aplatit la pente --- il faut bien plus d'ampères-tours pour saturer. On a troqué de l'inductance contre de la tenue en courant : l'énergie $\frac{1}{2}LI^2$ est en réalité stockée dans l'entrefer, le fer ne fait que canaliser.}
+\end{figure}
+
 \begin{retenir}
 \textbf{L'essentiel :}
 \begin{enumerate}[nosep]
@@ -19866,6 +19885,22 @@ Elles croissent en $f^2$ --- d'où l'usage de \textbf{ferrites} (isolantes, donc
 À faible charge, les pertes fer dominent (d'où le mauvais rendement en veille) ; à forte charge, les pertes cuivre prennent le dessus. Le rendement d'un SMPS en cloche --- maximal à charge moyenne --- vient directement de cette compétition.
 \end{attention}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=1.3cm, y=3.6cm]
+  \draw[-{Stealth[length=2mm]}] (-0.1,0) -- (5.45,0) node[right, font=\small]{$I_{\text{out}}$};
+  \draw[-{Stealth[length=2mm]}] (0,-0.06) -- (0,1.12) node[above, font=\small]{$\eta$};
+  \foreach \y/\l in {0.5/{50\,\%}, 0.9/{90\,\%}}{
+    \draw (0.04,\y) -- (-0.04,\y); \node[left, font=\tiny] at (-0.07,\y) {\l};}
+  \draw[very thick, blue!70!black, domain=0.06:5.2, samples=200] plot(\x, {5*\x/(5*\x+0.3+0.15*\x*\x)});
+  \draw[dashed, gray!50] (1.414,0) -- (1.414,0.922);
+  \filldraw[red!70!black] (1.414,0.922) circle (1.6pt);
+  \node[font=\scriptsize, gray!30!black, align=center] at (0.95,0.30) {pertes \textbf{fer}\\dominent (fixes)};
+  \node[font=\scriptsize, gray!30!black, align=center] at (4.25,0.62) {pertes \textbf{cuivre}\\dominent ($\propto I^2$)};
+\end{tikzpicture}
+\caption{La cloche de rendement d'un SMPS : les pertes fer (et de commutation) sont un impôt fixe qui écrase le rendement en veille, les pertes cuivre en $I^2$ le rognent à forte charge. Le maximum tombe là où les deux familles se valent --- et c'est pour aplatir la gauche de cette courbe que les contrôleurs sautent des cycles à faible charge.}
+\end{figure}
+
 \subsection{Le transformateur : deux bobines, un noyau}
 
 \begin{formule}
@@ -19888,6 +19923,31 @@ Le \textbf{flyback} est le convertisseur isolé le plus répandu (chargeurs, ali
 \end{itemize}
 La bobine couplée est donc une \textbf{inductance de stockage à deux enroulements}, pas un vrai transformateur (qui transfère en temps réel). Le rapport $N_2/N_1$ et le rapport cyclique fixent ensemble la tension de sortie, qui peut être inférieure, supérieure, et \textbf{isolée} --- d'où son succès pour les alimentations secteur où l'isolation est obligatoire.
 \end{formule}
+
+\begin{figure}[h]
+\centering
+\begin{circuitikz}[scale=0.95, american]
+  \draw (0,0) node[ground]{} to[V, l=$V_{\text{in}}$] (0,3.2);
+  \draw (0,3.2) -- (2.2,3.2);
+  \draw (2.2,3.2) to[L, l_=$N_1$] (2.2,1.2);
+  \draw (2.2,1.2) to[switch, l_=$S$] (2.2,0);
+  \draw (0,0) -- (2.2,0);
+  \draw[very thick] (2.55,0.9) -- (2.55,3.5);
+  \draw[very thick] (2.7,0.9) -- (2.7,3.5);
+  \draw (3.05,3.2) to[L, l_=$N_2$] (3.05,1.2);
+  \filldraw (1.9,3.0) circle (1.4pt);
+  \filldraw (3.35,1.4) circle (1.4pt);
+  \draw (3.05,3.2) to[D, l=$D$] (5.3,3.2);
+  \filldraw (5.3,3.2) circle (1.5pt);
+  \draw (5.3,3.2) to[C, l=$C$] (5.3,0.4);
+  \draw (6.7,3.2) to[R, l=$R_L$] (6.7,0.4);
+  \draw (5.3,3.2) -- (6.7,3.2);
+  \node[above, font=\footnotesize] at (6.0,3.3) {$V_{\text{out}}$};
+  \draw (3.05,1.2) -- (3.05,0.4) -- (6.7,0.4);
+  \node[ground] at (4.6,0.4) {};
+\end{circuitikz}
+\caption{Le flyback : un buck-boost dont la bobine est devenue une bobine \textit{couplée}. Phase ON, le primaire accumule (les points de polarité opposés bloquent la diode) ; phase OFF, l'énergie du noyau se déverse au secondaire --- de l'autre côté de la barrière d'isolation. Noter les deux masses distinctes : le secondaire flotte.}
+\end{figure}
 
 \begin{intuition}
 \textbf{Pourquoi l'isolation galvanique est non négociable sur secteur :} relier directement le \SI{230}{V} secteur à un circuit accessible mettrait l'utilisateur en contact avec le réseau (danger mortel, et masses référencées au neutre/phase). Le transformateur (ou la bobine couplée du flyback) coupe toute liaison conductrice : le secondaire ``flotte'', référencé à sa propre masse. C'est la barrière de sécurité de toute alimentation murale --- et un sujet central de la partie IX (CEM, courants de fuite, condensateurs Y).
@@ -19926,6 +19986,33 @@ f_{LC} = \frac{1}{2\pi\sqrt{LC}}
 
 \textbf{Le sauveur (parfois) : le zéro ESR.} La résistance série du condensateur de sortie crée un zéro $f_z = 1/(2\pi\,ESR\,C)$ qui \textbf{remonte} la phase de $+\SI{90}{°}$. C'est le même mécanisme qu'au chapitre 30 pour le LDO. D'où un constat important : \textbf{l'ESR du condensateur de sortie influence la stabilité, pas seulement l'ondulation}. Les condensateurs céramiques à très faible ESR, excellents pour l'ondulation, peuvent \textit{déstabiliser} une boucle conçue pour un zéro ESR --- il faut alors compenser activement.
 \end{formule}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=1.18cm, y=1cm]
+  % x : 1,5 u/décade depuis 1 kHz. fLC=8,9 k -> 1,42 ; fz=113 k -> 3,08 ; croisement 50 kHz -> 2,55 (vérifiés)
+  \draw[-{Stealth[length=2mm]}] (-0.25,0) -- (5.0,0) node[right, font=\scriptsize]{$f$};
+  \foreach \xx/\l in {0/{1 k}, 1.5/{10 k}, 3.0/{100 k}, 4.5/{1 M}}{
+    \draw (\xx,0.06) -- (\xx,-0.06); \node[below, font=\tiny] at (\xx,-0.08) {\l};}
+  \node[left, font=\scriptsize] at (-1.0,1.5) {$|T|$ (dB)};
+  \foreach \y/\l in {1.5/30, 0/0, -1.5/{-30}}{\node[left, font=\tiny] at (-0.08,\y) {\l};}
+  \draw[very thick, blue!70!black] (0,1.5) -- (1.42,1.5) -- (3.08,-1.81) -- (4.5,-3.23);
+  \node[font=\scriptsize, blue!70!black, rotate=-55] at (1.95,0.85) {$-40$ dB/déc};
+  \node[font=\scriptsize, blue!70!black, rotate=-34] at (3.95,-2.25) {$-20$ dB/déc};
+  \filldraw[red!70!black] (2.55,0) circle (1.7pt);
+  \node[font=\scriptsize, red!70!black, above right] at (2.58,0.04) {croisement $\sim$\SI{50}{kHz}};
+  % Phase
+  \draw[-{Stealth[length=2mm]}] (-0.25,-5.6) -- (5.0,-5.6);
+  \node[left, font=\scriptsize] at (-1.0,-6.6) {$\varphi$};
+  \foreach \y/\l in {-5.6/{0°}, -6.59/{-90°}, -7.58/{-180°}}{\node[left, font=\tiny] at (-0.08,\y) {\l};}
+  \draw[very thick, orange!80!black] (0,-5.6) -- (0.71,-5.6) -- (2.14,-7.58) -- (2.37,-7.58) -- (3.80,-6.59) -- (4.5,-6.59);
+  \draw[dashed, gray!45] (1.42,-7.7) -- (1.42,1.8); \node[above, font=\tiny, gray!30!black] at (1.42,1.82) {$f_{LC}$ = \SI{8.9}{kHz}};
+  \draw[dashed, gray!45] (3.08,-7.7) -- (3.08,1.8); \node[above, font=\tiny, gray!30!black] at (3.08,1.82) {$f_z$ (ESR) = \SI{113}{kHz}};
+  \draw[dashed, red!60] (2.55,-7.7) -- (2.55,-0.15);
+  \node[font=\scriptsize, red!70!black, below] at (2.9,-7.75) {marge $\approx$ 0° sans compensation !};
+\end{tikzpicture}
+\caption{La boucle du buck de l'exercice 32.3, non compensée : le pôle double LC à \SI{8.9}{kHz} plie le gain à $-\SI{40}{dB/déc}$ et précipite la phase à $-\SI{180}{°}$ ; le zéro ESR à \SI{113}{kHz} arrive trop tard --- au croisement ($\sim\SI{50}{kHz}$), la marge est nulle. C'est exactement le trou que les deux zéros d'un compensateur Type III viennent combler.}
+\end{figure}
 
 \begin{attention}
 \textbf{Le zéro du demi-plan droit (RHPZ) : le piège du boost et du flyback.} Les convertisseurs \textbf{élévateurs} (boost, buck-boost, flyback) possèdent un \textbf{zéro dans le demi-plan droit}. Ce zéro a un comportement contre-intuitif et dangereux : pour \textit{augmenter} la sortie, le contrôleur augmente $D$\ldots ce qui \textbf{réduit} transitoirement le courant envoyé à la charge (l'énergie reste plus longtemps dans la bobine côté primaire). La sortie baisse \textit{d'abord} avant de monter.
@@ -20031,12 +20118,21 @@ Multiplier la fréquence par 3 multiplie les pertes Foucault par 9 : c'est inten
 
 \subsection*{Questions de compréhension}
 
-\begin{enumerate}[nosep]
-\item Pourquoi insérer un entrefer dans un noyau \textit{réduit} l'inductance mais \textit{augmente} la tenue en courant ? Quel compromis cela représente-t-il ?
-\item Les pertes fer dépendent de $B_{\max}$ et $f_{\text{sw}}$ mais pas du courant de charge, alors que les pertes cuivre dépendent du courant. Déduisez-en la forme en cloche du rendement d'un SMPS.
-\item Le pôle double LC d'un buck fait chuter la phase de $-\SI{180}{°}$. Reliez ce fait au critère de marge de phase du chapitre 18 et expliquez pourquoi un compensateur Type III est nécessaire en mode tension.
-\item Le zéro du demi-plan droit d'un boost limite la bande passante de régulation. Expliquez physiquement pourquoi augmenter $D$ fait \textit{d'abord} baisser la sortie, et pourquoi ce zéro ne se compense pas.
-\end{enumerate}
+\textbf{Q1.} Pourquoi insérer un entrefer dans un noyau \textit{réduit} l'inductance mais \textit{augmente} la tenue en courant ? Quel compromis cela représente-t-il ?
+
+\textit{Réponse : l'entrefer ajoute au circuit magnétique une réluctance qui domine celle du fer : $L = N^2/\mathcal{R}$ chute. Mais pour atteindre un même $B$ (donc un même flux), il faut désormais beaucoup plus d'ampères-tours --- et comme $I_{\text{sat}} = N A_e B_{\text{sat}}/L$, réduire $L$ à $B_{\text{sat}}$ fixé repousse mécaniquement la saturation. Physiquement, l'énergie $\frac{1}{2}LI^2$ est logée dans l'entrefer (l'air stocke, le fer canalise) : à noyau donné, on échange des henrys contre des ampères, l'énergie stockable restant la vraie monnaie.}
+
+\textbf{Q2.} Les pertes fer dépendent de $B_{\max}$ et $f_{\text{sw}}$ mais pas du courant de charge, alors que les pertes cuivre dépendent du courant. Déduisez-en la forme en cloche du rendement d'un SMPS.
+
+\textit{Réponse : les pertes fer (et de commutation) sont un \textbf{impôt fixe}, payé à chaque cycle que le convertisseur tourne, charge ou pas ; les pertes cuivre sont un coût variable en $I^2$. Le rendement $\eta = P/(P + P_{\text{fixe}} + kI^2)$ s'effondre donc à faible charge (l'impôt écrase le peu de puissance utile), plafonne au milieu, et redescend à forte charge (le $I^2$ croît plus vite que le $I$ du numérateur). Le maximum tombe où pertes fixes et variables s'égalent --- et c'est pour raboter la gauche de la cloche que les contrôleurs passent en pulse-skipping en veille : moins de cycles, moins d'impôt.}
+
+\textbf{Q3.} Le pôle double LC d'un buck fait chuter la phase de $-\SI{180}{°}$. Reliez ce fait au critère de marge de phase du chapitre 18 et expliquez pourquoi un compensateur Type III est nécessaire en mode tension.
+
+\textit{Réponse : le critère du chapitre 18 exige $> \SI{45}{°}$ de marge au croisement ; or dès que le croisement dépasse $f_{LC}$, le pôle double a déjà consommé les $\SI{180}{°}$ --- marge nulle, la boucle sonne ou oscille. Il faut donc \textit{réinjecter} de la phase avant le croisement : les deux zéros du Type III, placés autour de $f_{LC}$, remontent jusqu'à $+\SI{180}{°}$ --- deux zéros contre deux pôles, l'arithmétique est structurelle. Ses deux pôles hautes fréquences referment ensuite le gain pour atténuer bruit et résidus de découpage. En mode courant, le pôle double étant cassé, un simple Type II suffit --- c'est tout l'argument de l'exercice 32.6.}
+
+\textbf{Q4.} Le zéro du demi-plan droit d'un boost limite la bande passante de régulation. Expliquez physiquement pourquoi augmenter $D$ fait \textit{d'abord} baisser la sortie, et pourquoi ce zéro ne se compense pas.
+
+\textit{Réponse : dans un boost, la charge n'est alimentée que pendant la phase OFF. Augmenter $D$ allonge l'accumulation et \textbf{raccourcit immédiatement} le temps de transfert --- or le courant de bobine, lui, ne peut pas sauter : au cycle suivant, la sortie reçoit \textit{moins} de charge. Elle baisse d'abord, et ne remonte que lorsque le courant moyen de bobine a eu le temps de croître, plusieurs cycles plus tard. Cette réponse inverse initiale est la signature d'un zéro à partie réelle positive : il inflige le retard de phase d'un pôle avec la pente de gain d'un zéro, et aucun réseau causal stable ne peut l'annuler (l'annulation exacte cacherait un mode instable). L'unique parade est l'humilité : croiser à $f_{\text{RHPZ}}/5$ au plus, et confier les transitoires au condensateur de sortie.}
 
 % === RÉSUMÉ ===
 \section*{Résumé du chapitre}
@@ -20085,6 +20181,12 @@ Mode courant & Casse le pôle LC $\Rightarrow$ Type II suffit. Standard moderne,
 \end{center}
 \end{ingenieur}
 
+
+\begin{retenir}
+\textbf{Ce qu'il faut emporter de ce chapitre :} la bobine n'est plus une boîte noire --- un noyau qui canalise ($\mu_r$), qui sature ($L I = N A_e B$, la limite dure), qui perd (hystérésis en $f B^n$, Foucault en $f^2$), et un entrefer qui loge l'énergie. Le flyback en fait une frontière d'isolation, obligatoire dès que le secteur entre en jeu. Et la régulation s'est révélée n'être que de l'asservissement : pôle double LC, zéro ESR, RHPZ, compensateurs Type II et III --- des pôles et des zéros posés sur un Bode, jusqu'ici avec les mains et les règles du chapitre 18.
+
+Il est temps de donner à tout cela son langage exact. La partie qui s'ouvre formalise ce que les alimentations viennent de nous faire pratiquer : Laplace, fonctions de transfert, pôles et zéros comme objets mathématiques --- chapitre 33.
+\end{retenir}
 
 % ============================================================================
 \part{Asservissement}
