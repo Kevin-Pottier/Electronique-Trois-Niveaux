@@ -164,19 +164,21 @@
 
 \vspace{1.8cm}
 
-\begin{circuitikz}[scale=1.0, blue!60!black]
-  \node[op amp] (A) at (2.6,0) {};
-  \draw[very thick] (A.+) -- ++(-1.3,0) node[ocirc]{} node[left]{$v_e$};
-  \draw[very thick] (A.out) -- ++(1.0,0) node[ocirc]{} node[right]{$v_s$};
-  \coordinate (fb) at ($(A.out)+(0.5,0)$);
-  \filldraw (fb) circle (1.6pt);
-  \draw[very thick] (A.-) -- ++(-0.5,0) coordinate(n1);
-  \filldraw (n1) circle (1.6pt);
-  \draw[very thick] (n1) -- ++(0,1.55) coordinate(t1);
-  \draw[very thick] (t1) to[R, l=$R_2$] (t1 -| fb);
-  \draw[very thick] (t1 -| fb) -- (fb);
-  \draw[very thick] (n1) to[R, l_=$R_1$] ++(0,-2.1) node[ground]{};
+\begin{circuitikz}[blue!60!black, line width=1.1pt]
+  \node[op amp, noinv input up] (A) at (0,0) {};
+  \draw (A.+) -- ++(-1.6,0) node[ocirc]{} node[above=0.6mm, xshift=1.5mm]{$v_e$};
+  \draw (A.out) -- ++(1.7,0) node[ocirc]{} node[above=0.6mm, xshift=-1.5mm]{$v_s$};
+  \coordinate (fb) at ($(A.out)+(0.8,0)$);
+  \filldraw (fb) circle (1.8pt);
+  \draw (A.-) -- ++(-0.7,0) coordinate (n1);
+  \filldraw (n1) circle (1.8pt);
+  \draw (n1) -- ++(0,-1.5) coordinate (b1);
+  \draw (b1) to[R, l_=$R_2$] (b1 -| fb) -- (fb);
+  \draw (n1) to[R, l=$R_1$] ++(-2.4,0) node[ground]{};
 \end{circuitikz}
+
+\vspace{0.3cm}
+{\color{gray!55!black}\small $v_s=\left(1+\dfrac{R_2}{R_1}\right)v_e$}
 
 \vspace{1.8cm}
 
@@ -214,7 +216,7 @@ Corrections, suggestions et contributions : \texttt{kevin.pottier@eseo.fr}
 \chapter*{Avant-propos}
 \addcontentsline{toc}{chapter}{Avant-propos}
 
-Ce livre est né d'un constat fait des deux côtés du bureau. Ingénieur en électronique, j'ai appris mon métier dans des ouvrages qui se répartissent presque toujours en deux familles : les livres d'initiation, clairs mais qui s'arrêtent au seuil des choses sérieuses, et les traités de référence, complets mais qui supposent acquis précisément ce qu'un débutant vient y chercher. Enseignant, je retrouve chaque année des étudiants coincés dans cet entre-deux : assez curieux pour vouloir comprendre vraiment, pas encore armés pour lire les grands traités dans le texte.
+Ce livre est né d'un manque. Étudiant, puis jeune ingénieur, j'ai cherché l'ouvrage qui permettrait d'apprendre les bases et d'approfondir dans un même volume --- et je ne l'ai jamais trouvé. Les livres d'électronique se répartissent presque toujours en deux familles : les ouvrages d'initiation, clairs mais qui s'arrêtent au seuil des choses sérieuses, et les traités de référence, complets mais qui supposent acquis précisément ce qu'un débutant vient y chercher. Devenu enseignant en école d'ingénieurs, je retrouve chez mes étudiants la même frustration : assez curieux pour vouloir comprendre vraiment, pas encore armés pour lire les grands traités dans le texte. Ce livre est celui que j'aurais voulu avoir entre les mains.
 
 La phrase qui figure en page de garde résume l'ambition : \emph{« un bébé doit pouvoir comprendre les bases, un ingénieur doit pouvoir s'y référer comme source de qualité »}. Ces deux exigences ne sont contradictoires qu'en apparence, et la réponse retenue ici est structurelle : chaque chapitre est écrit \textbf{trois fois}, à trois altitudes --- \emph{les Bases}, qui ne supposent rien ; l'\emph{Approfondissement}, qui outille ; le \emph{Niveau Ingénieur}, qui va au fond, ordres de grandeur et pièges de conception compris. On peut lire cet ouvrage comme trois livres emboîtés, et y revenir à mesure que l'on grandit.
 
@@ -230,7 +232,7 @@ Angers, juillet 2026
 
 \section*{Remerciements}
 
-Mes premiers remerciements vont à mes étudiants de BTS Systèmes Numériques : leurs questions, leurs blocages et leurs déclics sont la matière première de ce livre --- c'est en cherchant à leur expliquer que j'ai compris ce qui manquait aux explications. Merci à mes collègues enseignants et ingénieurs pour les discussions qui ont affûté nombre de ces pages, et d'avance aux relecteurs et contributeurs que ce projet libre trouvera en chemin. Merci enfin à vous, lecteur : un ouvrage libre ne vit que s'il est lu, critiqué et transmis.
+Mes premiers remerciements vont à mes étudiants : leurs questions, leurs blocages et leurs déclics sont la matière première de ce livre --- c'est en cherchant à leur expliquer que j'ai compris ce qui manquait aux explications. Merci à mes collègues enseignants et ingénieurs pour les discussions qui ont affûté nombre de ces pages, et d'avance aux relecteurs et contributeurs que ce projet libre trouvera en chemin. Merci enfin à vous, lecteur : un ouvrage libre ne vit que s'il est lu, critiqué et transmis.
 
 \newpage
 
