@@ -1,61 +1,63 @@
 # Bible de l'Électronique
 
-Ouvrage de référence multi-niveaux en électronique, du composant physique au système complet.
-Rédigé en LaTeX, compilé avec `pdflatex` (CircuiTikZ pour les schémas).
+**Du débutant absolu à l'ingénieur confirmé** — un livre libre de 644 pages,
+écrit en français, du courant électrique au circuit imprimé.
 
-## Public et philosophie
+> « Un bébé doit pouvoir comprendre les bases, un ingénieur doit pouvoir s'y
+> référer comme source de qualité. »
 
-Double lectorat : accessible aux débutants **et** de qualité référence pour ingénieurs/chercheurs.
-Chaque chapitre est structuré en trois niveaux :
+## Le principe : trois livres en un
 
-- 🟢 **Bases** — intuitif, sans Maxwell/ARQS
-- 🟡 **Approfondissement** — modèle d'ingénierie
-- 🔴 **Niveau Ingénieur** — modèle physique avec limites réelles
+Chaque chapitre est écrit trois fois, à trois altitudes :
 
-Principes : pas d'affirmation sans justification, hypothèses explicites, causalité physique
-traçable de bout en bout, liens inter-chapitres systématiques.
+1. **Les Bases** — aucune connaissance préalable supposée ;
+2. **Approfondissement** — les modèles, les calculs, les montages classiques ;
+3. **Niveau Ingénieur** — les limites, les compromis et les pièges réels.
 
-## État d'avancement
+On peut le lire comme trois livres emboîtés, et y revenir à mesure que l'on
+grandit.
 
-**Phase V0.1** (production de contenu) — **terminée** : 37 chapitres, 9 parties, 536 pages.
+## Contenu
 
-| Partie | Chapitres | Sujet | État |
-|--------|-----------|-------|------|
-| I    | 1–6   | Fondamentaux              | ✅ |
-| II   | 7–9   | Composants passifs        | ✅ |
-| III  | 10–12 | Régime sinusoïdal         | ✅ |
-| IV   | 13–14 | Fonctions de transfert    | ✅ |
-| V    | 15–19 | Semi-conducteurs          | ✅ |
-| VI   | 20–29 | Électronique numérique    | ✅ |
-| VII  | 30–32 | Alimentations             | ✅ |
-| VIII | 33–34 | Asservissement            | ✅ |
-| IX   | 35–37 | CEM / PCB                 | ✅ |
+37 chapitres en 9 parties : Fondamentaux · Composants passifs · Régime
+sinusoïdal · Fonctions de transfert et filtres · Semi-conducteurs ·
+Électronique numérique · Alimentations · Asservissement · CEM et conception
+de cartes. Plus : annexes (séries E, constantes, notations), bibliographie
+commentée, glossaire, lexique français–anglais, index.
 
-**V1.0 COMPLÈTE** — 37 chapitres relus en trois passes, annexes (séries E, constantes, notations), bibliographie commentée, glossaire (89 entrées), lexique FR–EN (128 paires), index (956 entrées, 629 clés), typographie française.
-**Ne pas mélanger V0.1 et V0.5.**
+En chiffres : **644 pages** · **300 exercices corrigés** · **175 schémas et
+figures** (CircuiTikZ/TikZ) · **956 entrées d'index** · toutes les valeurs
+numériques vérifiées par le calcul.
 
-## Compilation
+## Obtenir le livre
+
+- **PDF prêt à lire** : voir les [Releases](../../releases) (v1.0) ;
+- **Compiler soi-même** (TeX Live complet requis) :
 
 ```bash
 pdflatex Bible_Elec.tex
-pdflatex Bible_Elec.tex   # 2e passe (sommaire)
-pdflatex Bible_Elec.tex   # 3e passe (références stables)
+makeindex Bible_Elec.idx
+pdflatex Bible_Elec.tex
+pdflatex Bible_Elec.tex
 ```
 
-## Conventions éditoriales (rappel)
+## Signaler une erreur, contribuer
 
-- Environnements colorés : `bases`, `approfondissement`, `ingenieur`, `formule`, `intuition`,
-  `attention`, `pratique`, `retenir`.
-- Résumés en 3 tableaux par niveau en fin de chapitre.
-- 6 exercices/chapitre (2 débutant, 2 intermédiaire, 2 ingénieur) + 4 questions de compréhension.
-- Schémas CircuiTikZ `american` : courants intégrés sur les fils (`i=`), labels non superposés,
-  tracés orthogonaux, masse commune fermée.
+Une valeur douteuse, une coquille, un schéma perfectible ? Ouvrez une
+[issue](../../issues) avec la page et la citation exacte — chaque erreur
+signalée rend la version suivante meilleure. Voir
+[CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Workflow par chapitre
+## Licence
 
-1. Rédaction d'un fichier `ChapitreNN.tex` autonome
-2. Compilation + vérification visuelle (PDF)
-3. Relecture (peer review)
-4. Corrections ciblées → « Bon à Tirer »
-5. Merge dans `Bible_Elec.tex`
-6. Commit git
+[CC BY-NC-SA 4.0](LICENSE.md) : libre de partager et d'adapter, pas de vente,
+contributions repartagées sous la même licence.
+
+## Auteur
+
+**Kévin Pottier** — ingénieur en électronique, enseignant en école
+d'ingénieurs. Contact : `kevin.pottier@eseo.fr`.
+
+Ce livre a été écrit avec l'aide substantielle d'une intelligence artificielle
+(Claude, d'Anthropic), sous la direction et la vérification systématique de
+l'auteur — la démarche est détaillée dans l'avant-propos.
