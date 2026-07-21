@@ -209,6 +209,7 @@ un ingénieur doit pouvoir s'y référer comme source de qualité. »}
 Cet ouvrage est mis à disposition selon les termes de la licence \textbf{Creative Commons Attribution --- Pas d'Utilisation Commerciale --- Partage dans les Mêmes Conditions 4.0 International} (CC BY-NC-SA 4.0).\\[1.5mm]
 Vous êtes libres de \textbf{partager} (copier, redistribuer) et d'\textbf{adapter} (modifier, transformer, améliorer) ce document, sous trois conditions : \textbf{créditer l'auteur}, \textbf{ne pas en faire un usage commercial}, et \textbf{rediffuser toute version modifiée sous cette même licence}. Texte intégral : \url{https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr}\\[4mm]
 Composé en \LaTeX{} (pdflatex) ; schémas et figures en CircuiTikZ et TikZ.\\
+Rédigé avec l'assistance de l'intelligence artificielle Claude (Anthropic), sous la direction et la vérification de l'auteur.\\
 Version 0.75 --- compilé le \today.\\
 Corrections, suggestions et contributions : \texttt{kevin.pottier@eseo.fr}
 \end{minipage}
@@ -226,6 +227,8 @@ Ce livre est né d'un manque. Étudiant, puis jeune ingénieur, j'ai cherché l'
 La phrase qui figure en page de garde résume l'ambition : \emph{« un bébé doit pouvoir comprendre les bases, un ingénieur doit pouvoir s'y référer comme source de qualité »}. Ces deux exigences ne sont contradictoires qu'en apparence, et la réponse retenue ici est structurelle : chaque chapitre est écrit \textbf{trois fois}, à trois altitudes --- \emph{les Bases}, qui ne supposent rien ; l'\emph{Approfondissement}, qui outille ; le \emph{Niveau Ingénieur}, qui va au fond, ordres de grandeur et pièges de conception compris. On peut lire cet ouvrage comme trois livres emboîtés, et y revenir à mesure que l'on grandit.
 
 Le parcours va du courant électrique au circuit imprimé : trente-sept chapitres en neuf parties, du premier électron à l'intégrité du signal. Le fil conducteur est celui que je m'efforce de suivre en cours : ne jamais donner une formule sans son intuition, jamais une intuition sans un chiffre, jamais un chiffre sans dire d'où il vient. Tous les exercices sont corrigés en regard, et toutes les valeurs numériques de ce livre ont été vérifiées par le calcul.
+
+Une précision d'honnêteté, avant de vous laisser entrer : ce livre a été écrit avec l'aide substantielle d'une intelligence artificielle (Claude, d'Anthropic), employée comme assistant de rédaction, de calcul et de construction des figures --- sous ma direction, chapitre par chapitre. Chaque valeur numérique a été vérifiée par le calcul, chaque schéma relu, chaque exercice refait. Les choix pédagogiques, la structure, le ton --- et les erreurs qui subsistent --- restent de moi.
 
 Enfin, ce livre est \textbf{libre} (licence CC BY-NC-SA) : copiez-le, distribuez-le à vos étudiants, améliorez-le --- il vous appartient aussi. C'est le produit d'un artisanat, pas d'une industrie ; il contient donc des défauts. Chaque erreur signalée à l'adresse donnée en colophon rendra la version suivante meilleure.
 
@@ -276,7 +279,7 @@ Le texte s'appuie sur des encadrés récurrents, toujours les mêmes : \textbf{f
 \midrule
 0.1 & avril 2026 & Rédaction initiale des 37 chapitres. \\
 0.5 & juillet 2026 & Relecture technique intégrale : trois passes par chapitre, tous les exercices vérifiés par le calcul, une soixantaine de figures créées ou refaites. \\
-0.75 & juillet 2026 & Appareil éditorial : page de garde, licence, avant-propos, guide de lecture, table des figures, pages de partie, annexes, bibliographie. \\
+0.75 & juillet 2026 & Appareil éditorial : page de garde, licence, avant-propos, guide de lecture, table des figures, pages de partie, annexes, bibliographie, glossaires. \\
 1.0 & à venir & Listes, annexes, bibliographie commentée, glossaires, index, passe typographique finale. \\
 \bottomrule
 \end{tabular}
@@ -23427,12 +23430,12 @@ dBm, dBµV & niveaux référencés (1 mW, 1 µV) \\
 \addcontentsline{toc}{chapter}{Bibliographie commentée}
 \chapter*{Bibliographie commentée}
 
-Une bibliothèque d'électronicien tient en peu de volumes, à condition de choisir les bons. La liste ci-dessous est courte à dessein : un ouvrage par domaine, chacun faisant autorité dans le sien. Les commentaires résument leur réception générale ; le premier relève, lui, d'un choix personnel de l'auteur.
+Une bibliothèque d'électronicien tient en peu de volumes, à condition de choisir les bons. La liste ci-dessous est courte à dessein : un ouvrage par domaine, chacun faisant autorité dans le sien. Les commentaires résument leur réception générale ; le premier relève, lui, d'un choix qui m'est personnel.
 
 \section*{La référence de ce livre}
 
 \noindent Yves \textsc{Granjon}, Bruno \textsc{Estibals}, Serge \textsc{Weber}, \emph{Le cours d'électronique --- 120 fiches de cours, QCM et exercices corrigés}, 3\textsuperscript{e}~éd., Dunod, coll. «~Tout en fiches~», 2023, 480~p.\\[1mm]
-C'est l'ouvrage qui a servi d'étalon au présent livre : pour la clarté des explications et le soin apporté à la compréhension, il représente, aux yeux de l'auteur, ce qui se fait de mieux en français à ce niveau. Cent vingt fiches de deux pages, du post-bac à bac+3, avec QCM, exercices corrigés et ouvertures industrielles : le format idéal pour réviser --- là où le présent ouvrage privilégie la progression continue à trois niveaux et l'ouverture vers la conception.
+C'est l'ouvrage qui a servi d'étalon au présent livre : pour la clarté des explications et le soin apporté à la compréhension, il représente, à mes yeux, ce qui se fait de mieux en français à ce niveau. Cent vingt fiches de deux pages, du post-bac à bac+3, avec QCM, exercices corrigés et ouvertures industrielles : le format idéal pour réviser --- là où le présent ouvrage privilégie la progression continue à trois niveaux et l'ouverture vers la conception.
 
 \vspace{4mm}
 
@@ -23473,5 +23476,369 @@ Refonte moderne de son classique \emph{Noise Reduction Techniques in Electronic 
 La référence pédagogique de l'intégrité du signal, fidèle à sa devise : l'intuition d'abord, les équations ensuite. Ses règles d'estimation rapide sont passées dans le langage du métier. Prolonge les chapitres 36 et 37.
 
 \vspace{4mm}
+
+
+% === GLOSSAIRE ===
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Glossaire}
+\chapter*{Glossaire}
+
+Les termes du métier, définis en une ou deux lignes, avec leur équivalent anglais en italique --- celui que vous rencontrerez dans les fiches techniques. Le lexique qui suit donne les correspondances dans les deux sens.
+
+\noindent\textbf{Alimentation à découpage} \emph{(switch-mode power supply, SMPS)} --- Alimentation régulant par commutation rapide et stockage inductif, à haut rendement (ch.~31).
+\par\vspace{1.2mm}
+\noindent\textbf{Amplificateur opérationnel} \emph{(operational amplifier, op-amp)} --- Amplificateur différentiel à très grand gain, brique de base de l'analogique ; il s'utilise presque toujours contre-réactionné (ch.~18).
+\par\vspace{1.2mm}
+\noindent\textbf{Anode} \emph{(anode)} --- Borne P d'une diode, par laquelle entre le courant en polarisation directe.
+\par\vspace{1.2mm}
+\noindent\textbf{Atténuation} \emph{(attenuation)} --- Réduction d'amplitude d'un signal, généralement exprimée en décibels.
+\par\vspace{1.2mm}
+\noindent\textbf{Bande passante} \emph{(bandwidth)} --- Plage de fréquences transmise avec moins de 3~dB d'atténuation.
+\par\vspace{1.2mm}
+\noindent\textbf{Bascule} \emph{(flip-flop)} --- Élément séquentiel mémorisant un bit, synchronisé sur un front d'horloge (D, JK, T) (ch.~21).
+\par\vspace{1.2mm}
+\noindent\textbf{Blindage} \emph{(shielding)} --- Enveloppe conductrice interceptant les couplages électromagnétiques (ch.~35).
+\par\vspace{1.2mm}
+\noindent\textbf{Boucle de masse} \emph{(ground loop)} --- Chemin de masse fermé qui capte les perturbations par induction (ch.~35).
+\par\vspace{1.2mm}
+\noindent\textbf{Bruit} \emph{(noise)} --- Signal aléatoire indésirable superposé au signal utile : thermique, de grenaille, en 1/f.
+\par\vspace{1.2mm}
+\noindent\textbf{CAN / CNA} \emph{(ADC / DAC)} --- Convertisseurs analogique--numérique et numérique--analogique (ch.~27).
+\par\vspace{1.2mm}
+\noindent\textbf{Cathode} \emph{(cathode)} --- Borne N d'une diode, par laquelle sort le courant en polarisation directe.
+\par\vspace{1.2mm}
+\noindent\textbf{Charge} \emph{(load)} --- Élément qui consomme le courant fourni par une sortie.
+\par\vspace{1.2mm}
+\noindent\textbf{Chronogramme} \emph{(timing diagram)} --- Tracé temporel des signaux logiques d'un système.
+\par\vspace{1.2mm}
+\noindent\textbf{Claquage} \emph{(breakdown)} --- Conduction brutale d'une jonction soumise à une tension inverse excessive.
+\par\vspace{1.2mm}
+\noindent\textbf{CMOS} \emph{(CMOS)} --- Logique complémentaire associant NMOS et PMOS, à consommation statique quasi nulle (ch.~29).
+\par\vspace{1.2mm}
+\noindent\textbf{Collecteur ouvert / drain ouvert} \emph{(open collector / open drain)} --- Sortie ne pouvant que tirer vers le bas ; exige une résistance de rappel externe (ch.~28).
+\par\vspace{1.2mm}
+\noindent\textbf{Commutation} \emph{(switching)} --- Passage rapide d'un état de conduction à l'autre.
+\par\vspace{1.2mm}
+\noindent\textbf{Comparateur} \emph{(comparator)} --- Circuit à sortie binaire selon le signe de la différence de ses entrées.
+\par\vspace{1.2mm}
+\noindent\textbf{Compatibilité électromagnétique (CEM)} \emph{(electromagnetic compatibility, EMC)} --- Aptitude à émettre peu de perturbations et à en tolérer beaucoup (ch.~35).
+\par\vspace{1.2mm}
+\noindent\textbf{Condensateur de découplage} \emph{(decoupling capacitor)} --- Condensateur local qui fournit les appels de courant et court-circuite le bruit d'alimentation (ch.~36).
+\par\vspace{1.2mm}
+\noindent\textbf{Contre-réaction} \emph{(negative feedback)} --- Réinjection en opposition d'une fraction de la sortie vers l'entrée : stabilise, linéarise, élargit la bande (ch.~18).
+\par\vspace{1.2mm}
+\noindent\textbf{Convertisseur buck / boost} \emph{(buck / boost converter)} --- Convertisseur à découpage abaisseur / élévateur de tension (ch.~31).
+\par\vspace{1.2mm}
+\noindent\textbf{Courant de fuite} \emph{(leakage current)} --- Courant résiduel d'un composant théoriquement bloqué.
+\par\vspace{1.2mm}
+\noindent\textbf{Courant de repos} \emph{(quiescent current)} --- Courant consommé par un circuit en l'absence de signal et de charge.
+\par\vspace{1.2mm}
+\noindent\textbf{Diaphonie} \emph{(crosstalk)} --- Couplage parasite d'un signal sur une piste voisine (ch.~37).
+\par\vspace{1.2mm}
+\noindent\textbf{Diode de roue libre} \emph{(freewheeling diode)} --- Diode offrant un chemin au courant inductif à l'ouverture de l'interrupteur (ch.~31).
+\par\vspace{1.2mm}
+\noindent\textbf{Diode Zener} \emph{(Zener diode)} --- Diode exploitée en claquage contrôlé, servant de référence de tension (ch.~15).
+\par\vspace{1.2mm}
+\noindent\textbf{Dissipateur} \emph{(heatsink)} --- Radiateur évacuant la chaleur d'un composant de puissance.
+\par\vspace{1.2mm}
+\noindent\textbf{Distorsion} \emph{(distortion)} --- Déformation du signal par une non-linéarité ; mesurée par la THD.
+\par\vspace{1.2mm}
+\noindent\textbf{Échantillonnage} \emph{(sampling)} --- Prélèvement du signal à intervalles réguliers $1/f_s$ (ch.~27).
+\par\vspace{1.2mm}
+\noindent\textbf{Échelon} \emph{(step)} --- Signal passant brutalement d'un niveau à un autre ; sert à caractériser les régimes transitoires.
+\par\vspace{1.2mm}
+\noindent\textbf{Écrêtage} \emph{(clipping)} --- Saturation qui coupe les crêtes d'un signal.
+\par\vspace{1.2mm}
+\noindent\textbf{Émetteur commun} \emph{(common emitter)} --- Montage amplificateur de base du bipolaire : inverseur, à gain élevé (ch.~16).
+\par\vspace{1.2mm}
+\noindent\textbf{ESR} \emph{(equivalent series resistance)} --- Résistance série parasite d'un condensateur ; critique en découpage (ch.~31).
+\par\vspace{1.2mm}
+\noindent\textbf{Facteur de qualité} \emph{(quality factor)} --- Rapport de l'énergie stockée à l'énergie dissipée par cycle ; finesse d'une résonance (ch.~12).
+\par\vspace{1.2mm}
+\noindent\textbf{Filtre actif} \emph{(active filter)} --- Filtre associant AOP et réseau RC, sans inductance (ch.~14, 19).
+\par\vspace{1.2mm}
+\noindent\textbf{Fréquence de coupure} \emph{(cutoff frequency)} --- Fréquence à $-3$~dB délimitant la bande passante (ch.~13).
+\par\vspace{1.2mm}
+\noindent\textbf{Front} \emph{(edge)} --- Transition montante ou descendante d'un signal logique.
+\par\vspace{1.2mm}
+\noindent\textbf{Gabarit} \emph{(filter mask)} --- Zones interdites imposées à la réponse d'un filtre (ch.~14).
+\par\vspace{1.2mm}
+\noindent\textbf{Gain} \emph{(gain)} --- Rapport de la grandeur de sortie à celle d'entrée, souvent exprimé en dB.
+\par\vspace{1.2mm}
+\noindent\textbf{Gigue} \emph{(jitter)} --- Fluctuation aléatoire des instants de transition d'un signal d'horloge.
+\par\vspace{1.2mm}
+\noindent\textbf{Horloge} \emph{(clock)} --- Signal périodique cadençant la logique séquentielle (ch.~21, 22).
+\par\vspace{1.2mm}
+\noindent\textbf{Hystérésis} \emph{(hysteresis)} --- Écart entre seuils montant et descendant ; immunise une bascule contre le bruit.
+\par\vspace{1.2mm}
+\noindent\textbf{Impédance} \emph{(impedance)} --- Généralisation complexe de la résistance en régime sinusoïdal (ch.~10).
+\par\vspace{1.2mm}
+\noindent\textbf{Impédance caractéristique} \emph{(characteristic impedance)} --- Rapport tension/courant d'une onde sur une ligne ; 50~$\Omega$ typique (ch.~37).
+\par\vspace{1.2mm}
+\noindent\textbf{Intégrité du signal} \emph{(signal integrity)} --- Discipline garantissant que le signal reçu ressemble au signal émis (ch.~37).
+\par\vspace{1.2mm}
+\noindent\textbf{Latch-up} \emph{(latch-up)} --- Amorçage parasite d'un thyristor interne aux circuits CMOS, potentiellement destructeur.
+\par\vspace{1.2mm}
+\noindent\textbf{LDO} \emph{(low-dropout regulator)} --- Régulateur linéaire à faible tension de déchet (ch.~30).
+\par\vspace{1.2mm}
+\noindent\textbf{Ligne de transmission} \emph{(transmission line)} --- Piste dont la longueur n'est plus négligeable devant l'onde : propagation, réflexions (ch.~37).
+\par\vspace{1.2mm}
+\noindent\textbf{Logique combinatoire} \emph{(combinational logic)} --- Logique dont la sortie ne dépend que des entrées présentes (ch.~20).
+\par\vspace{1.2mm}
+\noindent\textbf{Logique séquentielle} \emph{(sequential logic)} --- Logique dont la sortie dépend aussi d'un état mémorisé (ch.~21).
+\par\vspace{1.2mm}
+\noindent\textbf{Machine à états (FSM)} \emph{(finite state machine)} --- Modèle séquentiel défini par états, transitions et sorties (ch.~23).
+\par\vspace{1.2mm}
+\noindent\textbf{Marge de phase} \emph{(phase margin)} --- Distance à $-180$° de la phase à la fréquence de gain unité ; mesure la stabilité (ch.~34).
+\par\vspace{1.2mm}
+\noindent\textbf{Masse} \emph{(ground)} --- Référence de potentiel du circuit.
+\par\vspace{1.2mm}
+\noindent\textbf{Métastabilité} \emph{(metastability)} --- État indéterminé prolongé d'une bascule dont la fenêtre setup/hold a été violée (ch.~22).
+\par\vspace{1.2mm}
+\noindent\textbf{Mode commun / différentiel} \emph{(common / differential mode)} --- Composante identique sur deux conducteurs / différence entre eux (ch.~35).
+\par\vspace{1.2mm}
+\noindent\textbf{Montage inverseur / non inverseur} \emph{(inverting / non-inverting amplifier)} --- Les deux amplificateurs de base à AOP (ch.~18).
+\par\vspace{1.2mm}
+\noindent\textbf{MOSFET} \emph{(MOSFET)} --- Transistor à effet de champ à grille isolée, commandé en tension (ch.~17).
+\par\vspace{1.2mm}
+\noindent\textbf{Multiplexeur} \emph{(multiplexer)} --- Aiguillage numérique sélectionnant une entrée parmi $N$ (ch.~20).
+\par\vspace{1.2mm}
+\noindent\textbf{Ondulation} \emph{(ripple)} --- Résidu alternatif superposé à une tension continue (ch.~31).
+\par\vspace{1.2mm}
+\noindent\textbf{Optocoupleur} \emph{(optocoupler)} --- Isolation galvanique par LED et phototransistor (ch.~28).
+\par\vspace{1.2mm}
+\noindent\textbf{Oscillateur} \emph{(oscillator)} --- Circuit engendrant un signal périodique sans signal d'entrée.
+\par\vspace{1.2mm}
+\noindent\textbf{Perle de ferrite} \emph{(ferrite bead)} --- Impédance dissipative aux hautes fréquences, utilisée en filtrage CEM (ch.~35).
+\par\vspace{1.2mm}
+\noindent\textbf{Piste} \emph{(trace)} --- Conducteur gravé d'un circuit imprimé (ch.~36).
+\par\vspace{1.2mm}
+\noindent\textbf{Plan de masse} \emph{(ground plane)} --- Couche conductrice continue servant de référence et de chemin de retour (ch.~36).
+\par\vspace{1.2mm}
+\noindent\textbf{Polarisation} \emph{(bias)} --- Point de fonctionnement continu imposé à un composant actif (ch.~16).
+\par\vspace{1.2mm}
+\noindent\textbf{Pont diviseur} \emph{(voltage divider)} --- Deux résistances en série prélevant une fraction d'une tension (ch.~3).
+\par\vspace{1.2mm}
+\noindent\textbf{PSRR} \emph{(power supply rejection ratio)} --- Réjection du bruit d'alimentation d'un circuit, en dB (ch.~30).
+\par\vspace{1.2mm}
+\noindent\textbf{Quantification} \emph{(quantization)} --- Arrondi de chaque échantillon au niveau discret le plus proche ; source d'un bruit propre (ch.~27).
+\par\vspace{1.2mm}
+\noindent\textbf{Rapport cyclique} \emph{(duty cycle)} --- Fraction de la période passée à l'état haut (ch.~31).
+\par\vspace{1.2mm}
+\noindent\textbf{Redressement} \emph{(rectification)} --- Conversion d'une tension alternative en tension unidirectionnelle par diodes (ch.~15).
+\par\vspace{1.2mm}
+\noindent\textbf{Régime transitoire / permanent} \emph{(transient / steady state)} --- Évolution vers l'équilibre / équilibre atteint (ch.~9).
+\par\vspace{1.2mm}
+\noindent\textbf{Registre} \emph{(register)} --- Groupe de bascules mémorisant un mot binaire (ch.~21).
+\par\vspace{1.2mm}
+\noindent\textbf{Repliement} \emph{(aliasing)} --- Repli des fréquences supérieures à $f_s/2$ dans la bande utile (ch.~27).
+\par\vspace{1.2mm}
+\noindent\textbf{Résistance de rappel} \emph{(pull-up / pull-down resistor)} --- Résistance imposant un niveau logique par défaut à un n\oe ud (ch.~28).
+\par\vspace{1.2mm}
+\noindent\textbf{Résonance} \emph{(resonance)} --- Échange d'énergie maximal entre L et C à $\omega_0$ ; surtension proportionnelle à $Q$ (ch.~12).
+\par\vspace{1.2mm}
+\noindent\textbf{Retard de propagation} \emph{(propagation delay)} --- Temps entre le changement d'entrée et celui de sortie d'une porte (ch.~22).
+\par\vspace{1.2mm}
+\noindent\textbf{Rétroaction positive} \emph{(positive feedback)} --- Réinjection en phase : bascule, hystérésis ou oscillation.
+\par\vspace{1.2mm}
+\noindent\textbf{Saturation} \emph{(saturation)} --- Butée de la plage de sortie ; régime du transistor commuté fermé.
+\par\vspace{1.2mm}
+\noindent\textbf{Shunt} \emph{(shunt)} --- Résistance série de très faible valeur servant à mesurer un courant.
+\par\vspace{1.2mm}
+\noindent\textbf{Source de courant} \emph{(current source)} --- Dipôle imposant un courant indépendant de la tension à ses bornes (ch.~16).
+\par\vspace{1.2mm}
+\noindent\textbf{Suiveur} \emph{(voltage follower)} --- AOP à gain unité isolant deux étages en impédance (ch.~18).
+\par\vspace{1.2mm}
+\noindent\textbf{Température de jonction} \emph{(junction temperature)} --- Température interne du silicium ; première limite de fiabilité.
+\par\vspace{1.2mm}
+\noindent\textbf{Temps de montée} \emph{(rise time)} --- Durée de transition de 10 à 90~\% ; liée à la bande passante (ch.~37).
+\par\vspace{1.2mm}
+\noindent\textbf{Temps de prépositionnement / maintien} \emph{(setup / hold time)} --- Fenêtre de stabilité exigée autour du front d'horloge (ch.~22).
+\par\vspace{1.2mm}
+\noindent\textbf{Transconductance} \emph{(transconductance)} --- Rapport de la variation du courant de sortie à celle de la tension d'entrée ($g_m$).
+\par\vspace{1.2mm}
+\noindent\textbf{Trigger de Schmitt} \emph{(Schmitt trigger)} --- Comparateur à hystérésis, régénérateur de fronts propres.
+\par\vspace{1.2mm}
+\noindent\textbf{Via} \emph{(via)} --- Trou métallisé reliant les couches d'un circuit imprimé (ch.~36).
+\par\vspace{1.2mm}
+\noindent\textbf{Vitesse de balayage} \emph{(slew rate)} --- Vitesse maximale de variation de la sortie d'un AOP, en V/µs (ch.~18).
+\par\vspace{1.2mm}
+
+% === LEXIQUE FR-EN ===
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Lexique français--anglais}
+\chapter*{Lexique français--anglais}
+
+Pour lire une fiche technique ou rédiger une spécification : les correspondances essentielles, dans les deux sens.
+
+\section*{Français $\rightarrow$ anglais}
+
+\begin{center}\small\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{3.5cm}p{3.9cm}p{3.5cm}p{3.9cm}}
+\toprule
+\textbf{français} & \textbf{anglais} & \textbf{français} & \textbf{anglais} \\
+\midrule
+alimentation & power supply & hystérésis & hysteresis \\
+amplificateur & amplifier & impédance d'entrée & input impedance \\
+atténuation & attenuation & impédance de sortie & output impedance \\
+bande passante & bandwidth & interrupteur & switch \\
+bascule & flip-flop & jonction & junction \\
+base & base & ligne de transmission & transmission line \\
+blindage & shielding & marge de gain & gain margin \\
+bobinage & coil & marge de phase & phase margin \\
+bobine & inductor & masse & ground \\
+boîtier & package & mémoire & memory \\
+boucle & loop & mise en forme & conditioning \\
+brochage & pinout & montage & circuit \\
+bruit & noise & niveau logique & logic level \\
+bus & bus & onde & wave \\
+carte & board & ondulation & ripple \\
+charge & load & parasites & interference \\
+chute de tension & voltage drop & pente & slope \\
+circuit imprimé & printed circuit board (PCB) & période & period \\
+collecteur & collector & perte & loss \\
+commutation & switching & phase & phase \\
+comparateur & comparator & pic & peak \\
+condensateur & capacitor & piste & trace \\
+condensateur de filtrage & filter capacitor & plan de masse & ground plane \\
+consigne & setpoint & polarisation & bias \\
+contre-réaction & negative feedback & pont de diodes & diode bridge \\
+convertisseur abaisseur & buck converter & pont diviseur & voltage divider \\
+convertisseur élévateur & boost converter & porte logique & logic gate \\
+couplage & coupling & puissance & power \\
+courant & current & rapport cyclique & duty cycle \\
+courant de fuite & leakage current & réactance & reactance \\
+court-circuit & short circuit & redressement & rectification \\
+câble blindé & shielded cable & référence de tension & voltage reference \\
+découplage & decoupling & régime permanent & steady state \\
+dépassement & overshoot & régime transitoire & transient \\
+déphasage & phase shift & régulateur linéaire & linear regulator \\
+diaphonie & crosstalk & rendement & efficiency \\
+diode de redressement & rectifier diode & repliement & aliasing \\
+diode de roue libre & freewheeling diode & résistance de rappel & pull-up resistor \\
+dissipateur & heatsink & résonance & resonance \\
+dissipation & dissipation & retard & delay \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}\small\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{3.5cm}p{3.9cm}p{3.5cm}p{3.9cm}}
+\toprule
+\textbf{français} & \textbf{anglais} & \textbf{français} & \textbf{anglais} \\
+\midrule
+drain & drain & rétroaction & feedback \\
+échantillonnage & sampling & ruban & ribbon \\
+échelle & scale & saturation & saturation \\
+échelon & step & schéma & schematic \\
+écrêtage & clipping & seuil & threshold \\
+émetteur & emitter & signal carré & square wave \\
+émetteur commun & common emitter & sortie & output \\
+enroulement & winding & soudure & solder joint \\
+entrée & input & source (MOSFET) & source \\
+entrefer & air gap & source de courant & current source \\
+étage & stage & suiveur & buffer \\
+facteur de qualité & quality factor & température de jonction & junction temperature \\
+fiche technique & datasheet & temps d'établissement & settling time \\
+filtre passe-bas & low-pass filter & temps de maintien & hold time \\
+filtre passe-haut & high-pass filter & temps de montée & rise time \\
+fréquence d'échantillonnage & sampling rate & tension & voltage \\
+fréquence de coupure & cutoff frequency & tension de décalage & offset voltage \\
+front & edge & tension de seuil & threshold voltage \\
+fuite magnétique & leakage flux & trame & frame \\
+gabarit & mask & transformateur & transformer \\
+gain en boucle ouverte & open-loop gain & trou métallisé & plated hole \\
+gigue & jitter & valeur efficace & RMS value \\
+grille & gate & via & via \\
+horloge & clock & vitesse de balayage & slew rate \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section*{Anglais $\rightarrow$ français}
+
+\begin{center}\small\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{3.5cm}p{3.9cm}p{3.5cm}p{3.9cm}}
+\toprule
+\textbf{anglais} & \textbf{français} & \textbf{anglais} & \textbf{français} \\
+\midrule
+air gap & entrefer & low-pass filter & filtre passe-bas \\
+aliasing & repliement & mask & gabarit \\
+amplifier & amplificateur & memory & mémoire \\
+attenuation & atténuation & negative feedback & contre-réaction \\
+bandwidth & bande passante & noise & bruit \\
+base & base & offset voltage & tension de décalage \\
+bias & polarisation & open-loop gain & gain en boucle ouverte \\
+board & carte & output & sortie \\
+boost converter & convertisseur élévateur & output impedance & impédance de sortie \\
+buck converter & convertisseur abaisseur & overshoot & dépassement \\
+buffer & suiveur & package & boîtier \\
+bus & bus & peak & pic \\
+capacitor & condensateur & period & période \\
+circuit & montage & phase & phase \\
+clipping & écrêtage & phase margin & marge de phase \\
+clock & horloge & phase shift & déphasage \\
+coil & bobinage & pinout & brochage \\
+collector & collecteur & plated hole & trou métallisé \\
+common emitter & émetteur commun & power & puissance \\
+comparator & comparateur & power supply & alimentation \\
+conditioning & mise en forme & printed circuit board (PCB) & circuit imprimé \\
+coupling & couplage & pull-up resistor & résistance de rappel \\
+crosstalk & diaphonie & quality factor & facteur de qualité \\
+current & courant & reactance & réactance \\
+current source & source de courant & rectification & redressement \\
+cutoff frequency & fréquence de coupure & rectifier diode & diode de redressement \\
+datasheet & fiche technique & resonance & résonance \\
+decoupling & découplage & ribbon & ruban \\
+delay & retard & ripple & ondulation \\
+diode bridge & pont de diodes & rise time & temps de montée \\
+dissipation & dissipation & RMS value & valeur efficace \\
+drain & drain & sampling & échantillonnage \\
+duty cycle & rapport cyclique & sampling rate & fréquence d'échantillonnage \\
+edge & front & saturation & saturation \\
+efficiency & rendement & scale & échelle \\
+emitter & émetteur & schematic & schéma \\
+feedback & rétroaction & setpoint & consigne \\
+filter capacitor & condensateur de filtrage & settling time & temps d'établissement \\
+flip-flop & bascule & shielded cable & câble blindé \\
+frame & trame & shielding & blindage \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}\small\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{3.5cm}p{3.9cm}p{3.5cm}p{3.9cm}}
+\toprule
+\textbf{anglais} & \textbf{français} & \textbf{anglais} & \textbf{français} \\
+\midrule
+freewheeling diode & diode de roue libre & short circuit & court-circuit \\
+gain margin & marge de gain & slew rate & vitesse de balayage \\
+gate & grille & slope & pente \\
+ground & masse & solder joint & soudure \\
+ground plane & plan de masse & source & source (MOSFET) \\
+heatsink & dissipateur & square wave & signal carré \\
+high-pass filter & filtre passe-haut & stage & étage \\
+hold time & temps de maintien & steady state & régime permanent \\
+hysteresis & hystérésis & step & échelon \\
+inductor & bobine & switch & interrupteur \\
+input & entrée & switching & commutation \\
+input impedance & impédance d'entrée & threshold & seuil \\
+interference & parasites & threshold voltage & tension de seuil \\
+jitter & gigue & trace & piste \\
+junction & jonction & transformer & transformateur \\
+junction temperature & température de jonction & transient & régime transitoire \\
+leakage current & courant de fuite & transmission line & ligne de transmission \\
+leakage flux & fuite magnétique & via & via \\
+linear regulator & régulateur linéaire & voltage & tension \\
+load & charge & voltage divider & pont diviseur \\
+logic gate & porte logique & voltage drop & chute de tension \\
+logic level & niveau logique & voltage reference & référence de tension \\
+loop & boucle & wave & onde \\
+loss & perte & winding & enroulement \\
+\bottomrule
+\end{tabular}
+\end{center}
 
 \end{document}
