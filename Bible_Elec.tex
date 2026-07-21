@@ -276,7 +276,7 @@ Le texte s'appuie sur des encadrés récurrents, toujours les mêmes : \textbf{f
 \midrule
 0.1 & avril 2026 & Rédaction initiale des 37 chapitres. \\
 0.5 & juillet 2026 & Relecture technique intégrale : trois passes par chapitre, tous les exercices vérifiés par le calcul, une soixantaine de figures créées ou refaites. \\
-0.75 & juillet 2026 & Appareil éditorial : page de garde, licence, avant-propos, guide de lecture, table des figures, pages de partie. \\
+0.75 & juillet 2026 & Appareil éditorial : page de garde, licence, avant-propos, guide de lecture, table des figures, pages de partie, annexes. \\
 1.0 & à venir & Listes, annexes, bibliographie commentée, glossaires, index, passe typographique finale. \\
 \bottomrule
 \end{tabular}
@@ -23213,5 +23213,168 @@ Démarche & Règles $\to$ simulation (IBIS) $\to$ mesure (TDR, sonde) --- dans c
 \begin{retenir}
 Ce chapitre referme la boucle ouverte au chapitre 1. Le trajet complet est désormais traçable : la physique du semi-conducteur fixe les fronts (chapitres 15--16), les fronts fixent le spectre (chapitre 29), le spectre rencontre la géométrie du cuivre --- boucles, plans, lignes (chapitres 35--37) --- et cette rencontre décide de ce qui marche, rayonne ou échoue. Concevoir un système électronique, c'est tenir cette chaîne causale d'un bout à l'autre : il n'y a pas de « détail de routage », il n'y a que de la physique appliquée à des géométries. Le reste --- normes, outils, abaques --- n'est que l'intendance de cette idée.
 \end{retenir}
+
+
+% === ANNEXES ===
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{part}{Annexes}
+\part*{Annexes}
+\vspace{2.2cm}
+\begin{center}
+\begin{minipage}{0.78\textwidth}
+\itshape\large
+Les tables que l'on garde à portée de main : valeurs normalisées des composants, constantes physiques, symboles et notations utilisés dans ce livre.
+\end{minipage}
+\end{center}
+\appendix
+
+\chapter{Séries de valeurs normalisées}
+
+Les résistances et condensateurs du commerce ne prennent pas n'importe quelles valeurs : ils suivent les \textbf{séries E} (norme IEC 60063), des progressions géométriques de raison $10^{1/N}$ qui répartissent $N$ valeurs par décade, régulièrement en échelle logarithmique. L'intérêt : avec une tolérance adaptée à la série ($\pm 10\,\%$ pour E12, $\pm 5\,\%$ pour E24, $\pm 1\,\%$ pour E96), les plages de valeurs adjacentes se recouvrent --- toute valeur réelle est couverte. Chaque mantisse ci-dessous se décline sur toutes les décades : 4,7 se lit 4,7~$\Omega$, 47~$\Omega$, 470~$\Omega$, 4,7~k$\Omega$, etc.
+
+\begin{center}\small
+\begin{tabular}{*{12}{c}}
+\toprule
+\multicolumn{12}{c}{\textbf{E12} --- tolérance $\pm 10\,\%$}\\ \midrule
+1,0 & 1,2 & 1,5 & 1,8 & 2,2 & 2,7 & 3,3 & 3,9 & 4,7 & 5,6 & 6,8 & 8,2 \\
+\midrule
+\multicolumn{12}{c}{\textbf{E24} --- tolérance $\pm 5\,\%$}\\ \midrule
+1,0 & 1,1 & 1,2 & 1,3 & 1,5 & 1,6 & 1,8 & 2,0 & 2,2 & 2,4 & 2,7 & 3,0 \\
+3,3 & 3,6 & 3,9 & 4,3 & 4,7 & 5,1 & 5,6 & 6,2 & 6,8 & 7,5 & 8,2 & 9,1 \\
+\midrule
+\multicolumn{12}{c}{\textbf{E96} --- tolérance $\pm 1\,\%$}\\ \midrule
+1,00 & 1,02 & 1,05 & 1,07 & 1,10 & 1,13 & 1,15 & 1,18 & 1,21 & 1,24 & 1,27 & 1,30 \\
+1,33 & 1,37 & 1,40 & 1,43 & 1,47 & 1,50 & 1,54 & 1,58 & 1,62 & 1,65 & 1,69 & 1,74 \\
+1,78 & 1,82 & 1,87 & 1,91 & 1,96 & 2,00 & 2,05 & 2,10 & 2,15 & 2,21 & 2,26 & 2,32 \\
+2,37 & 2,43 & 2,49 & 2,55 & 2,61 & 2,67 & 2,74 & 2,80 & 2,87 & 2,94 & 3,01 & 3,09 \\
+3,16 & 3,24 & 3,32 & 3,40 & 3,48 & 3,57 & 3,65 & 3,74 & 3,83 & 3,92 & 4,02 & 4,12 \\
+4,22 & 4,32 & 4,42 & 4,53 & 4,64 & 4,75 & 4,87 & 4,99 & 5,11 & 5,23 & 5,36 & 5,49 \\
+5,62 & 5,76 & 5,90 & 6,04 & 6,19 & 6,34 & 6,49 & 6,65 & 6,81 & 6,98 & 7,15 & 7,32 \\
+7,50 & 7,68 & 7,87 & 8,06 & 8,25 & 8,45 & 8,66 & 8,87 & 9,09 & 9,31 & 9,53 & 9,76 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Comment choisir une valeur}
+
+Le réflexe : calculer la valeur théorique, puis prendre \textbf{la valeur normalisée la plus proche} dans la série correspondant à la précision requise --- et vérifier que l'erreur commise (au plus la moitié du pas de la série) reste acceptable pour la fonction. Si elle ne l'est pas, deux valeurs en série ou en parallèle affinent le résultat ; au-delà, c'est le potentiomètre ou la conception qui est à revoir.
+
+\section{Deux particularités à connaître}
+
+\textbf{Les huit valeurs historiques de l'E24.} Les séries E6/E12/E24 sont antérieures à la formalisation géométrique : huit mantisses de l'E24 s'écartent de l'arrondi théorique de $10^{k/24}$ --- 2,7 ; 3,0 ; 3,3 ; 3,6 ; 3,9 ; 4,3 ; 4,7 et 8,2 (au lieu de 2,6 ; 2,9 ; 3,2 ; 3,5 ; 3,8 ; 4,2 ; 4,6 ; 8,3). L'E96, plus récente, suit strictement l'arrondi à trois chiffres de $10^{k/96}$ --- les 96 valeurs ont été vérifiées par calcul pour ce livre.
+
+\textbf{L'E24 n'est pas un sous-ensemble de l'E96.} Conséquence directe du point précédent, et piège classique : seules six mantisses de l'E24 (1,0 ; 1,1 ; 1,3 ; 1,5 ; 2,0 ; 7,5) existent telles quelles dans l'E96. \emph{Il n'existe pas de résistance de 4,7~k$\Omega$ à 1\,\%} : le catalogue proposera 4,64 ou 4,75~k$\Omega$. Un schéma qui spécifie « 4,7~k$\Omega$, 1\,\% » enverra l'acheteur au choix arbitraire.
+
+\chapter{Constantes physiques et grandeurs utiles}
+
+Valeurs CODATA (SI 2019), arrondies à la précision utile en électronique --- quatre chiffres suffisent toujours, deux suffisent souvent. Les cohérences internes ont été vérifiées par calcul : $c = 1/\sqrt{\mu_0\,\varepsilon_0}$ et $Z_0 = \sqrt{\mu_0/\varepsilon_0}$ à mieux que $10^{-9}$ près.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{llll}
+\toprule
+\textbf{Grandeur} & \textbf{Symbole} & \textbf{Valeur} & \textbf{Unité} \\
+\midrule
+Charge élémentaire & $q$ & $1{,}602\times10^{-19}$ & C \\
+Constante de Boltzmann & $k$ & $1{,}381\times10^{-23}$ & J/K \\
+Constante de Planck & $h$ & $6{,}626\times10^{-34}$ & J$\cdot$s \\
+Vitesse de la lumière & $c$ & $2{,}998\times10^{8}$ & m/s \\
+Nombre d'Avogadro & $N_A$ & $6{,}022\times10^{23}$ & mol$^{-1}$ \\
+Permittivité du vide & $\varepsilon_0$ & $8{,}854\times10^{-12}$ & F/m \\
+Perméabilité du vide & $\mu_0$ & $4\pi\times10^{-7} \approx 1{,}257\times10^{-6}$ & H/m \\
+Impédance du vide & $Z_0=\sqrt{\mu_0/\varepsilon_0}$ & $376{,}7 \approx 377$ & $\Omega$ \\
+\midrule
+\multicolumn{4}{l}{\textbf{À $T = 300$ K} (27~°C, la température de convention de ce livre)} \\
+\midrule
+Tension thermique & $V_T = kT/q$ & $25{,}85 \approx 26$ & mV \\
+Énergie thermique & $kT$ & $25{,}85$ meV $= 4{,}14\times10^{-21}$ & J \\
+\midrule
+\multicolumn{4}{l}{\textbf{Matériaux} (ordres de grandeur à 300 K)} \\
+\midrule
+Gap du silicium & $E_g$ & $1{,}12$ & eV \\
+Concentration intrinsèque Si & $n_i$ & $\approx 1{,}0\times10^{10}$ & cm$^{-3}$ \\
+Permittivité relative Si & $\varepsilon_r$ & $11{,}7$ & --- \\
+Permittivité relative SiO$_2$ & $\varepsilon_r$ & $3{,}9$ & --- \\
+Permittivité relative FR-4 & $\varepsilon_r$ & $\approx 4{,}4$ & --- \\
+Résistivité du cuivre & $\rho$ & $1{,}68\times10^{-8}$ & $\Omega\cdot$m \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Pourquoi 300 K plutôt que 25~°C (298,15 K) ? Par commodité : $V_T$ y vaut 25,85~mV, que l'on arrondit à 26~mV --- à 25~°C il vaudrait 25,69~mV. L'écart (0,6\,\%) est très inférieur aux dispersions des composants ; la convention $V_T \approx 26$~mV à 300 K est celle de tout le livre.
+
+\chapter{Symboles et notations}
+
+Convention typographique générale : \textbf{minuscule} pour une grandeur instantanée ($v(t)$, $i(t)$), \textbf{majuscule} pour une grandeur continue, moyenne ou efficace selon le contexte ($V$, $I$), \textbf{chapeau} pour une amplitude ($\hat{V}$). Les symboles ci-dessous sont regroupés par domaine, dans l'ordre du livre.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.25}\small
+\begin{tabular}{lp{10.2cm}}
+\toprule
+\multicolumn{2}{l}{\textbf{Grandeurs générales et régimes transitoires}} \\
+\midrule
+$v(t)$, $i(t)$ & tension, courant instantanés (V, A) \\
+$V$, $I$ & valeurs continues ou efficaces selon le contexte \\
+$\hat{V}$, $V_{\max}$ & amplitude (valeur crête) \\
+$V_{\text{eff}}$, $V_{\text{RMS}}$ & valeur efficace \\
+$q$ & charge électrique (C) \\
+$T$, $f$ & période (s), fréquence (Hz) \\
+$\omega = 2\pi f$ & pulsation (rad/s) \\
+$\tau$ & constante de temps (s) : $RC$ ou $L/R$ \\
+$\varphi$ & déphasage (rad ou degrés) \\
+\midrule
+\multicolumn{2}{l}{\textbf{Régime sinusoïdal, fonctions de transfert et filtres}} \\
+\midrule
+$Z$, $R$, $X$ & impédance, résistance, réactance ($\Omega$) \\
+$H(j\omega)$, $H(s)$ & fonction de transfert (harmonique, Laplace) \\
+$s = \sigma + j\omega$ & variable de Laplace \\
+$\omega_0$, $f_c$ & pulsation propre, fréquence de coupure \\
+$Q$, $\zeta$ & facteur de qualité, amortissement ($Q = 1/2\zeta$) \\
+$G_{\text{dB}}$ & gain en décibels : $20\log_{10}|H|$ \\
+\midrule
+\multicolumn{2}{l}{\textbf{Composants actifs et amplification}} \\
+\midrule
+$V_{BE}$, $V_{CE}$, $I_C$, $I_B$ & tensions et courants du bipolaire \\
+$\beta$ ($h_{FE}$) & gain en courant du bipolaire \\
+$g_m$ & transconductance (S) \\
+$V_T$ & tension thermique $kT/q \approx 26$~mV --- \emph{à ne pas confondre avec} $V_{TH}$ \\
+$V_{TH}$ & tension de seuil du MOSFET \\
+$V_{GS}$, $V_{DS}$, $I_D$ & tensions et courant du MOSFET \\
+$A_V$ & gain en tension \\
+GBW & produit gain--bande (Hz) \\
+SR & vitesse de balayage, \emph{slew rate} (V/µs) \\
+CMRR, PSRR & réjection de mode commun, d'alimentation (dB) \\
+THD & taux de distorsion harmonique \\
+\midrule
+\multicolumn{2}{l}{\textbf{Numérique et conversion}} \\
+\midrule
+LSB, MSB & bit de poids faible, de poids fort \\
+$N$ & nombre de bits \\
+$f_s$ & fréquence d'échantillonnage \\
+$t_{su}$, $t_h$ & temps de prépositionnement (\emph{setup}), de maintien (\emph{hold}) \\
+$t_{pd}$ & temps de propagation \\
+$f_{\max}$ & fréquence d'horloge maximale \\
+SNR, ENOB & rapport signal/bruit, nombre effectif de bits \\
+\midrule
+\multicolumn{2}{l}{\textbf{Alimentations}} \\
+\midrule
+$D$ & rapport cyclique \\
+$\eta$ & rendement \\
+$f_{sw}$ & fréquence de découpage \\
+$\Delta I_L$, $\Delta V_s$ & ondulation de courant, de tension \\
+ESR & résistance série équivalente ($\Omega$) \\
+\midrule
+\multicolumn{2}{l}{\textbf{Lignes, CEM et intégrité du signal}} \\
+\midrule
+$Z_0$ & impédance caractéristique d'une ligne ($\Omega$) \\
+$t_d$ & retard de propagation (s ou s/m) \\
+$t_r$ & temps de montée \\
+$\lambda$ & longueur d'onde (m) \\
+$\varepsilon_{r,\text{eff}}$ & permittivité relative effective \\
+dBm, dBµV & niveaux référencés (1 mW, 1 µV) \\
+\bottomrule
+\end{tabular}
+\end{center}
 
 \end{document}
