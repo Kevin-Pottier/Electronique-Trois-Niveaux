@@ -23323,6 +23323,10 @@ $T$, $f$ & période (s), fréquence (Hz) \\
 $\omega = 2\pi f$ & pulsation (rad/s) \\
 $\tau$ & constante de temps (s) : $RC$ ou $L/R$ \\
 $\varphi$ & déphasage (rad ou degrés) \\
+$\langle v \rangle$ & valeur moyenne \\
+$G = 1/R$ & conductance (S) \\
+$u(t)$ & échelon unité \\
+ppm & partie par million ($10^{-6}$) \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -23349,12 +23353,14 @@ $G_{\text{dB}}$ & gain en décibels : $20\log_{10}|H|$ \\
 \toprule
 \multicolumn{2}{l}{\textbf{Composants actifs et amplification}} \\
 \midrule
+$V_{CC}$, $V_{DD}$, $V_{EE}$, $V_{SS}$ & rails d'alimentation (bipolaire, MOS) \\
 $V_{BE}$, $V_{CE}$, $I_C$, $I_B$ & tensions et courants du bipolaire \\
 $\beta$ ($h_{FE}$) & gain en courant du bipolaire \\
 $g_m$ & transconductance (S) \\
 $V_T$ & tension thermique $kT/q \approx 26$~mV --- \emph{à ne pas confondre avec} $V_{TH}$ \\
 $V_{TH}$ & tension de seuil du MOSFET \\
 $V_{GS}$, $V_{DS}$, $I_D$ & tensions et courant du MOSFET \\
+$f_T$ & fréquence de transition d'un transistor \\
 $A_V$ & gain en tension \\
 GBW & produit gain--bande (Hz) \\
 SR & vitesse de balayage, \emph{slew rate} (V/µs) \\
@@ -23373,6 +23379,8 @@ THD & taux de distorsion harmonique \\
 LSB, MSB & bit de poids faible, de poids fort \\
 $N$ & nombre de bits \\
 $f_s$ & fréquence d'échantillonnage \\
+$f_s/2$ & fréquence de Nyquist \\
+PE & pleine échelle d'un convertisseur \\
 $t_{su}$, $t_h$ & temps de prépositionnement (\emph{setup}), de maintien (\emph{hold}) \\
 $t_{pd}$ & temps de propagation \\
 $f_{\max}$ & fréquence d'horloge maximale \\
@@ -23404,7 +23412,7 @@ ESR & résistance série équivalente ($\Omega$) \\
 \midrule
 $Z_0$ & impédance caractéristique d'une ligne ($\Omega$) \\
 $t_d$ & retard de propagation (s ou s/m) \\
-$t_r$ & temps de montée \\
+$t_r$, $t_f$ & temps de montée, de descente \\
 $\lambda$ & longueur d'onde (m) \\
 $\varepsilon_{r,\text{eff}}$ & permittivité relative effective \\
 dBm, dBµV & niveaux référencés (1 mW, 1 µV) \\
