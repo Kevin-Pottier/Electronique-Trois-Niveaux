@@ -23231,7 +23231,9 @@ Les tables que l'on garde à portée de main : valeurs normalisées des composan
 
 \chapter{Séries de valeurs normalisées}
 
-Les résistances et condensateurs du commerce ne prennent pas n'importe quelles valeurs : ils suivent les \textbf{séries E} (norme IEC 60063), des progressions géométriques de raison $10^{1/N}$ qui répartissent $N$ valeurs par décade, régulièrement en échelle logarithmique. L'intérêt : avec une tolérance adaptée à la série ($\pm 10\,\%$ pour E12, $\pm 5\,\%$ pour E24, $\pm 1\,\%$ pour E96), les plages de valeurs adjacentes se recouvrent --- toute valeur réelle est couverte. Chaque mantisse ci-dessous se décline sur toutes les décades : 4,7 se lit 4,7~$\Omega$, 47~$\Omega$, 470~$\Omega$, 4,7~k$\Omega$, etc.
+Ouvrez un catalogue de composants pour y chercher une résistance de 5,3~k$\Omega$ : elle n'existe pas. Les fabricants ne produisent pas toutes les valeurs possibles --- ce serait une infinité de références --- mais un jeu réduit de \textbf{valeurs normalisées}, les \textbf{séries E} (norme IEC 60063). Le principe : dans chaque décade (de 1 à 10, de 10 à 100, de 100 à 1\,000\ldots), la série E$N$ place $N$ valeurs régulièrement espacées en échelle logarithmique --- chaque valeur vaut environ $10^{1/N}$ fois la précédente.
+
+\textbf{Comment lire le tableau ci-dessous.} Chaque nombre est une \emph{mantisse}, qui se décline sur toutes les décades. La mantisse 4,7 de la série E12 signifie qu'il existe des résistances de 4,7~$\Omega$, 47~$\Omega$, 470~$\Omega$, 4,7~k$\Omega$, 47~k$\Omega$\ldots{} --- mais aucune de 5,3~k$\Omega$, qui n'est la déclinaison d'aucune mantisse. Plus la série est fine, plus les valeurs sont rapprochées, et plus la tolérance garantie est serrée : E12 pour le tout-venant à $\pm10\,\%$, E24 pour le courant à $\pm5\,\%$, E96 pour la précision à $\pm1\,\%$. Notre 5,3~k$\Omega$ théorique deviendra donc 5,6~k$\Omega$ en E12, 5,1~k$\Omega$ en E24, ou 5,36~k$\Omega$ en E96.
 
 \begin{center}\small
 \begin{tabular}{*{12}{c}}
@@ -23268,7 +23270,7 @@ Le réflexe : calculer la valeur théorique, puis prendre \textbf{la valeur norm
 
 \chapter{Constantes physiques et grandeurs utiles}
 
-Valeurs CODATA (SI 2019), arrondies à la précision utile en électronique --- quatre chiffres suffisent toujours, deux suffisent souvent. Les cohérences internes ont été vérifiées par calcul : $c = 1/\sqrt{\mu_0\,\varepsilon_0}$ et $Z_0 = \sqrt{\mu_0/\varepsilon_0}$ à mieux que $10^{-9}$ près.
+Valeurs CODATA (SI 2019), arrondies à la précision utile en électronique --- quatre chiffres suffisent toujours, deux suffisent souvent.
 
 \begin{center}
 \renewcommand{\arraystretch}{1.3}
@@ -23302,8 +23304,6 @@ Résistivité du cuivre & $\rho$ & $1{,}68\times10^{-8}$ & $\Omega\cdot$m \\
 \end{tabular}
 \end{center}
 
-Pourquoi 300 K plutôt que 25~°C (298,15 K) ? Par commodité : $V_T$ y vaut 25,85~mV, que l'on arrondit à 26~mV --- à 25~°C il vaudrait 25,69~mV. L'écart (0,6\,\%) est très inférieur aux dispersions des composants ; la convention $V_T \approx 26$~mV à 300 K est celle de tout le livre.
-
 \chapter{Symboles et notations}
 
 Convention typographique générale : \textbf{minuscule} pour une grandeur instantanée ($v(t)$, $i(t)$), \textbf{majuscule} pour une grandeur continue, moyenne ou efficace selon le contexte ($V$, $I$), \textbf{chapeau} pour une amplitude ($\hat{V}$). Les symboles ci-dessous sont regroupés par domaine, dans l'ordre du livre.
@@ -23323,7 +23323,14 @@ $T$, $f$ & période (s), fréquence (Hz) \\
 $\omega = 2\pi f$ & pulsation (rad/s) \\
 $\tau$ & constante de temps (s) : $RC$ ou $L/R$ \\
 $\varphi$ & déphasage (rad ou degrés) \\
-\midrule
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.25}\small
+\begin{tabular}{lp{10.2cm}}
+\toprule
 \multicolumn{2}{l}{\textbf{Régime sinusoïdal, fonctions de transfert et filtres}} \\
 \midrule
 $Z$, $R$, $X$ & impédance, résistance, réactance ($\Omega$) \\
@@ -23332,7 +23339,14 @@ $s = \sigma + j\omega$ & variable de Laplace \\
 $\omega_0$, $f_c$ & pulsation propre, fréquence de coupure \\
 $Q$, $\zeta$ & facteur de qualité, amortissement ($Q = 1/2\zeta$) \\
 $G_{\text{dB}}$ & gain en décibels : $20\log_{10}|H|$ \\
-\midrule
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.25}\small
+\begin{tabular}{lp{10.2cm}}
+\toprule
 \multicolumn{2}{l}{\textbf{Composants actifs et amplification}} \\
 \midrule
 $V_{BE}$, $V_{CE}$, $I_C$, $I_B$ & tensions et courants du bipolaire \\
@@ -23346,7 +23360,14 @@ GBW & produit gain--bande (Hz) \\
 SR & vitesse de balayage, \emph{slew rate} (V/µs) \\
 CMRR, PSRR & réjection de mode commun, d'alimentation (dB) \\
 THD & taux de distorsion harmonique \\
-\midrule
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.25}\small
+\begin{tabular}{lp{10.2cm}}
+\toprule
 \multicolumn{2}{l}{\textbf{Numérique et conversion}} \\
 \midrule
 LSB, MSB & bit de poids faible, de poids fort \\
@@ -23356,7 +23377,14 @@ $t_{su}$, $t_h$ & temps de prépositionnement (\emph{setup}), de maintien (\emph
 $t_{pd}$ & temps de propagation \\
 $f_{\max}$ & fréquence d'horloge maximale \\
 SNR, ENOB & rapport signal/bruit, nombre effectif de bits \\
-\midrule
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.25}\small
+\begin{tabular}{lp{10.2cm}}
+\toprule
 \multicolumn{2}{l}{\textbf{Alimentations}} \\
 \midrule
 $D$ & rapport cyclique \\
@@ -23364,7 +23392,14 @@ $\eta$ & rendement \\
 $f_{sw}$ & fréquence de découpage \\
 $\Delta I_L$, $\Delta V_s$ & ondulation de courant, de tension \\
 ESR & résistance série équivalente ($\Omega$) \\
-\midrule
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.25}\small
+\begin{tabular}{lp{10.2cm}}
+\toprule
 \multicolumn{2}{l}{\textbf{Lignes, CEM et intégrité du signal}} \\
 \midrule
 $Z_0$ & impédance caractéristique d'une ligne ($\Omega$) \\
