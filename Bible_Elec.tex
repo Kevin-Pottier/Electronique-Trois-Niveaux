@@ -118,6 +118,11 @@
 
 % === LIENS ===
 \usepackage{hyperref}
+\setcounter{tocdepth}{1}
+\renewcommand{\listfigurename}{Table des figures}
+\makeatletter
+\renewcommand\@endpart{}
+\makeatother
 \hypersetup{unicode=true,
   pdftitle={Bible de l'Électronique - Du débutant absolu à l'ingénieur confirmé},
   pdfauthor={Kévin Pottier},
@@ -271,7 +276,7 @@ Le texte s'appuie sur des encadrés récurrents, toujours les mêmes : \textbf{f
 \midrule
 0.1 & avril 2026 & Rédaction initiale des 37 chapitres. \\
 0.5 & juillet 2026 & Relecture technique intégrale : trois passes par chapitre, tous les exercices vérifiés par le calcul, une soixantaine de figures créées ou refaites. \\
-0.75 & juillet 2026 & Appareil éditorial : page de garde, licence, avant-propos, guide de lecture. \\
+0.75 & juillet 2026 & Appareil éditorial : page de garde, licence, avant-propos, guide de lecture, table des figures, pages de partie. \\
 1.0 & à venir & Listes, annexes, bibliographie commentée, glossaires, index, passe typographique finale. \\
 \bottomrule
 \end{tabular}
@@ -283,6 +288,12 @@ Le texte s'appuie sur des encadrés récurrents, toujours les mêmes : \textbf{f
 \tableofcontents
 \newpage
 
+% === TABLE DES FIGURES ===
+\phantomsection
+\addcontentsline{toc}{chapter}{Table des figures}
+\listoffigures
+\newpage
+
 
 
 
@@ -290,6 +301,13 @@ Le texte s'appuie sur des encadrés récurrents, toujours les mêmes : \textbf{f
 % PARTIE I : FONDAMENTAUX
 % ============================================================================
 \part{Fondamentaux}
+\vspace{2.2cm}
+\begin{center}
+\begin{minipage}{0.78\textwidth}
+\itshape\large
+Tout commence ici. Le courant, la tension, la résistance, la puissance : quatre grandeurs et quelques lois --- Ohm, Kirchhoff, Thévenin --- suffisent à analyser n'importe quel circuit à courant continu. Ces six chapitres ne supposent rien et fondent tout : chaque page du reste du livre s'appuie, d'une façon ou d'une autre, sur ce qui s'établit ici.
+\end{minipage}
+\end{center}
 
 % ============================================================================
 % CHAPITRE 1 : LE COURANT ÉLECTRIQUE
@@ -4021,6 +4039,13 @@ Superposition, Thévenin, Norton, Millman : la boîte à outils du circuit \emph
 % PARTIE II : COMPOSANTS PASSIFS
 % ============================================================================
 \part{Composants Passifs}
+\vspace{2.2cm}
+\begin{center}
+\begin{minipage}{0.78\textwidth}
+\itshape\large
+Le condensateur stocke des charges, la bobine stocke un champ : avec eux, le temps entre dans les circuits. Charges, décharges, constantes de temps, oscillations --- ces trois chapitres décrivent les régimes transitoires, là où les signaux naissent, s'établissent et s'éteignent.
+\end{minipage}
+\end{center}
 
 % ============================================================================
 % CHAPITRE 7 : LE CONDENSATEUR
@@ -5691,6 +5716,13 @@ Le régime transitoire (échelon, décharge) se résout par équation différent
 % PARTIE III : RÉGIME SINUSOÏDAL
 % ============================================================================
 \part{Régime Sinusoïdal}
+\vspace{2.2cm}
+\begin{center}
+\begin{minipage}{0.78\textwidth}
+\itshape\large
+Le sinus est le signal-roi de l'électricité : celui du réseau, celui des porteuses, celui dans lequel Fourier décompose tous les autres. La notation complexe transforme les équations différentielles en simple algèbre : impédances, puissances active et réactive, résonance --- l'outillage indispensable de l'alternatif.
+\end{minipage}
+\end{center}
 
 % ============================================================================
 % CHAPITRE 10 : NOTATION COMPLEXE ET IMPÉDANCES
@@ -7513,6 +7545,13 @@ La résonance est le cas particulier où la réponse d'un circuit du 2\textsuper
 % PARTIE IV : FONCTIONS DE TRANSFERT ET FILTRES
 % ============================================================================
 \part{Fonctions de Transfert et Filtres}
+\vspace{2.2cm}
+\begin{center}
+\begin{minipage}{0.78\textwidth}
+\itshape\large
+Que fait un circuit à un signal ? La fonction de transfert répond en une expression, le diagramme de Bode en un dessin. On apprend ici à lire et à tracer ces courbes, puis à sculpter le spectre : laisser passer, couper, atténuer --- filtrer.
+\end{minipage}
+\end{center}
 
 % ============================================================================
 % CHAPITRE 13 : FONCTIONS DE TRANSFERT ET DIAGRAMMES DE BODE
@@ -9169,6 +9208,13 @@ Les filtres actifs reposent entièrement sur l'amplificateur opérationnel --- l
 % PARTIE V : SEMI-CONDUCTEURS
 % ============================================================================
 \part{Semi-conducteurs}
+\vspace{2.2cm}
+\begin{center}
+\begin{minipage}{0.78\textwidth}
+\itshape\large
+Le silicium change tout : avec la jonction PN, le courant ne circule plus que si on le lui permet. Diode, transistor bipolaire, MOSFET, puis l'amplificateur opérationnel, brique reine de l'analogique : cinq chapitres pour passer des composants qui subissent aux composants qui décident et qui amplifient.
+\end{minipage}
+\end{center}
 
 % ============================================================================
 % CHAPITRE 15 : LA DIODE
@@ -13182,6 +13228,13 @@ Le filtre anti-aliasing de notre cas d'étude est la dernière ligne analogique 
 
 % ############################################################################
 \part{Électronique Numérique}
+\vspace{2.2cm}
+\begin{center}
+\begin{minipage}{0.78\textwidth}
+\itshape\large
+Deux niveaux, 0 et 1, et tout un monde. De la porte logique au processeur : combinatoire, séquentiel, contraintes temporelles, machines à états, mémoires, arithmétique, architecture, conversion, protocoles --- jusqu'aux limites physiques, où le numérique redevient de l'analogique qui s'ignore.
+\end{minipage}
+\end{center}
 % ############################################################################
 
 % ============================================================================
@@ -18811,6 +18864,13 @@ Une variable domine désormais tout : l'\textbf{énergie} --- la produire propre
 
 % ============================================================================
 \part{Alimentations}
+\vspace{2.2cm}
+\begin{center}
+\begin{minipage}{0.78\textwidth}
+\itshape\large
+Aucun montage ne vaut mieux que son alimentation. Réguler proprement une tension --- en linéaire quand il faut du silence, en découpage quand il faut du rendement --- et maîtriser les composants magnétiques comme la stabilité des boucles : trois chapitres discrets et décisifs.
+\end{minipage}
+\end{center}
 % ============================================================================
 
 % ============================================================================
@@ -20295,6 +20355,13 @@ Il est temps de donner à tout cela son langage exact. La partie qui s'ouvre for
 
 % ============================================================================
 \part{Asservissement}
+\vspace{2.2cm}
+\begin{center}
+\begin{minipage}{0.78\textwidth}
+\itshape\large
+Mesurer, comparer, corriger : la boucle fermée est l'une des idées les plus puissantes de l'ingénierie. La transformée de Laplace en donne le langage, le PID et le lieu des racines en donnent les outils --- avec les marges qui séparent un système précis d'un système qui oscille.
+\end{minipage}
+\end{center}
 % ============================================================================
 
 % ============================================================================
@@ -21239,6 +21306,13 @@ La partie VIII se referme : nous savons analyser \textit{et} concevoir une boucl
 
 % ============================================================================
 \part{CEM et Conception de Cartes}
+\vspace{2.2cm}
+\begin{center}
+\begin{minipage}{0.78\textwidth}
+\itshape\large
+C'est ici que le schéma rencontre la matière. Perturbations, couplages, blindages ; le circuit imprimé traité comme le composant qu'il est ; l'intégrité du signal, quand la piste devient une ligne de transmission. Trois chapitres pour que ce qui fonctionne en simulation fonctionne aussi sur la carte.
+\end{minipage}
+\end{center}
 % ============================================================================
 
 % ============================================================================
