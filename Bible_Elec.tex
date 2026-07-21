@@ -276,7 +276,7 @@ Le texte s'appuie sur des encadrés récurrents, toujours les mêmes : \textbf{f
 \midrule
 0.1 & avril 2026 & Rédaction initiale des 37 chapitres. \\
 0.5 & juillet 2026 & Relecture technique intégrale : trois passes par chapitre, tous les exercices vérifiés par le calcul, une soixantaine de figures créées ou refaites. \\
-0.75 & juillet 2026 & Appareil éditorial : page de garde, licence, avant-propos, guide de lecture, table des figures, pages de partie, annexes. \\
+0.75 & juillet 2026 & Appareil éditorial : page de garde, licence, avant-propos, guide de lecture, table des figures, pages de partie, annexes, bibliographie. \\
 1.0 & à venir & Listes, annexes, bibliographie commentée, glossaires, index, passe typographique finale. \\
 \bottomrule
 \end{tabular}
@@ -23411,5 +23411,59 @@ dBm, dBµV & niveaux référencés (1 mW, 1 µV) \\
 \bottomrule
 \end{tabular}
 \end{center}
+
+
+% === BIBLIOGRAPHIE COMMENTÉE ===
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Bibliographie commentée}
+\chapter*{Bibliographie commentée}
+
+Une bibliothèque d'électronicien tient en peu de volumes, à condition de choisir les bons. La liste ci-dessous est courte à dessein : un ouvrage par domaine, chacun faisant autorité dans le sien. Les commentaires résument leur réception générale ; le premier relève, lui, d'un choix personnel de l'auteur.
+
+\section*{La référence de ce livre}
+
+\noindent Yves \textsc{Granjon}, Bruno \textsc{Estibals}, Serge \textsc{Weber}, \emph{Le cours d'électronique --- 120 fiches de cours, QCM et exercices corrigés}, 3\textsuperscript{e}~éd., Dunod, coll. «~Tout en fiches~», 2023, 480~p.\\[1mm]
+C'est l'ouvrage qui a servi d'étalon au présent livre : pour la clarté des explications et le soin apporté à la compréhension, il représente, aux yeux de l'auteur, ce qui se fait de mieux en français à ce niveau. Cent vingt fiches de deux pages, du post-bac à bac+3, avec QCM, exercices corrigés et ouvertures industrielles : le format idéal pour réviser --- là où le présent ouvrage privilégie la progression continue à trois niveaux et l'ouverture vers la conception.
+
+\vspace{4mm}
+
+\section*{Électronique générale et pratique}
+
+\noindent Paul \textsc{Horowitz}, Winfield \textsc{Hill}, \emph{The Art of Electronics}, 3\textsuperscript{e}~éd., Cambridge University Press, 2015.\\[1mm]
+Unanimement décrit comme la référence mondiale de la conception de circuits --- beaucoup l'appellent simplement «~la bible~». Écrit par des praticiens, d'un style informel, rempli de schémas réels, de mesures et de tables de composants : on y pioche plus qu'on ne l'apprend. La 2\textsuperscript{e}~édition existe en français sous le titre \emph{Traité de l'électronique analogique et numérique} (deux volumes) ; la 3\textsuperscript{e} n'est pas traduite. Prolonge naturellement les parties IV à VI.
+
+\vspace{4mm}
+
+\noindent Adel \textsc{Sedra}, Kenneth \textsc{Smith}, \emph{Microelectronic Circuits}, 8\textsuperscript{e}~éd., Oxford University Press, 2020.\\[1mm]
+Le manuel académique par excellence : des générations d'étudiants, dans le monde entier, y ont appris l'électronique analogique. Progression rigoureuse du semi-conducteur aux amplificateurs intégrés, appareil d'exercices considérable. Plus scolaire que Horowitz \& Hill --- les deux se complètent.
+
+\vspace{4mm}
+
+\section*{Conception analogique intégrée}
+
+\noindent Behzad \textsc{Razavi}, \emph{Design of Analog CMOS Integrated Circuits}, 2\textsuperscript{e}~éd., McGraw-Hill, 2017.\\[1mm]
+La référence de la conception analogique CMOS, au point que «~le Razavi~» est devenu un nom commun chez les concepteurs de circuits intégrés. Exigeant, mais réputé pour la limpidité de ses intuitions. C'est la suite logique des chapitres 16 à 19, quand on passe du transistor discret au circuit intégré.
+
+\vspace{4mm}
+
+\section*{Alimentations et électronique de puissance}
+
+\noindent Robert \textsc{Erickson}, Dragan \textsc{Maksimovi\'c}, \emph{Fundamentals of Power Electronics}, 3\textsuperscript{e}~éd., Springer, 2020.\\[1mm]
+Le traité de référence académique des convertisseurs : modélisation moyenne, dimensionnement des composants magnétiques, stabilité des boucles --- exactement les sujets des chapitres 31 et 32, poussés à leur profondeur mathématique. L'ouvrage sur lequel s'appuient la plupart des cours avancés d'électronique de puissance.
+
+\vspace{4mm}
+
+\section*{CEM et intégrité du signal}
+
+\noindent Henry \textsc{Ott}, \emph{Electromagnetic Compatibility Engineering}, Wiley, 2009.\\[1mm]
+Refonte moderne de son classique \emph{Noise Reduction Techniques in Electronic Systems}, considérée comme la référence mondiale de la CEM : masses, blindages, découplage et filtrage y sont traités avec un sens physique rare. Le prolongement direct du chapitre 35.
+
+\vspace{4mm}
+
+\noindent Eric \textsc{Bogatin}, \emph{Signal and Power Integrity --- Simplified}, 3\textsuperscript{e}~éd., Prentice Hall, 2018.\\[1mm]
+La référence pédagogique de l'intégrité du signal, fidèle à sa devise : l'intuition d'abord, les équations ensuite. Ses règles d'estimation rapide sont passées dans le langage du métier. Prolonge les chapitres 36 et 37.
+
+\vspace{4mm}
 
 \end{document}
