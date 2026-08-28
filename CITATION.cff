@@ -1,11 +1,12 @@
 cff-version: 1.2.0
 message: "Pour citer ce livre, merci d'utiliser les métadonnées ci-dessous."
 type: book
-title: "Bible de l'Électronique — Du débutant absolu à l'ingénieur confirmé"
+title: "L'Électronique en trois niveaux — Du débutant absolu à l'ingénieur confirmé"
 authors:
   - family-names: "Pottier"
     given-names: "Kévin"
+    affiliation: "ESEO, Angers"
 version: "1.0"
 date-released: "2026-07-21"
 license: "CC-BY-NC-SA-4.0"
-url: "https://github.com/Kevin-Pottier/BibleElectronique_Manuel"
+url: "https://github.com/Kevin-Pottier/Electronique-Trois-Niveaux"

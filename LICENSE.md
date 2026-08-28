@@ -1,6 +1,6 @@
 # Licence
 
-**Bible de l'Électronique — Du débutant absolu à l'ingénieur confirmé**
+**L'Électronique en trois niveaux — Du débutant absolu à l'ingénieur confirmé**
 © 2026 Kévin Pottier
 
 Cette œuvre est mise à disposition selon les termes de la licence
@@ -28,5 +28,4 @@ Texte juridique complet : <https://creativecommons.org/licenses/by-nc-sa/4.0/leg
 ---
 
 *This work is licensed under the Creative Commons
-Attribution-NonCommercial-ShareAlike 4.0 International License. To view a copy
-of this license, visit <https://creativecommons.org/licenses/by-nc-sa/4.0/>.*
+Attribution-NonCommercial-ShareAlike 4.0 International License.*

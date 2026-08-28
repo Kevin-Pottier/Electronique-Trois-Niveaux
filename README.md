@@ -1,4 +1,4 @@
-# Bible de l'Électronique
+# L'Électronique en trois niveaux
 
 **Du débutant absolu à l'ingénieur confirmé** — un livre libre de 644 pages,
 écrit en français, du courant électrique au circuit imprimé.
@@ -25,9 +25,9 @@ sinusoïdal · Fonctions de transfert et filtres · Semi-conducteurs ·
 de cartes. Plus : annexes (séries E, constantes, notations), bibliographie
 commentée, glossaire, lexique français–anglais, index.
 
-En chiffres : **644 pages** · **300 exercices corrigés** · **175 schémas et
-figures** (CircuiTikZ/TikZ) · **956 entrées d'index** · toutes les valeurs
-numériques vérifiées par le calcul.
+En chiffres : **644 pages** · **226 exercices corrigés** · **170 figures**
+(CircuiTikZ/TikZ) · **956 entrées d'index** · toutes les valeurs numériques
+vérifiées par le calcul.
 
 ## Obtenir le livre
 
@@ -35,10 +35,10 @@ numériques vérifiées par le calcul.
 - **Compiler soi-même** (TeX Live complet requis) :
 
 ```bash
-pdflatex Bible_Elec.tex
-makeindex Bible_Elec.idx
-pdflatex Bible_Elec.tex
-pdflatex Bible_Elec.tex
+pdflatex Electronique_Trois_Niveaux.tex
+makeindex Electronique_Trois_Niveaux.idx
+pdflatex Electronique_Trois_Niveaux.tex
+pdflatex Electronique_Trois_Niveaux.tex
 ```
 
 ## Signaler une erreur, contribuer
@@ -55,8 +55,9 @@ contributions repartagées sous la même licence.
 
 ## Auteur
 
-**Kévin Pottier** — ingénieur en électronique, enseignant en école
-d'ingénieurs. Contact : `kevin.pottier@eseo.fr`.
+**Kévin Pottier** — ingénieur en électronique, enseignant en électronique à
+l'ESEO (Angers). Contact : `kevin.pottier@eseo.fr`.
+Ouvrage personnel de l'auteur ; il n'engage pas son établissement.
 
 Ce livre a été écrit avec l'aide substantielle d'une intelligence artificielle
 (Claude, d'Anthropic), sous la direction et la vérification systématique de
