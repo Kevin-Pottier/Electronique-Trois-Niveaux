@@ -194,7 +194,8 @@ un ingénieur doit pouvoir s'y référer comme source de qualité.~»}
 
 \vspace{1.4cm}
 
-{\LARGE Kévin \textsc{Pottier}}
+{\LARGE Kévin \textsc{Pottier}}\\[3mm]
+{\normalsize Enseignant en électronique --- ESEO, Angers}
 
 \vfill
 {\small Distribué librement sous licence CC BY-NC-SA 4.0}\\[1mm]
@@ -207,7 +208,8 @@ un ingénieur doit pouvoir s'y référer comme source de qualité.~»}
 \begin{center}
 \begin{minipage}{0.86\textwidth}
 \small
-\noindent\textcopyright{} 2026 Kévin \textsc{Pottier}.\\[2mm]
+\noindent\textcopyright{} 2026 Kévin \textsc{Pottier}, enseignant en électronique à l'ESEO (Angers).\\[2mm]
+Ouvrage personnel de l'auteur~; il n'engage pas son établissement.\\[2mm]
 Cet ouvrage est mis à disposition selon les termes de la licence \textbf{Creative Commons Attribution --- Pas d'Utilisation Commerciale --- Partage dans les Mêmes Conditions 4.0 International} (CC BY-NC-SA 4.0).\\[1.5mm]
 Vous êtes libres de \textbf{partager} (copier, redistribuer) et d'\textbf{adapter} (modifier, transformer, améliorer) ce document, sous trois conditions : \textbf{créditer l'auteur}, \textbf{ne pas en faire un usage commercial}, et \textbf{rediffuser toute version modifiée sous cette même licence}. Texte intégral : \url{https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr}\\[4mm]
 Composé en \LaTeX{} (pdflatex)~; schémas et figures en CircuiTikZ et TikZ.\\
@@ -224,7 +226,7 @@ Corrections, suggestions et contributions : \texttt{kevin.pottier@eseo.fr}
 \chapter*{Avant-propos}
 \addcontentsline{toc}{chapter}{Avant-propos}
 
-Ce livre est né d'un manque. Étudiant, puis jeune ingénieur, j'ai cherché l'ouvrage qui permettrait d'apprendre les bases et d'approfondir dans un même volume --- et je ne l'ai jamais trouvé. Les livres d'électronique se répartissent presque toujours en deux familles~: les ouvrages d'initiation, clairs mais qui s'arrêtent au seuil des choses sérieuses, et les traités de référence, complets mais qui supposent acquis précisément ce qu'un débutant vient y chercher. Devenu enseignant en école d'ingénieurs, je retrouve chez mes étudiants la même frustration~: assez curieux pour vouloir comprendre vraiment, pas encore armés pour lire les grands traités dans le texte. Ce livre est celui que j'aurais voulu avoir entre les mains.
+Ce livre est né d'un manque. Étudiant, puis jeune ingénieur, j'ai cherché l'ouvrage qui permettrait d'apprendre les bases et d'approfondir dans un même volume --- et je ne l'ai jamais trouvé. Les livres d'électronique se répartissent presque toujours en deux familles~: les ouvrages d'initiation, clairs mais qui s'arrêtent au seuil des choses sérieuses, et les traités de référence, complets mais qui supposent acquis précisément ce qu'un débutant vient y chercher. Devenu enseignant en électronique à l'ESEO, école d'ingénieurs angevine, je retrouve chez mes étudiants la même frustration~: assez curieux pour vouloir comprendre vraiment, pas encore armés pour lire les grands traités dans le texte. Ce livre est celui que j'aurais voulu avoir entre les mains.
 
 La phrase qui figure en page de garde résume l'ambition~: \emph{«~un bébé doit pouvoir comprendre les bases, un ingénieur doit pouvoir s'y référer comme source de qualité~»}. Ces deux exigences ne sont contradictoires qu'en apparence, et la réponse retenue ici est structurelle~: chaque chapitre est écrit \textbf{trois fois}, à trois altitudes --- \emph{les Bases}, qui ne supposent rien~; l'\emph{Approfondissement}, qui outille~; le \emph{Niveau Ingénieur}, qui va au fond, ordres de grandeur et pièges de conception compris. On peut lire cet ouvrage comme trois livres emboîtés, et y revenir à mesure que l'on grandit.
 
@@ -237,12 +239,12 @@ Enfin, ce livre est \textbf{libre} (licence CC BY-NC-SA)~: copiez-le, distribuez
 \vspace{0.6cm}
 \begin{flushright}
 Kévin \textsc{Pottier}\\
-Angers, juillet 2026
+ESEO, Angers, juillet 2026
 \end{flushright}
 
 \section*{Remerciements}
 
-Mes premiers remerciements vont à mes étudiants~: leurs questions, leurs blocages et leurs déclics sont la matière première de ce livre --- c'est en cherchant à leur expliquer que j'ai compris ce qui manquait aux explications. Merci à mes collègues enseignants et ingénieurs pour les discussions qui ont affûté nombre de ces pages, et d'avance aux relecteurs et contributeurs que ce projet libre trouvera en chemin. Merci enfin à vous, lecteur~: un ouvrage libre ne vit que s'il est lu, critiqué et transmis.
+Mes premiers remerciements vont à mes étudiants de l'ESEO~: leurs questions, leurs blocages et leurs déclics sont la matière première de ce livre --- c'est en cherchant à leur expliquer que j'ai compris ce qui manquait aux explications. Merci à mes collègues enseignants et ingénieurs pour les discussions qui ont affûté nombre de ces pages, et d'avance aux relecteurs et contributeurs que ce projet libre trouvera en chemin. Merci enfin à vous, lecteur~: un ouvrage libre ne vit que s'il est lu, critiqué et transmis.
 
 \newpage
 
