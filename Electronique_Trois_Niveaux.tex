@@ -23,6 +23,13 @@
 \fancyhead[RO]{\rightmark}
 \fancyfoot[C]{\thepage}
 \renewcommand{\headrulewidth}{0.4pt}
+%% Six titres de chapitre sont assez longs pour que le bandeau courant tienne
+%% sur deux lignes ; la boite d'en-tete de 15 pt ne les contenait pas et le
+%% texte debordait sur le corps. On lui donne les 29,2 pt necessaires et on
+%% remonte la marge du meme montant : l'en-tete monte, le bloc de texte ne
+%% bouge pas d'un point, et la pagination est preservee.
+\setlength{\headheight}{29.2pt}
+\addtolength{\topmargin}{-14.2pt}
 
 %% === CESURE FRANCAISE ===
 %% Les motifs de coupure francais sont deja presents dans le format pdflatex
@@ -50,6 +57,13 @@
 \usepackage{mathtools}
 \usepackage{siunitx}
 \sisetup{locale = FR, per-mode=symbol}
+%% siunitx compose ses unites en mode mathematique, ou un accent tape
+%% litteralement n'existe pas : LaTeX emet un avertissement et jette le
+%% caractere. D'ou le \text{} dans le corps de ces deux unites. La declaration
+%% doit rester au niveau du preambule : dans un \AtBeginDocument, l'unite ne
+%% survit pas a l'ecriture de la table des figures.
+\DeclareSIUnit\dec{\text{déc}}
+\DeclareSIUnit\decade{\text{décade}}
 
 % === GRAPHIQUES & COULEURS ===
 \usepackage{graphicx}
@@ -1440,7 +1454,7 @@ C'est cette valeur que le voltmètre affichera. La tension crête-à-crête est 
 
 \subsection*{Niveau ingénieur}
 
-\textbf{Exercice 2.5 —} Calculez le bruit de tension Johnson-Nyquist d'une résistance de \SI{1}{M\ohm} à \SI{27}{°C} dans une bande passante de \SI{1}{kHz}. Comparez avec le bruit d'une résistance de \SI{100}{\ohm} dans les mêmes conditions. Commentez l'impact sur le choix de la valeur de résistance dans un étage d'entrée d'amplificateur.
+\textbf{Exercice 2.5 —} Calculez le bruit de tension Johnson-Nyquist d'une résistance de \SI{1}{M\ohm} à \SI{27}{\degreeCelsius} dans une bande passante de \SI{1}{kHz}. Comparez avec le bruit d'une résistance de \SI{100}{\ohm} dans les mêmes conditions. Commentez l'impact sur le choix de la valeur de résistance dans un étage d'entrée d'amplificateur.
 
 \begin{pratique}
 \textbf{Solution :} $T = 27 + 273 = \SI{300}{K}$, $\Delta f = \SI{1}{kHz}$.
@@ -1877,15 +1891,15 @@ Modèle linéaire (valable sur une plage de température raisonnable)~:
 \boxed{R(T) = R_0 \left[1 + \alpha (T - T_0)\right]}
 \]
 \begin{itemize}[nosep]
-\item $R_0$~: résistance à la température de référence $T_0$ (souvent \SI{20}{°C} ou \SI{25}{°C})
-\item $\alpha$~: coefficient de température ($\text{K}^{-1}$ ou $°C^{-1}$)
+\item $R_0$~: résistance à la température de référence $T_0$ (souvent \SI{20}{\degreeCelsius} ou \SI{25}{\degreeCelsius})
+\item $\alpha$~: coefficient de température ($\text{K}^{-1}$ ou $^{\circ}C^{-1}$)
 \end{itemize}
 \end{formule}
 
 \begin{center}
 \begin{tabular}{ll}
 \toprule
-\textbf{Matériau} & $\alpha$ (\SI{}{/°C}) \\
+\textbf{Matériau} & $\alpha$ (\SI{}{\per\degreeCelsius}) \\
 \midrule
 Cuivre & $+\SI{3.9e-3}{}$ \\
 Aluminium & $+\SI{4.0e-3}{}$ \\
@@ -1898,7 +1912,7 @@ Carbone & $-\SI{5e-4}{}$ \\
 \begin{pratique}
 \textbf{Sondes de température :} le fait que la résistance varie avec $T$ est exploité pour \textbf{mesurer} la température :
 \begin{itemize}[nosep]
-\item \textbf{Pt100 / Pt1000}~: résistance en platine ($R_0 = \SI{100}{\ohm}$ ou \SI{1000}{\ohm} à \SI{0}{°C}). Très linéaire, précis, utilisé en industrie.
+\item \textbf{Pt100 / Pt1000}~: résistance en platine ($R_0 = \SI{100}{\ohm}$ ou \SI{1000}{\ohm} à \SI{0}{\degreeCelsius}). Très linéaire, précis, utilisé en industrie.
 \item \textbf{CTN (NTC)}~: thermistance à coefficient négatif. Résistance décroît fortement avec $T$. Non linéaire mais très sensible. Utilisée en électronique grand public.
 \item \textbf{CTP (PTC)}~: coefficient positif. Utilisée comme fusible réarmable (``polyfuse'')~: si le courant est trop élevé, elle chauffe, $R$ augmente, et elle limite le courant.
 \end{itemize}
@@ -2157,12 +2171,12 @@ C'est au-dessus de la limite normative de $3\%$~! Il faut augmenter la section (
 
 \subsection*{Niveau ingénieur}
 
-\textbf{Exercice 3.6 —} Une sonde Pt100 a une résistance de \SI{100}{\ohm} à \SI{0}{°C} ($\alpha = \SI{3.85e-3}{/°C}$). Elle est insérée dans un pont de Wheatstone avec trois résistances de \SI{100}{\ohm} et alimentée par \SI{5}{V}. Calculez la tension de déséquilibre $U_{AB}$ lorsque la température est de \SI{50}{°C}. Quelle sensibilité (en mV/°C) obtient-on ?
+\textbf{Exercice 3.6 —} Une sonde Pt100 a une résistance de \SI{100}{\ohm} à \SI{0}{\degreeCelsius} ($\alpha = \SI{3.85e-3}{\per\degreeCelsius}$). Elle est insérée dans un pont de Wheatstone avec trois résistances de \SI{100}{\ohm} et alimentée par \SI{5}{V}. Calculez la tension de déséquilibre $U_{AB}$ lorsque la température est de \SI{50}{\degreeCelsius}. Quelle sensibilité (en mV/°C) obtient-on ?
 
 \begin{pratique}
 \textbf{Solution :} \textit{Hypothèses : sonde placée en $R_2$ (branche $E \to B$), les trois autres bras à \SI{100}{\ohm}, voltmètre idéal.}
 
-Résistance de la sonde à \SI{50}{°C}~: $R_{\text{Pt}} = 100(1 + 3{,}85\times10^{-3} \times 50) = \SI{119.25}{\ohm}$.
+Résistance de la sonde à \SI{50}{\degreeCelsius}~: $R_{\text{Pt}} = 100(1 + 3{,}85\times10^{-3} \times 50) = \SI{119.25}{\ohm}$.
 
 Chaque demi-pont est un diviseur de tension (figure)~:
 \[
@@ -2171,7 +2185,7 @@ V_A = E\,\frac{R_3}{R_1+R_3} = \SI{2.500}{V}
 V_B = E\,\frac{R_4}{R_2+R_4} = 5 \times \frac{100}{219{,}25} = \SI{2.281}{V}
 \]
 \[
-U_{AB} = V_A - V_B = \boxed{\SI{219}{mV}} \qquad \text{soit en moyenne } \approx \SI{4.4}{mV/°C}.
+U_{AB} = V_A - V_B = \boxed{\SI{219}{mV}} \qquad \text{soit en moyenne } \approx \SI{4.4}{\milli\volt\per\degreeCelsius}.
 \]
 
 \textbf{Interprétation :} la réponse du pont n'est \emph{pas} linéaire en $\Delta R$ (le diviseur sature) : la sensibilité locale décroît quand l'écart grandit. Pour de petites variations, $U_{AB} \approx \dfrac{E}{4}\dfrac{\Delta R}{R_0}$ ; ici $\Delta R/R_0 = 19{,}25\,\%$ est déjà « grand ». Signal directement exploitable par un amplificateur d'instrumentation : c'est l'architecture standard des capteurs à pont.
@@ -2646,7 +2660,7 @@ On définit également~:
   \node[font=\footnotesize, align=center] at (7.7,-1.45) {$p < 0$ : l'énergie repart\\ vers la source (réactif)};
   \draw[-{Stealth}, thin] (6.5,-1.15) -- (5.45,-0.3);
 \end{tikzpicture}
-\caption{Charge déphasée ($\varphi = 50°$) : $p(t)$ passe périodiquement sous zéro --- la charge \emph{rend} de l'énergie pendant ces intervalles. La moyenne $P = U_{\text{eff}}I_{\text{eff}}\cos\varphi$ est d'autant plus faible que ces allers-retours (puissance réactive $Q$) sont importants : le réseau, lui, transporte tout le courant.}
+\caption{Charge déphasée ($\varphi = 50^\circ$) : $p(t)$ passe périodiquement sous zéro --- la charge \emph{rend} de l'énergie pendant ces intervalles. La moyenne $P = U_{\text{eff}}I_{\text{eff}}\cos\varphi$ est d'autant plus faible que ces allers-retours (puissance réactive $Q$) sont importants : le réseau, lui, transporte tout le courant.}
 \end{figure}
 
 \begin{attention}
@@ -2716,14 +2730,14 @@ R_{\text{th,total}} = R_{\text{th,jc}} + R_{\text{th,cs}} + R_{\text{th,sa}}
 \end{figure}
 
 \begin{pratique}
-\textbf{Exemple de dimensionnement :} un régulateur linéaire (LDO) en boîtier TO-220 dissipe \SI{5}{W}. Sa température de jonction maximale est $T_{j,\max} = \SI{150}{°C}$. Température ambiante : $T_a = \SI{40}{°C}$. $R_{\text{th,jc}} = \SI{3}{°C/W}$, $R_{\text{th,cs}} = \SI{0.5}{°C/W}$ (avec pâte thermique).
+\textbf{Exemple de dimensionnement :} un régulateur linéaire (LDO) en boîtier TO-220 dissipe \SI{5}{W}. Sa température de jonction maximale est $T_{j,\max} = \SI{150}{\degreeCelsius}$. Température ambiante : $T_a = \SI{40}{\degreeCelsius}$. $R_{\text{th,jc}} = \SI{3}{\degreeCelsius\per\watt}$, $R_{\text{th,cs}} = \SI{0.5}{\degreeCelsius\per\watt}$ (avec pâte thermique).
 
 Résistance thermique maximale du radiateur~:
 \[
-R_{\text{th,sa}} = \frac{T_{j,\max} - T_a}{P} - R_{\text{th,jc}} - R_{\text{th,cs}} = \frac{150-40}{5} - 3 - 0{,}5 = 22 - 3{,}5 = \SI{18.5}{°C/W}
+R_{\text{th,sa}} = \frac{T_{j,\max} - T_a}{P} - R_{\text{th,jc}} - R_{\text{th,cs}} = \frac{150-40}{5} - 3 - 0{,}5 = 22 - 3{,}5 = \SI{18.5}{\degreeCelsius\per\watt}
 \]
 
-Un petit radiateur à ailettes en aluminium ($\sim\SI{10}{°C/W}$) suffira largement.
+Un petit radiateur à ailettes en aluminium ($\sim\SI{10}{\degreeCelsius\per\watt}$) suffira largement.
 \end{pratique}
 
 \begin{pratique}
@@ -2793,18 +2807,18 @@ Le condensateur voit la tension \textbf{crête} (après redressement\index{redre
 
 \subsection*{Niveau ingénieur}
 
-\textbf{Exercice 4.5 —} Un MOSFET de puissance dissipe \SI{15}{W} dans un boîtier TO-220. Ses caractéristiques : $T_{j,\max} = \SI{175}{°C}$, $R_{\text{th,jc}} = \SI{1.5}{°C/W}$. L'interface thermique a $R_{\text{th,cs}} = \SI{0.8}{°C/W}$. Température ambiante : \SI{50}{°C}. Calculez la résistance thermique maximale du radiateur et la température de jonction si l'on utilise un radiateur de \SI{4}{°C/W}.
+\textbf{Exercice 4.5 —} Un MOSFET de puissance dissipe \SI{15}{W} dans un boîtier TO-220. Ses caractéristiques : $T_{j,\max} = \SI{175}{\degreeCelsius}$, $R_{\text{th,jc}} = \SI{1.5}{\degreeCelsius\per\watt}$. L'interface thermique a $R_{\text{th,cs}} = \SI{0.8}{\degreeCelsius\per\watt}$. Température ambiante : \SI{50}{\degreeCelsius}. Calculez la résistance thermique maximale du radiateur et la température de jonction si l'on utilise un radiateur de \SI{4}{\degreeCelsius\per\watt}.
 
 \begin{pratique}
 \textbf{Solution :} $R_{\text{th,sa,max}} = (T_{j,\max} - T_a)/P - R_{\text{th,jc}} - R_{\text{th,cs}}$
 
-$= (175-50)/15 - 1{,}5 - 0{,}8 = 8{,}33 - 2{,}3 = \SI{6.0}{°C/W}$.
+$= (175-50)/15 - 1{,}5 - 0{,}8 = 8{,}33 - 2{,}3 = \SI{6.0}{\degreeCelsius\per\watt}$.
 
-Avec un radiateur de \SI{4}{°C/W}~: $R_{\text{th,total}} = 1{,}5 + 0{,}8 + 4 = \SI{6.3}{°C/W}$.
+Avec un radiateur de \SI{4}{\degreeCelsius\per\watt}~: $R_{\text{th,total}} = 1{,}5 + 0{,}8 + 4 = \SI{6.3}{\degreeCelsius\per\watt}$.
 
-$T_j = T_a + R_{\text{th,total}} \times P = 50 + 6{,}3 \times 15 = 50 + 94{,}5 = \SI{144.5}{°C}$.
+$T_j = T_a + R_{\text{th,total}} \times P = 50 + 6{,}3 \times 15 = 50 + 94{,}5 = \SI{144.5}{\degreeCelsius}$.
 
-C'est sous $T_{j,\max} = \SI{175}{°C}$~: OK avec une marge de \SI{30.5}{°C}.
+C'est sous $T_{j,\max} = \SI{175}{\degreeCelsius}$~: OK avec une marge de \SI{30.5}{\degreeCelsius}.
 \end{pratique}
 
 \textbf{Exercice 4.6 —} Un moteur industriel consomme $P_{\text{active}} = \SI{5}{kW}$ avec un $\cos\varphi = 0{,}7$ sous \SI{400}{V} (triphasé simplifié ici en monophasé). Calculez le courant absorbé, la puissance apparente et la puissance réactive. On ajoute un condensateur pour relever $\cos\varphi$ à $0{,}95$. Quelle puissance réactive doit-il compenser ?
@@ -5901,9 +5915,9 @@ Conjugué & $z^* = a - jb$ & $|z|\,e^{-j\theta}$ \\
 
 Cas particuliers essentiels~:
 \begin{itemize}[nosep]
-\item $\times\, j = \times\, e^{j\pi/2}$~: rotation de $+90°$.
-\item $\times\, (-j) = \times\, e^{-j\pi/2}$~: rotation de $-90°$.
-\item $\times\, (-1) = \times\, e^{j\pi}$~: rotation de $180°$ (inversion de signe).
+\item $\times\, j = \times\, e^{j\pi/2}$~: rotation de $+90^\circ$.
+\item $\times\, (-j) = \times\, e^{-j\pi/2}$~: rotation de $-90^\circ$.
+\item $\times\, (-1) = \times\, e^{j\pi}$~: rotation de $180^\circ$ (inversion de signe).
 \end{itemize}
 \end{intuition}
 
@@ -5971,14 +5985,14 @@ L'impédance est réelle~: tension et courant sont en phase.
 \[
 \boxed{\underline{Z}_C = \frac{1}{j\omega C} = \frac{-j}{\omega C}}
 \]
-L'impédance est \textbf{imaginaire négative}~: le courant est en avance de $90°$ sur la tension. Le module $|\underline{Z}_C| = 1/(\omega C)$ \textbf{diminue} avec $\omega$~: le condensateur laisse de mieux en mieux passer quand la fréquence augmente.
+L'impédance est \textbf{imaginaire négative}~: le courant est en avance de $90^\circ$ sur la tension. Le module $|\underline{Z}_C| = 1/(\omega C)$ \textbf{diminue} avec $\omega$~: le condensateur laisse de mieux en mieux passer quand la fréquence augmente.
 
 \vspace{0.3cm}
 \textbf{Inductance :}
 \[
 \boxed{\underline{Z}_L = j\omega L}
 \]
-L'impédance est \textbf{imaginaire positive}~: le courant est en retard de $90°$ sur la tension. Le module $|\underline{Z}_L| = \omega L$ \textbf{augmente} avec $\omega$~: la bobine bloque de plus en plus quand la fréquence augmente.
+L'impédance est \textbf{imaginaire positive}~: le courant est en retard de $90^\circ$ sur la tension. Le module $|\underline{Z}_L| = \omega L$ \textbf{augmente} avec $\omega$~: la bobine bloque de plus en plus quand la fréquence augmente.
 \end{formule}
 
 \begin{intuition}
@@ -6004,7 +6018,7 @@ La dérivée temporelle est devenue une simple multiplication par $j\omega$. C'e
   \draw[very thick, blue!70!black, -{Stealth[length=2.5mm]}] (0,0) -- (0,-1.7);
   \node[blue!70!black, font=\footnotesize, right] at (0.05,-1.3) {$\underline{Z}_C = \dfrac{1}{j\omega C}$};
 \end{tikzpicture}
-\caption{Les trois impédances dans le plan complexe. $R$ sur l'axe réel (u et i en phase), $\underline{Z}_L$ à $+90°$ (u en avance sur i), $\underline{Z}_C$ à $-90°$ (u en retard sur i). Tout circuit passif se place dans le demi-plan $\Re \geq 0$.}
+\caption{Les trois impédances dans le plan complexe. $R$ sur l'axe réel (u et i en phase), $\underline{Z}_L$ à $+90^\circ$ (u en avance sur i), $\underline{Z}_C$ à $-90^\circ$ (u en retard sur i). Tout circuit passif se place dans le demi-plan $\Re \geq 0$.}
 \end{figure}
 
 \subsection{Comportement en basse et haute fréquence}
@@ -6116,7 +6130,7 @@ avec $\omega_c = 1/(RC)$.
 \item \textbf{Argument} (déphasage)~: $\varphi = -\arctan(\omega/\omega_c)$
 \end{itemize}
 
-À $\omega = \omega_c$~: $|H| = 1/\sqrt{2} \approx 0{,}707$ ($-3$ dB) et $\varphi = -45°$.
+À $\omega = \omega_c$~: $|H| = 1/\sqrt{2} \approx 0{,}707$ ($-3$ dB) et $\varphi = -45^\circ$.
 
 \subsection{Déphasage~: signification physique}
 
@@ -6126,8 +6140,8 @@ Le déphasage porté par l'impédance est $\varphi = \arg(\underline{Z}) = \varp
 Trois cas de référence (convention~: $\varphi = \varphi_u - \varphi_i$)~:
 \begin{itemize}[nosep]
 \item \textbf{Résistance}, $\underline{Z}_R = R$~: $\varphi = 0$. $u$ et $i$ en phase.
-\item \textbf{Inductance}, $\underline{Z}_L = j\omega L$~: $\varphi = +90°$. La tension \emph{devance} le courant --- physiquement, $u = L\,\mathrm{d}i/\mathrm{d}t$~: la tension réagit à la \emph{pente} du courant, donc le précède. Le courant «~traîne~».
-\item \textbf{Condensateur}, $\underline{Z}_C = 1/(j\omega C)$~: $\varphi = -90°$. La tension est \emph{en retard} sur le courant --- $i = C\,\mathrm{d}u/\mathrm{d}t$~: il faut d'abord du courant pour charger, la tension suit.
+\item \textbf{Inductance}, $\underline{Z}_L = j\omega L$~: $\varphi = +90^\circ$. La tension \emph{devance} le courant --- physiquement, $u = L\,\mathrm{d}i/\mathrm{d}t$~: la tension réagit à la \emph{pente} du courant, donc le précède. Le courant «~traîne~».
+\item \textbf{Condensateur}, $\underline{Z}_C = 1/(j\omega C)$~: $\varphi = -90^\circ$. La tension est \emph{en retard} sur le courant --- $i = C\,\mathrm{d}u/\mathrm{d}t$~: il faut d'abord du courant pour charger, la tension suit.
 \end{itemize}
 Moyen mnémotechnique (\textbf{CIVIL})~: dans un \textbf{C}, \textbf{I} devance \textbf{V}~; \textbf{V} devance \textbf{I} dans une \textbf{L}.
 \end{intuition}
@@ -6277,7 +6291,7 @@ Si $\underline{Z}_{\text{in}} = Z_0 = \SI{50}{\ohm}$~: $S_{11} = 0$ (adaptation 
 \textbf{Exercice 10.1 ---} Calculez le module et l'argument de $z = 3 + 4j$. Convertissez en forme exponentielle.
 
 \begin{pratique}
-\textbf{Solution :} $|z| = \sqrt{9+16} = 5$. $\theta = \arctan(4/3) \approx 53{,}1°$. $z = 5\,e^{j\times53{,}1°}$.
+\textbf{Solution :} $|z| = \sqrt{9+16} = 5$. $\theta = \arctan(4/3) \approx 53{,}1^\circ$. $z = 5\,e^{j\times53{,}1^\circ}$.
 \end{pratique}
 
 \textbf{Exercice 10.2 ---} Calculez l'impédance d'un condensateur de \SI{100}{nF} à \SI{1}{kHz} et à \SI{1}{MHz}. Commentez.
@@ -6305,13 +6319,13 @@ $\underline{H} = 1/(1 + j\omega/\omega_c)$.
 \toprule
 $f$ & $\omega/\omega_c$ & $|H|$ & $\varphi$ \\
 \midrule
-$f_c$ & 1 & $1/\sqrt{2} = 0{,}707$ ($-3$ dB) & $-45°$ \\
-$10f_c$ & 10 & $1/\sqrt{101} \approx 0{,}0995$ ($-20$ dB) & $-84{,}3°$ \\
-$100f_c$ & 100 & $\approx 0{,}01$ ($-40$ dB) & $-89{,}4°$ \\
+$f_c$ & 1 & $1/\sqrt{2} = 0{,}707$ ($-3$ dB) & $-45^\circ$ \\
+$10f_c$ & 10 & $1/\sqrt{101} \approx 0{,}0995$ ($-20$ dB) & $-84{,}3^\circ$ \\
+$100f_c$ & 100 & $\approx 0{,}01$ ($-40$ dB) & $-89{,}4^\circ$ \\
 \bottomrule
 \end{tabular}
 
-On voit bien l'atténuation de $-20$ dB/décade et le déphasage qui tend vers $-90°$ en HF.
+On voit bien l'atténuation de $-20$ dB/décade et le déphasage qui tend vers $-90^\circ$ en HF.
 \end{pratique}
 
 \textbf{Exercice 10.4 ---} Calculez l'impédance totale de $R = \SI{100}{\ohm}$ en série avec $C = \SI{1}{\micro F}$ à $f = \SI{1}{kHz}$. Donnez le module et l'argument.
@@ -6321,9 +6335,9 @@ On voit bien l'atténuation de $-20$ dB/décade et le déphasage qui tend vers $
 
 $|Z| = \sqrt{100^2 + 159{,}2^2} = \sqrt{10000 + 25345} = \sqrt{35345} \approx \SI{188}{\ohm}$.
 
-$\theta = \arctan(-159{,}2/100) = -57{,}9°$.
+$\theta = \arctan(-159{,}2/100) = -57{,}9^\circ$.
 
-Le circuit est principalement capacitif à cette fréquence ($\theta$ proche de $-90°$).
+Le circuit est principalement capacitif à cette fréquence ($\theta$ proche de $-90^\circ$).
 \end{pratique}
 
 \subsection*{Niveau ingénieur}
@@ -6364,7 +6378,7 @@ $|S_{11}| = 0{,}667$, soit $|S_{11}|^2 = 44\%$ de la puissance réfléchie. L'ad
 
 \textbf{Q3.} On mesure $\underline{Z} = 50 + 50j\ \Omega$. Circuit inductif ou capacitif ? Déphasage ?
 
-\textit{Réponse : partie imaginaire positive $\Rightarrow$ \textbf{inductif}. $\varphi = \arg(\underline{Z}) = \arctan(50/50) = +45°$ : la tension devance le courant de $45°$. $|\underline{Z}| = 50\sqrt{2} \approx \SI{70.7}{\ohm}$. Concrètement, une self en série avec une résistance égale à sa réactance à cette fréquence.}
+\textit{Réponse : partie imaginaire positive $\Rightarrow$ \textbf{inductif}. $\varphi = \arg(\underline{Z}) = \arctan(50/50) = +45^\circ$ : la tension devance le courant de $45^\circ$. $|\underline{Z}| = 50\sqrt{2} \approx \SI{70.7}{\ohm}$. Concrètement, une self en série avec une résistance égale à sa réactance à cette fréquence.}
 
 \textbf{Q4.} Pourquoi Kirchhoff, Thévenin et superposition marchent-ils tels quels avec les impédances ?
 
@@ -6460,7 +6474,7 @@ En AC, la tension et le courant sont des sinusoïdes. Si la charge contient des 
 \item Une partie est ``à contretemps''~: vous poussez alors que la balançoire revient vers vous, puis vous retirez quand elle repart. L'énergie fait un aller-retour sans résultat (puissance réactive\index{puissance!réactive}).
 \item Votre effort total (la force que vous exercez) est la puissance apparente.
 \end{itemize}
-Si $\varphi = 90°$, vous poussez exactement quand la balançoire est immobile au sommet~: aucune énergie n'est transférée, malgré un effort réel.
+Si $\varphi = 90^\circ$, vous poussez exactement quand la balançoire est immobile au sommet~: aucune énergie n'est transférée, malgré un effort réel.
 \end{analogie}
 
 \subsection{La puissance instantanée}\index{puissance instantanée}
@@ -6545,12 +6559,12 @@ C'est le ``total''~: $\boxed{S^2 = P^2 + Q^2}$ (relation de Pythagore).
 \toprule
 \textbf{Type de charge} & $\varphi$ & $\cos\varphi$ & \textbf{Commentaire} \\
 \midrule
-Résistance pure & $0°$ & $1$ & Idéal : tout est utile \\
-Moteur asynchrone & $20°$--$40°$ & $0{,}77$--$0{,}94$ & Inductif \\
-Moteur à vide & $\sim 70°$ & $\sim 0{,}35$ & Très mauvais \\
-Lampe à incandescence & $\sim 0°$ & $\sim 1$ & Résistif \\
-Tube fluorescent (avec ballast) & $\sim 50°$ & $\sim 0{,}6$ & Inductif (ballast) \\
-Condensateur pur & $-90°$ & $0$ & Aucune puissance active \\
+Résistance pure & $0^\circ$ & $1$ & Idéal : tout est utile \\
+Moteur asynchrone & $20^\circ$--$40^\circ$ & $0{,}77$--$0{,}94$ & Inductif \\
+Moteur à vide & $\sim 70^\circ$ & $\sim 0{,}35$ & Très mauvais \\
+Lampe à incandescence & $\sim 0^\circ$ & $\sim 1$ & Résistif \\
+Tube fluorescent (avec ballast) & $\sim 50^\circ$ & $\sim 0{,}6$ & Inductif (ballast) \\
+Condensateur pur & $-90^\circ$ & $0$ & Aucune puissance active \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -6691,9 +6705,9 @@ Pourquoi le conjugué~? Si $\underline{U} = Ue^{j0}$ et $\underline{I} = Ie^{-j\
 \toprule
 \textbf{Composant} & $\underline{Z}$ & $\varphi$ & $P$ & $Q$ \\
 \midrule
-Résistance $R$ & $R$ & $0°$ & $RI^2$ & $0$ \\
-Inductance $L$ & $j\omega L$ & $+90°$ & $0$ & $+\omega LI^2$ \\
-Condensateur $C$ & $1/(j\omega C)$ & $-90°$ & $0$ & $-U^2\omega C$ \\
+Résistance $R$ & $R$ & $0^\circ$ & $RI^2$ & $0$ \\
+Inductance $L$ & $j\omega L$ & $+90^\circ$ & $0$ & $+\omega LI^2$ \\
+Condensateur $C$ & $1/(j\omega C)$ & $-90^\circ$ & $0$ & $-U^2\omega C$ \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -6723,7 +6737,7 @@ $|Z| = \sqrt{20^2 + 15{,}7^2} = \SI{25.4}{\ohm}$.
 
 $I = U/|Z| = 230/25{,}4 = \SI{9.06}{A}$.
 
-$\varphi = \arctan(15{,}7/20) = 38{,}1°$. $\cos\varphi = 0{,}786$.
+$\varphi = \arctan(15{,}7/20) = 38{,}1^\circ$. $\cos\varphi = 0{,}786$.
 
 $P = UI\cos\varphi = 230\times9{,}06\times0{,}786 = \SI{1638}{W}$.
 
@@ -6780,7 +6794,7 @@ Topologies courantes~: boost PFC (le plus répandu), bridgeless PFC (haut rendem
 
 \subsection{Puissance en triphasé}\index{puissance en triphasé}
 
-En système triphasé \textbf{équilibré} (3 phases de même amplitude, déphasées de $120°$)~:
+En système triphasé \textbf{équilibré} (3 phases de même amplitude, déphasées de $120^\circ$)~:
 
 \begin{formule}
 \[
@@ -6906,7 +6920,7 @@ Nouveau courant~: $I' = 15000/(\sqrt{3}\times400\times0{,}95) = \SI{22.8}{A}$ (�
 
 \textbf{Q1.} Une bobine idéale consomme-t-elle de la puissance active ?
 
-\textit{Réponse : non. $\varphi = +90°$ entre u et i $\Rightarrow P = UI\cos 90° = 0$. Physiquement, elle stocke l'énergie dans son champ magnétique un quart de période et la restitue intégralement le suivant : bilan net nul. Elle n'échange que du réactif ($Q = \omega L I^2$), qui impose du courant dans les câbles sans travail utile.}
+\textit{Réponse : non. $\varphi = +90^\circ$ entre u et i $\Rightarrow P = UI\cos 90^\circ = 0$. Physiquement, elle stocke l'énergie dans son champ magnétique un quart de période et la restitue intégralement le suivant : bilan net nul. Elle n'échange que du réactif ($Q = \omega L I^2$), qui impose du courant dans les câbles sans travail utile.}
 
 \textbf{Q2.} Pourquoi $p(t)$ oscille-t-elle à $2f$ et non $f$ ?
 
@@ -7232,9 +7246,9 @@ Si on prend la tension aux bornes de $R$ comme sortie (dans le RLC série), on o
 \toprule
 \textbf{Fréquence} & \textbf{Gain $|H|$} & \textbf{Phase $\varphi$} \\
 \midrule
-$f \ll f_0$ & $\to 0$ (atténuation BF) & $\to +90°$ \\
-$f = f_0$ & $1$ (gain maximal) & $0°$ \\
-$f \gg f_0$ & $\to 0$ (atténuation HF) & $\to -90°$ \\
+$f \ll f_0$ & $\to 0$ (atténuation BF) & $\to +90^\circ$ \\
+$f = f_0$ & $1$ (gain maximal) & $0^\circ$ \\
+$f \gg f_0$ & $\to 0$ (atténuation HF) & $\to -90^\circ$ \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -7668,7 +7682,7 @@ Les gains en électronique couvrent des plages immenses~: de $0{,}001$ (atténua
 \textbf{Pourquoi les dB sont si pratiques :}
 \begin{enumerate}[nosep]
 \item \textbf{Les multiplications deviennent des additions.} Si deux étages en cascade ont des gains de \SI{20}{dB} et \SI{14}{dB}, le gain total est $20+14 = \SI{34}{dB}$. Pas besoin de multiplier $10 \times 5 = 50$.
-\item \textbf{Les pentes sont simples.} Un filtre du 1er ordre atténue de $-\SI{20}{dB}$ par décade (facteur 10 en fréquence). Un 2nd ordre~: $-\SI{40}{dB/décade}$. Ce sont des droites sur le diagramme de Bode.
+\item \textbf{Les pentes sont simples.} Un filtre du 1er ordre atténue de $-\SI{20}{dB}$ par décade (facteur 10 en fréquence). Un 2nd ordre~: $-\SI{40}{\decibel\per\decade}$. Ce sont des droites sur le diagramme de Bode.
 \item \textbf{L'échelle compresse les extrêmes.} On peut visualiser simultanément un gain de 1\,000\,000 ($\SI{120}{dB}$) et une atténuation de 0,001 ($\SI{-60}{dB}$) sur le même graphique.
 \end{enumerate}
 \end{intuition}
@@ -7725,9 +7739,9 @@ Prenons le filtre RC passe-bas\index{filtre!passe-bas} (chapitre~\ref{ch:complex
 \toprule
 \textbf{Régime} & $|H|$ & $G_{\text{dB}}$ & $\varphi$ \\
 \midrule
-$\omega \ll \omega_c$ (BF) & $\approx 1$ & $\approx \SI{0}{dB}$ & $\approx 0°$ \\
-$\omega = \omega_c$ (coupure) & $1/\sqrt{2}$ & $\SI{-3}{dB}$ & $-45°$ \\
-$\omega \gg \omega_c$ (HF) & $\approx \omega_c/\omega$ & $-\SI{20}{dB/décade}$ & $\to -90°$ \\
+$\omega \ll \omega_c$ (BF) & $\approx 1$ & $\approx \SI{0}{dB}$ & $\approx 0^\circ$ \\
+$\omega = \omega_c$ (coupure) & $1/\sqrt{2}$ & $\SI{-3}{dB}$ & $-45^\circ$ \\
+$\omega \gg \omega_c$ (HF) & $\approx \omega_c/\omega$ & $-\SI{20}{\decibel\per\decade}$ & $\to -90^\circ$ \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -7788,9 +7802,9 @@ $\omega \gg \omega_c$ (HF) & $\approx \omega_c/\omega$ & $-\SI{20}{dB/décade}$ 
     }
     \node[below, font=\footnotesize] at (4,0.35) {$1$};
     
-    \node[left, font=\footnotesize] at (0,0.5) {$0°$};
-    \node[left, font=\footnotesize] at (0,-1.5) {$-45°$};
-    \node[left, font=\footnotesize] at (0,-3.5) {$-90°$};
+    \node[left, font=\footnotesize] at (0,0.5) {$0^\circ$};
+    \node[left, font=\footnotesize] at (0,-1.5) {$-45^\circ$};
+    \node[left, font=\footnotesize] at (0,-3.5) {$-90^\circ$};
     \draw (-0.08,-1.5) -- (0.08,-1.5);
     \draw (-0.08,-3.5) -- (0.08,-3.5);
     
@@ -7801,7 +7815,7 @@ $\omega \gg \omega_c$ (HF) & $\approx \omega_c/\omega$ & $-\SI{20}{dB/décade}$ 
     
     % Point -45°
     \filldraw[red!70!black] (4,-1.5) circle (2.5pt);
-    \node[red!70!black, right, font=\footnotesize] at (4.2,-1.3) {$-45°$};
+    \node[red!70!black, right, font=\footnotesize] at (4.2,-1.3) {$-45^\circ$};
     
     % Asymptotes
     \draw[dashed, gray] (0,0.5) -- (2,0.5);
@@ -7810,15 +7824,15 @@ $\omega \gg \omega_c$ (HF) & $\approx \omega_c/\omega$ & $-\SI{20}{dB/décade}$ 
     \node[below, font=\bfseries] at (4,-5) {Diagramme de phase};
   \end{scope}
 \end{tikzpicture}
-\caption{Diagramme de Bode du passe-bas du 1\textsuperscript{er} ordre. Gain (gauche) : plat à \SI{0}{dB} puis $-\SI{20}{dB/décade}$ après $f_c$, asymptotes en vert, écart maximal de \SI{3}{dB} à $f_c$. Phase (droite) : de $0°$ à $-90°$, passant par $-45°$ à $f_c$.}
+\caption{Diagramme de Bode du passe-bas du 1\textsuperscript{er} ordre. Gain (gauche) : plat à \SI{0}{dB} puis $-\SI{20}{\decibel\per\decade}$ après $f_c$, asymptotes en vert, écart maximal de \SI{3}{dB} à $f_c$. Phase (droite) : de $0^\circ$ à $-90^\circ$, passant par $-45^\circ$ à $f_c$.}
 \end{figure}
 
 \begin{intuition}
 \textbf{Comment lire ce diagramme :}
 \begin{itemize}[nosep]
-\item \textbf{En BF} (à gauche de $f_c$)~: le gain est $\SI{0}{dB}$ (le signal passe intégralement) et la phase est $\sim 0°$ (pas de décalage). Le filtre est ``transparent''.
-\item \textbf{À $f_c$}~: le gain a baissé de \SI{3}{dB} (le signal est atténué à $70{,}7\%$) et la phase est $-45°$. C'est le point de coupure.
-\item \textbf{En HF} (à droite de $f_c$)~: le gain diminue de \SI{20}{dB} par décade (droite descendante). La phase tend vers $-90°$. Le filtre ``bloque'' de plus en plus.
+\item \textbf{En BF} (à gauche de $f_c$)~: le gain est $\SI{0}{dB}$ (le signal passe intégralement) et la phase est $\sim 0^\circ$ (pas de décalage). Le filtre est ``transparent''.
+\item \textbf{À $f_c$}~: le gain a baissé de \SI{3}{dB} (le signal est atténué à $70{,}7\%$) et la phase est $-45^\circ$. C'est le point de coupure.
+\item \textbf{En HF} (à droite de $f_c$)~: le gain diminue de \SI{20}{dB} par décade (droite descendante). La phase tend vers $-90^\circ$. Le filtre ``bloque'' de plus en plus.
 \end{itemize}
 Les \textbf{asymptotes} (lignes vertes en pointillé) sont l'approximation de la courbe réelle (bleue). L'écart maximal est de \SI{3}{dB} au point de coupure. En pratique, on trace d'abord les asymptotes, puis on arrondit au voisinage de $f_c$.
 \end{intuition}
@@ -7832,9 +7846,9 @@ Si on prend la sortie aux bornes de $R$ dans un circuit RC série (au lieu de $C
 
 C'est le \textbf{miroir} du passe-bas~:
 \begin{itemize}[nosep]
-\item En BF~: gain $\to 0$ ($+\SI{20}{dB/décade}$ de montée).
-\item À $f_c$~: gain $= \SI{-3}{dB}$, phase $= +45°$.
-\item En HF~: gain $\to \SI{0}{dB}$, phase $\to 0°$.
+\item En BF~: gain $\to 0$ ($+\SI{20}{\decibel\per\decade}$ de montée).
+\item À $f_c$~: gain $= \SI{-3}{dB}$, phase $= +45^\circ$.
+\item En HF~: gain $\to \SI{0}{dB}$, phase $\to 0^\circ$.
 \end{itemize}
 
 \begin{retenir}
@@ -7843,7 +7857,7 @@ C'est le \textbf{miroir} du passe-bas~:
 \item $\underline{H}(\omega) = V_{\text{out}}/V_{\text{in}}$~: module = gain, argument = phase.
 \item $G_{\text{dB}} = 20\log|H|$. Les dB transforment les multiplications en additions.
 \item Le diagramme de Bode = gain (dB) et phase (°) en fonction de $\log f$.
-\item Passe-bas 1er ordre~: \SI{0}{dB} en BF, $-\SI{20}{dB/décade}$ en HF, $-\SI{3}{dB}$ et $-45°$ à $f_c$.
+\item Passe-bas 1er ordre~: \SI{0}{dB} en BF, $-\SI{20}{\decibel\per\decade}$ en HF, $-\SI{3}{dB}$ et $-45^\circ$ à $f_c$.
 \item On trace d'abord les \textbf{asymptotes}, puis on corrige au voisinage des fréquences de coupure.
 \end{enumerate}
 \end{retenir}
@@ -7871,7 +7885,7 @@ Toute fonction de transfert d'un système linéaire peut se mettre sous la forme
 \end{formule}
 
 \begin{intuition}
-\textbf{Pôles et zéros sont les ``ingrédients'' du diagramme de Bode.} Chaque pôle ajoute une cassure vers le bas ($-\SI{20}{dB/décade}$) et $-90°$ de déphasage. Chaque zéro ajoute une cassure vers le haut ($+\SI{20}{dB/décade}$) et $+90°$. Le diagramme de Bode complet est la \textbf{somme} de toutes ces contributions (grâce aux propriétés du logarithme).
+\textbf{Pôles et zéros sont les ``ingrédients'' du diagramme de Bode.} Chaque pôle ajoute une cassure vers le bas ($-\SI{20}{\decibel\per\decade}$) et $-90^\circ$ de déphasage. Chaque zéro ajoute une cassure vers le haut ($+\SI{20}{\decibel\per\decade}$) et $+90^\circ$. Le diagramme de Bode complet est la \textbf{somme} de toutes ces contributions (grâce aux propriétés du logarithme).
 \end{intuition}
 
 \subsection{Règles de construction du diagramme de Bode}
@@ -7879,10 +7893,10 @@ Toute fonction de transfert d'un système linéaire peut se mettre sous la forme
 \textbf{Étape 1 --- Identifier les éléments :}
 \begin{itemize}[nosep]
 \item Gain statique $H_0$ $\Rightarrow$ ligne horizontale à $20\log|H_0|$ dB.
-\item Chaque pôle à $\omega_{pk}$ $\Rightarrow$ cassure de $-\SI{20}{dB/décade}$ à $f_{pk}$.
-\item Chaque zéro à $\omega_{zk}$ $\Rightarrow$ cassure de $+\SI{20}{dB/décade}$ à $f_{zk}$.
-\item Éventuel intégrateur ($1/j\omega$) $\Rightarrow$ pente de $-\SI{20}{dB/décade}$ dès $f = 0$.
-\item Éventuel dérivateur ($j\omega$) $\Rightarrow$ pente de $+\SI{20}{dB/décade}$ dès $f = 0$.
+\item Chaque pôle à $\omega_{pk}$ $\Rightarrow$ cassure de $-\SI{20}{\decibel\per\decade}$ à $f_{pk}$.
+\item Chaque zéro à $\omega_{zk}$ $\Rightarrow$ cassure de $+\SI{20}{\decibel\per\decade}$ à $f_{zk}$.
+\item Éventuel intégrateur ($1/j\omega$) $\Rightarrow$ pente de $-\SI{20}{\decibel\per\decade}$ dès $f = 0$.
+\item Éventuel dérivateur ($j\omega$) $\Rightarrow$ pente de $+\SI{20}{\decibel\per\decade}$ dès $f = 0$.
 \end{itemize}
 
 \textbf{Étape 2 --- Tracer le gain asymptotique :}
@@ -7900,8 +7914,8 @@ Toute fonction de transfert d'un système linéaire peut se mettre sous la forme
 
 \textbf{Étape 4 --- Phase :}
 \begin{itemize}[nosep]
-\item Chaque pôle contribue $-90°$ (transition sur $\sim 2$ décades, centrée sur la fréquence du pôle).
-\item Chaque zéro contribue $+90°$.
+\item Chaque pôle contribue $-90^\circ$ (transition sur $\sim 2$ décades, centrée sur la fréquence du pôle).
+\item Chaque zéro contribue $+90^\circ$.
 \item La phase totale est la somme des contributions.
 \end{itemize}
 
@@ -7912,9 +7926,9 @@ Soit $H(j\omega) = 10 \cdot \dfrac{1 + j\omega/\omega_{z}}{1 + j\omega/\omega_{p
 \textbf{Construction :}
 \begin{itemize}[nosep]
 \item En BF ($f \ll f_z$)~: $|H| = 10$ soit $\SI{+20}{dB}$.
-\item À $f_z = \SI{100}{Hz}$~: le zéro ajoute $+\SI{20}{dB/décade}$.
-\item Entre $f_z$ et $f_p$~: la pente est $+\SI{20}{dB/décade}$. À $f_p$~: $|H| = 10 \times f_p/f_z = 10 \times 100 = 1000$ soit $\SI{+60}{dB}$.
-\item À $f_p = \SI{10}{kHz}$~: le pôle ajoute $-\SI{20}{dB/décade}$. Les deux pentes se compensent~: le gain redevient plat à $\SI{+60}{dB}$.
+\item À $f_z = \SI{100}{Hz}$~: le zéro ajoute $+\SI{20}{\decibel\per\decade}$.
+\item Entre $f_z$ et $f_p$~: la pente est $+\SI{20}{\decibel\per\decade}$. À $f_p$~: $|H| = 10 \times f_p/f_z = 10 \times 100 = 1000$ soit $\SI{+60}{dB}$.
+\item À $f_p = \SI{10}{kHz}$~: le pôle ajoute $-\SI{20}{\decibel\per\decade}$. Les deux pentes se compensent~: le gain redevient plat à $\SI{+60}{dB}$.
 \item En HF ($f \gg f_p$)~: $|H| \to 10 \times \omega_p/\omega_z = 10 \times 100 = 1000$ soit $\SI{+60}{dB}$ constant.
 \end{itemize}
 
@@ -7934,7 +7948,7 @@ Deux paramètres fondamentaux~: $\omega_0$ (pulsation propre) et $Q$ (facteur de
 \textbf{Comportement sur le diagramme de Bode :}
 \begin{itemize}[nosep]
 \item En BF~: $|H| = H_0$ ($\SI{0}{dB}$ si $H_0 = 1$).
-\item En HF~: pente de $-\SI{40}{dB/décade}$ (deux pôles = deux fois $-\SI{20}{dB}$).
+\item En HF~: pente de $-\SI{40}{\decibel\per\decade}$ (deux pôles = deux fois $-\SI{20}{dB}$).
 \item À $\omega_0$~: le comportement dépend de $Q$~:
 \end{itemize}
 
@@ -7945,7 +7959,7 @@ Deux paramètres fondamentaux~: $\omega_0$ (pulsation propre) et $Q$ (facteur de
 \textbf{$Q$} & \textbf{Gain à $\omega_0$} & \textbf{Allure} \\
 \midrule
 $Q < 1/\sqrt{2} \approx 0{,}707$ & $< \SI{0}{dB}$ & Pas de bosse, arrondi progressif \\
-$Q = 1/\sqrt{2}$ (Butterworth) & $\SI{0}{dB}$ exactement & Plat au maximum, puis $-\SI{40}{dB/déc}$ \\
+$Q = 1/\sqrt{2}$ (Butterworth) & $\SI{0}{dB}$ exactement & Plat au maximum, puis $-\SI{40}{\decibel\per\dec}$ \\
 $Q = 1$ & $\SI{0}{dB}$ (+ léger pic) & Petit pic de résonance \\
 $Q = 5$ & $\SI{+14}{dB}$ & Pic marqué de résonance \\
 $Q = 50$ & $\SI{+34}{dB}$ & Pic très pointu (filtre sélectif) \\
@@ -7982,11 +7996,11 @@ Le gain au pic de résonance\index{résonance} vaut exactement $Q$ en linéaire,
   \node[red!70!black, font=\footnotesize] at (2.15,1.25) {$Q=5$};
   \filldraw[red!70!black] (3,1.4) circle (1.8pt);
 \end{tikzpicture}
-\caption{Passe-bas du 2\textsuperscript{e} ordre selon $Q$. Tous partagent l'asymptote $-\SI{40}{dB/décade}$, mais près de $f_0$ la courbe réelle dépasse l'asymptote d'autant plus que $Q$ est grand (pic $= 20\log Q$, soit $+\SI{14}{dB}$ pour $Q=5$). L'asymptotique seul est trompeur dès $Q > 1/\sqrt2$.}
+\caption{Passe-bas du 2\textsuperscript{e} ordre selon $Q$. Tous partagent l'asymptote $-\SI{40}{\decibel\per\decade}$, mais près de $f_0$ la courbe réelle dépasse l'asymptote d'autant plus que $Q$ est grand (pic $= 20\log Q$, soit $+\SI{14}{dB}$ pour $Q=5$). L'asymptotique seul est trompeur dès $Q > 1/\sqrt2$.}
 \end{figure}
 
 \begin{attention}
-\textbf{Piège de l'asymptotique au 2nd ordre :} l'asymptote prédit une cassure nette de $-\SI{40}{dB/décade}$ à $\omega_0$. Mais si $Q > 1/\sqrt{2}$, la courbe réelle \textbf{dépasse} l'asymptote avant de la rejoindre : c'est le pic de résonance. L'écart peut être considérable ($\SI{34}{dB}$ pour $Q = 50$). \textbf{Ne jamais se fier à l'asymptotique seul au 2nd ordre} quand $Q$ est élevé.
+\textbf{Piège de l'asymptotique au 2nd ordre :} l'asymptote prédit une cassure nette de $-\SI{40}{\decibel\per\decade}$ à $\omega_0$. Mais si $Q > 1/\sqrt{2}$, la courbe réelle \textbf{dépasse} l'asymptote avant de la rejoindre : c'est le pic de résonance. L'écart peut être considérable ($\SI{34}{dB}$ pour $Q = 50$). \textbf{Ne jamais se fier à l'asymptotique seul au 2nd ordre} quand $Q$ est élevé.
 \end{attention}
 
 \begin{pratique}
@@ -8137,12 +8151,12 @@ Si le gain de boucle $|T| \gg 1$~: $H_{\text{BF}} \approx 1/B(s)$ (la sortie ne 
 
 \subsection{Condition d'instabilité}\index{condition d'instabilité}
 
-Le dénominateur de $H_{\text{BF}}$ est $1 + T(s)$. Si $T(s) = -1$ (c'est-à-dire $|T| = 1$ et $\arg(T) = -180°$), le dénominateur s'annule et le gain en boucle fermée\index{boucle fermée} \textbf{diverge}~: le système \textbf{oscille}.
+Le dénominateur de $H_{\text{BF}}$ est $1 + T(s)$. Si $T(s) = -1$ (c'est-à-dire $|T| = 1$ et $\arg(T) = -180^\circ$), le dénominateur s'annule et le gain en boucle fermée\index{boucle fermée} \textbf{diverge}~: le système \textbf{oscille}.
 
 \begin{formule}
 \textbf{Condition d'oscillation (critère de Barkhausen) :}
 \[
-\boxed{|T(j\omega)| = 1 \quad \text{et} \quad \arg(T(j\omega)) = -180°}
+\boxed{|T(j\omega)| = 1 \quad \text{et} \quad \arg(T(j\omega)) = -180^\circ}
 \]
 Si ces deux conditions sont remplies simultanément à une fréquence $\omega$, le système est instable à cette fréquence (il oscille).
 \end{formule}
@@ -8156,14 +8170,14 @@ C'est la même condition qui fait fonctionner les \textbf{oscillateurs} (on la c
 Pour qu'un système bouclé soit stable avec une marge de sécurité, on définit deux grandeurs lues directement sur le \textbf{diagramme de Bode de la FTBO} $T(j\omega)$~:
 
 \begin{formule}
-\textbf{Marge de phase} ($M_\varphi$) : déphasage restant avant $-180°$ à la fréquence où $|T| = \SI{0}{dB}$ (gain unité).
+\textbf{Marge de phase} ($M_\varphi$) : déphasage restant avant $-180^\circ$ à la fréquence où $|T| = \SI{0}{dB}$ (gain unité).
 \[
-\boxed{M_\varphi = 180° + \arg(T(j\omega_0))} \qquad \text{où } |T(j\omega_0)| = 1
+\boxed{M_\varphi = 180^\circ + \arg(T(j\omega_0))} \qquad \text{où } |T(j\omega_0)| = 1
 \]
 
-\textbf{Marge de gain} ($M_G$) : atténuation restante avant $\SI{0}{dB}$ à la fréquence où $\arg(T) = -180°$.
+\textbf{Marge de gain} ($M_G$) : atténuation restante avant $\SI{0}{dB}$ à la fréquence où $\arg(T) = -180^\circ$.
 \[
-\boxed{M_G = -|T(j\omega_{180})|_{\text{dB}}} \qquad \text{où } \arg(T(j\omega_{180})) = -180°
+\boxed{M_G = -|T(j\omega_{180})|_{\text{dB}}} \qquad \text{où } \arg(T(j\omega_{180})) = -180^\circ
 \]
 \end{formule}
 
@@ -8183,7 +8197,7 @@ Pour qu'un système bouclé soit stable avec une marge de sécurité, on défini
     \node[below, red!70!black, font=\footnotesize] at (4,-3.5) {$f_{0\text{dB}}$};
     % f_-180 à x=5.5 (gain=-1.5)
     \draw[dashed, orange!80!black] (5.5,0) -- (5.5,-1.5);
-    \node[below, orange!80!black, font=\footnotesize] at (5.5,-3.5) {$f_{-180°}$};
+    \node[below, orange!80!black, font=\footnotesize] at (5.5,-3.5) {$f_{-180^\circ}$};
     \filldraw[orange!80!black] (5.5,-1.5) circle (2pt);
     % Marge de gain : du point (5.5,-1.5) jusqu'à 0 dB
     \draw[<->, very thick, orange!80!black] (5.5,-1.5) -- (5.5,0);
@@ -8194,9 +8208,9 @@ Pour qu'un système bouclé soit stable avec une marge de sécurité, on défini
   \begin{scope}[shift={(9,0)}]
     \draw[->] (0,0.5) -- (8,0.5) node[right, font=\small]{$\log f$};
     \draw[->] (0,-3.5) -- (0,1.5) node[above, font=\small]{$\arg(T)$};
-    \node[left, font=\footnotesize] at (0,0.5) {$0°$};
-    \node[left, font=\footnotesize] at (0,-1) {$-90°$};
-    \node[left, font=\footnotesize] at (0,-2.5) {$-180°$};
+    \node[left, font=\footnotesize] at (0,0.5) {$0^\circ$};
+    \node[left, font=\footnotesize] at (0,-1) {$-90^\circ$};
+    \node[left, font=\footnotesize] at (0,-2.5) {$-180^\circ$};
     \draw[dashed, gray] (0,-2.5) -- (7.5,-2.5);
     % Phase : (0.5,0.3)->(2,0)->(4,-1.6)->(5.5,-2.5)->(7,-3.1). -180 à x=5.5, -126° (y=-1.6) à x=4
     \draw[very thick, red!70!black] (0.5,0.3) -- (2,0) -- (4,-1.6) -- (5.5,-2.5) -- (7,-3.1);
@@ -8209,12 +8223,12 @@ Pour qu'un système bouclé soit stable avec une marge de sécurité, on défini
     \node[red!70!black, font=\footnotesize, right] at (4.1,-2.05) {$M_\varphi$};
     % f_-180 à x=5.5
     \draw[dashed, orange!80!black] (5.5,0.5) -- (5.5,-2.5);
-    \node[above, orange!80!black, font=\footnotesize] at (5.5,0.6) {$f_{-180°}$};
+    \node[above, orange!80!black, font=\footnotesize] at (5.5,0.6) {$f_{-180^\circ}$};
     \filldraw[orange!80!black] (5.5,-2.5) circle (2pt);
     \node[font=\bfseries\small] at (4,-4.4) {Phase};
   \end{scope}
 \end{tikzpicture}
-\caption{Lecture des marges sur le Bode de la FTBO. Marge de phase $M_\varphi$ : écart à $-180°$ de la phase, lu à $f_{0\text{dB}}$ (où $|T| = \SI{0}{dB}$). Marge de gain $M_G$ : écart à \SI{0}{dB} du gain, lu à $f_{-180°}$ (où la phase atteint $-180°$). Les deux doivent rester positives et confortables.}
+\caption{Lecture des marges sur le Bode de la FTBO. Marge de phase $M_\varphi$ : écart à $-180^\circ$ de la phase, lu à $f_{0\text{dB}}$ (où $|T| = \SI{0}{dB}$). Marge de gain $M_G$ : écart à \SI{0}{dB} du gain, lu à $f_{-180^\circ}$ (où la phase atteint $-180^\circ$). Les deux doivent rester positives et confortables.}
 \end{figure}
 
 Le même verdict de stabilité se lit dans le plan complexe (diagramme de Nyquist\index{Nyquist})~:
@@ -8256,16 +8270,16 @@ Le même verdict de stabilité se lit dans le plan complexe (diagramme de Nyquis
 \toprule
 \textbf{Critère} & \textbf{Valeur typique} \\
 \midrule
-Marge de phase & $> 45°$ (idéal : $60°$--$70°$) \\
+Marge de phase & $> 45^\circ$ (idéal : $60^\circ$--$70^\circ$) \\
 Marge de gain & $> \SI{6}{dB}$ (idéal : \SI{10}{dB}--\SI{12}{dB}) \\
 \bottomrule
 \end{tabular}
 \end{center}
 
 \begin{itemize}[nosep]
-\item $M_\varphi < 45°$~: réponse transitoire oscillante (dépassement important).
-\item $M_\varphi < 0°$~: \textbf{instable} (le système oscille).
-\item $M_\varphi \approx 60°$~: bon compromis rapidité/stabilité (correspond à $Q \approx 0{,}7$ en boucle fermée).
+\item $M_\varphi < 45^\circ$~: réponse transitoire oscillante (dépassement important).
+\item $M_\varphi < 0^\circ$~: \textbf{instable} (le système oscille).
+\item $M_\varphi \approx 60^\circ$~: bon compromis rapidité/stabilité (correspond à $Q \approx 0{,}7$ en boucle fermée).
 \end{itemize}
 \end{pratique}
 
@@ -8355,7 +8369,7 @@ Quand un système bouclé a une marge de phase\index{marge de phase} insuffisant
 \begin{pratique}
 \textbf{Techniques courantes :}
 \begin{itemize}[nosep]
-\item \textbf{Compensation dominante (pôle dominant)}~: on ajoute un pôle à basse fréquence qui force le gain à croiser \SI{0}{dB} bien avant que la phase n'atteigne $-180°$. C'est ce que fait la capacité de compensation ``Miller'' dans un ampli-op (typiquement $\SI{30}{pF}$ interne, chapitre~\ref{ch:aop}).
+\item \textbf{Compensation dominante (pôle dominant)}~: on ajoute un pôle à basse fréquence qui force le gain à croiser \SI{0}{dB} bien avant que la phase n'atteigne $-180^\circ$. C'est ce que fait la capacité de compensation ``Miller'' dans un ampli-op (typiquement $\SI{30}{pF}$ interne, chapitre~\ref{ch:aop}).
 \item \textbf{Avance de phase (lead)}~: un réseau zéro-pôle ($f_z < f_p$) qui ``remonte'' la phase au voisinage du croisement à \SI{0}{dB}. Utilisé dans les régulateurs de tension et les boucles PLL.
 \item \textbf{Retard de phase (lag)}~: un réseau pôle-zéro ($f_p < f_z$) qui augmente le gain en BF (réduit l'erreur statique) sans affecter la phase au croisement. Utilisé en automatique.
 \item \textbf{PID\index{correcteur!PID}}~: combinaison d'un intégrateur (erreur statique nulle), d'un proportionnel (gain) et d'un dérivateur (avance de phase). C'est le correcteur universel des systèmes asservis, détaillé au chapitre~\ref{ch:pid}.
@@ -8397,13 +8411,13 @@ $300 = 3\times100 \Rightarrow 10 + 40 = \SI{+50}{dB}$ (approximation~; exact~: $
 \textbf{Exercice 13.2 ---} Un filtre passe-bas du 1er ordre a $f_c = \SI{10}{kHz}$. Quel est le gain en dB à \SI{100}{kHz} ? À \SI{1}{MHz} ? Quel est le déphasage à $f_c$ ?
 
 \begin{pratique}
-\textbf{Solution :} Au-delà de $f_c$, l'atténuation est de $-\SI{20}{dB/décade}$.
+\textbf{Solution :} Au-delà de $f_c$, l'atténuation est de $-\SI{20}{\decibel\per\decade}$.
 
 À \SI{100}{kHz} ($= 10\times f_c$, 1 décade)~: $G \approx 0 - 20 = \SI{-20}{dB}$.
 
 À \SI{1}{MHz} ($= 100\times f_c$, 2 décades)~: $G \approx 0 - 40 = \SI{-40}{dB}$.
 
-Déphasage à $f_c$~: $\varphi = -45°$.
+Déphasage à $f_c$~: $\varphi = -45^\circ$.
 \end{pratique}
 
 \subsection*{Niveau intermédiaire}
@@ -8421,9 +8435,9 @@ Gain statique~: $H_0 = R_2/(R_1+R_2) = 10/20 = 0{,}5$ soit $\SI{-6}{dB}$.
 
 Fréquence de coupure~: $\omega_c = (R_1+R_2)/(R_1 R_2 C) = 20000/(10^4\times10^4\times10^{-8}) = 20000/10^{-4+8} = \SI{2e4}{} \Rightarrow f_c = \omega_c/(2\pi) \approx \SI{3.18}{kHz}$.
 
-C'est un \textbf{filtre passe-bas du 1er ordre} avec gain statique de $\SI{-6}{dB}$, coupure à $\SI{3.18}{kHz}$, pente $-\SI{20}{dB/décade}$ en HF.
+C'est un \textbf{filtre passe-bas du 1er ordre} avec gain statique de $\SI{-6}{dB}$, coupure à $\SI{3.18}{kHz}$, pente $-\SI{20}{\decibel\per\decade}$ en HF.
 
-Bode asymptotique~: horizontale à $\SI{-6}{dB}$ jusqu'à $\SI{3.18}{kHz}$, puis descente à $-\SI{20}{dB/déc}$.
+Bode asymptotique~: horizontale à $\SI{-6}{dB}$ jusqu'à $\SI{3.18}{kHz}$, puis descente à $-\SI{20}{\decibel\per\dec}$.
 \end{pratique}
 
 \textbf{Exercice 13.4 ---} Deux étages identiques de filtre passe-bas ($f_c = \SI{1}{kHz}$, gain $\SI{0}{dB}$) sont mis en cascade (avec un buffer entre les deux pour éviter le chargement). Quel est le gain total à \SI{1}{kHz} ? À \SI{10}{kHz} ? Quelle est la pente asymptotique HF ?
@@ -8435,7 +8449,7 @@ Chaque étage à \SI{1}{kHz}~: $\SI{-3}{dB}$. Total~: $-3-3 = \SI{-6}{dB}$.
 
 Chaque étage à \SI{10}{kHz} (1 décade au-dessus)~: $\approx\SI{-20}{dB}$. Total~: $-20-20 = \SI{-40}{dB}$.
 
-Pente HF~: $-20 - 20 = -\SI{40}{dB/décade}$. C'est l'équivalent d'un filtre du 2nd ordre.
+Pente HF~: $-20 - 20 = -\SI{40}{\decibel\per\decade}$. C'est l'équivalent d'un filtre du 2nd ordre.
 
 \textbf{Attention :} la fréquence de coupure à $\SI{-3}{dB}$ du système total n'est \textit{pas} \SI{1}{kHz}. Il faut trouver $f$ tel que $|H_{\text{tot}}|^2 = 1/2$, soit $[1+(f/f_c)^2]^2 = 2$, d'où $f_{c,\text{tot}} = f_c\sqrt{\sqrt{2}-1} \approx 0{,}644\times f_c = \SI{644}{Hz}$. La bande passante a \textbf{rétréci}.
 \end{pratique}
@@ -8457,17 +8471,17 @@ Pente HF~: $-20 - 20 = -\SI{40}{dB/décade}$. C'est l'équivalent d'un filtre du
 
 Produit gain-bande~: $\text{GBW} = A_0 \times f_1 = 10^5 \times 10 = \SI{1}{MHz}$ (le gain de l'AOP croise \SI{0}{dB} à $\sim\SI{1}{MHz}$).
 
-(b) Le gain de boucle $|T|$ part de $\SI{80}{dB}$ et descend à $-\SI{20}{dB/déc}$ après $f_1 = \SI{10}{Hz}$, puis $-\SI{40}{dB/déc}$ après $f_2 = \SI{1}{MHz}$.
+(b) Le gain de boucle $|T|$ part de $\SI{80}{dB}$ et descend à $-\SI{20}{\decibel\per\dec}$ après $f_1 = \SI{10}{Hz}$, puis $-\SI{40}{\decibel\per\dec}$ après $f_2 = \SI{1}{MHz}$.
 
-$|T| = \SI{0}{dB}$~: en première approximation, entre $f_1$ et $f_2$ la pente est $-\SI{20}{dB/déc}$. De $\SI{80}{dB}$ à $\SI{10}{Hz}$, il faut 4 décades pour atteindre $\SI{0}{dB}$~: $f_{0\text{dB}} \approx 10 \times 10^4 = \SI{100}{kHz}$.
+$|T| = \SI{0}{dB}$~: en première approximation, entre $f_1$ et $f_2$ la pente est $-\SI{20}{\decibel\per\dec}$. De $\SI{80}{dB}$ à $\SI{10}{Hz}$, il faut 4 décades pour atteindre $\SI{0}{dB}$~: $f_{0\text{dB}} \approx 10 \times 10^4 = \SI{100}{kHz}$.
 
-À \SI{100}{kHz}, le pôle $f_1 = \SI{10}{Hz}$ contribue $\approx -90°$ (on est 4 décades au-dessus). Le pôle $f_2 = \SI{1}{MHz}$ contribue $\approx -\arctan(0{,}1) \approx -6°$.
+À \SI{100}{kHz}, le pôle $f_1 = \SI{10}{Hz}$ contribue $\approx -90^\circ$ (on est 4 décades au-dessus). Le pôle $f_2 = \SI{1}{MHz}$ contribue $\approx -\arctan(0{,}1) \approx -6^\circ$.
 
-Phase totale $\approx -90° - 6° = -96°$. Marge de phase $= 180° - 96° = 84°$. \textbf{Stable} avec une bonne marge.
+Phase totale $\approx -90^\circ - 6^\circ = -96^\circ$. Marge de phase $= 180^\circ - 96^\circ = 84^\circ$. \textbf{Stable} avec une bonne marge.
 
-(c) Pas besoin de compensation dans ce cas~: la marge est confortable. Le croisement à \SI{0}{dB} se fait à une décade en dessous du 2e pôle, donc avec une pente de $-\SI{20}{dB/déc}$ et une phase $< -135°$. C'est la situation typique d'un AOP compensé internement.
+(c) Pas besoin de compensation dans ce cas~: la marge est confortable. Le croisement à \SI{0}{dB} se fait à une décade en dessous du 2e pôle, donc avec une pente de $-\SI{20}{\decibel\per\dec}$ et une phase $< -135^\circ$. C'est la situation typique d'un AOP compensé internement.
 
-Si $f_2$ était à \SI{100}{kHz} (= $f_{0\text{dB}}$), la phase serait $-90° - 45° = -135°$ et la marge de phase tomberait à $45°$ (limite). Si $f_2 < f_{0\text{dB}}$, on passerait à $-\SI{40}{dB/déc}$ au croisement et $M_\varphi < 45°$~: compensation nécessaire.
+Si $f_2$ était à \SI{100}{kHz} (= $f_{0\text{dB}}$), la phase serait $-90^\circ - 45^\circ = -135^\circ$ et la marge de phase tomberait à $45^\circ$ (limite). Si $f_2 < f_{0\text{dB}}$, on passerait à $-\SI{40}{\decibel\per\dec}$ au croisement et $M_\varphi < 45^\circ$~: compensation nécessaire.
 \end{pratique}
 
 \textbf{Exercice 13.6 ---} Le polynôme caractéristique d'un système bouclé est $D(s) = s^3 + 4s^2 + 5s + K$ où $K$ est un gain ajustable. Utilisez le critère de Routh-Hurwitz pour trouver la plage de $K$ assurant la stabilité.
@@ -8502,18 +8516,18 @@ Pour $K > 20$~: instable. Pour $K < 0$~: instable aussi (et physiquement, un gai
 \textbf{Interprétation :} plus on augmente le gain $K$ de la boucle, plus on risque l'instabilité. C'est le compromis fondamental de toute conception à rétroaction : \textit{gain élevé = précision mais risque d'instabilité}.
 \end{pratique}
 
-\textbf{Exercice 13.7 ---} Un régulateur de tension a une FTBO dont le Bode montre : gain qui croise \SI{0}{dB} à $f = \SI{50}{kHz}$ avec une phase de $-120°$. La phase atteint $-180°$ à $f = \SI{200}{kHz}$ avec un gain de $\SI{-8}{dB}$.
+\textbf{Exercice 13.7 ---} Un régulateur de tension a une FTBO dont le Bode montre : gain qui croise \SI{0}{dB} à $f = \SI{50}{kHz}$ avec une phase de $-120^\circ$. La phase atteint $-180^\circ$ à $f = \SI{200}{kHz}$ avec un gain de $\SI{-8}{dB}$.
 
 Calculez la marge de phase et la marge de gain\index{marge de gain}. Le système est-il suffisamment stable~? Si la marge de phase est insuffisante, proposez une action corrective et estimez son effet.
 
 \begin{pratique}
 \textbf{Solution :}
 
-$M_\varphi = 180° - 120° = 60°$. $M_G = 0 - (-8) = \SI{8}{dB}$.
+$M_\varphi = 180^\circ - 120^\circ = 60^\circ$. $M_G = 0 - (-8) = \SI{8}{dB}$.
 
-Les deux marges sont \textbf{correctes} ($M_\varphi > 45°$ et $M_G > \SI{6}{dB}$). Le système est stable avec un bon compromis.
+Les deux marges sont \textbf{correctes} ($M_\varphi > 45^\circ$ et $M_G > \SI{6}{dB}$). Le système est stable avec un bon compromis.
 
-Si $M_\varphi$ était insuffisante (par ex. $30°$)~: ajouter un \textbf{réseau d'avance de phase} (lead compensator) centré sur $f_{0\text{dB}}$. Un réseau lead avec un rapport $f_p/f_z = 3$ remonte la phase d'environ $30°$ au maximum. On placerait $f_z \approx \SI{30}{kHz}$ et $f_p \approx \SI{90}{kHz}$ pour maximiser l'avance à \SI{50}{kHz}.
+Si $M_\varphi$ était insuffisante (par ex. $30^\circ$)~: ajouter un \textbf{réseau d'avance de phase} (lead compensator) centré sur $f_{0\text{dB}}$. Un réseau lead avec un rapport $f_p/f_z = 3$ remonte la phase d'environ $30^\circ$ au maximum. On placerait $f_z \approx \SI{30}{kHz}$ et $f_p \approx \SI{90}{kHz}$ pour maximiser l'avance à \SI{50}{kHz}.
 \end{pratique}
 
 \textbf{Exercice 13.8 ---} Un filtre passe-bas du 2nd ordre (Sallen-Key) a $f_0 = \SI{10}{kHz}$ et $Q = 5$. Quel est le pic de gain à la résonance en dB ? Quel est le gain à $f = \SI{100}{kHz}$ ? Pourquoi ce filtre n'est-il pas adapté comme filtre anti-aliasing pour un ADC échantillonnant à \SI{200}{kHz} ?
@@ -8523,7 +8537,7 @@ Si $M_\varphi$ était insuffisante (par ex. $30°$)~: ajouter un \textbf{réseau
 
 Le filtre \textbf{amplifie} les fréquences proches de $f_0$ de \SI{14}{dB}. Cela peut saturer l'ADC.
 
-À $f = \SI{100}{kHz}$ ($= 10f_0$, 1 décade au-dessus)~: $G \approx \SI{14}{dB} - \SI{40}{dB} = \SI{-26}{dB}$. (Approximation~: le pic est à $f_0$, pente $-\SI{40}{dB/déc}$ après.)
+À $f = \SI{100}{kHz}$ ($= 10f_0$, 1 décade au-dessus)~: $G \approx \SI{14}{dB} - \SI{40}{dB} = \SI{-26}{dB}$. (Approximation~: le pic est à $f_0$, pente $-\SI{40}{\decibel\per\dec}$ après.)
 
 Calcul exact~: $|H(10\omega_0)| = 1/\sqrt{(1-100)^2 + (10/5)^2} = 1/\sqrt{9801+4} = 1/99 \approx \SI{-40}{dB}$.
 
@@ -8538,7 +8552,7 @@ De plus, le $Q = 5$ crée un pic de $\SI{14}{dB}$ qui peut provoquer de la satur
 
 \textbf{Q1.} Pourquoi une échelle logarithmique en fréquence (et pas linéaire) pour Bode ?
 
-\textit{Réponse : parce que le comportement électronique est multiplicatif en fréquence (une décade = un facteur 10) et que l'oreille, les filtres et les pentes raisonnent en rapports, pas en écarts. En log, un pôle du 1\textsuperscript{er} ordre devient une droite de pente constante ($-\SI{20}{dB/déc}$) au lieu d'une courbe, et l'on visualise \SI{1}{Hz} à \SI{1}{GHz} sur un même axe. Le log transforme les produits de $H$ en sommes de segments : c'est ce qui rend le tracé asymptotique possible.}
+\textit{Réponse : parce que le comportement électronique est multiplicatif en fréquence (une décade = un facteur 10) et que l'oreille, les filtres et les pentes raisonnent en rapports, pas en écarts. En log, un pôle du 1\textsuperscript{er} ordre devient une droite de pente constante ($-\SI{20}{\decibel\per\dec}$) au lieu d'une courbe, et l'on visualise \SI{1}{Hz} à \SI{1}{GHz} sur un même axe. Le log transforme les produits de $H$ en sommes de segments : c'est ce qui rend le tracé asymptotique possible.}
 
 \textbf{Q2.} Gain BO \SI{100}{dB}, bande \SI{10}{Hz}. Bouclé à \SI{20}{dB} : bande passante ?
 
@@ -8546,11 +8560,11 @@ De plus, le $Q = 5$ crée un pic de $\SI{14}{dB}$ qui peut provoquer de la satur
 
 \textbf{Q3.} Pourquoi une rétroaction négative peut-elle devenir instable ? À quelle fréquence bascule-t-elle en positive ?
 
-\textit{Réponse : le retour est soustrait en phase à l'entrée seulement en BF. Chaque pôle de la boucle ajoute du retard de phase ; quand le déphasage cumulé de $T(j\omega)$ atteint $-180°$, le signal renvoyé arrive \emph{en opposition} de ce qu'on voulait soustraire : la soustraction devient addition, la rétroaction est positive. Si de plus $|T| \geq 1$ à cette fréquence (Barkhausen), l'oscillation s'auto-entretient. L'instabilité n'est donc pas un gain trop fort en soi, mais un gain $\geq 1$ persistant \emph{là où} la phase a viré à $-180°$.}
+\textit{Réponse : le retour est soustrait en phase à l'entrée seulement en BF. Chaque pôle de la boucle ajoute du retard de phase ; quand le déphasage cumulé de $T(j\omega)$ atteint $-180^\circ$, le signal renvoyé arrive \emph{en opposition} de ce qu'on voulait soustraire : la soustraction devient addition, la rétroaction est positive. Si de plus $|T| \geq 1$ à cette fréquence (Barkhausen), l'oscillation s'auto-entretient. L'instabilité n'est donc pas un gain trop fort en soi, mais un gain $\geq 1$ persistant \emph{là où} la phase a viré à $-180^\circ$.}
 
-\textbf{Q4.} Deux pôles à $f_1$ et $f_2 = 2f_1$ : pourquoi le croisement \SI{0}{dB} proche de $-180°$ est-il critique ? Effet d'un 3\textsuperscript{e} pôle ?
+\textbf{Q4.} Deux pôles à $f_1$ et $f_2 = 2f_1$ : pourquoi le croisement \SI{0}{dB} proche de $-180^\circ$ est-il critique ? Effet d'un 3\textsuperscript{e} pôle ?
 
-\textit{Réponse : deux pôles apportent au plus $-180°$. S'ils sont proches (rapport 2) et encadrent le croisement \SI{0}{dB}, la phase y est déjà voisine de $-135°$ à $-160°$ : la marge fond, transitoire très oscillant ($Q$ élevé en BF), voire instabilité. Un système à deux pôles \emph{seuls} reste toutefois stable (phase $> -180°$ strictement). Ajouter un 3\textsuperscript{e} pôle fait franchir $-180°$ avec un gain encore $> \SI{0}{dB}$ possible : là, instabilité franche. D'où la règle : viser un croisement à pente $-\SI{20}{dB/déc}$ (un seul pôle actif au croisement), en repoussant les autres pôles au-delà.}
+\textit{Réponse : deux pôles apportent au plus $-180^\circ$. S'ils sont proches (rapport 2) et encadrent le croisement \SI{0}{dB}, la phase y est déjà voisine de $-135^\circ$ à $-160^\circ$ : la marge fond, transitoire très oscillant ($Q$ élevé en BF), voire instabilité. Un système à deux pôles \emph{seuls} reste toutefois stable (phase $> -180^\circ$ strictement). Ajouter un 3\textsuperscript{e} pôle fait franchir $-180^\circ$ avec un gain encore $> \SI{0}{dB}$ possible : là, instabilité franche. D'où la règle : viser un croisement à pente $-\SI{20}{\decibel\per\dec}$ (un seul pôle actif au croisement), en repoussant les autres pôles au-delà.}
 
 % === RÉSUMÉ DU CHAPITRE 13 ===
 \section*{Résumé du chapitre}
@@ -8564,7 +8578,7 @@ De plus, le $Q = 5$ crée un pic de $\SI{14}{dB}$ qui peut provoquer de la satur
 Fonction de transfert & $\underline{H} = V_{\text{out}}/V_{\text{in}}$ : module = gain, argument = phase \\
 Décibel & $G_{\text{dB}} = 20\log|H|$ ; $-\SI{3}{dB}$ = fréquence de coupure \\
 Diagramme de Bode & Gain (dB) et phase (°) vs $\log f$ \\
-Passe-bas 1er ordre & $\SI{0}{dB}$ en BF, $-\SI{20}{dB/déc}$ en HF, $-45°$ à $f_c$ \\
+Passe-bas 1er ordre & $\SI{0}{dB}$ en BF, $-\SI{20}{\decibel\per\dec}$ en HF, $-45^\circ$ à $f_c$ \\
 Asymptotes & Tracer d'abord les droites, corriger à $\pm\SI{3}{dB}$ aux coupures \\
 \bottomrule
 \end{tabular}
@@ -8576,7 +8590,7 @@ Asymptotes & Tracer d'abord les droites, corriger à $\pm\SI{3}{dB}$ aux coupure
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{p{4cm}p{9cm}}
 \toprule
-Pôles et zéros & Pôle = $-\SI{20}{dB/déc}$ et $-90°$ ; Zéro = inverse \\
+Pôles et zéros & Pôle = $-\SI{20}{\decibel\per\dec}$ et $-90^\circ$ ; Zéro = inverse \\
 2nd ordre & $Q$ contrôle le pic : Butterworth ($Q=0{,}707$), Bessel, Tchebychev \\
 Cascade & $G_{\text{dB}} = \sum G_k$ et $\varphi = \sum\varphi_k$ (si pas de chargement) \\
 Laplace $s$ & $H(s) = N(s)/D(s)$ --- pôles de $D(s)$ déterminent la stabilité \\
@@ -8591,7 +8605,7 @@ Laplace $s$ & $H(s) = N(s)/D(s)$ --- pôles de $D(s)$ déterminent la stabilité
 \begin{tabular}{p{4cm}p{9cm}}
 \toprule
 Boucle fermée & $H_{\text{BF}} = A/(1+AB)$ --- la rétroaction stabilise mais peut osciller \\
-Marges & $M_\varphi > 45°$ et $M_G > \SI{6}{dB}$ pour un système stable \\
+Marges & $M_\varphi > 45^\circ$ et $M_G > \SI{6}{dB}$ pour un système stable \\
 Routh-Hurwitz & Tableau algébrique : changements de signe = pôles instables \\
 Nyquist & Courbe dans le plan complexe, entoure $-1$ $\Rightarrow$ instable \\
 Compensation & Lead (avance phase), lag (gain BF), Miller (pôle dominant), PID \\
@@ -8696,7 +8710,7 @@ Les filtres les plus simples n'utilisent qu'une résistance et un condensateur (
 
 \begin{formule}
 \[
-\underline{H} = \frac{1}{1 + j\omega RC} \qquad f_c = \frac{1}{2\pi RC} \qquad \text{pente : } -\SI{20}{dB/déc}
+\underline{H} = \frac{1}{1 + j\omega RC} \qquad f_c = \frac{1}{2\pi RC} \qquad \text{pente : } -\SI{20}{\decibel\per\dec}
 \]
 \end{formule}
 
@@ -8715,7 +8729,7 @@ Les filtres les plus simples n'utilisent qu'une résistance et un condensateur (
 
 \begin{formule}
 \[
-\underline{H} = \frac{j\omega RC}{1 + j\omega RC} \qquad f_c = \frac{1}{2\pi RC} \qquad \text{pente BF : } +\SI{20}{dB/déc}
+\underline{H} = \frac{j\omega RC}{1 + j\omega RC} \qquad f_c = \frac{1}{2\pi RC} \qquad \text{pente BF : } +\SI{20}{\decibel\per\dec}
 \]
 \end{formule}
 
@@ -8725,7 +8739,7 @@ Les filtres les plus simples n'utilisent qu'une résistance et un condensateur (
 
 \subsection{Le problème des filtres passifs du 1er ordre}
 
-Un filtre du 1er ordre n'atténue que de $-\SI{20}{dB/décade}$ dans la bande coupée. C'est souvent \textbf{insuffisant}.
+Un filtre du 1er ordre n'atténue que de $-\SI{20}{\decibel\per\decade}$ dans la bande coupée. C'est souvent \textbf{insuffisant}.
 
 \begin{pratique}
 \textbf{Exemple :} on veut filtrer un signal audio (bande utile $< \SI{20}{kHz}$) avant un ADC échantillonnant à \SI{48}{kHz}. Il faut rejeter les fréquences au-dessus de $f_s/2 = \SI{24}{kHz}$ pour éviter le repliement (aliasing).
@@ -8734,12 +8748,12 @@ Avec un filtre du 1er ordre ($f_c = \SI{20}{kHz}$), l'atténuation à \SI{24}{kH
 
 À \SI{100}{kHz} (si un parasite HF est présent)~: $\sim\SI{14}{dB}$. Toujours insuffisant.
 
-Il faut un filtre d'ordre \textbf{supérieur}~: 2nd ordre ($-\SI{40}{dB/déc}$), 4e ordre ($-\SI{80}{dB/déc}$), etc.
+Il faut un filtre d'ordre \textbf{supérieur}~: 2nd ordre ($-\SI{40}{\decibel\per\dec}$), 4e ordre ($-\SI{80}{\decibel\per\dec}$), etc.
 \end{pratique}
 
 \subsection{Filtres passifs du 2nd ordre~: le RLC}
 
-On l'a vu aux chapitres~\ref{ch:rc-rl-rlc} et~\ref{ch:resonance}. Le circuit RLC donne un filtre du 2nd ordre avec une pente de $-\SI{40}{dB/décade}$ --- deux fois plus raide que le 1er ordre.
+On l'a vu aux chapitres~\ref{ch:rc-rl-rlc} et~\ref{ch:resonance}. Le circuit RLC donne un filtre du 2nd ordre avec une pente de $-\SI{40}{\decibel\per\decade}$ --- deux fois plus raide que le 1er ordre.
 
 \begin{formule}
 \textbf{Passe-bas RLC} (sortie aux bornes de $C$) :
@@ -8772,8 +8786,8 @@ Un filtre actif utilise un \textbf{amplificateur opérationnel\index{amplificate
 \begin{retenir}
 \textbf{Filtres passifs vs actifs :}
 \begin{enumerate}[nosep]
-\item 1er ordre~: RC ou CR. Simple, mais pente limitée ($-\SI{20}{dB/déc}$).
-\item 2nd ordre passif~: RLC. Pente $-\SI{40}{dB/déc}$ mais nécessite une inductance.
+\item 1er ordre~: RC ou CR. Simple, mais pente limitée ($-\SI{20}{\decibel\per\dec}$).
+\item 2nd ordre passif~: RLC. Pente $-\SI{40}{\decibel\per\dec}$ mais nécessite une inductance.
 \item 2nd ordre actif~: RC + AOP (Sallen-Key\index{Sallen--Key}, MFB\ldots). Pas d'inductance, gain et $Q$ réglables.
 \item Pour l'ordre $> 2$~: on met en cascade des cellules du 2nd ordre.
 \end{enumerate}
@@ -9124,7 +9138,7 @@ $= 1/(2\pi\times10^4\times1{,}483\times10^{-9}) = \SI{10.7}{kHz}$. Proche de \SI
 \begin{pratique}
 \textbf{Solution :} C'est un \textbf{filtre passe-bande} du 1er ordre par côté : il laisse passer entre \SI{20}{Hz} et \SI{20}{kHz} (bande audio).
 
-Bode asymptotique~: montée à $+\SI{20}{dB/déc}$ de \SI{20}{Hz} à \SI{20}{Hz}, plateau à \SI{0}{dB} de \SI{20}{Hz} à \SI{20}{kHz}, descente à $-\SI{20}{dB/déc}$ au-dessus de \SI{20}{kHz}.
+Bode asymptotique~: montée à $+\SI{20}{\decibel\per\dec}$ de \SI{20}{Hz} à \SI{20}{Hz}, plateau à \SI{0}{dB} de \SI{20}{Hz} à \SI{20}{kHz}, descente à $-\SI{20}{\decibel\per\dec}$ au-dessus de \SI{20}{kHz}.
 
 Bande passante à $-\SI{3}{dB}$~: de \SI{20}{Hz} à \SI{20}{kHz} (exactement la bande audio).
 
@@ -9202,8 +9216,8 @@ $\Delta f = f_0/Q_L = 433/0{,}587 \approx \SI{738}{MHz}$. Le filtre est \textbf{
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{p{4cm}p{9cm}}
 \toprule
-1er ordre (RC/CR) & $f_c = 1/(2\pi RC)$, pente $\pm\SI{20}{dB/déc}$ \\
-2nd ordre passif & RLC : pente $\pm\SI{40}{dB/déc}$, nécessite une inductance \\
+1er ordre (RC/CR) & $f_c = 1/(2\pi RC)$, pente $\pm\SI{20}{\decibel\per\dec}$ \\
+2nd ordre passif & RLC : pente $\pm\SI{40}{\decibel\per\dec}$, nécessite une inductance \\
 Filtre actif & RC + AOP : pas d'inductance, gain possible, $Q$ réglable \\
 Ordre supérieur & Cascade de cellules du 2nd ordre \\
 \bottomrule
@@ -9667,7 +9681,7 @@ Quand on met un matériau P en contact avec un matériau N, un phénomène spont
 \end{formule}
 
 \begin{attention}
-\textbf{Effet de la température :} $I_S$ double environ tous les \SI{10}{°C}. À \SI{25}{°C}, $I_S \sim \SI{1}{nA}$ pour une diode Si. À \SI{125}{°C}, $I_S \sim \SI{1}{\micro A}$. C'est pourquoi les circuits à diodes se comportent différemment à chaud : la tension de seuil $V_F$ \textit{diminue} d'environ $\SI{-2}{mV/°C}$. Ce coefficient est exploité dans les \textbf{capteurs de température à diode} et les \textbf{références de tension bandgap}.
+\textbf{Effet de la température :} $I_S$ double environ tous les \SI{10}{\degreeCelsius}. À \SI{25}{\degreeCelsius}, $I_S \sim \SI{1}{nA}$ pour une diode Si. À \SI{125}{\degreeCelsius}, $I_S \sim \SI{1}{\micro A}$. C'est pourquoi les circuits à diodes se comportent différemment à chaud : la tension de seuil $V_F$ \textit{diminue} d'environ $\SI{-2}{\milli\volt\per\degreeCelsius}$. Ce coefficient est exploité dans les \textbf{capteurs de température à diode} et les \textbf{références de tension bandgap}.
 \end{attention}
 
 \subsection{L'équation de Shockley}\index{équation de Shockley}
@@ -9680,7 +9694,7 @@ La relation $I(V)$ exacte d'une diode est donnée par l'\textbf{équation de Sho
 \]
 \begin{itemize}[nosep]
 \item $I_S$~: courant de saturation inverse ($\sim\SI{1}{nA}$ à \SI{1}{\micro A} selon la diode et la température).
-\item $V_T = kT/q$~: \textbf{tension thermique} ($\SI{26}{mV}$ à \SI{25}{°C}).
+\item $V_T = kT/q$~: \textbf{tension thermique} ($\SI{26}{mV}$ à \SI{25}{\degreeCelsius}).
 \item $n$~: facteur d'idéalité ($1$ à $2$, typiquement $\approx 1$ pour les diodes Si standard).
 \item $k = \SI{1.381e-23}{J/K}$~: constante de Boltzmann.
 \item $q = \SI{1.602e-19}{C}$~: charge de l'électron.
@@ -10216,7 +10230,7 @@ La tension de sortie n'est que \SI{1.875}{V} --- bien en dessous de $V_Z$. La Ze
 
 \textbf{Q2.} Deux diodes en parallèle pour « partager le courant » : bonne idée ?
 
-\textit{Réponse : non, piège classique. La caractéristique est exponentielle : à $V_F$ commun, un écart de quelques mV (tolérance de fabrication) suffit à ce qu'une diode prenne l'essentiel du courant. Elle chauffe, or $V_F$ chute de $\SI{-2}{mV/°C}$ : sa tension baisse, elle attire encore plus de courant $\to$ emballement thermique, elle grille, puis la seconde suit. Le partage passif ne marche pas. Solutions : résistances de ballast en série (dégénérescence qui égalise), ou un seul composant correctement dimensionné. Même problème que les BJT en parallèle (chapitre~\ref{ch:bjt}).}
+\textit{Réponse : non, piège classique. La caractéristique est exponentielle : à $V_F$ commun, un écart de quelques mV (tolérance de fabrication) suffit à ce qu'une diode prenne l'essentiel du courant. Elle chauffe, or $V_F$ chute de $\SI{-2}{\milli\volt\per\degreeCelsius}$ : sa tension baisse, elle attire encore plus de courant $\to$ emballement thermique, elle grille, puis la seconde suit. Le partage passif ne marche pas. Solutions : résistances de ballast en série (dégénérescence qui égalise), ou un seul composant correctement dimensionné. Même problème que les BJT en parallèle (chapitre~\ref{ch:bjt}).}
 
 \textbf{Q3.} Pourquoi les Schottky ont-elles un $V_F$ plus bas ? Quel compromis ?
 
@@ -10250,7 +10264,7 @@ Résistance série & Toujours limiter le courant ! \\
 \begin{tabular}{P{4cm}P{9cm}}
 \toprule
 Jonction PN & Zone de déplétion = barrière de $\sim\SI{0.7}{V}$ \\
-Shockley & $I = I_S(e^{V/nV_T}-1)$ --- exponentielle, $\SI{60}{mV/décade}$ \\
+Shockley & $I = I_S(e^{V/nV_T}-1)$ --- exponentielle, $\SI{60}{\milli\volt\per\decade}$ \\
 $r_d$ & $nV_T/I_D$ --- résistance dynamique petit signal \\
 Redressement & Simple alternance, pont de Graetz + filtrage \\
 Variantes & Schottky, Zener, LED, TVS, varicap, photodiode \\
@@ -10379,7 +10393,7 @@ La flèche sur l'émetteur indique le sens du courant \textit{conventionnel}. Ce
 \begin{itemize}[nosep]
 \item le courant $I_C$ (chute à faible et fort courant),
 \item la tension $V_{CE}$ (effet Early),
-\item la température (augmente d'environ $+0{,}5\%/°$C à $+1\%/°$C),
+\item la température (augmente d'environ $+0{,}5\%/^\circ$C à $+1\%/^\circ$C),
 \item le lot de fabrication (dispersions de 1 à 5 entre $\beta_{\min}$ et $\beta_{\max}$).
 \end{itemize}
 \textbf{Conséquence :} on ne conçoit \textbf{jamais} un circuit dont le fonctionnement dépend de la valeur exacte de $\beta$. On utilise soit la sursaturation (en commutation), soit la rétroaction (en amplification).
@@ -10401,7 +10415,7 @@ La flèche sur l'émetteur indique le sens du courant \textit{conventionnel}. Ce
 \end{center}
 
 \begin{attention}
-\textbf{``$I_C = 0$ en bloqué'' est une approximation.} En réalité, un courant de fuite $I_{CEO}$ circule (porteurs minoritaires thermiques + fuites de surface). Ce courant est négligeable à \SI{25}{°C} (nA) mais peut atteindre des $\mu$A à haute température. Pour les applications de précision (intégrateurs, échantillonneurs-bloqueurs), ce courant de fuite compte.
+\textbf{``$I_C = 0$ en bloqué'' est une approximation.} En réalité, un courant de fuite $I_{CEO}$ circule (porteurs minoritaires thermiques + fuites de surface). Ce courant est négligeable à \SI{25}{\degreeCelsius} (nA) mais peut atteindre des $\mu$A à haute température. Pour les applications de précision (intégrateurs, échantillonneurs-bloqueurs), ce courant de fuite compte.
 \end{attention}
 
 \subsection{Le BJT en commutation}\index{BJT en commutation}
@@ -10536,15 +10550,15 @@ Cette distinction est fondamentale pour comprendre~:
 \textbf{Hypothèses :} régime actif direct, modèle d'Ebers-Moll simplifié.
 
 \begin{itemize}[nosep]
-\item $I_S$~: courant de saturation inverse ($\sim\SI{1e-15}{A}$ à $\SI{1e-12}{A}$). Dépend \textbf{fortement} de la température~: $I_S \propto T^4 e^{-E_g/kT}$, approximativement $\times 2$ tous les \SI{5}{°C}. Conséquence pratique~: à $V_{BE}$ fixé, $I_C$ double environ tous les \SI{10}{°C} (la hausse de $V_T$ compense partiellement la montée de $I_S$).
-\item $V_T = kT/q$~: tension thermique (\SI{25.7}{mV} à \SI{25}{°C} --- souvent arrondie à \SI{26}{mV} ---, \SI{34.3}{mV} à \SI{125}{°C}).
+\item $I_S$~: courant de saturation inverse ($\sim\SI{1e-15}{A}$ à $\SI{1e-12}{A}$). Dépend \textbf{fortement} de la température~: $I_S \propto T^4 e^{-E_g/kT}$, approximativement $\times 2$ tous les \SI{5}{\degreeCelsius}. Conséquence pratique~: à $V_{BE}$ fixé, $I_C$ double environ tous les \SI{10}{\degreeCelsius} (la hausse de $V_T$ compense partiellement la montée de $I_S$).
+\item $V_T = kT/q$~: tension thermique (\SI{25.7}{mV} à \SI{25}{\degreeCelsius} --- souvent arrondie à \SI{26}{mV} ---, \SI{34.3}{mV} à \SI{125}{\degreeCelsius}).
 \item $V_A$~: tension d'Early (\SI{50}{V} à \SI{200}{V}), modélise la dépendance de $I_C$ en $V_{CE}$.
 \item Le terme $(1 + V_{CE}/V_A)$ est souvent omis en première approximation.
 \end{itemize}
 \end{formule}
 
 \begin{intuition}
-\textbf{Sensibilité exponentielle :} une variation de $V_{BE}$ de seulement $\SI{60}{mV}$ (à $n = 1$, \SI{25}{°C}) multiplie $I_C$ par \textbf{10}. C'est cette sensibilité extraordinaire qui rend le BJT excellent pour l'amplification de précision, mais aussi très sensible aux variations de température ($V_{BE}$ diminue d'environ $\SI{-2}{mV/°C}$ à courant constant).
+\textbf{Sensibilité exponentielle :} une variation de $V_{BE}$ de seulement $\SI{60}{mV}$ (à $n = 1$, \SI{25}{\degreeCelsius}) multiplie $I_C$ par \textbf{10}. C'est cette sensibilité extraordinaire qui rend le BJT excellent pour l'amplification de précision, mais aussi très sensible aux variations de température ($V_{BE}$ diminue d'environ $\SI{-2}{\milli\volt\per\degreeCelsius}$ à courant constant).
 \end{intuition}
 
 \subsection{Polarisation par diviseur de tension}
@@ -10967,7 +10981,7 @@ Un ampli classe A de $\SI{10}{W}$ utiles dissipe $\geq \SI{30}{W}$ \textit{au re
 \end{formule}
 
 \begin{attention}
-\textbf{Stabilité thermique de la classe AB :} le courant de repos dépend de l'écart entre la tension des diodes de polarisation et les $V_{BE}$ des transistors de puissance. Si les transistors chauffent ($V_{BE}$ diminue de $\SI{-2}{mV/°C}$) mais pas les diodes, le courant de repos \textbf{augmente}, donc la dissipation augmente, donc la température monte\ldots C'est exactement le mécanisme d'emballement thermique de la section suivante. \textbf{Parade obligatoire :} monter les diodes de polarisation \textit{sur le même radiateur} que les transistors de puissance (couplage thermique), et ajouter de petites résistances d'émetteur ($0{,}1$--$\SI{0.5}{\ohm}$) en dégénérescence.
+\textbf{Stabilité thermique de la classe AB :} le courant de repos dépend de l'écart entre la tension des diodes de polarisation et les $V_{BE}$ des transistors de puissance. Si les transistors chauffent ($V_{BE}$ diminue de $\SI{-2}{\milli\volt\per\degreeCelsius}$) mais pas les diodes, le courant de repos \textbf{augmente}, donc la dissipation augmente, donc la température monte\ldots C'est exactement le mécanisme d'emballement thermique de la section suivante. \textbf{Parade obligatoire :} monter les diodes de polarisation \textit{sur le même radiateur} que les transistors de puissance (couplage thermique), et ajouter de petites résistances d'émetteur ($0{,}1$--$\SI{0.5}{\ohm}$) en dégénérescence.
 \end{attention}
 
 \subsection{L'emballement thermique}\index{emballement thermique}
@@ -10977,7 +10991,7 @@ Un ampli classe A de $\SI{10}{W}$ utiles dissipe $\geq \SI{30}{W}$ \textit{au re
 \[
 T \uparrow \;\Rightarrow\; I_S \uparrow \;\Rightarrow\; I_C \uparrow \text{ (à $V_{BE}$ constant)} \;\Rightarrow\; P = V_{CE}I_C \uparrow \;\Rightarrow\; T \uparrow
 \]
-À $V_{BE}$ constant, $I_C$ augmente de $\approx 8{,}7\,\%/°$C, soit un doublement environ tous les \SI{10}{°C}.
+À $V_{BE}$ constant, $I_C$ augmente de $\approx 8{,}7\,\%/^\circ$C, soit un doublement environ tous les \SI{10}{\degreeCelsius}.
 
 \textbf{Condition de stabilité thermique} (critère simplifié) :
 \[
@@ -11031,7 +11045,7 @@ Le BJT silicium classique a été largement remplacé par le MOSFET en logique e
 \begin{itemize}[nosep]
 \item \textbf{SiGe HBT} (\textit{Heterojunction Bipolar Transistor})~: un alliage SiGe dans la base crée un champ de dérive qui accélère les porteurs. $f_T > \SI{300}{GHz}$, bruit $NF < \SI{0.5}{dB}$. Utilisé dans les LNA 5G, les PLL millimétriques, et les ADC ultra-rapides.
 \item \textbf{BiCMOS}~: technologie qui combine BJT (pour l'analogique de précision, les références de tension, les LNA) et CMOS\index{CMOS} (pour la logique numérique) sur la même puce.
-\item \textbf{Bandgap}~: la dépendance complémentaire de $V_{BE}$ en température ($\SI{-2}{mV/°C}$) est exploitée avec une tension proportionnelle à $T$ ($V_T$) pour créer des références de tension ultra-stables ($\sim\SI{1.2}{V}$, $< \SI{10}{ppm/°C}$).
+\item \textbf{Bandgap}~: la dépendance complémentaire de $V_{BE}$ en température ($\SI{-2}{\milli\volt\per\degreeCelsius}$) est exploitée avec une tension proportionnelle à $T$ ($V_T$) pour créer des références de tension ultra-stables ($\sim\SI{1.2}{V}$, $< \SI{10}{ppm\per\degreeCelsius}$).
 \end{itemize}
 \end{pratique}
 
@@ -11089,7 +11103,7 @@ Cascode~: $C_{\text{Miller}} \approx 2\times3{,}5 = \SI{7}{pF}$. $C_{\text{in}} 
 \textbf{Solution :} $I_{\text{out}} = I_{\text{ref}}/(1+2/\beta) = 100/1{,}01 = \SI{99}{\micro A}$ (erreur $1\%$). $r_o = \SI{1}{M\ohm}$. $\Delta I = 3/10^6 = \SI{3}{\micro A}$ ($3\%$). Miroir cascode ou Wilson pour améliorer.
 \end{pratique}
 
-\textbf{Exercice 16.6 ---} Un BJT de puissance ($V_{CE} = \SI{10}{V}$, $I_C = \SI{2}{A}$, $R_{\theta JA} = \SI{5}{°C/W}$) fonctionne à \SI{25}{°C}. La puissance dissipée est $P = \SI{20}{W}$. La température de jonction atteint $T_j = 25 + 20\times5 = \SI{125}{°C}$. À cette température, à $V_{BE}$ fixé, $I_C$ tendrait à être multiplié par $2^{(125-25)/10} = 2^{10} \approx 1000$ (doublement tous les \SI{10}{°C}). Le point de repos est-il stable ? Que se passe-t-il si $R_E = \SI{0}{\ohm}$ vs $R_E = \SI{0.5}{\ohm}$ ?
+\textbf{Exercice 16.6 ---} Un BJT de puissance ($V_{CE} = \SI{10}{V}$, $I_C = \SI{2}{A}$, $R_{\theta JA} = \SI{5}{\degreeCelsius\per\watt}$) fonctionne à \SI{25}{\degreeCelsius}. La puissance dissipée est $P = \SI{20}{W}$. La température de jonction atteint $T_j = 25 + 20\times5 = \SI{125}{\degreeCelsius}$. À cette température, à $V_{BE}$ fixé, $I_C$ tendrait à être multiplié par $2^{(125-25)/10} = 2^{10} \approx 1000$ (doublement tous les \SI{10}{\degreeCelsius}). Le point de repos est-il stable ? Que se passe-t-il si $R_E = \SI{0}{\ohm}$ vs $R_E = \SI{0.5}{\ohm}$ ?
 
 \begin{pratique}
 \textbf{Solution :} Sans $R_E$ ($R_E = 0$), $V_{BE}$ est fixé uniquement par le diviseur de base. À $V_{BE}$ constant, $I_C$ tente de monter d'un facteur $\sim 1000$ ! La puissance explose $\Rightarrow$ \textbf{emballement thermique} $\Rightarrow$ destruction.
@@ -11125,7 +11139,7 @@ Avec $R_E = \SI{0.5}{\ohm}$~: $V_E = R_E I_E \approx 0{,}5\times2 = \SI{1}{V}$. 
 \begin{tabular}{p{3.5cm}p{9.5cm}}
 \toprule
 Causalité & $V_{BE}$ contrôle $I_C$ (pas $I_B$). $I_B$ = recombinaisons, pas cause \\
-$V_{BE}$ & $\approx \SI{0.6}{V}$--$\SI{0.8}{V}$ selon $I_C$ et $T$ ($\SI{-2}{mV/°C}$) \\
+$V_{BE}$ & $\approx \SI{0.6}{V}$--$\SI{0.8}{V}$ selon $I_C$ et $T$ ($\SI{-2}{\milli\volt\per\degreeCelsius}$) \\
 $\beta$ & Variable (50--500), dépend de $I_C$, $V_{CE}$, $T$ \\
 3 régimes & Bloqué ($I_C \approx 0$), actif, saturé ($V_{CE} \approx \SI{0.2}{V}$, charges stockées) \\
 Commutation & Sursaturer, mais temps de stockage $t_s$ limite la vitesse \\
@@ -11156,7 +11170,7 @@ Gain EC & $-g_m R_C$ (découplé), $-R_C/R_E$ (non découplé) \\
 \toprule
 $f_T$ & $g_m/[2\pi(C_\pi+C_\mu)]$ --- bande passante du transistor \\
 Miller & $C_\mu(1+|A_v|)$ --- tue la BP $\Rightarrow$ cascode \\
-Emballement & à $V_{BE}$ fixé, $I_C$ double tous les $\sim$\SI{10}{°C} $\Rightarrow$ stabiliser par $R_E$ \\
+Emballement & à $V_{BE}$ fixé, $I_C$ double tous les $\sim$\SI{10}{\degreeCelsius} $\Rightarrow$ stabiliser par $R_E$ \\
 Saturation profonde & Charges stockées $\Rightarrow$ temps de stockage $t_s$ \\
 Bruit & Shot noise ($2qI_C$), faible $1/f$ (transport en volume) \\
 SiGe HBT & $f_T > \SI{300}{GHz}$, $NF < \SI{0.5}{dB}$, BiCMOS \\
@@ -11262,7 +11276,7 @@ Ce chapitre traite des MOSFETs \textbf{à enrichissement} (\textit{enhancement m
 Commande & Tension $V_{BE}$ (courant $I_B$ conséquent) & Tension $V_{GS}$ (courant $\approx 0$ en statique) \\
 Impédance d'entrée & $r_\pi \sim \SI{1}{k\ohm}$--\SI{10}{k\ohm} & $> \SI{1e12}{\ohm}$ (BF), capacitif (HF) \\
 Chute en conduction & $V_{CE,\text{sat}}$ fixe ($\approx\SI{0.2}{V}$) & $R_{DS,\text{on}} \cdot I_D$ (proportionnelle) \\
-Stabilité thermique & Emballement ($I_C$ double/\SI{10}{°C} à $V_{BE}$ fixé) & \textbf{Auto-stable} ($R_{DS,\text{on}}$ augmente avec $T$) \\
+Stabilité thermique & Emballement ($I_C$ double/\SI{10}{\degreeCelsius} à $V_{BE}$ fixé) & \textbf{Auto-stable} ($R_{DS,\text{on}}$ augmente avec $T$) \\
 Vitesse & $t_s$ (charges stockées en sat.) & Très rapide (pas de charges stockées) \\
 Bruit BF & Faible $1/f$ (transport volume) & Plus élevé $1/f$ (pièges interface) \\
 $g_m$ à même $I$ & $I_C/V_T$ (élevé) & $\sqrt{2k_nI_D}$ (plus faible) \\
@@ -11542,7 +11556,7 @@ $R_{DS,\text{on}}$ et ses dépendances, capacités parasites et plateau de Mille
 $R_{DS,\text{on}}$ dépend de trois facteurs indépendants~:
 \begin{itemize}[nosep]
 \item \textbf{$V_{GS}$}~: plus $V_{GS} \gg V_{th}$, plus le canal est conducteur, plus $R_{DS,\text{on}}$ est faible. Les datasheets spécifient $R_{DS,\text{on}}$ pour un $V_{GS}$ donné (typiquement \SI{10}{V} ou \SI{4.5}{V} pour les MOSFETs ``logic level'').
-\item \textbf{Température}~: $R_{DS,\text{on}}$ \textbf{augmente} avec $T$ ($+0{,}3\%/°$C à $+0{,}8\%/°$C) car la mobilité $\mu$ diminue ($\mu \propto T^{-1{,}5}$ à $T^{-2{,}5}$). C'est stabilisant (pas d'emballement), mais la puissance dissipée augmente quand le composant chauffe.
+\item \textbf{Température}~: $R_{DS,\text{on}}$ \textbf{augmente} avec $T$ ($+0{,}3\%/^\circ$C à $+0{,}8\%/^\circ$C) car la mobilité $\mu$ diminue ($\mu \propto T^{-1{,}5}$ à $T^{-2{,}5}$). C'est stabilisant (pas d'emballement), mais la puissance dissipée augmente quand le composant chauffe.
 \item \textbf{$V_{DS,\max}$}~: le compromis fondamental ``on-resistance vs breakdown voltage''. La zone de drift (N faiblement dopé entre canal et drain) doit être plus longue et moins dopée pour tenir une haute tension $\Rightarrow$ $R_{DS,\text{on}} \propto V_{BR}^{2{,}5}$ (loi de Baliga). Les MOSFETs haute tension ($\SI{600}{V}$+) ont des $R_{DS,\text{on}}$ 100 à 1000$\times$ plus élevés que les basse tension (\SI{30}{V}).
 \end{itemize}
 \end{formule}
@@ -11683,8 +11697,8 @@ Le terme capacitif ($C_{oss}$) devient significatif à haute fréquence et haute
 Trois paramètres varient avec la température~:
 \begin{itemize}[nosep]
 \item $\mu$ \textbf{diminue} ($\propto T^{-1{,}5}$ à $T^{-2{,}5}$) $\Rightarrow$ $g_m \downarrow$ et $R_{DS,\text{on}} \uparrow$ (\textbf{stabilisant}).
-\item $V_{th}$ \textbf{diminue} ($\approx \SI{-2}{mV/°C}$ à $\SI{-5}{mV/°C}$) $\Rightarrow$ le MOSFET conduit à un $V_{GS}$ plus faible. En logique, cela peut créer des problèmes de marges de bruit à haute température.
-\item $I_{\text{off}}$ (courant de fuite sub-seuil) \textbf{augmente} exponentiellement ($\sim\times 2$ tous les \SI{10}{°C}). Dans les SoC modernes ($L < \SI{10}{nm}$), les fuites à chaud deviennent un problème de consommation majeur.
+\item $V_{th}$ \textbf{diminue} ($\approx \SI{-2}{\milli\volt\per\degreeCelsius}$ à $\SI{-5}{\milli\volt\per\degreeCelsius}$) $\Rightarrow$ le MOSFET conduit à un $V_{GS}$ plus faible. En logique, cela peut créer des problèmes de marges de bruit à haute température.
+\item $I_{\text{off}}$ (courant de fuite sub-seuil) \textbf{augmente} exponentiellement ($\sim\times 2$ tous les \SI{10}{\degreeCelsius}). Dans les SoC modernes ($L < \SI{10}{nm}$), les fuites à chaud deviennent un problème de consommation majeur.
 \end{itemize}
 \textbf{Point de croisement ZTC} (\textit{Zero Temperature Coefficient}) : il existe un $V_{GS}$ pour lequel les effets de $\mu \downarrow$ et $V_{th} \downarrow$ se compensent exactement, rendant $I_D$ indépendant de $T$. Ce point est utilisé pour les références de courant.
 \end{formule}
@@ -11723,7 +11737,7 @@ avec $\alpha$ le facteur d'activité ($0{,}1$ à $0{,}3$ typique). \textbf{Puiss
 \begin{pratique}
 \begin{itemize}[nosep]
 \item \textbf{GaN} (nitrure de gallium)~: mobilité élevée, champ critique $10\times$ supérieur au Si $\Rightarrow$ $R_{DS,\text{on}}$ très faible à haute tension, capacités parasites réduites. Commutation à \SI{1}{MHz}--\SI{10}{MHz}. Rendements $> 99\%$ dans les chargeurs et serveurs.
-\item \textbf{SiC} (carbure de silicium)~: champ critique $10\times$ Si, excellente tenue en température ($T_j > \SI{200}{°C}$). Dominance en haute tension ($> \SI{600}{V}$) et haute température (véhicules électriques, photovoltaïque, traction).
+\item \textbf{SiC} (carbure de silicium)~: champ critique $10\times$ Si, excellente tenue en température ($T_j > \SI{200}{\degreeCelsius}$). Dominance en haute tension ($> \SI{600}{V}$) et haute température (véhicules électriques, photovoltaïque, traction).
 \item \textbf{CMOS avancé} ($L < \SI{10}{nm}$)~: effets de canal court (DIBL, SCE), FinFET et GAA (Gate-All-Around) pour maintenir le contrôle électrostatique, tensions d'alimentation $< \SI{0.8}{V}$, fuites dominantes.
 \end{itemize}
 \end{pratique}
@@ -11794,7 +11808,7 @@ $g_m = \SI{5}{mA/V}$. $r_o = 1/(0{,}02\times2{,}5\times10^{-3}) = \SI{20}{k\ohm}
 
 \textbf{Q1.} Pourquoi le MOSFET est-il thermiquement stable alors que le BJT ne l'est pas ? Quel paramètre physique ($\mu$ vs $I_S$) est responsable ?
 
-\textit{Réponse : dans le MOSFET, c'est la mobilité $\mu$ qui pilote le courant, et elle diminue avec la température ($\mu \propto T^{-1{,}5}$ à $T^{-2{,}5}$) : $R_{DS,\text{on}}$ augmente, le courant baisse, la boucle est stabilisante. Dans le BJT, c'est $I_S$ qui domine, et il croît exponentiellement avec $T$ : à $V_{BE}$ fixé, $I_C$ double tous les $\sim$\SI{10}{°C} --- boucle déstabilisante, d'où l'emballement.}
+\textit{Réponse : dans le MOSFET, c'est la mobilité $\mu$ qui pilote le courant, et elle diminue avec la température ($\mu \propto T^{-1{,}5}$ à $T^{-2{,}5}$) : $R_{DS,\text{on}}$ augmente, le courant baisse, la boucle est stabilisante. Dans le BJT, c'est $I_S$ qui domine, et il croît exponentiellement avec $T$ : à $V_{BE}$ fixé, $I_C$ double tous les $\sim$\SI{10}{\degreeCelsius} --- boucle déstabilisante, d'où l'emballement.}
 
 \textbf{Q2.} Pourquoi le bruit $1/f$ du MOSFET est-il plus élevé que celui du BJT ? Quel paramètre de conception réduit ce bruit ?
 
@@ -11852,7 +11866,7 @@ Capacités & $C_{GS}$, $C_{GD}$ (Miller, non-linéaire), $C_{DS}$ \\
 Plateau Miller & Phase à $V_{GS}$ constante pendant laquelle $V_{DS}$ chute \\
 Pertes & Conduction ($R_{DS,\text{on}} I_D^2\,D$) + commutation ($(E_{\text{on}}{+}E_{\text{off}})\,f_{sw}$) + capacitives \\
 Bruit & Thermique ($4kT\gamma g_m$) + $1/f$ ($K_F/(C_{ox}WLf)$) \\
-GaN / SiC & Champ critique $10\times$ Si, $f_{sw} > \SI{1}{MHz}$, $T_j > \SI{200}{°C}$ \\
+GaN / SiC & Champ critique $10\times$ Si, $f_{sw} > \SI{1}{MHz}$, $T_j > \SI{200}{\degreeCelsius}$ \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -12105,7 +12119,7 @@ Si le retour va sur $V^+$ au lieu de $V^-$, c'est une rétroaction \textit{posit
 
 \textbf{2. Le gain de boucle est-il suffisant ?}
 
-Les règles d'or supposent $A_{OL} \gg A_{CL}$. À haute fréquence, $A_{OL}$ diminue ($-\SI{20}{dB/déc}$). Quand $A_{OL}$ devient comparable à $A_{CL}$, l'erreur de gain dépasse $1\%$ et les règles d'or perdent leur précision. Comparez toujours la fréquence de travail avec $GBW/A_{CL}$.
+Les règles d'or supposent $A_{OL} \gg A_{CL}$. À haute fréquence, $A_{OL}$ diminue ($-\SI{20}{\decibel\per\dec}$). Quand $A_{OL}$ devient comparable à $A_{CL}$, l'erreur de gain dépasse $1\%$ et les règles d'or perdent leur précision. Comparez toujours la fréquence de travail avec $GBW/A_{CL}$.
 
 \textbf{3. La sortie est-elle saturée ?}
 
@@ -12199,7 +12213,7 @@ $\beta$~: fraction de retour. $T = A_{OL}\beta$~: gain de boucle.
 \item \textbf{Réduit l'impédance de sortie}~: $Z_{\text{out,fermée}} = Z_{\text{out,ouverte}}/(1+T)$.
 \item \textbf{Étend la bande passante}~: le gain diminue mais la BP augmente, à produit constant (GBW).
 \end{enumerate}
-Le prix~: risque d'\textbf{instabilité} si le déphasage dépasse $180°$ quand $|T| = 1$ (voir niveau ingénieur).
+Le prix~: risque d'\textbf{instabilité} si le déphasage dépasse $180^\circ$ quand $|T| = 1$ (voir niveau ingénieur).
 \end{intuition}
 
 \subsection{Produit gain-bande et pôle dominant}
@@ -12237,7 +12251,7 @@ Exemple (741)~: $GBW = \SI{1}{MHz}$. En suiveur\index{suiveur} ($A_{CL} = 1$)~: 
   \node[blue!70!black, font=\footnotesize, above] at (0.45,5.05) {$A_{OL}$};
   \draw[dashed, gray!50] (1,0) -- (1,5);
   \node[below, font=\tiny, gray!60!black] at (1,-0.45) {$f_{p1}$};
-  \node[rotate=-45, font=\footnotesize, gray!30!black] at (3.45,2.85) {$-\SI{20}{dB/déc}$};
+  \node[rotate=-45, font=\footnotesize, gray!30!black] at (3.45,2.85) {$-\SI{20}{\decibel\per\dec}$};
   \draw[very thick, red!70!black] (0,2) -- (4,2);
   \node[red!70!black, font=\footnotesize, above] at (1.9,2.03) {$A_{CL} = \SI{40}{dB}$};
   \draw[dashed, gray!50] (4,0) -- (4,2);
@@ -12245,7 +12259,7 @@ Exemple (741)~: $GBW = \SI{1}{MHz}$. En suiveur\index{suiveur} ($A_{CL} = 1$)~: 
   \node[above right, font=\footnotesize, gray!30!black] at (4.02,2.1) {$f_{-3\text{dB}} = GBW/A_{CL}$};
   \node[above right, font=\footnotesize, blue!70!black] at (6.02,0.12) {$GBW$};
 \end{tikzpicture}
-\caption{Réponse en boucle ouverte d'un AOP compensé (échelles logarithmiques) : gain plat $A_{OL,DC} = \SI{100}{dB}$ jusqu'au pôle dominant $f_{p1}$, puis $-\SI{20}{dB/déc}$ jusqu'au gain unité à $f = GBW$ (ici \SI{1}{MHz}). Bouclé à $A_{CL} = \SI{40}{dB}$, l'amplificateur suit la droite rouge jusqu'à $f_{-3\text{dB}} = GBW/A_{CL} = \SI{10}{kHz}$, puis retombe sur $A_{OL}$ : le produit gain $\times$ bande est constant.}
+\caption{Réponse en boucle ouverte d'un AOP compensé (échelles logarithmiques) : gain plat $A_{OL,DC} = \SI{100}{dB}$ jusqu'au pôle dominant $f_{p1}$, puis $-\SI{20}{\decibel\per\dec}$ jusqu'au gain unité à $f = GBW$ (ici \SI{1}{MHz}). Bouclé à $A_{CL} = \SI{40}{dB}$, l'amplificateur suit la droite rouge jusqu'à $f_{-3\text{dB}} = GBW/A_{CL} = \SI{10}{kHz}$, puis retombe sur $A_{OL}$ : le produit gain $\times$ bande est constant.}
 \end{figure}
 
 
@@ -12254,14 +12268,14 @@ Exemple (741)~: $GBW = \SI{1}{MHz}$. En suiveur\index{suiveur} ($A_{CL} = 1$)~: 
 \begin{attention}
 \textbf{C'est ici que les chapitres~\ref{ch:bjt} et~\ref{ch:mosfet} deviennent essentiels.}
 
-Sans compensation, les deux étages de gain (paire diff. + EC/SC) ont chacun un pôle. Deux pôles proches créent une pente de $-\SI{40}{dB/déc}$ avec $-180°$ de phase $\Rightarrow$ \textbf{oscillation} en boucle fermée\index{boucle fermée}.
+Sans compensation, les deux étages de gain (paire diff. + EC/SC) ont chacun un pôle. Deux pôles proches créent une pente de $-\SI{40}{\decibel\per\dec}$ avec $-180^\circ$ de phase $\Rightarrow$ \textbf{oscillation} en boucle fermée\index{boucle fermée}.
 
 \textbf{Solution : la compensation de Miller.} Un condensateur $C_C$ ($\sim\SI{20}{pF}$--$\SI{30}{pF}$) entre la sortie et l'entrée de l'étage 2. Par l'effet Miller ($C_{\text{Miller}} = C(1+|A_v|)$, chapitre~\ref{ch:bjt}) :
 \begin{itemize}[nosep]
 \item Le \textbf{premier pôle} descend vers les BF (capacité apparente $\times |A_{v2}|$).
 \item Le \textbf{deuxième pôle} remonte vers les HF (``pole splitting'').
 \end{itemize}
-Résultat~: un seul pôle dans la bande utile $\Rightarrow$ $-\SI{20}{dB/déc}$ $\Rightarrow$ stable ($M_\varphi \approx 60°$--$90°$).
+Résultat~: un seul pôle dans la bande utile $\Rightarrow$ $-\SI{20}{\decibel\per\dec}$ $\Rightarrow$ stable ($M_\varphi \approx 60^\circ$--$90^\circ$).
 \end{attention}
 
 \begin{formule}
@@ -12306,10 +12320,10 @@ Stabilité, modèle fréquentiel complet, bruit, effets thermiques, saturation e
 \subsection{Stabilité~: marges de phase et de gain}
 
 \begin{formule}
-\textbf{Condition de stabilité :} le gain de boucle $T(f)$ doit traverser $\SI{0}{dB}$ avec une pente de $-\SI{20}{dB/déc}$.
+\textbf{Condition de stabilité :} le gain de boucle $T(f)$ doit traverser $\SI{0}{dB}$ avec une pente de $-\SI{20}{\decibel\per\dec}$.
 
 \[
-\boxed{M_\varphi > 45° \quad \text{(minimum)}, \quad 60°\text{--}70° \quad \text{(recommandé)}}
+\boxed{M_\varphi > 45^\circ \quad \text{(minimum)}, \quad 60^\circ\text{--}70^\circ \quad \text{(recommandé)}}
 \]
 
 \textbf{Charge capacitive :} une $C_L$ en sortie crée un pôle $f_L = 1/(2\pi R_{\text{out}} C_L)$ qui réduit $M_\varphi$. Solutions : résistance d'isolation ($\sim\SI{50}{\ohm}$), ou AOP ``capacitive load stable''.
@@ -12321,11 +12335,11 @@ Stabilité, modèle fréquentiel complet, bruit, effets thermiques, saturation e
 \[
 A_{OL}(s) = \frac{A_{OL,DC}}{(1+s/\omega_{p1})(1+s/\omega_{p2})}
 \]
-Avec compensation~: $f_{p1} \ll f_{p2}$. Le $\SI{0}{dB}$ est atteint à $f_T = GBW$ avec $\sim -90°$ $\Rightarrow$ marge $\approx 90°$ en théorie, $\sim 60°$--$70°$ en pratique.
+Avec compensation~: $f_{p1} \ll f_{p2}$. Le $\SI{0}{dB}$ est atteint à $f_T = GBW$ avec $\sim -90^\circ$ $\Rightarrow$ marge $\approx 90^\circ$ en théorie, $\sim 60^\circ$--$70^\circ$ en pratique.
 \end{formule}
 
 \begin{pratique}
-\textbf{Bode typique (741) :} DC : \SI{100}{dB}. $f_{p1} \approx \SI{10}{Hz}$. $GBW \approx \SI{1}{MHz}$. $f_{p2} \approx \SI{3}{MHz}$. Phase à $f_T$ : $\approx -110°$ $\Rightarrow$ marge $\approx 70°$.
+\textbf{Bode typique (741) :} DC : \SI{100}{dB}. $f_{p1} \approx \SI{10}{Hz}$. $GBW \approx \SI{1}{MHz}$. $f_{p2} \approx \SI{3}{MHz}$. Phase à $f_T$ : $\approx -110^\circ$ $\Rightarrow$ marge $\approx 70^\circ$.
 \end{pratique}
 
 \subsection{Bruit de l'AOP}\index{bruit de l'AOP}
@@ -12361,8 +12375,8 @@ Transimpédance & $> \SI{1}{M\ohm}$ & JFET & $i_n$ faible \\
 
 \begin{formule}
 \begin{itemize}[nosep]
-\item \textbf{Offset}~: dérive \SI{1}{\micro V/°C} (BJT) à \SI{10}{\micro V/°C} (CMOS). Chopper~: $< \SI{0.05}{\micro V/°C}$.
-\item \textbf{$I_B$}~: pour les entrées JFET/\allowbreak CMOS (fuite de jonction), il double tous les \SI{10}{°C} --- piège classique à chaud. Pour les entrées BJT ($I_B = I_C/\beta$), il est quasi stable, $\beta$ augmentant avec $T$.
+\item \textbf{Offset}~: dérive \SI{1}{\micro\volt\per\degreeCelsius} (BJT) à \SI{10}{\micro\volt\per\degreeCelsius} (CMOS). Chopper~: $< \SI{0.05}{\micro\volt\per\degreeCelsius}$.
+\item \textbf{$I_B$}~: pour les entrées JFET/\allowbreak CMOS (fuite de jonction), il double tous les \SI{10}{\degreeCelsius} --- piège classique à chaud. Pour les entrées BJT ($I_B = I_C/\beta$), il est quasi stable, $\beta$ augmentant avec $T$.
 \item \textbf{$g_m$}~: diminue avec $T$ (MOSFET\index{MOSFET}, $\mu \downarrow$), augmente (BJT, $V_T \downarrow$). $A_{OL}$ varie, mais la rétroaction absorbe ($\div(1+T)$).
 \item \textbf{GBW}~: varie de $\pm 20\%$ sur la plage de température.
 \end{itemize}
@@ -12472,11 +12486,11 @@ Compensation~: $R_3 = R_1 \parallel R_2 \approx \SI{9.1}{k\ohm}$ sur $V^+$. Erre
 
 (a) $GBW = 10^5\times10 = \SI{1}{MHz}$. Croisement à \SI{1}{MHz}.
 
-(b) $\varphi = -\arctan(10^6/10) - \arctan(10^6/5\times10^6) = -90° - 11{,}3° = -101{,}3°$. $M_\varphi = 78{,}7°$. Excellent.
+(b) $\varphi = -\arctan(10^6/10) - \arctan(10^6/5\times10^6) = -90^\circ - 11{,}3^\circ = -101{,}3^\circ$. $M_\varphi = 78{,}7^\circ$. Excellent.
 
-(c) $f_{p3} = 1/(2\pi\times100\times100\times10^{-12}) = \SI{15.9}{MHz}$. Phase additionnelle~: $-3{,}6°$. $M_\varphi = 75{,}1°$. OK.
+(c) $f_{p3} = 1/(2\pi\times100\times100\times10^{-12}) = \SI{15.9}{MHz}$. Phase additionnelle~: $-3{,}6^\circ$. $M_\varphi = 75{,}1^\circ$. OK.
 
-Mais si $C_L = \SI{10}{nF}$~: $f_{p3} = \SI{159}{kHz}$, $\varphi_{p3} = -81°$ $\Rightarrow$ $M_\varphi < 0$ $\Rightarrow$ \textbf{instable}.
+Mais si $C_L = \SI{10}{nF}$~: $f_{p3} = \SI{159}{kHz}$, $\varphi_{p3} = -81^\circ$ $\Rightarrow$ $M_\varphi < 0$ $\Rightarrow$ \textbf{instable}.
 \end{pratique}
 
 \textbf{Exercice 18.6 ---} Comparez le bruit : AOP BJT ($e_n = \SI{3}{nV/\sqrt{Hz}}$, $i_n = \SI{1}{pA/\sqrt{Hz}}$) vs CMOS ($e_n = \SI{15}{nV/\sqrt{Hz}}$, $i_n = \SI{0.01}{pA/\sqrt{Hz}}$), pour $R_s = \SI{100}{\ohm}$ et $R_s = \SI{10}{M\ohm}$.
@@ -12503,9 +12517,9 @@ $R_s = \SI{10}{M\ohm}$~: $e_{R_s} = \sqrt{4kT\times10^7} = \SI{0.41}{\micro V/\s
 
 \textit{Réponse : vu de l'entrée de l'étage 2, $C_C$ apparaît multiplié par $(1+|A_{v2}|)$ (effet Miller, chapitre~\ref{ch:bjt}) : le n\oe ud de sortie de la paire différentielle, à haute impédance, voit une capacité énorme --- le premier pôle descend en fréquence. Au n\oe ud de sortie de l'étage 2, $C_C$ crée une contre-réaction locale qui abaisse l'impédance vue à $\approx 1/g_{m2}$ --- le second pôle remonte à $g_{m2}/(2\pi C_L)$. Les pôles s'écartent (pole splitting) : le système se comporte en premier ordre jusqu'au-delà du gain unité.}
 
-\textbf{Q4.} Calculez l'incertitude totale d'offset d'un AOP CMOS ($V_{OS} = \SI{5}{mV}$, $\SI{5}{\micro V/°C}$) sur $-40°$C à $+85°$C. Comparez avec un chopper ($V_{OS} < \SI{10}{\micro V}$, $< \SI{0.05}{\micro V/°C}$).
+\textbf{Q4.} Calculez l'incertitude totale d'offset d'un AOP CMOS ($V_{OS} = \SI{5}{mV}$, $\SI{5}{\micro\volt\per\degreeCelsius}$) sur $-40^\circ$C à $+85^\circ$C. Comparez avec un chopper ($V_{OS} < \SI{10}{\micro V}$, $< \SI{0.05}{\micro\volt\per\degreeCelsius}$).
 
-\textit{Réponse : pire cas depuis \SI{25}{°C} : $|\Delta T|_{\max} = 65$ (vers $-40°$C). CMOS : $5\,\text{mV} + \SI{5}{\micro V/°C} \times 65 = \SI{5.3}{mV}$. Chopper : $\SI{10}{\micro V} + \SI{0.05}{\micro V/°C} \times 65 = \SI{13}{\micro V}$. Le chopper est $\sim 400\times$ meilleur : c'est le choix obligé dès qu'on mesure des millivolts en DC (thermocouples, shunts, ponts de jauges).}
+\textit{Réponse : pire cas depuis \SI{25}{\degreeCelsius} : $|\Delta T|_{\max} = 65$ (vers $-40^\circ$C). CMOS : $5\,\text{mV} + \SI{5}{\micro\volt\per\degreeCelsius} \times 65 = \SI{5.3}{mV}$. Chopper : $\SI{10}{\micro V} + \SI{0.05}{\micro\volt\per\degreeCelsius} \times 65 = \SI{13}{\micro V}$. Le chopper est $\sim 400\times$ meilleur : c'est le choix obligé dès qu'on mesure des millivolts en DC (thermocouples, shunts, ponts de jauges).}
 
 % === RÉSUMÉ ===
 \section*{Résumé du chapitre}
@@ -12545,9 +12559,9 @@ Slew rate & $SR = I_{\text{tail}}/C_C$ : limitation en \textbf{courant}, pas en 
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{p{3.5cm}p{9.5cm}}
 \toprule
-Stabilité & $M_\varphi > 45°$ ($60°$--$70°$ idéal). Charge $C_L$ crée un pôle \\
+Stabilité & $M_\varphi > 45^\circ$ ($60^\circ$--$70^\circ$ idéal). Charge $C_L$ crée un pôle \\
 Bruit & $e_{n,\text{tot}} = \sqrt{e_n^2 + (i_n R_s)^2 + 4kTR_s}$. BJT : faible $e_n$. CMOS : faible $i_n$ \\
-Température & Offset : \SI{1}{\micro V/°C} (BJT) à \SI{10}{\micro V/°C} (CMOS). Chopper : $< \SI{0.05}{\micro V/°C}$ \\
+Température & Offset : \SI{1}{\micro\volt\per\degreeCelsius} (BJT) à \SI{10}{\micro\volt\per\degreeCelsius} (CMOS). Chopper : $< \SI{0.05}{\micro\volt\per\degreeCelsius}$ \\
 Saturation & $V_{\text{out}} < V_{CC} - V_{\text{headroom}}$. Recovery time à la sortie \\
 \bottomrule
 \end{tabular}
@@ -12613,7 +12627,7 @@ Les pôles et zéros d'une fonction de transfert\index{fonction de transfert} ne
 \begin{formule}
 \textbf{Un pôle = un réservoir d'énergie qui ralentit la réponse.}
 
-Un condensateur stocke de l'énergie $E = \frac{1}{2}CV^2$. Pour que la tension à ses bornes change, il faut du \textit{temps}~: $\tau = RC$. Au-delà de la fréquence $f_p = 1/(2\pi\tau)$, le condensateur ne peut plus ``suivre'' le signal $\Rightarrow$ atténuation de $-\SI{20}{dB/déc}$ et déphasage de $-90°$ par pôle.
+Un condensateur stocke de l'énergie $E = \frac{1}{2}CV^2$. Pour que la tension à ses bornes change, il faut du \textit{temps}~: $\tau = RC$. Au-delà de la fréquence $f_p = 1/(2\pi\tau)$, le condensateur ne peut plus ``suivre'' le signal $\Rightarrow$ atténuation de $-\SI{20}{\decibel\per\dec}$ et déphasage de $-90^\circ$ par pôle.
 
 \textbf{Physiquement :} le courant qui charge le condensateur est limité par la résistance. Plus la fréquence est élevée, moins le condensateur a le temps de se charger $\Rightarrow$ la tension de sortie diminue.
 \end{formule}
@@ -12621,7 +12635,7 @@ Un condensateur stocke de l'énergie $E = \frac{1}{2}CV^2$. Pour que la tension 
 \begin{formule}
 \textbf{Un zéro = un chemin qui compense ou court-circuite.}
 
-Un zéro crée l'effet inverse d'un pôle~: $+\SI{20}{dB/déc}$ et $+90°$. Physiquement~:
+Un zéro crée l'effet inverse d'un pôle~: $+\SI{20}{\decibel\per\dec}$ et $+90^\circ$. Physiquement~:
 \begin{itemize}[nosep]
 \item \textbf{Zéro à l'origine} ($s=0$)~: le condensateur \textit{bloque le DC} et laisse passer l'AC $\Rightarrow$ filtre passe-haut.
 \item \textbf{Zéro à une fréquence finie}~: un chemin alternatif (résonance série $LC$, branche de rétroaction) \textit{annule la transmission} à cette fréquence $\Rightarrow$ filtre coupe-bande (notch).
@@ -12642,7 +12656,7 @@ Le filtre Butterworth\index{filtre!Butterworth} ($Q = 0{,}707$) est au seuil cri
 \end{intuition}
 
 \begin{retenir}
-Un pôle est un réservoir d'énergie ($-\SI{20}{dB/déc}$, $-90°$)~; un zéro, un chemin qui compense ou court-circuite. $Q$ --- énergie stockée sur énergie dissipée --- pilote \textit{à la fois} le pic fréquentiel et le dépassement temporel~: deux visages du même phénomène de résonance (chapitre~\ref{ch:resonance}). La suite du chapitre transforme ces briques en démarche complète~: gabarit $\to$ type $\to$ ordre $\to$ cellules $\to$ composants $\to$ vérification.
+Un pôle est un réservoir d'énergie ($-\SI{20}{\decibel\per\dec}$, $-90^\circ$)~; un zéro, un chemin qui compense ou court-circuite. $Q$ --- énergie stockée sur énergie dissipée --- pilote \textit{à la fois} le pic fréquentiel et le dépassement temporel~: deux visages du même phénomène de résonance (chapitre~\ref{ch:resonance}). La suite du chapitre transforme ces briques en démarche complète~: gabarit $\to$ type $\to$ ordre $\to$ cellules $\to$ composants $\to$ vérification.
 \end{retenir}
 
 % ============================================================================
@@ -12955,10 +12969,10 @@ On retrouve ici la chaîne causale complète \textbf{transistor $\to$ AOP $\to$ 
 
 \subsubsection*{3. Déphasage de l'AOP $\Rightarrow$ problème de stabilité}
 
-L'AOP n'est pas un simple gain à la fréquence $f_0$~: il introduit un \textbf{déphasage} ($-90°$ au pôle dominant, plus au-delà). Ce déphasage s'ajoute à celui du filtre lui-même. Pour un filtre à fort $Q$, la boucle de rétroaction est ``tendue'' et le déphasage supplémentaire de l'AOP peut faire basculer le circuit dans l'\textbf{instabilité} (oscillation).
+L'AOP n'est pas un simple gain à la fréquence $f_0$~: il introduit un \textbf{déphasage} ($-90^\circ$ au pôle dominant, plus au-delà). Ce déphasage s'ajoute à celui du filtre lui-même. Pour un filtre à fort $Q$, la boucle de rétroaction est ``tendue'' et le déphasage supplémentaire de l'AOP peut faire basculer le circuit dans l'\textbf{instabilité} (oscillation).
 
 \begin{formule}
-\textbf{Vérification :} simuler le gain de boucle $T(s)$ du circuit complet (filtre + AOP) et vérifier que la marge de phase est $> 45°$ à la fréquence où $|T| = 1$. Si la marge est insuffisante : choisir un AOP plus rapide, réduire $Q$, ou passer à une topologie moins sensible (state-variable, biquad).
+\textbf{Vérification :} simuler le gain de boucle $T(s)$ du circuit complet (filtre + AOP) et vérifier que la marge de phase est $> 45^\circ$ à la fréquence où $|T| = 1$. Si la marge est insuffisante : choisir un AOP plus rapide, réduire $Q$, ou passer à une topologie moins sensible (state-variable, biquad).
 \end{formule}
 
 \begin{intuition}
@@ -13080,7 +13094,7 @@ $f_0$ réelle $= 1/(2\pi\times3300\times\sqrt{3{,}3\times1{,}8}\times10^{-9}) = 
 
 \textbf{AOP :} $GBW > 10\times0{,}707\times20000 = \SI{141}{kHz}$. N'importe quel AOP audio convient (NE5532 : $GBW = \SI{10}{MHz}$, $e_n = \SI{5}{nV/\sqrt{Hz}}$, $SR = \SI{9}{V/\micro s}$).
 
-$SR$~: $V_{\text{in,max}} = \SI{2}{V_{rms}} \approx \SI{2.83}{V_{crête}}$. $SR_{\min} = 2\pi\times20000\times0{,}707\times2{,}83 = \SI{0.25}{V/\micro s}$. NE5532~: $SR = \SI{9}{V/\micro s}$ $\Rightarrow$ marge de $\times 36$. OK.
+$SR$~: $V_{\text{in,max}} = \SI{2}{V_{\text{rms}}} \approx \SI{2.83}{V_{\text{crête}}}$. $SR_{\min} = 2\pi\times20000\times0{,}707\times2{,}83 = \SI{0.25}{V/\micro s}$. NE5532~: $SR = \SI{9}{V/\micro s}$ $\Rightarrow$ marge de $\times 36$. OK.
 
 \textbf{Bruit :} $e_n = \SI{5}{nV/\sqrt{Hz}}$. Bruit dans la bande audio ($\SI{20}{kHz}$) : $5\times\sqrt{20000} = \SI{0.71}{\micro V_{rms}}$. Bruit de $R$ : $\sqrt{4kT\times3300\times20000} = \SI{1.04}{\micro V_{rms}}$. Bruit total : $\sqrt{0{,}71^2+1{,}04^2} = \SI{1.26}{\micro V_{rms}}$. Bien en dessous du seuil de $\SI{10}{\micro V_{rms}}$.
 \end{pratique}
@@ -13218,10 +13232,10 @@ Le bruit en $1/f$ (chapitre~\ref{ch:mosfet}, section bruit MOSFET) devient la so
 
 Les condensateurs céramiques classiques varient fortement avec la tension appliquée et la température~:
 \begin{itemize}[nosep]
-\item \textbf{X7R}~: capacité $\pm 15\%$ en température ($-55°$C à $+125°$C), et \textbf{$-20\%$ à $-40\%$} sous tension DC nominale. Un condensateur X7R de \SI{10}{nF}/\SI{10}{V} peut ne valoir que \SI{6}{nF} sous \SI{8}{V}. Si ce condensateur fixe $f_0$, la fréquence de coupure dérive de $+30\%$.
+\item \textbf{X7R}~: capacité $\pm 15\%$ en température ($-55^\circ$C à $+125^\circ$C), et \textbf{$-20\%$ à $-40\%$} sous tension DC nominale. Un condensateur X7R de \SI{10}{nF}/\SI{10}{V} peut ne valoir que \SI{6}{nF} sous \SI{8}{V}. Si ce condensateur fixe $f_0$, la fréquence de coupure dérive de $+30\%$.
 \item \textbf{Y5V}~: variations encore plus extrêmes ($-80\%$ possibles). \textbf{Inutilisable} en filtrage.
-\item \textbf{C0G/NP0}~: variation $< \pm\SI{30}{ppm/°C}$, aucune dépendance en tension. C'est le \textbf{seul choix acceptable} pour fixer $f_0$ et $Q$ dans un filtre de précision.
-\item \textbf{Film polypropylène (PP)}~: excellente stabilité ($< \SI{200}{ppm/°C}$, pas de dépendance en tension), mais encombrant. Préféré en audio et en instrumentation quand l'espace le permet.
+\item \textbf{C0G/NP0}~: variation $< \pm\SI{30}{ppm\per\degreeCelsius}$, aucune dépendance en tension. C'est le \textbf{seul choix acceptable} pour fixer $f_0$ et $Q$ dans un filtre de précision.
+\item \textbf{Film polypropylène (PP)}~: excellente stabilité ($< \SI{200}{ppm\per\degreeCelsius}$, pas de dépendance en tension), mais encombrant. Préféré en audio et en instrumentation quand l'espace le permet.
 \end{itemize}
 
 \textbf{3. Tolérances et reproductibilité.}
@@ -13238,7 +13252,7 @@ Une résistance à $5\%$ peut transformer un filtre Butterworth ($Q = 0{,}707$, 
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{p{3.5cm}p{9.5cm}}
 \toprule
-Pôle & = stockage d'énergie ($RC$), atténue $-\SI{20}{dB/déc}$, déphasage $-90°$ \\
+Pôle & = stockage d'énergie ($RC$), atténue $-\SI{20}{\decibel\per\dec}$, déphasage $-90^\circ$ \\
 Zéro & = chemin qui annule ou compense à une fréquence \\
 $Q$ & = énergie stockée / énergie dissipée. $Q \uparrow$ = pic + dépassement \\
 Ce chapitre & Complète le Ch.~\ref{ch:filtres} : conception réelle, limites AOP, tolérances \\
@@ -13743,7 +13757,7 @@ Trois causes font dériver la fréquence d'un oscillateur.
 \begin{itemize}[nosep]
 \item La \textbf{température}~: les composants passifs dérivent, le quartz
 lui-même a une courbe caractéristique. Un quartz de montre est taillé pour
-présenter un extremum autour de \SI{25}{°C}~; un TCXO\index{TCXO} compense
+présenter un extremum autour de \SI{25}{\degreeCelsius}~; un TCXO\index{TCXO} compense
 activement, un OCXO\index{OCXO} maintient le quartz dans une enceinte
 thermostatée.
 \item Le \textbf{vieillissement}~: quelques ppm par an, dus à la relaxation
@@ -15533,7 +15547,7 @@ $t_j$ & \SI{15}{ps} & Jitter PLL (crête-à-crête) \\
 \end{tabular}
 \end{center}
 
-La marge de $\SI{15}{ps}$ ($3\%$) est typique des circuits modernes. Il suffit d'une variation de procédé de fabrication, d'une hausse de température de $\SI{30}{°C}$, ou d'une tension $V_{DD}$ $5\%$ trop basse pour la consommer entièrement.
+La marge de $\SI{15}{ps}$ ($3\%$) est typique des circuits modernes. Il suffit d'une variation de procédé de fabrication, d'une hausse de température de $\SI{30}{\degreeCelsius}$, ou d'une tension $V_{DD}$ $5\%$ trop basse pour la consommer entièrement.
 \end{pratique}
 
 \begin{figure}[h]
@@ -15596,9 +15610,9 @@ L'analyse de timing statique (\textit{Static Timing Analysis}, STA) est la méth
 \toprule
 \textbf{Coin} & \textbf{Procédé} & \textbf{$V_{DD}$} & \textbf{$T$} \\
 \midrule
-Slow-Slow (SS) & Lent & $V_{DD} - 10\%$ & $+125°$C \\
-Typical-Typical (TT) & Typique & $V_{DD}$ nominal & $+25°$C \\
-Fast-Fast (FF) & Rapide & $V_{DD} + 10\%$ & $-40°$C \\
+Slow-Slow (SS) & Lent & $V_{DD} - 10\%$ & $+125^\circ$C \\
+Typical-Typical (TT) & Typique & $V_{DD}$ nominal & $+25^\circ$C \\
+Fast-Fast (FF) & Rapide & $V_{DD} + 10\%$ & $-40^\circ$C \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -16731,7 +16745,7 @@ Un \textbf{sense amplifier} (rétroaction positive, essentiellement un verrou SR
 
 Le condensateur de stockage fuit à cause~:
 \begin{itemize}[nosep]
-\item Du courant de fuite sub-seuil ($I_{\text{off}}$) du transistor d'accès (chapitre~\ref{ch:mosfet}~: $I_{\text{off}}$ double tous les $\SI{10}{°C}$).
+\item Du courant de fuite sub-seuil ($I_{\text{off}}$) du transistor d'accès (chapitre~\ref{ch:mosfet}~: $I_{\text{off}}$ double tous les $\SI{10}{\degreeCelsius}$).
 \item Du courant de fuite de la jonction PN (diode parasite du transistor d'accès).
 \item Du courant de fuite à travers le diélectrique du condensateur.
 \end{itemize}
@@ -16866,7 +16880,7 @@ Standard JEDEC DDR4~: toutes les lignes doivent être rafraîchies toutes les $\
 
 Chaque REF occupe la puce pendant $t_{\text{RFC}} \approx \SI{260}{ns}$ (DDR4 \SI{8}{Gb}). Bande passante perdue~: $t_{\text{RFC}}/t_{\text{REFI}} = 260/7812 \approx 3{,}3\,\%$. (Le calcul naïf ``une ligne $=$ un REF'' donnerait $53\,\%$ --- c'est le regroupement qui rend le refresh viable.)
 
-À haute température ($> \SI{85}{°C}$), les fuites augmentent exponentiellement et la fréquence de refresh doit \textbf{doubler} (passage à $\SI{32}{ms}$). Les serveurs en datacenter doivent prévoir cette pénalité.
+À haute température ($> \SI{85}{\degreeCelsius}$), les fuites augmentent exponentiellement et la fréquence de refresh doit \textbf{doubler} (passage à $\SI{32}{ms}$). Les serveurs en datacenter doivent prévoir cette pénalité.
 \end{attention}
 
 \subsection{Flash multi-niveaux~: stocker plus de bits par cellule}
@@ -16951,8 +16965,8 @@ Le \textbf{sense amplifier} est le circuit critique qui fait le lien entre la ph
 
 \begin{formule}
 \begin{itemize}[nosep]
-\item \textbf{Température $\uparrow$ $\Rightarrow$ fuites $\uparrow$} (DRAM, SRAM). $I_{\text{off}} \times 2$ par $\SI{10}{°C}$ (chapitre~\ref{ch:mosfet}). En DRAM~: refresh plus fréquent. En SRAM~: SNM dégradée.
-\item \textbf{Rétention Flash $\downarrow$ avec $T$}~: les électrons piégés dans la grille flottante ont plus d'énergie thermique et s'échappent plus facilement. La rétention passe de $> 10$ ans à \SI{25}{°C} à $\sim 1$ an à \SI{85}{°C} pour une Flash usée.
+\item \textbf{Température $\uparrow$ $\Rightarrow$ fuites $\uparrow$} (DRAM, SRAM). $I_{\text{off}} \times 2$ par $\SI{10}{\degreeCelsius}$ (chapitre~\ref{ch:mosfet}). En DRAM~: refresh plus fréquent. En SRAM~: SNM dégradée.
+\item \textbf{Rétention Flash $\downarrow$ avec $T$}~: les électrons piégés dans la grille flottante ont plus d'énergie thermique et s'échappent plus facilement. La rétention passe de $> 10$ ans à \SI{25}{\degreeCelsius} à $\sim 1$ an à \SI{85}{\degreeCelsius} pour une Flash usée.
 \item \textbf{Soft errors} (erreurs logiques transitoires)~: un rayon cosmique ou une particule alpha (émise par les matériaux d'encapsulation) peut déposer assez de charge pour retourner un bit en SRAM ou DRAM. Taux~: $\sim 1$ bit flip par $\SI{1}{Gb}$ par $\SI{1000}{h}$ au niveau de la mer. Les serveurs utilisent des DRAM ECC (1 bit de parité pour 8 bits de données) pour détecter et corriger ces erreurs.
 \end{itemize}
 \end{formule}
@@ -16999,18 +17013,18 @@ Si le bruit est gaussien ($\sigma = \SI{100}{mV}$)~: la marge est $267/(2\sigma)
 
 \subsection*{Niveau ingénieur}
 
-\textbf{Exercice 24.5 ---} Une puce DRAM DDR4 de $\SI{8}{Gb}$ a $2^{17}$ lignes. Le refresh doit couvrir toutes les lignes en $\SI{64}{ms}$ ($\SI{32}{ms}$ au-dessus de $\SI{85}{°C}$).
+\textbf{Exercice 24.5 ---} Une puce DRAM DDR4 de $\SI{8}{Gb}$ a $2^{17}$ lignes. Le refresh doit couvrir toutes les lignes en $\SI{64}{ms}$ ($\SI{32}{ms}$ au-dessus de $\SI{85}{\degreeCelsius}$).
 
-(a) Combien de commandes de refresh par seconde à $\SI{25}{°C}$~? À $\SI{85}{°C}$~?
+(a) Combien de commandes de refresh par seconde à $\SI{25}{\degreeCelsius}$~? À $\SI{85}{\degreeCelsius}$~?
 
 (b) Si chaque refresh prend $t_{\text{RFC}} = \SI{260}{ns}$, quel pourcentage de la bande passante est perdu à chaque température~?
 
 \begin{pratique}
 \textbf{Solution :}
 
-(a) Une commande REF rafraîchit un \textbf{lot} de lignes, pas une seule~: le standard impose $8192$ commandes par fenêtre de $\SI{64}{ms}$, chacune traitant $2^{17}/8192 = 16$ lignes. Cadence~: $8192/0{,}064 = 128\,000$ REF/s à $\SI{25}{°C}$ ($t_{\text{REFI}} = \SI{7.8}{\micro s}$)~; fenêtre $\SI{32}{ms}$ à $\SI{85}{°C}$ $\Rightarrow$ $256\,000$ REF/s ($t_{\text{REFI}} = \SI{3.9}{\micro s}$).
+(a) Une commande REF rafraîchit un \textbf{lot} de lignes, pas une seule~: le standard impose $8192$ commandes par fenêtre de $\SI{64}{ms}$, chacune traitant $2^{17}/8192 = 16$ lignes. Cadence~: $8192/0{,}064 = 128\,000$ REF/s à $\SI{25}{\degreeCelsius}$ ($t_{\text{REFI}} = \SI{7.8}{\micro s}$)~; fenêtre $\SI{32}{ms}$ à $\SI{85}{\degreeCelsius}$ $\Rightarrow$ $256\,000$ REF/s ($t_{\text{REFI}} = \SI{3.9}{\micro s}$).
 
-(b) Bande passante perdue $= t_{\text{RFC}}/t_{\text{REFI}}$~: $260/7812 \approx 3{,}3\,\%$ à $\SI{25}{°C}$, $260/3906 \approx 6{,}7\,\%$ à $\SI{85}{°C}$. (Le calcul naïf ``une ligne $=$ une commande de $\SI{260}{ns}$'' donnerait $53\,\%$~: c'est le regroupement de $16$ lignes par REF qui rend la DRAM viable.) En datacenter chaud, la pénalité double --- un vrai poste de performance pour le HPC.
+(b) Bande passante perdue $= t_{\text{RFC}}/t_{\text{REFI}}$~: $260/7812 \approx 3{,}3\,\%$ à $\SI{25}{\degreeCelsius}$, $260/3906 \approx 6{,}7\,\%$ à $\SI{85}{\degreeCelsius}$. (Le calcul naïf ``une ligne $=$ une commande de $\SI{260}{ns}$'' donnerait $53\,\%$~: c'est le regroupement de $16$ lignes par REF qui rend la DRAM viable.) En datacenter chaud, la pénalité double --- un vrai poste de performance pour le HPC.
 \end{pratique}
 
 \textbf{Exercice 24.6 ---} Une cellule SRAM en technologie $\SI{7}{nm}$ a une SNM de $\SI{120}{mV}$ nominale. La variabilité de $V_{th}$ ($\sigma_{V_{th}} = \SI{30}{mV}$) réduit la SNM. Si la SNM suit une distribution gaussienne centrée sur $\SI{120}{mV}$ avec $\sigma = \SI{40}{mV}$ :
@@ -17074,7 +17088,7 @@ Fil rouge & Toute mémoire numérique repose sur un phénomène analogique \\
 \toprule
 SNM (SRAM) & Marge de stabilité du verrou. Dégradée par $V_{DD}\downarrow$, $T\uparrow$, variabilité \\
 Timing DRAM & $t_{\text{accès}} \approx t_{RP}+t_{RCD}+t_{CAS} \approx \SI{30}{ns}$--$\SI{50}{ns}$ ($100\times$ plus lent que SRAM) \\
-Refresh & Toutes les $\SI{64}{ms}$, $\times 2$ au-dessus de $\SI{85}{°C}$. Consomme $3$--$7\%$ de BP \\
+Refresh & Toutes les $\SI{64}{ms}$, $\times 2$ au-dessus de $\SI{85}{\degreeCelsius}$. Consomme $3$--$7\%$ de BP \\
 Flash MLC/TLC/QLC & Plus de bits/cellule $=$ marge $\downarrow$ $=$ ECC obligatoire \\
 \bottomrule
 \end{tabular}
@@ -18594,7 +18608,7 @@ Pour une sinusoïde de fréquence $f_{\text{in}}$, la pente maximale est $2\pi f
 
 \textbf{6. Vérifier le budget de bruit total} : $\sigma_{\text{total}}^2 = \sigma_q^2 + \sigma_{\text{thermique}}^2 + \sigma_{\text{jitter}}^2 + \sigma_{\text{ampli}}^2$. Chaque contribution doit rester sous le bruit de quantification, sinon les bits supplémentaires sont gaspillés.
 
-\textbf{7. Soigner la référence de tension :} la précision absolue de l'ADC est celle de sa référence. Une référence à $\SI{50}{ppm/°C}$ sur $\SI{50}{°C}$ dérive de $2500$ ppm $=$ 0,25\% $\Rightarrow$ limite à $\sim 8{,}6$ bits absolus, même avec un ADC 16 bits.
+\textbf{7. Soigner la référence de tension :} la précision absolue de l'ADC est celle de sa référence. Une référence à $\SI{50}{ppm\per\degreeCelsius}$ sur $\SI{50}{\degreeCelsius}$ dérive de $2500$ ppm $=$ 0,25\% $\Rightarrow$ limite à $\sim 8{,}6$ bits absolus, même avec un ADC 16 bits.
 \end{pratique}
 
 \begin{intuition}
@@ -19311,7 +19325,7 @@ L' = kL, \quad V'_{DD} = kV_{DD}, \quad C' = kC
 \begin{attention}
 \textbf{La fin de Dennard ($\sim$ 2005) :} $V_{DD}$ ne peut plus descendre. Deux raisons physiques :
 \begin{itemize}[nosep]
-\item $V_{th}$ ne peut pas suivre~: la pente sous-seuil est bornée à $\SI{60}{mV/décade}$ à \SI{300}{K} (limite thermodynamique $kT/q\cdot\ln 10$, chapitre~\ref{ch:mosfet}). Baisser $V_{th}$ fait exploser $I_{\text{off}}$ \textbf{exponentiellement}.
+\item $V_{th}$ ne peut pas suivre~: la pente sous-seuil est bornée à $\SI{60}{\milli\volt\per\decade}$ à \SI{300}{K} (limite thermodynamique $kT/q\cdot\ln 10$, chapitre~\ref{ch:mosfet}). Baisser $V_{th}$ fait exploser $I_{\text{off}}$ \textbf{exponentiellement}.
 \item Sans baisser $V_{th}$, baisser $V_{DD}$ écrase la marge $V_{DD} - V_{th}$~: les portes deviennent lentes.
 \end{itemize}
 $V_{DD}$ est bloquée autour de $0{,}7$--$\SI{1}{V}$ depuis 15 ans. Conséquence~: chaque génération ajoute des transistors \textbf{sans} réduire leur énergie d'autant $\Rightarrow$ la densité de puissance \textit{augmente}. C'est la cause directe du plafonnement des fréquences à $\sim\SI{4}{}$--$\SI{5}{GHz}$ (le Pentium 4 en a été la première victime, chapitre~\ref{ch:architecture}) et de la bascule vers le multicœur.
@@ -19329,7 +19343,7 @@ $V_{DD}$ est bloquée autour de $0{,}7$--$\SI{1}{V}$ depuis 15 ans. Conséquence
   \draw[very thick, blue!70!black] (3.36,3.5) .. controls (4.3,4.25) and (5.1,4.35) .. (6.2,4.42);
   \draw[dashed, gray!60] (3.36,0) -- (3.36,3.5);
   \node[below, font=\footnotesize] at (3.36,-0.05) {$V_{th}$};
-  \node[rotate=46, font=\footnotesize, blue!70!black] at (1.35,1.95) {\SI{60}{mV/déc}};
+  \node[rotate=46, font=\footnotesize, blue!70!black] at (1.35,1.95) {\SI{60}{\milli\volt\per\dec}};
   \draw[dashed, gray!60] (0,0) -- (-0.8,0);
   \node[left, font=\footnotesize, red!60!black] at (-0.85,0) {$I_{\text{off}}$};
   \node[right, font=\footnotesize] at (6.25,4.42) {$I_{\text{on}}$};
@@ -19360,7 +19374,7 @@ P_{\text{totale}} = \underbrace{\alpha C V_{DD}^2 f}_{\text{dynamique}} + \under
 \]
 \begin{itemize}[nosep]
 \item La dynamique se paie \textbf{à chaque commutation}~: elle plafonne $f$.
-\item La statique se paie \textbf{en permanence}~: avec $N \sim 10^{10}$ transistors et $I_{\text{off}}$ qui double tous les \SI{10}{°C} (chapitre~\ref{ch:mosfet}), elle représente $20$--$40\%$ du total en technologie avancée --- et elle s'auto-amplifie avec la température (fuite $\to$ chaleur $\to$ fuite).
+\item La statique se paie \textbf{en permanence}~: avec $N \sim 10^{10}$ transistors et $I_{\text{off}}$ qui double tous les \SI{10}{\degreeCelsius} (chapitre~\ref{ch:mosfet}), elle représente $20$--$40\%$ du total en technologie avancée --- et elle s'auto-amplifie avec la température (fuite $\to$ chaleur $\to$ fuite).
 \end{itemize}
 \end{formule}
 
@@ -19457,7 +19471,7 @@ Un circuit neuf et le même circuit après 10 ans ne sont pas identiques. Quatre
 \[
 \boxed{MTTF = \frac{A}{J^n}\, e^{E_a/kT}} \qquad (n \approx 2, \; E_a \approx \SI{0.8}{eV} \text{ pour le cuivre})
 \]
-Doubler la densité de courant $J$ divise la durée de vie par $\sim 4$~; $+\SI{25}{°C}$ la divise par $\sim 5$. C'est \textbf{la} contrainte de dimensionnement des rails d'alimentation ($J_{\max} \sim \SI{1}{}$--$\SI{2}{MA/cm^2}$).
+Doubler la densité de courant $J$ divise la durée de vie par $\sim 4$~; $+\SI{25}{\degreeCelsius}$ la divise par $\sim 5$. C'est \textbf{la} contrainte de dimensionnement des rails d'alimentation ($J_{\max} \sim \SI{1}{}$--$\SI{2}{MA/cm^2}$).
 
 \textbf{4. TDDB (Time-Dependent Dielectric Breakdown)} : l'oxyde de grille ($\sim\SI{1}{nm}$ !) accumule des défauts sous champ jusqu'au claquage --- le même mécanisme qui use la Flash (chapitre~\ref{ch:memoire}), à l'œuvre partout.
 \end{formule}
@@ -19536,12 +19550,12 @@ La physique du transistor (chapitre~\ref{ch:mosfet}~: $I_{\text{off}}$, $\SI{60}
 Marge $100/2{,}9 \approx 34\sigma$~: confortable. Mais à $C = \SI{0.01}{fF}$~: $\sigma = \SI{20}{mV}$, soit $5\sigma$ seulement --- des erreurs apparaissent ($P(|x|>5\sigma) \approx 6\times10^{-7}$ par échantillonnage\index{échantillonnage}, soit quelques \textbf{centaines par seconde} à \SI{1}{GHz}).
 \end{pratique}
 
-\textbf{Exercice 29.2 ---} Un SoC a $N = 5\times10^9$ transistors avec $I_{\text{off}} = \SI{10}{nA}$ chacun à \SI{25}{°C}, sous $V_{DD} = \SI{0.8}{V}$. Calculez la puissance statique à \SI{25}{°C} et à \SI{85}{°C} ($I_{\text{off}}$ double tous les \SI{10}{°C}).
+\textbf{Exercice 29.2 ---} Un SoC a $N = 5\times10^9$ transistors avec $I_{\text{off}} = \SI{10}{nA}$ chacun à \SI{25}{\degreeCelsius}, sous $V_{DD} = \SI{0.8}{V}$. Calculez la puissance statique à \SI{25}{\degreeCelsius} et à \SI{85}{\degreeCelsius} ($I_{\text{off}}$ double tous les \SI{10}{\degreeCelsius}).
 
 \begin{pratique}
 \textbf{Solution :} $P_{25} = 0{,}8 \times 10\times10^{-9} \times 5\times10^9 = \SI{40}{W}$\ldots c'est déjà énorme : en pratique seuls $\sim 10\%$ des transistors sont non power-gatés, soit $\sim\SI{4}{W}$.
 
-À \SI{85}{°C}~: $(85-25)/10 = 6$ doublements $\Rightarrow \times 64$. $P_{85} = 4 \times 64 = \SI{256}{W}$ \textbf{si rien n'est coupé} --- emballement garanti. D'où~: power gating agressif + plafonnement thermique (throttling). La fuite est bien le problème n°1 du nanométrique.
+À \SI{85}{\degreeCelsius}~: $(85-25)/10 = 6$ doublements $\Rightarrow \times 64$. $P_{85} = 4 \times 64 = \SI{256}{W}$ \textbf{si rien n'est coupé} --- emballement garanti. D'où~: power gating agressif + plafonnement thermique (throttling). La fuite est bien le problème n°1 du nanométrique.
 \end{pratique}
 
 \subsection*{Niveau intermédiaire}
@@ -19596,9 +19610,9 @@ Si $J \times 2$~: $MTTF \propto 1/J^2 \Rightarrow \div 4$. Un simple via sous-di
 
 \subsection*{Questions de compréhension}
 
-\textbf{Q1.} Pourquoi la pente sous-seuil de \SI{60}{mV/décade} est-elle une limite \textit{thermodynamique} et non technologique ? Qu'est-ce que cela implique pour $V_{DD}$ ?
+\textbf{Q1.} Pourquoi la pente sous-seuil de \SI{60}{\milli\volt\per\decade} est-elle une limite \textit{thermodynamique} et non technologique ? Qu'est-ce que cela implique pour $V_{DD}$ ?
 
-\textit{Réponse : sous le seuil, le courant est une émission thermoïonique : la fraction de porteurs capables de franchir la barrière suit la statistique de Boltzmann, $e^{qV/kT}$. La pente vaut donc au mieux $kT/q \cdot \ln 10 = \SI{60}{mV/déc}$ à \SI{300}{K} --- c'est une propriété de la distribution d'énergie des électrons, pas du matériau ni de la géométrie (les non-idéalités ne peuvent que l'empirer). Conséquence : garder $6$--$7$ décades entre $I_{\text{on}}$ et $I_{\text{off}}$ fige $V_{th}$, donc $V_{DD}$, vers $0{,}7$--$\SI{1}{V}$. Pour passer dessous, il faut changer la physique d'injection (tunnel FET) ou la température.}
+\textit{Réponse : sous le seuil, le courant est une émission thermoïonique : la fraction de porteurs capables de franchir la barrière suit la statistique de Boltzmann, $e^{qV/kT}$. La pente vaut donc au mieux $kT/q \cdot \ln 10 = \SI{60}{\milli\volt\per\dec}$ à \SI{300}{K} --- c'est une propriété de la distribution d'énergie des électrons, pas du matériau ni de la géométrie (les non-idéalités ne peuvent que l'empirer). Conséquence : garder $6$--$7$ décades entre $I_{\text{on}}$ et $I_{\text{off}}$ fige $V_{th}$, donc $V_{DD}$, vers $0{,}7$--$\SI{1}{V}$. Pour passer dessous, il faut changer la physique d'injection (tunnel FET) ou la température.}
 
 \textbf{Q2.} La loi de Pelgrom dit $\sigma_{V_{th}} \propto 1/\sqrt{WL}$. Pourquoi les circuits analogiques de précision (chapitres~\ref{ch:aop}, \ref{ch:conversion}) utilisent-ils de \textit{gros} transistors alors que le numérique les veut minuscules ?
 
@@ -19606,7 +19620,7 @@ Si $J \times 2$~: $MTTF \propto 1/J^2 \Rightarrow \div 4$. Un simple via sous-di
 
 \textbf{Q3.} L'électromigration suit $MTTF \propto J^{-2}e^{E_a/kT}$. Pourquoi un même design est-il fiable en datacenter climatisé et risqué sous le capot d'une voiture ?
 
-\textit{Réponse : l'exponentielle d'Arrhenius est impitoyable : entre une jonction à \SI{55}{°C} (datacenter) et \SI{125}{°C} (sous capot), $e^{E_a/k\,(1/T_1 - 1/T_2)} \approx 150$ pour $E_a = \SI{0.8}{eV}$ --- deux ordres de grandeur de durée de vie envolés, avant même de compter le cyclage thermique (dilatations répétées) et la dérive NBTI accélérée. Un design taillé pour 10 ans au frais n'en promet plus que quelques mois au chaud : l'automobile impose ses propres règles de courant, ses n\oe uds matures et ses qualifications (AEC-Q100) --- la fiabilité est une fonction exponentielle de la température, pas un attribut du schéma.}
+\textit{Réponse : l'exponentielle d'Arrhenius est impitoyable : entre une jonction à \SI{55}{\degreeCelsius} (datacenter) et \SI{125}{\degreeCelsius} (sous capot), $e^{E_a/k\,(1/T_1 - 1/T_2)} \approx 150$ pour $E_a = \SI{0.8}{eV}$ --- deux ordres de grandeur de durée de vie envolés, avant même de compter le cyclage thermique (dilatations répétées) et la dérive NBTI accélérée. Un design taillé pour 10 ans au frais n'en promet plus que quelques mois au chaud : l'automobile impose ses propres règles de courant, ses n\oe uds matures et ses qualifications (AEC-Q100) --- la fiabilité est une fonction exponentielle de la température, pas un attribut du schéma.}
 
 \textbf{Q4.} Le dark silicon était une mauvaise nouvelle ; il a pourtant accéléré l'innovation architecturale. Expliquez le mécanisme économique et physique de ce paradoxe.
 
@@ -19623,7 +19637,7 @@ Si $J \times 2$~: $MTTF \propto 1/J^2 \Rightarrow \div 4$. Un simple via sous-di
 \toprule
 Fin de Dennard & $V_{DD}$ bloquée ($\SI{60}{mV/dec}$ thermodynamique) $\Rightarrow$ densité de puissance $\uparrow$ \\
 Plancher (bruit) & $\sigma_V = \sqrt{kT/C}$ : les petits nœuds deviennent bruyants \\
-Plafond (thermique) & $P = \alpha CV^2f + VI_{\text{off}}N$ ; la fuite double tous les \SI{10}{°C} \\
+Plafond (thermique) & $P = \alpha CV^2f + VI_{\text{off}}N$ ; la fuite double tous les \SI{10}{\degreeCelsius} \\
 Conséquence & Fréquences plafonnées $\sim\SI{4}{GHz}$, bascule au multicœur ($\sim$ 2005) \\
 \bottomrule
 \end{tabular}
@@ -19805,7 +19819,7 @@ V_{\text{out}} = V_Z - V_{BE} \qquad Z_{\text{out}} \approx \frac{r_Z + 1/g_m}{\
 \]
 Le suiveur fait ce qu'il sait faire~: recopier une tension de référence en divisant l'impédance par $\beta+1$. La Zener ne fournit plus que le courant de base ($I_L/\beta$)~: le rendement de la \textit{référence} ne pèse plus.
 
-\textbf{Il manque encore la précision} : $V_{BE}$ dérive ($\SI{-2}{mV/°C}$, chapitre~\ref{ch:bjt}) et rien ne compense. La solution : fermer une vraie boucle --- section suivante.
+\textbf{Il manque encore la précision} : $V_{BE}$ dérive ($\SI{-2}{\milli\volt\per\degreeCelsius}$, chapitre~\ref{ch:bjt}) et rien ne compense. La solution : fermer une vraie boucle --- section suivante.
 \end{formule}
 
 \begin{figure}[h]
@@ -20015,7 +20029,7 @@ Typiquement \SI{60}{}--\SI{80}{dB} en DC\ldots mais le PSRR \textbf{s'effondre a
   \draw[dashed, gray!50] (4.7,0) -- (4.7,1.08);
   \node[red!70!black, font=\scriptsize, above right] at (4.45,1.35) {\SI{18}{dB} à \SI{500}{kHz} (exo 30.5)};
 \end{tikzpicture}
-\caption{Le PSRR d'un LDO en fréquence : excellent tant que la boucle a du gain, il s'effondre en $-\SI{20}{dB/déc}$ au-delà du pôle dominant, touche son minimum vers le croisement, puis remonte un peu grâce au condensateur de sortie. Le plancher tombe précisément dans la plage des fréquences de découpage --- d'où le filtre LC \textit{avant} le LDO.}
+\caption{Le PSRR d'un LDO en fréquence : excellent tant que la boucle a du gain, il s'effondre en $-\SI{20}{\decibel\per\dec}$ au-delà du pôle dominant, touche son minimum vers le croisement, puis remonte un peu grâce au condensateur de sortie. Le plancher tombe précisément dans la plage des fréquences de découpage --- d'où le filtre LC \textit{avant} le LDO.}
 \end{figure}
 
 % ============================================================================
@@ -20052,7 +20066,7 @@ avec les résistances thermiques jonction-boîtier, boîtier-radiateur, radiateu
 \begin{enumerate}[nosep]
 \item $P = (V_{\text{in,max}} - V_{\text{out}})\, I_{L,\max}$ (le pire cas, pas le nominal).
 \item $R_{th,JA}$ requis $= (T_{J,\max,\text{datasheet}} - \text{marge} - T_{A,\max})/P$.
-\item Comparer au $R_{th,JA}$ du boîtier nu (SOT-223~: $\sim\SI{60}{°C/W}$~; TO-220 vertical~: $\sim\SI{65}{°C/W}$)~; sinon~: plan de cuivre (le PCB \textit{est} le radiateur des CMS) ou radiateur.
+\item Comparer au $R_{th,JA}$ du boîtier nu (SOT-223~: $\sim\SI{60}{\degreeCelsius\per\watt}$~; TO-220 vertical~: $\sim\SI{65}{\degreeCelsius\per\watt}$)~; sinon~: plan de cuivre (le PCB \textit{est} le radiateur des CMS) ou radiateur.
 \end{enumerate}
 Un régulateur qui ``coupe au bout de 5 minutes'' est presque toujours un calcul thermique sauté~: la protection thermique (ci-dessous) fait son travail.
 \end{formule}
@@ -20064,7 +20078,7 @@ Un régulateur qui ``coupe au bout de 5 minutes'' est presque toujours un calcul
 
 \textbf{2. Foldback :} en court-circuit franc, la limitation simple impose $P = V_{\text{in}}\cdot I_{\max}$ au ballast (le pire cas thermique !). Le \textit{foldback} \textbf{réduit} $I_{\max}$ quand $V_{\text{out}}$ chute : courant de court-circuit $\ll$ courant nominal. Revers : démarrage difficile sur charges à fort appel (capacitives, lampes).
 
-\textbf{3. Protection thermique :} à $T_J \approx \SI{150}{}$--$\SI{165}{°C}$, coupure avec hystérésis. C'est elle qui fait ``clignoter'' une alim sous-dimensionnée.
+\textbf{3. Protection thermique :} à $T_J \approx \SI{150}{}$--$\SI{165}{\degreeCelsius}$, coupure avec hystérésis. C'est elle qui fait ``clignoter'' une alim sous-dimensionnée.
 
 Ces trois protections, inventées pour le \textit{µA723} puis généralisées (78xx), sont la raison pour laquelle un régulateur intégré survit à presque tout --- contrairement au montage discret du début de chapitre.
 \end{formule}
@@ -20119,14 +20133,14 @@ Pire cas pour la Zener~: $V_{\text{in,max}} = \SI{10}{V}$, $I_L = 0$~: $I_Z = (1
 
 \subsection*{Niveau intermédiaire}
 
-\textbf{Exercice 30.3 ---} Un 7805 (TO-220, $R_{th,JA} = \SI{65}{°C/W}$ sans radiateur, $T_{J,\max} = \SI{125}{°C}$) alimente \SI{5}{V}/\SI{0.8}{A} depuis \SI{12}{V}, $T_A = \SI{40}{°C}$. (a) Dissipation et $T_J$ sans radiateur ? (b) $R_{th,SA}$ du radiateur requis ($R_{th,JC} = \SI{5}{°C/W}$, $R_{th,CS} = \SI{1}{°C/W}$, marge \SI{20}{°C}) ? (c) Rendement ?
+\textbf{Exercice 30.3 ---} Un 7805 (TO-220, $R_{th,JA} = \SI{65}{\degreeCelsius\per\watt}$ sans radiateur, $T_{J,\max} = \SI{125}{\degreeCelsius}$) alimente \SI{5}{V}/\SI{0.8}{A} depuis \SI{12}{V}, $T_A = \SI{40}{\degreeCelsius}$. (a) Dissipation et $T_J$ sans radiateur ? (b) $R_{th,SA}$ du radiateur requis ($R_{th,JC} = \SI{5}{\degreeCelsius\per\watt}$, $R_{th,CS} = \SI{1}{\degreeCelsius\per\watt}$, marge \SI{20}{\degreeCelsius}) ? (c) Rendement ?
 
 \begin{pratique}
 \textbf{Solution :}
 
-(a) $P = (12-5)\times0{,}8 = \SI{5.6}{W}$. $T_J = 40 + 5{,}6\times65 = \SI{404}{°C}$~: destruction (en réalité, coupure thermique immédiate).
+(a) $P = (12-5)\times0{,}8 = \SI{5.6}{W}$. $T_J = 40 + 5{,}6\times65 = \SI{404}{\degreeCelsius}$~: destruction (en réalité, coupure thermique immédiate).
 
-(b) $R_{th,JA}$ requis $= (125-20-40)/5{,}6 = \SI{11.6}{°C/W}$. $R_{th,SA} \leq 11{,}6 - 5 - 1 = \SI{5.6}{°C/W}$~: un vrai radiateur (type \SI{5}{°C/W}, $\sim$ 50 mm).
+(b) $R_{th,JA}$ requis $= (125-20-40)/5{,}6 = \SI{11.6}{\degreeCelsius\per\watt}$. $R_{th,SA} \leq 11{,}6 - 5 - 1 = \SI{5.6}{\degreeCelsius\per\watt}$~: un vrai radiateur (type \SI{5}{\degreeCelsius\per\watt}, $\sim$ 50 mm).
 
 (c) $\eta = 5/12 = 42\%$~: 5,6 W chauffent pour 4 W utiles. Candidat évident pour un buck\index{convertisseur!buck} (chapitre~\ref{ch:decoupage}) --- ou pour la cascade buck + LDO.
 \end{pratique}
@@ -20181,7 +20195,7 @@ Pire cas pour la Zener~: $V_{\text{in,max}} = \SI{10}{V}$, $I_L = 0$~: $I_Z = (1
 
 \textbf{Q3.} Le PSRR d'un LDO suit son gain de boucle. Déduisez-en pourquoi il est excellent en DC et médiocre à \SI{1}{MHz}, et ce que cela implique pour le post-filtrage d'un découpage.
 
-\textit{Réponse : au premier ordre, $PSRR \approx 1 + A\beta$ : en DC, le gain d'erreur énorme donne 60--80 dB ; puis $A\beta$ chute en $-\SI{20}{dB/déc}$ après le pôle dominant (chapitre~\ref{ch:aop}), et le PSRR le suit fidèlement. Au-delà du croisement, il ne reste que le diviseur passif ballast/condensateur : 10--20 dB. Or les fréquences de découpage (100 kHz--2 MHz) tombent exactement dans ce creux : le LDO est le plus sourd là où le buck crie. D'où la règle : filtre LC ou perle + condensateur \textit{en amont} du LDO --- et un LDO choisi pour son PSRR haute fréquence, pas pour son chiffre DC de datasheet.}
+\textit{Réponse : au premier ordre, $PSRR \approx 1 + A\beta$ : en DC, le gain d'erreur énorme donne 60--80 dB ; puis $A\beta$ chute en $-\SI{20}{\decibel\per\dec}$ après le pôle dominant (chapitre~\ref{ch:aop}), et le PSRR le suit fidèlement. Au-delà du croisement, il ne reste que le diviseur passif ballast/condensateur : 10--20 dB. Or les fréquences de découpage (100 kHz--2 MHz) tombent exactement dans ce creux : le LDO est le plus sourd là où le buck crie. D'où la règle : filtre LC ou perle + condensateur \textit{en amont} du LDO --- et un LDO choisi pour son PSRR haute fréquence, pas pour son chiffre DC de datasheet.}
 
 \textbf{Q4.} Un régulateur en limitation de courant devient une source de courant constant. Que devient alors la puissance dissipée dans le ballast en court-circuit, et pourquoi le foldback existe-t-il ?
 
@@ -20939,7 +20953,7 @@ V_{\text{out}} \to \text{diviseur} &\to \text{comparaison à } V_{\text{ref}} \t
 &\to D \to \text{étage de puissance} \to V_{\text{out}}
 \end{aligned}
 \]
-Comme toute boucle, elle obéit au critère de stabilité du chapitre~\ref{ch:aop}~: au gain unité ($|T| = 1$), la \textbf{marge de phase\index{marge de phase}} doit rester suffisante ($> \SI{45}{°}$, idéalement $\SI{60}{°}$). Si la phase atteint $-\SI{180}{°}$ avant le croisement, le convertisseur \textbf{oscille} --- ondulation\index{ondulation} incontrôlée, bruit, voire destruction.
+Comme toute boucle, elle obéit au critère de stabilité du chapitre~\ref{ch:aop}~: au gain unité ($|T| = 1$), la \textbf{marge de phase\index{marge de phase}} doit rester suffisante ($> \SI{45}{\degree}$, idéalement $\SI{60}{\degree}$). Si la phase atteint $-\SI{180}{\degree}$ avant le croisement, le convertisseur \textbf{oscille} --- ondulation\index{ondulation} incontrôlée, bruit, voire destruction.
 
 \textbf{La spécificité du découpage :} l'étage de puissance contient un \textbf{filtre LC} en sortie (la bobine + le condensateur), qui introduit des pôles et des zéros bien plus problématiques que le pôle unique d'un AOP.
 \end{formule}
@@ -20951,9 +20965,9 @@ Le filtre de sortie L-C d'un buck\index{convertisseur!buck} crée une paire de p
 \[
 f_{LC} = \frac{1}{2\pi\sqrt{LC}}
 \]
-\textbf{Le danger :} un pôle double fait chuter la phase de \textbf{$-\SI{180}{°}$} d'un coup au voisinage de $f_{LC}$ --- exactement la limite de stabilité. Sans correction, la boucle est au mieux marginalement stable (elle ``sonne'').
+\textbf{Le danger :} un pôle double fait chuter la phase de \textbf{$-\SI{180}{\degree}$} d'un coup au voisinage de $f_{LC}$ --- exactement la limite de stabilité. Sans correction, la boucle est au mieux marginalement stable (elle ``sonne'').
 
-\textbf{Le sauveur (parfois) : le zéro ESR.} La résistance série du condensateur de sortie crée un zéro $f_z = 1/(2\pi\,ESR\,C)$ qui \textbf{remonte} la phase de $+\SI{90}{°}$. C'est le même mécanisme qu'au chapitre~\ref{ch:ldo} pour le LDO. D'où un constat important : \textbf{l'ESR du condensateur de sortie influence la stabilité, pas seulement l'ondulation}. Les condensateurs céramiques à très faible ESR, excellents pour l'ondulation, peuvent \textit{déstabiliser} une boucle conçue pour un zéro ESR --- il faut alors compenser activement.
+\textbf{Le sauveur (parfois) : le zéro ESR.} La résistance série du condensateur de sortie crée un zéro $f_z = 1/(2\pi\,ESR\,C)$ qui \textbf{remonte} la phase de $+\SI{90}{\degree}$. C'est le même mécanisme qu'au chapitre~\ref{ch:ldo} pour le LDO. D'où un constat important : \textbf{l'ESR du condensateur de sortie influence la stabilité, pas seulement l'ondulation}. Les condensateurs céramiques à très faible ESR, excellents pour l'ondulation, peuvent \textit{déstabiliser} une boucle conçue pour un zéro ESR --- il faut alors compenser activement.
 \end{formule}
 
 \begin{figure}[h]
@@ -20980,7 +20994,7 @@ f_{LC} = \frac{1}{2\pi\sqrt{LC}}
   \draw[dashed, red!60] (2.55,-7.7) -- (2.55,-0.15);
   \node[font=\scriptsize, red!70!black, below] at (2.9,-7.75) {marge $\approx$ 0° sans compensation !};
 \end{tikzpicture}
-\caption{La boucle du buck de l'exercice 32.3, non compensée : le pôle double LC à \SI{8.9}{kHz} plie le gain à $-\SI{40}{dB/déc}$ et précipite la phase à $-\SI{180}{°}$ ; le zéro ESR à \SI{113}{kHz} arrive trop tard --- au croisement ($\sim\SI{50}{kHz}$), la marge est nulle. C'est exactement le trou que les deux zéros d'un compensateur Type III viennent combler.}
+\caption{La boucle du buck de l'exercice 32.3, non compensée : le pôle double LC à \SI{8.9}{kHz} plie le gain à $-\SI{40}{\decibel\per\dec}$ et précipite la phase à $-\SI{180}{\degree}$ ; le zéro ESR à \SI{113}{kHz} arrive trop tard --- au croisement ($\sim\SI{50}{kHz}$), la marge est nulle. C'est exactement le trou que les deux zéros d'un compensateur Type III viennent combler.}
 \end{figure}
 
 \begin{attention}
@@ -20994,9 +21008,9 @@ Conséquence~: le RHPZ ajoute du retard de phase \textbf{sans} apport de gain fa
 \begin{formule}
 Le rôle du \textbf{correcteur} (compensateur) est de modeler le gain et la phase de la boucle pour garantir la marge de phase au croisement. Trois types standard~:
 \begin{itemize}[nosep]
-\item \textbf{Type I} (intégrateur pur)~: annule l'erreur statique, mais $-\SI{90}{°}$ de phase partout. Réservé aux systèmes à pôle unique (certains convertisseurs en mode courant).
-\item \textbf{Type II} (un zéro + un pôle)~: ajoute un \textbf{remontée de phase} (\textit{phase boost}) jusqu'à $\sim\SI{90}{°}$ pour compenser un pôle dominant. Standard du mode courant.
-\item \textbf{Type III} (deux zéros + deux pôles)~: remontée jusqu'à $\sim\SI{180}{°}$, nécessaire pour compenser le \textbf{pôle double LC} d'un convertisseur en mode tension. C'est le compensateur le plus courant des bucks en mode tension.
+\item \textbf{Type I} (intégrateur pur)~: annule l'erreur statique, mais $-\SI{90}{\degree}$ de phase partout. Réservé aux systèmes à pôle unique (certains convertisseurs en mode courant).
+\item \textbf{Type II} (un zéro + un pôle)~: ajoute un \textbf{remontée de phase} (\textit{phase boost}) jusqu'à $\sim\SI{90}{\degree}$ pour compenser un pôle dominant. Standard du mode courant.
+\item \textbf{Type III} (deux zéros + deux pôles)~: remontée jusqu'à $\sim\SI{180}{\degree}$, nécessaire pour compenser le \textbf{pôle double LC} d'un convertisseur en mode tension. C'est le compensateur le plus courant des bucks en mode tension.
 \end{itemize}
 On place les zéros du compensateur \textit{avant} ou \textit{autour} de $f_{LC}$ pour ``rattraper'' la phase que le pôle double fait chuter --- exactement la logique des marges du chapitre~\ref{ch:aop}.
 \end{formule}
@@ -21046,9 +21060,9 @@ En continu~: $dB/dt = 0 \Rightarrow$ aucune tension induite au secondaire. Pire,
 
 (a) $f_{LC} = \frac{1}{2\pi\sqrt{LC}} = \frac{1}{2\pi\sqrt{6{,}8\times10^{-6}\times47\times10^{-6}}} = \frac{1}{2\pi\sqrt{3{,}2\times10^{-10}}} = \frac{1}{2\pi\times1{,}79\times10^{-5}} = \SI{8.9}{kHz}$.
 
-(b) Le pôle double LC à \SI{8.9}{kHz} fait chuter la phase de $-\SI{180}{°}$~: c'est exactement le seuil d'instabilité. La boucle doit être compensée (Type III en mode tension) pour restaurer la marge de phase au croisement.
+(b) Le pôle double LC à \SI{8.9}{kHz} fait chuter la phase de $-\SI{180}{\degree}$~: c'est exactement le seuil d'instabilité. La boucle doit être compensée (Type III en mode tension) pour restaurer la marge de phase au croisement.
 
-(c) $f_z = \frac{1}{2\pi\,ESR\,C} = \frac{1}{2\pi\times0{,}030\times47\times10^{-6}} = \SI{113}{kHz}$. Ce zéro remonte la phase de $+\SI{90}{°}$ au-dessus de \SI{113}{kHz} --- utile s'il tombe avant le croisement.
+(c) $f_z = \frac{1}{2\pi\,ESR\,C} = \frac{1}{2\pi\times0{,}030\times47\times10^{-6}} = \SI{113}{kHz}$. Ce zéro remonte la phase de $+\SI{90}{\degree}$ au-dessus de \SI{113}{kHz} --- utile s'il tombe avant le croisement.
 \end{pratique}
 
 \textbf{Exercice 32.4 ---} Un noyau dissipe \SI{0.5}{W} de pertes fer à \SI{100}{kHz} pour une induction $B_{\max}$ donnée. En supposant les pertes dominées par les courants de Foucault, estimez les pertes fer à \SI{300}{kHz} (même $B_{\max}$). Conclusion ?
@@ -21095,9 +21109,9 @@ Multiplier la fréquence par 3 multiplie les pertes Foucault par 9~: c'est inten
 
 \textit{Réponse : les pertes fer (et de commutation) sont un \textbf{impôt fixe}, payé à chaque cycle que le convertisseur tourne, charge ou pas ; les pertes cuivre sont un coût variable en $I^2$. Le rendement $\eta = P/(P + P_{\text{fixe}} + kI^2)$ s'effondre donc à faible charge (l'impôt écrase le peu de puissance utile), plafonne au milieu, et redescend à forte charge (le $I^2$ croît plus vite que le $I$ du numérateur). Le maximum tombe où pertes fixes et variables s'égalent --- et c'est pour raboter la gauche de la cloche que les contrôleurs passent en pulse-skipping en veille : moins de cycles, moins d'impôt.}
 
-\textbf{Q3.} Le pôle double LC d'un buck fait chuter la phase de $-\SI{180}{°}$. Reliez ce fait au critère de marge de phase du chapitre~\ref{ch:aop} et expliquez pourquoi un compensateur Type III est nécessaire en mode tension.
+\textbf{Q3.} Le pôle double LC d'un buck fait chuter la phase de $-\SI{180}{\degree}$. Reliez ce fait au critère de marge de phase du chapitre~\ref{ch:aop} et expliquez pourquoi un compensateur Type III est nécessaire en mode tension.
 
-\textit{Réponse : le critère du chapitre~\ref{ch:aop} exige $> \SI{45}{°}$ de marge au croisement ; or dès que le croisement dépasse $f_{LC}$, le pôle double a déjà consommé les $\SI{180}{°}$ --- marge nulle, la boucle sonne ou oscille. Il faut donc \textit{réinjecter} de la phase avant le croisement : les deux zéros du Type III, placés autour de $f_{LC}$, remontent jusqu'à $+\SI{180}{°}$ --- deux zéros contre deux pôles, l'arithmétique est structurelle. Ses deux pôles hautes fréquences referment ensuite le gain pour atténuer bruit et résidus de découpage. En mode courant, le pôle double étant cassé, un simple Type II suffit --- c'est tout l'argument de l'exercice 32.6.}
+\textit{Réponse : le critère du chapitre~\ref{ch:aop} exige $> \SI{45}{\degree}$ de marge au croisement ; or dès que le croisement dépasse $f_{LC}$, le pôle double a déjà consommé les $\SI{180}{\degree}$ --- marge nulle, la boucle sonne ou oscille. Il faut donc \textit{réinjecter} de la phase avant le croisement : les deux zéros du Type III, placés autour de $f_{LC}$, remontent jusqu'à $+\SI{180}{\degree}$ --- deux zéros contre deux pôles, l'arithmétique est structurelle. Ses deux pôles hautes fréquences referment ensuite le gain pour atténuer bruit et résidus de découpage. En mode courant, le pôle double étant cassé, un simple Type II suffit --- c'est tout l'argument de l'exercice 32.6.}
 
 \textbf{Q4.} Le zéro du demi-plan droit d'un boost limite la bande passante de régulation. Expliquez physiquement pourquoi augmenter $D$ fait \textit{d'abord} baisser la sortie, et pourquoi ce zéro ne se compense pas.
 
@@ -21140,8 +21154,8 @@ Flyback & Bobine couplée à stockage : isolé, abaisse ou élève. Standard des
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{p{3.5cm}p{9.5cm}}
 \toprule
-Boucle asservie & Le convertisseur est une contre-réaction : marge de phase $> \SI{45}{°}$ (Ch.~\ref{ch:aop}) \\
-Pôle LC & $f_{LC} = 1/(2\pi\sqrt{LC})$ : chute de $-\SI{180}{°}$. Zéro ESR remonte de $+\SI{90}{°}$ \\
+Boucle asservie & Le convertisseur est une contre-réaction : marge de phase $> \SI{45}{\degree}$ (Ch.~\ref{ch:aop}) \\
+Pôle LC & $f_{LC} = 1/(2\pi\sqrt{LC})$ : chute de $-\SI{180}{\degree}$. Zéro ESR remonte de $+\SI{90}{\degree}$ \\
 RHPZ & Boost/flyback : zéro demi-plan droit $\Rightarrow$ $f_c < f_{\text{RHPZ}}/5$, réponse lente \\
 Compensation & Type II (mode courant) ou Type III (mode tension, pôle double LC) \\
 Mode courant & Casse le pôle LC $\Rightarrow$ Type II suffit. Standard moderne, slope comp. si $D > 0{,}5$ \\
@@ -21202,7 +21216,7 @@ Boucle ouverte contre boucle fermée\index{boucle fermée}, les éléments d'un 
 \begin{formule}
 \textbf{Commande en boucle ouverte :} on applique une commande \textit{calculée} sans vérifier le résultat. Un radiateur réglé sur ``puissance 1500 W'' chauffe sans savoir la température de la pièce. Simple, mais aveugle : toute perturbation (fenêtre ouverte) ou erreur de modèle fausse le résultat, sans correction.
 
-\textbf{Commande en boucle fermée (asservissement) :} on \textbf{mesure} la grandeur de sortie, on la \textbf{compare} à la consigne, et on corrige selon l'\textbf{écart}. Un thermostat mesure la température, la compare à \SI{20}{°C}, et ajuste le chauffage en continu. Le système \textit{réagit} aux perturbations et aux erreurs --- c'est ce qui fait toute la différence.
+\textbf{Commande en boucle fermée (asservissement) :} on \textbf{mesure} la grandeur de sortie, on la \textbf{compare} à la consigne, et on corrige selon l'\textbf{écart}. Un thermostat mesure la température, la compare à \SI{20}{\degreeCelsius}, et ajuste le chauffage en continu. Le système \textit{réagit} aux perturbations et aux erreurs --- c'est ce qui fait toute la différence.
 \end{formule}
 
 \subsection{Les éléments d'une boucle d'asservissement}\index{éléments d'une boucle d'asservissement}
@@ -21472,7 +21486,7 @@ Le résultat dépend du nombre d'\textbf{intégrateurs} (pôles en $s = 0$) dans
 \begin{itemize}[nosep]
 \item Gain trop \textbf{faible}~: stable mais lent et imprécis (erreur statique élevée).
 \item Gain trop \textbf{fort}~: rapide mais oscillant, dépassement excessif, voire instabilité.
-\item \textbf{Le bon réglage}~: assez de gain pour la précision et la rapidité, pas trop pour garder une marge de stabilité ($\zeta \approx 0{,}7$, marge de phase\index{marge de phase} $\sim\SI{60}{°}$).
+\item \textbf{Le bon réglage}~: assez de gain pour la précision et la rapidité, pas trop pour garder une marge de stabilité ($\zeta \approx 0{,}7$, marge de phase\index{marge de phase} $\sim\SI{60}{\degree}$).
 \end{itemize}
 Concevoir un correcteur (chapitre~\ref{ch:pid}), c'est naviguer ce compromis~: placer les pôles de la boucle fermée là où l'on veut, entre rapidité et amortissement.
 \end{attention}
@@ -21563,7 +21577,7 @@ $\zeta = \frac{10}{2}\sqrt{10^{-6}/10^{-3}} = 5\times\sqrt{10^{-3}} = 5\times0{,
 
 (b) Avec un intégrateur (classe 1)~: $\varepsilon_\infty = 0$. L'intégrateur accumule l'erreur tant qu'elle est non nulle, jusqu'à l'annuler complètement. C'est la précision parfaite en régime établi.
 
-(c) L'intégrateur ajoute $-\SI{90}{°}$ de phase à toutes les fréquences $\Rightarrow$ il \textbf{dégrade la marge de phase} et tend à déstabiliser. Tout l'art du correcteur PID (chapitre~\ref{ch:pid}) est de bénéficier de la précision du ``I'' sans perdre la stabilité --- d'où l'ajout du terme dérivé ``D''.
+(c) L'intégrateur ajoute $-\SI{90}{\degree}$ de phase à toutes les fréquences $\Rightarrow$ il \textbf{dégrade la marge de phase} et tend à déstabiliser. Tout l'art du correcteur PID (chapitre~\ref{ch:pid}) est de bénéficier de la précision du ``I'' sans perdre la stabilité --- d'où l'ajout du terme dérivé ``D''.
 \end{pratique}
 
 \textbf{Exercice 33.6 ---} Un régulateur de tension (chapitre~\ref{ch:ldo}) a un gain de boucle de \SI{80}{dB} en continu, tombant à \SI{20}{dB} à \SI{100}{kHz}. (a) De combien atténue-t-il une perturbation d'alimentation à \SI{100}{Hz} (gain de boucle $\approx \SI{80}{dB}$) ? (b) À \SI{100}{kHz} ? (c) Reliez au PSRR du chapitre~\ref{ch:ldo}.
@@ -21594,7 +21608,7 @@ $\zeta = \frac{10}{2}\sqrt{10^{-6}/10^{-3}} = 5\times\sqrt{10^{-3}} = 5\times0{,
 
 \textbf{Q4.} Un intégrateur annule l'erreur statique mais dégrade la stabilité. Expliquez ce double effet et pourquoi il motive l'ajout d'un terme dérivé dans un PID.
 
-\textit{Réponse : l'intégrateur est un gain infini en continu (un pôle en $s = 0$) : aucune erreur statique ne peut subsister, car tant qu'elle existe, la commande continue de croître --- l'équilibre n'est possible qu'à erreur nulle. Mais ce même pôle inflige $-\SI{90}{°}$ de phase à \textbf{toutes} les fréquences, y compris au croisement, où chaque degré de marge compte : la boucle devient nerveuse, puis oscillante. Le terme dérivé fait l'inverse : une avance de phase (jusqu'à $+\SI{90}{°}$) précisément dans la zone du croisement, qui rend la marge que l'intégrateur a prise. Le PID est cet attelage : le I paie la précision, le D paie la stabilité, le P dose l'ensemble --- chapitre~\ref{ch:pid}.}
+\textit{Réponse : l'intégrateur est un gain infini en continu (un pôle en $s = 0$) : aucune erreur statique ne peut subsister, car tant qu'elle existe, la commande continue de croître --- l'équilibre n'est possible qu'à erreur nulle. Mais ce même pôle inflige $-\SI{90}{\degree}$ de phase à \textbf{toutes} les fréquences, y compris au croisement, où chaque degré de marge compte : la boucle devient nerveuse, puis oscillante. Le terme dérivé fait l'inverse : une avance de phase (jusqu'à $+\SI{90}{\degree}$) précisément dans la zone du croisement, qui rend la marge que l'intégrateur a prise. Le PID est cet attelage : le I paie la précision, le D paie la stabilité, le P dose l'ensemble --- chapitre~\ref{ch:pid}.}
 
 % === RÉSUMÉ ===
 \section*{Résumé du chapitre}
@@ -21707,7 +21721,7 @@ Tant qu'il reste une erreur, l'intégrale \textbf{s'accumule} et pousse la comma
 \textbf{Effets de $K_i$ :}
 \begin{itemize}[nosep]
 \item \textbf{Erreur statique nulle}~: l'avantage décisif. La sortie atteint exactement la consigne en régime établi.
-\item \textbf{Mais $-\SI{90}{°}$ de phase} ajoutés (un intégrateur, chapitre~\ref{ch:laplace})~: l'intégrale \textbf{dégrade la stabilité} et ralentit la réponse. Trop d'intégrale $\Rightarrow$ oscillations lentes.
+\item \textbf{Mais $-\SI{90}{\degree}$ de phase} ajoutés (un intégrateur, chapitre~\ref{ch:laplace})~: l'intégrale \textbf{dégrade la stabilité} et ralentit la réponse. Trop d'intégrale $\Rightarrow$ oscillations lentes.
 \end{itemize}
 \end{formule}
 
@@ -21722,7 +21736,7 @@ Si l'erreur diminue vite, le dérivé \textbf{freine} la commande à l'avance, a
 
 \textbf{Effets de $K_d$ :}
 \begin{itemize}[nosep]
-\item $+\SI{90}{°}$ de phase (un dérivateur)~: il \textbf{améliore la marge de phase\index{marge de phase}} et la stabilité, autorise un $K_p$ plus élevé donc une réponse plus rapide sans osciller.
+\item $+\SI{90}{\degree}$ de phase (un dérivateur)~: il \textbf{améliore la marge de phase\index{marge de phase}} et la stabilité, autorise un $K_p$ plus élevé donc une réponse plus rapide sans osciller.
 \item \textbf{Mais il amplifie le bruit}~: dériver un signal bruité (chapitre~\ref{ch:aop}, $e_n$) accentue les hautes fréquences. Un dérivé pur est inutilisable tel quel --- il faut le filtrer (niveau ingénieur).
 \end{itemize}
 \end{formule}
@@ -21735,8 +21749,8 @@ Si l'erreur diminue vite, le dérivé \textbf{freine} la commande à l'avance, a
 \textbf{L'essentiel :}
 \begin{enumerate}[nosep]
 \item \textbf{P} ($K_p\varepsilon$)~: rapidité, réduit l'erreur sans l'annuler. Trop $\Rightarrow$ oscille.
-\item \textbf{I} ($K_i\!\int\!\varepsilon$)~: annule l'erreur statique, mais $-\SI{90}{°}$ de phase $\Rightarrow$ déstabilise.
-\item \textbf{D} ($K_d\,d\varepsilon/dt$)~: anticipe, amortit, $+\SI{90}{°}$ de phase, mais amplifie le bruit.
+\item \textbf{I} ($K_i\!\int\!\varepsilon$)~: annule l'erreur statique, mais $-\SI{90}{\degree}$ de phase $\Rightarrow$ déstabilise.
+\item \textbf{D} ($K_d\,d\varepsilon/dt$)~: anticipe, amortit, $+\SI{90}{\degree}$ de phase, mais amplifie le bruit.
 \item Le PID combine les trois~: précision (I) + rapidité (P) + amortissement (D).
 \end{enumerate}
 \end{retenir}
@@ -21795,7 +21809,7 @@ Le PID apporte un \textbf{pôle à l'origine} (l'intégrateur, en $s = 0$) et \t
 \textbf{Lecture du graphe :}
 \begin{itemize}[nosep]
 \item \textbf{P seul} (bleu)~: réponse rapide mais se stabilise \textit{sous} la consigne --- l'erreur statique résiduelle.
-\item \textbf{PI} (orange)~: l'intégrale efface l'erreur (la courbe rejoint la consigne) mais au prix d'un \textbf{dépassement} et d'oscillations (le $-\SI{90}{°}$ de l'intégrateur).
+\item \textbf{PI} (orange)~: l'intégrale efface l'erreur (la courbe rejoint la consigne) mais au prix d'un \textbf{dépassement} et d'oscillations (le $-\SI{90}{\degree}$ de l'intégrateur).
 \item \textbf{PID} (rouge)~: le terme dérivé amortit $\Rightarrow$ montée rapide, dépassement réduit, et toujours erreur nulle. Le meilleur compromis.
 \end{itemize}
 \end{formule}
@@ -21910,22 +21924,22 @@ La même information se lit sur le diagramme de Bode\index{Bode, diagramme de} d
   % Phase
   \draw[->] (-0.2,-6.6) -- (3.3,-6.6) node[right, font=\scriptsize]{$f$ (log)};
   \node[left, font=\scriptsize] at (-0.75,-5.2) {$\varphi$};
-  \foreach \y/\l in {-4.58/{$-90°$}, -5.66/{$-180°$}}{\node[left, font=\tiny] at (-0.06,\y) {\l};}
+  \foreach \y/\l in {-4.58/{$-90^\circ$}, -5.66/{$-180^\circ$}}{\node[left, font=\tiny] at (-0.06,\y) {\l};}
   \foreach \x/\l in {0/{100}, 1.5/{1 k}, 3/{10 k}}{\draw (\x,-6.54) -- (\x,-6.66); \node[below, font=\tiny] at (\x,-6.7) {\l};}
   \draw[dashed, gray!55] (-0.05,-5.66) -- (3.15,-5.66);
   \draw[very thick, orange!80!black] (0,-4.58) -- (1.2,-4.9) -- (1.8,-5.66) -- (3,-6.14);
   \filldraw[orange!80!black] (1.5,-5.28) circle (1.4pt);
   \draw[{Stealth[length=1.7mm]}-{Stealth[length=1.7mm]}, red!75!black, thick] (1.5,-5.66) -- (1.5,-5.28);
-  \node[right, font=\scriptsize, red!75!black] at (1.56,-5.47) {MP $= \SI{50}{°}$};
+  \node[right, font=\scriptsize, red!75!black] at (1.56,-5.47) {MP $= \SI{50}{\degree}$};
 \end{tikzpicture}
-\caption{Les deux marges, avec les chiffres de l'exercice 34.5 : au croisement de gain ($f_c = \SI{1}{kHz}$, $|T| = \SI{0}{dB}$), la phase est à $-\SI{130}{°}$ --- il reste \SI{50}{°} avant $-\SI{180}{°}$. À $f_{-180} = \SI{1.6}{kHz}$, le gain est déjà descendu à $-\SI{8}{dB}$ --- \SI{8}{dB} de réserve. Le $K_{\text{crit}}$ du lieu des racines est exactement le réglage qui annule ces deux marges ensemble.}
+\caption{Les deux marges, avec les chiffres de l'exercice 34.5 : au croisement de gain ($f_c = \SI{1}{kHz}$, $|T| = \SI{0}{dB}$), la phase est à $-\SI{130}{\degree}$ --- il reste \SI{50}{\degree} avant $-\SI{180}{\degree}$. À $f_{-180} = \SI{1.6}{kHz}$, le gain est déjà descendu à $-\SI{8}{dB}$ --- \SI{8}{dB} de réserve. Le $K_{\text{crit}}$ du lieu des racines est exactement le réglage qui annule ces deux marges ensemble.}
 \end{figure}
 
 \begin{formule}
 \textbf{Les deux marges (chapitre~\ref{ch:aop}, formalisées) :}
 \begin{itemize}[nosep]
-\item \textbf{Marge de phase}~: à la fréquence de croisement $f_c$ (où $|T| = \SI{0}{dB}$), c'est l'écart entre la phase réelle et $-\SI{180}{°}$. Une marge $> \SI{45}{°}$ (idéalement \SI{60}{°}) garantit un amortissement correct ($\zeta \approx 0{,}7$, chapitre~\ref{ch:laplace}).
-\item \textbf{Marge de gain\index{marge de gain}}~: à la fréquence où la phase atteint $-\SI{180}{°}$, c'est l'écart en dB entre $|T|$ et \SI{0}{dB}. Une marge $> \SI{6}{dB}$ ($\times 2$) donne une réserve avant l'instabilité.
+\item \textbf{Marge de phase}~: à la fréquence de croisement $f_c$ (où $|T| = \SI{0}{dB}$), c'est l'écart entre la phase réelle et $-\SI{180}{\degree}$. Une marge $> \SI{45}{\degree}$ (idéalement \SI{60}{\degree}) garantit un amortissement correct ($\zeta \approx 0{,}7$, chapitre~\ref{ch:laplace}).
+\item \textbf{Marge de gain\index{marge de gain}}~: à la fréquence où la phase atteint $-\SI{180}{\degree}$, c'est l'écart en dB entre $|T|$ et \SI{0}{dB}. Une marge $> \SI{6}{dB}$ ($\times 2$) donne une réserve avant l'instabilité.
 \end{itemize}
 \textbf{Le lien entre les deux représentations :} le point où le lieu des racines croise l'axe imaginaire (gain critique) correspond exactement au point où la marge de gain s'annule sur Bode. Ce sont deux vues du \textbf{même} critère de stabilité --- lieu des racines (côté pôles, plan $s$) et marges (côté fréquence, Bode).
 \end{formule}
@@ -21953,7 +21967,7 @@ Le filtre coupe le gain au-delà de $1/\tau_f$~: on garde l'anticipation utile, 
 \begin{enumerate}[nosep]
 \item \textbf{Modéliser le procédé} $G(s)$~: identifier ses pôles (constantes de temps, résonances --- chapitre~\ref{ch:laplace}). Un moteur, un convertisseur (chapitre~\ref{ch:magnetiques}), un étage thermique.
 \item \textbf{Choisir la structure du correcteur}~: P, PI, ou PID selon le besoin de précision et d'amortissement.
-\item \textbf{Régler les gains}~: placer les pôles de la boucle fermée (lieu des racines) ou viser une marge de phase de \SI{60}{°} sur Bode (chapitre~\ref{ch:aop}).
+\item \textbf{Régler les gains}~: placer les pôles de la boucle fermée (lieu des racines) ou viser une marge de phase de \SI{60}{\degree} sur Bode (chapitre~\ref{ch:aop}).
 \item \textbf{Ajouter les protections réelles}~: filtrage du dérivé, anti-windup, et vérifier en numérique.
 \item \textbf{Valider}~: réponse indicielle (dépassement, temps de réponse), rejet de perturbation (chapitre~\ref{ch:laplace}), robustesse aux variations du procédé.
 \end{enumerate}
@@ -22014,16 +22028,16 @@ D'où $K_i = K_p/T_i = 4{,}8/0{,}25 = \SI{19.2}{s^{-1}}$ et $K_d = K_p T_d = 4{,
 
 \subsection*{Niveau ingénieur}
 
-\textbf{Exercice 34.5 ---} Sur le diagramme de Bode du gain de boucle, on lit à la fréquence de croisement $f_c = \SI{1}{kHz}$ une phase de $-\SI{130}{°}$, et à la fréquence où la phase vaut $-\SI{180}{°}$ un gain de $-\SI{8}{dB}$. (a) Quelles sont les marges de phase et de gain ? (b) Le système est-il stable et bien amorti ? (c) Que faire pour augmenter la marge de phase sans changer $f_c$ ?
+\textbf{Exercice 34.5 ---} Sur le diagramme de Bode du gain de boucle, on lit à la fréquence de croisement $f_c = \SI{1}{kHz}$ une phase de $-\SI{130}{\degree}$, et à la fréquence où la phase vaut $-\SI{180}{\degree}$ un gain de $-\SI{8}{dB}$. (a) Quelles sont les marges de phase et de gain ? (b) Le système est-il stable et bien amorti ? (c) Que faire pour augmenter la marge de phase sans changer $f_c$ ?
 
 \begin{pratique}
 \textbf{Solution :}
 
-(a) Marge de phase $= -130 - (-180) = \SI{50}{°}$. Marge de gain $= 0 - (-8) = \SI{8}{dB}$.
+(a) Marge de phase $= -130 - (-180) = \SI{50}{\degree}$. Marge de gain $= 0 - (-8) = \SI{8}{dB}$.
 
-(b) MP $= \SI{50}{°}$ ($> \SI{45}{°}$) et MG $= \SI{8}{dB}$ ($> \SI{6}{dB}$)~: \textbf{stable et correctement amorti} ($\zeta \approx 0{,}5$--$0{,}6$, léger dépassement acceptable).
+(b) MP $= \SI{50}{\degree}$ ($> \SI{45}{\degree}$) et MG $= \SI{8}{dB}$ ($> \SI{6}{dB}$)~: \textbf{stable et correctement amorti} ($\zeta \approx 0{,}5$--$0{,}6$, léger dépassement acceptable).
 
-(c) Ajouter de l'\textbf{avance de phase} autour de $f_c$~: un terme dérivé (ou un correcteur à avance de phase) apporte du $+$phase au croisement, remontant la marge vers \SI{60}{°} sans déplacer $f_c$. C'est exactement le rôle stabilisateur du ``D''.
+(c) Ajouter de l'\textbf{avance de phase} autour de $f_c$~: un terme dérivé (ou un correcteur à avance de phase) apporte du $+$phase au croisement, remontant la marge vers \SI{60}{\degree} sans déplacer $f_c$. C'est exactement le rôle stabilisateur du ``D''.
 \end{pratique}
 
 \textbf{Exercice 34.6 ---} Un PID numérique pilote un procédé dont le temps de réponse est \SI{200}{ms}. (a) Quelle période d'échantillonnage $T_e$ choisir (règle $T_e < T_{\text{rép}}/10$) ? (b) L'actionneur sature régulièrement : quel problème cela pose-t-il à l'intégrateur et quelle est la parade ? (c) Pourquoi faut-il filtrer le terme dérivé ?
@@ -22046,11 +22060,11 @@ D'où $K_i = K_p/T_i = 4{,}8/0{,}25 = \SI{19.2}{s^{-1}}$ et $K_d = K_p T_d = 4{,
 
 \textbf{Q2.} L'action intégrale annule l'erreur mais dégrade la stabilité ; l'action dérivée stabilise mais amplifie le bruit. Expliquez pourquoi le PID complet est un compromis entre ces effets opposés.
 
-\textit{Réponse : chaque action a son royaume fréquentiel. Le I offre un gain infini en continu (précision parfaite) mais paie $-\SI{90}{°}$ partout ; le D offre $+\SI{90}{°}$ (marge rendue) mais un gain qui croît avec $f$ (bruit amplifié, actionneur maltraité). Le PID les attelle en répartissant les fréquences : le I règne en basse fréquence, là où sa phase ne coûte rien ; le D n'intervient qu'autour du croisement, là où sa phase vaut de l'or, et se fait couper au-delà (dérivé filtré) avant que son gain ne devienne nuisible. Les deux zéros de $C(s)$ sont précisément les curseurs de cette répartition --- régler un PID, c'est découper le spectre en zones d'influence.}
+\textit{Réponse : chaque action a son royaume fréquentiel. Le I offre un gain infini en continu (précision parfaite) mais paie $-\SI{90}{\degree}$ partout ; le D offre $+\SI{90}{\degree}$ (marge rendue) mais un gain qui croît avec $f$ (bruit amplifié, actionneur maltraité). Le PID les attelle en répartissant les fréquences : le I règne en basse fréquence, là où sa phase ne coûte rien ; le D n'intervient qu'autour du croisement, là où sa phase vaut de l'or, et se fait couper au-delà (dérivé filtré) avant que son gain ne devienne nuisible. Les deux zéros de $C(s)$ sont précisément les curseurs de cette répartition --- régler un PID, c'est découper le spectre en zones d'influence.}
 
 \textbf{Q3.} Sur le lieu des racines, que signifie le passage d'une branche dans le demi-plan droit ? Reliez ce moment au gain critique et à la marge de gain nulle sur Bode.
 
-\textit{Réponse : une branche qui franchit l'axe imaginaire, c'est un pôle de la boucle \textbf{fermée} dont la partie réelle devient positive : un mode $e^{\sigma t}$ qui se met à croître --- l'instabilité du chapitre~\ref{ch:laplace}, atteinte pour $K = K_{\text{crit}}$. Sur Bode, c'est très exactement l'instant où $|T| = \SI{0}{dB}$ à la fréquence où $\varphi = -\SI{180}{°}$ : marge de gain nulle (et marge de phase nulle --- les deux s'annulent ensemble). Lieu des racines et marges sont deux projections du même critère, l'une côté pôles, l'autre côté fréquence. Ziegler-Nichols exploite ce point à l'état pur : $K_u$ \textit{est} $K_{\text{crit}}$, et $T_u = 2\pi/\omega_{\text{crit}}$ la période de l'oscillation entretenue sur l'axe.}
+\textit{Réponse : une branche qui franchit l'axe imaginaire, c'est un pôle de la boucle \textbf{fermée} dont la partie réelle devient positive : un mode $e^{\sigma t}$ qui se met à croître --- l'instabilité du chapitre~\ref{ch:laplace}, atteinte pour $K = K_{\text{crit}}$. Sur Bode, c'est très exactement l'instant où $|T| = \SI{0}{dB}$ à la fréquence où $\varphi = -\SI{180}{\degree}$ : marge de gain nulle (et marge de phase nulle --- les deux s'annulent ensemble). Lieu des racines et marges sont deux projections du même critère, l'une côté pôles, l'autre côté fréquence. Ziegler-Nichols exploite ce point à l'état pur : $K_u$ \textit{est} $K_{\text{crit}}$, et $T_u = 2\pi/\omega_{\text{crit}}$ la période de l'oscillation entretenue sur l'axe.}
 
 \textbf{Q4.} Pourquoi le windup de l'intégrateur n'apparaît-il qu'en présence de saturation de l'actionneur, et pourquoi provoque-t-il un dépassement au retour en zone linéaire ?
 
@@ -22066,8 +22080,8 @@ D'où $K_i = K_p/T_i = 4{,}8/0{,}25 = \SI{19.2}{s^{-1}}$ et $K_d = K_p T_d = 4{,
 \begin{tabular}{p{3.0cm}p{10.0cm}}
 \toprule
 Action P & $K_p\varepsilon$ : rapidité, réduit l'erreur sans l'annuler. Trop $\Rightarrow$ oscille \\
-Action I & $K_i\!\int\!\varepsilon$ : annule l'erreur statique, mais $-\SI{90}{°}$ $\Rightarrow$ déstabilise \\
-Action D & $K_d\,d\varepsilon/dt$ : anticipe, amortit, $+\SI{90}{°}$, mais amplifie le bruit \\
+Action I & $K_i\!\int\!\varepsilon$ : annule l'erreur statique, mais $-\SI{90}{\degree}$ $\Rightarrow$ déstabilise \\
+Action D & $K_d\,d\varepsilon/dt$ : anticipe, amortit, $+\SI{90}{\degree}$, mais amplifie le bruit \\
 PID & Combine les trois : précision (I) + rapidité (P) + amortissement (D) \\
 \bottomrule
 \end{tabular}
@@ -22094,7 +22108,7 @@ Méthodes & Manuel, Ziegler-Nichols (empirique), par modèle (placement de pôle
 \begin{tabular}{p{3.0cm}p{10.0cm}}
 \toprule
 Lieu des racines & Déplacement des pôles BF avec $K$ : croisement de l'axe $j\omega$ = $K_{\text{crit}}$ \\
-Marges (Bode) & Phase $> \SI{45}{°}$, gain $> \SI{6}{dB}$. Même critère que le lieu des racines \\
+Marges (Bode) & Phase $> \SI{45}{\degree}$, gain $> \SI{6}{dB}$. Même critère que le lieu des racines \\
 PID réel & Dérivé filtré ($K_d s/(1+\tau_f s)$), anti-windup, version numérique ($T_e < T_{\text{rép}}/10$) \\
 Démarche & Modéliser $G$, choisir P/PI/PID, régler (pôles ou marges), protéger, valider \\
 \bottomrule
@@ -22105,7 +22119,7 @@ Démarche & Modéliser $G$, choisir P/PI/PID, régler (pôles ou marges), proté
 
 
 \begin{retenir}
-\textbf{Ce qu'il faut emporter de ce chapitre :} le PID, ce sont trois verbes --- réagir (P), mémoriser (I), anticiper (D) --- et une fonction de transfert : un pôle à l'origine pour la précision, deux zéros à placer pour la phase. La stabilité se lit indifféremment sur deux cartes : le lieu des racines (où vont les pôles quand le gain monte, jusqu'au $K_{\text{crit}}$) et les marges de Bode (\SI{45}{°} et \SI{6}{dB} de réserve au croisement) --- deux projections du même critère. Et le PID réel exige ses trois garde-fous : dérivé filtré, anti-windup, échantillonnage assez rapide.
+\textbf{Ce qu'il faut emporter de ce chapitre :} le PID, ce sont trois verbes --- réagir (P), mémoriser (I), anticiper (D) --- et une fonction de transfert : un pôle à l'origine pour la précision, deux zéros à placer pour la phase. La stabilité se lit indifféremment sur deux cartes : le lieu des racines (où vont les pôles quand le gain monte, jusqu'au $K_{\text{crit}}$) et les marges de Bode (\SI{45}{\degree} et \SI{6}{dB} de réserve au croisement) --- deux projections du même critère. Et le PID réel exige ses trois garde-fous : dérivé filtré, anti-windup, échantillonnage assez rapide.
 
 La partie~\ref{part:asservissement} se referme~: nous savons analyser \textit{et} concevoir une boucle. Reste le monde extérieur --- nos circuits rayonnent, se polluent, cohabitent sur des cartes. La dernière partie s'ouvre sur la compatibilité électromagnétique~: chapitre~\ref{ch:cem}.
 \end{retenir}
@@ -22630,11 +22644,11 @@ Exemple~: jointure de $\SI{15}{cm}$ sans contact intermédiaire, à $\SI{600}{MH
 \begin{itemize}[itemsep=2pt]
   \item \textbf{fractionner}~: points de contact (vis, clips, joint conducteur) à intervalle $\ll \lambda_{\min}/2$ de la fréquence la plus haute à contenir --- viser $\lambda/20$ à $\lambda/50$ pour un SE utile~;
   \item \textbf{aération en guide sous coupure}~: un trou profond ($t$) et étroit ($d$) est un guide d'onde utilisé sous sa fréquence de coupure ($f_c \approx 176/d\,[\si{mm}]$ en \si{GHz} pour un trou rond)~: atténuation $\approx 32\,t/d$~dB, indépendante de la fréquence tant que $f \ll f_c$. C'est le principe des grilles nid-d'abeilles~: beaucoup de petits trous profonds plutôt qu'une grande ouverture~;
-  \item \textbf{traiter les câbles à la traversée}~: un câble qui traverse l'écran sans précaution est la pire des ouvertures --- il ramène l'antenne \emph{à travers} le blindage. Blindage du câble repris à $360°$ sur le châssis (presse-étoupe CEM), ou filtrage traversant (condensateurs \emph{feedthrough}) au passage de paroi.
+  \item \textbf{traiter les câbles à la traversée}~: un câble qui traverse l'écran sans précaution est la pire des ouvertures --- il ramène l'antenne \emph{à travers} le blindage. Blindage du câble repris à $360^\circ$ sur le châssis (presse-étoupe CEM), ou filtrage traversant (condensateurs \emph{feedthrough}) au passage de paroi.
 \end{itemize}
 
 \begin{attention}
-\textbf{Le « pigtail » ruine le blindage.} Reprendre la tresse d'un câble blindé par un petit fil queue-de-cochon de quelques centimètres insère $\sim$ dizaines de \si{nH} en série : à $\SI{100}{MHz}$, plusieurs dizaines d'ohms, alors que l'efficacité du blindage repose sur une reprise de quelques milliohms. La qualité d'un câble blindé se caractérise d'ailleurs par son \textbf{impédance de transfert} $Z_t$ (tension induite à l'intérieur par ampère de courant de gaine, par mètre) : une reprise en pigtail multiplie le $Z_t$ effectif par des ordres de grandeur. La règle : reprise périphérique $360°$, directement sur le châssis, à l'entrée du boîtier.
+\textbf{Le « pigtail » ruine le blindage.} Reprendre la tresse d'un câble blindé par un petit fil queue-de-cochon de quelques centimètres insère $\sim$ dizaines de \si{nH} en série : à $\SI{100}{MHz}$, plusieurs dizaines d'ohms, alors que l'efficacité du blindage repose sur une reprise de quelques milliohms. La qualité d'un câble blindé se caractérise d'ailleurs par son \textbf{impédance de transfert} $Z_t$ (tension induite à l'intérieur par ampère de courant de gaine, par mètre) : une reprise en pigtail multiplie le $Z_t$ effectif par des ordres de grandeur. La règle : reprise périphérique $360^\circ$, directement sur le châssis, à l'entrée du boîtier.
 \end{attention}
 
 \begin{pratique}
@@ -22790,7 +22804,7 @@ $I_{\mathrm{MC}} = \dfrac{E\,r}{\num{6.3e-7}\,f\,L} = \dfrac{\num{3e-4}}{\num{6.
 
 (c) $\mathrm{SE} \ge \SI{40}{dB} \Rightarrow \lambda/(2L) \ge 100 \Rightarrow L \le \lambda/200 = \SI{2.5}{mm}$. Aucun vissage raisonnable n'y parvient~: il faut un \textbf{joint conducteur continu} (tresse, élastomère chargé, doigts de contact) sur le périmètre. C'est la conclusion générale~: au-delà de quelques centaines de MHz, un blindage se joue dans la connectique mécanique, pas dans la tôle.
 
-(d) À peu près rien à ses fréquences de résonance~: le câble ré-émet à l'extérieur ce qu'il capte à l'intérieur --- il \emph{traverse} l'écran. D'où le traitement systématique des traversées~: filtrage traversant ou reprise de blindage $360°$ à la paroi.
+(d) À peu près rien à ses fréquences de résonance~: le câble ré-émet à l'extérieur ce qu'il capte à l'intérieur --- il \emph{traverse} l'écran. D'où le traitement systématique des traversées~: filtrage traversant ou reprise de blindage $360^\circ$ à la paroi.
 \end{pratique}
 
 \subsection*{Questions de compréhension}
@@ -22805,7 +22819,7 @@ $I_{\mathrm{MC}} = \dfrac{E\,r}{\num{6.3e-7}\,f\,L} = \dfrac{\num{3e-4}}{\num{6.
 
 \textbf{Q3.} Faut-il raccorder le blindage d'un câble à une seule extrémité ou aux deux ?
 
-\textit{Réponse : cela dépend de la bande à traiter. En BF (instrumentation), une seule extrémité évite qu'un courant de boucle de masse circule dans la tresse et s'ajoute au signal. En HF, la reprise aux deux extrémités (à $360°$) est indispensable à l'efficacité --- et les capacités parasites referment de toute façon la boucle. Le compromis classique en environnement mixte : liaison directe d'un côté, condensateur de l'autre (raccord hybride) --- ouvert à $\SI{50}{Hz}$, fermé en HF.}
+\textit{Réponse : cela dépend de la bande à traiter. En BF (instrumentation), une seule extrémité évite qu'un courant de boucle de masse circule dans la tresse et s'ajoute au signal. En HF, la reprise aux deux extrémités (à $360^\circ$) est indispensable à l'efficacité --- et les capacités parasites referment de toute façon la boucle. Le compromis classique en environnement mixte : liaison directe d'un côté, condensateur de l'autre (raccord hybride) --- ouvert à $\SI{50}{Hz}$, fermé en HF.}
 
 \textbf{Q4.} Pourquoi la fuite d'une fente de blindage dépend-elle de sa longueur et non de sa surface ?
 
