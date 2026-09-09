@@ -37,6 +37,14 @@
 \fi
 \makeatother
 
+%% === COLONNES DE TABLEAU CESURABLES ===
+%% Une cellule p{} ouvre un paragraphe, et TeX ne coupe jamais le premier mot
+%% d'un paragraphe : faute de ressort avant lui, un mot plus large que la
+%% colonne deborde au lieu de se couper. Un \hspace{0pt} en tete retablit la
+%% cesure sans toucher a la geometrie du tableau.
+\usepackage{array}
+\newcolumntype{P}[1]{>{\hspace{0pt}}p{#1}}
+
 % === MATHS ===
 \usepackage{amsmath, amssymb, amsfonts}
 \usepackage{mathtools}
@@ -2505,6 +2513,7 @@ $\eta$ est sans dimension, compris entre 0 et 1 (souvent exprimé en \%).
 \end{formule}
 
 \begin{center}
+\setlength{\tabcolsep}{5pt}
 \begin{tabular}{ll}
 \toprule
 \textbf{Système} & \textbf{Rendement typique} \\
@@ -4353,7 +4362,7 @@ Capacité du condensateur plan, les technologies réelles et leurs compromis, la
 \begin{center}
 \footnotesize
 \setlength{\tabcolsep}{4pt}
-\begin{tabular}{p{2.75cm}p{2.9cm}p{1.7cm}p{4.2cm}}
+\begin{tabular}{P{2.75cm}P{2.9cm}P{1.7cm}P{4.2cm}}
 \toprule
 \textbf{Technologie} & \textbf{Gamme} & \textbf{Tension} & \textbf{Usage typique} \\
 \midrule
@@ -5713,7 +5722,7 @@ Fréquence propre & $f_0 = 1/(2\pi\sqrt{LC})$ \\
 \begin{approfondissement}[title={\color{white} Résumé --- Approfondissement}]
 \begin{center}
 \renewcommand{\arraystretch}{1.3}
-\begin{tabular}{p{4cm}p{9cm}}
+\begin{tabular}{P{4cm}P{9cm}}
 \toprule
 Forme canonique & $\ddot u + 2\zeta\omega_0\dot u + \omega_0^2 u = \omega_0^2 E$ \\
 Amortissement & $\zeta = \frac{R}{2}\sqrt{C/L} = 1/(2Q)$ --- série ; $Q = R\sqrt{C/L}$ parallèle \\
@@ -8015,7 +8024,7 @@ Cette propriété n'est valable que si chaque étage \textbf{ne charge pas le pr
 
 \begin{center}
 \renewcommand{\arraystretch}{1.5}
-\begin{tabular}{lp{5cm}p{5cm}}
+\begin{tabular}{lP{4.7cm}P{4.7cm}}
 \toprule
 \textbf{Type} & \textbf{Ce qui passe} & \textbf{Exemple d'usage} \\
 \midrule
@@ -8840,7 +8849,7 @@ Le choix de la \textbf{réponse normalisée} détermine la forme de la courbe de
 
 \begin{center}
 \renewcommand{\arraystretch}{1.5}
-\begin{tabular}{p{2.8cm}p{2.5cm}p{2.5cm}p{4.5cm}}
+\begin{tabular}{P{2.8cm}P{2.5cm}P{2.5cm}P{4.5cm}}
 \toprule
 \textbf{Type} & \textbf{Bande passante} & \textbf{Transition} & \textbf{Usage typique} \\
 \midrule
@@ -9205,7 +9214,7 @@ Ordre supérieur & Cascade de cellules du 2nd ordre \\
 \begin{approfondissement}[title={\color{white} Résumé --- Approfondissement}]
 \begin{center}
 \renewcommand{\arraystretch}{1.3}
-\begin{tabular}{p{4cm}p{9cm}}
+\begin{tabular}{P{4cm}P{9cm}}
 \toprule
 Sallen-Key & Topologie la plus courante (suiveur ou non-inverseur) \\
 MFB & Inverseur, meilleur pour $Q$ élevé et rejet HF \\
@@ -9822,7 +9831,7 @@ Le pont de diodes perd \textbf{deux chutes de diode} ($2V_F \approx \SI{1.4}{V}$
 
 \begin{center}
 \renewcommand{\arraystretch}{1.4}
-\begin{tabular}{p{2.5cm}p{2cm}p{7cm}}
+\begin{tabular}{P{2.5cm}P{2cm}P{7cm}}
 \toprule
 \textbf{Type} & \textbf{$V_F$ / $V_{BR}$} & \textbf{Fonction et usage} \\
 \midrule
@@ -10238,7 +10247,7 @@ Résistance série & Toujours limiter le courant ! \\
 \begin{approfondissement}[title={\color{white} Résumé --- Approfondissement}]
 \begin{center}
 \renewcommand{\arraystretch}{1.3}
-\begin{tabular}{p{4cm}p{9cm}}
+\begin{tabular}{P{4cm}P{9cm}}
 \toprule
 Jonction PN & Zone de déplétion = barrière de $\sim\SI{0.7}{V}$ \\
 Shockley & $I = I_S(e^{V/nV_T}-1)$ --- exponentielle, $\SI{60}{mV/décade}$ \\
@@ -10488,7 +10497,11 @@ La séquence physique qui crée le courant collecteur est~:
 
 \begin{formule}
 \[
-\boxed{V_{BE} \xrightarrow{\text{1. abaisse la barrière}} \text{injection d'électrons} \xrightarrow{\text{2. diffusion}} \text{traversée de la base} \xrightarrow{\text{3. collecte}} I_C}
+\boxed{\begin{gathered}
+V_{BE} \xrightarrow{\text{1. abaisse la barrière}} \text{injection d'électrons}
+\xrightarrow{\text{2. diffusion}} \text{traversée de la base} \\[1mm]
+\xrightarrow{\text{3. collecte}} I_C
+\end{gathered}}
 \]
 \begin{enumerate}[nosep]
 \item $V_{BE}$ en polarisation directe \textbf{abaisse la barrière de potentiel} de la jonction BE. Les électrons de l'émetteur ($N^+$, fortement dopé) sont injectés massivement dans la base P.
@@ -10600,7 +10613,10 @@ Le montage standard qui réalise cette polarisation~:
 \begin{formule}
 \textbf{Calcul du point de repos} (hypothèse : $I_B \ll I_{\text{div}} = V_{CC}/(R_1+R_2)$) :
 \[
-V_B = V_{CC}\frac{R_2}{R_1+R_2}, \qquad V_E = V_B - V_{BE,Q}, \qquad I_C \approx I_E = \frac{V_E}{R_E}, \qquad V_{CE} = V_{CC} - I_C(R_C+R_E)
+\begin{gathered}
+V_B = V_{CC}\frac{R_2}{R_1+R_2}, \qquad V_E = V_B - V_{BE,Q}, \\[1mm]
+I_C \approx I_E = \frac{V_E}{R_E}, \qquad V_{CE} = V_{CC} - I_C(R_C+R_E)
+\end{gathered}
 \]
 \textbf{Vérifications :} $V_{CE} > V_{CE,\text{sat}}$ (régime actif), et $I_B/I_{\text{div}} < 10\%$ (validité du diviseur).
 \end{formule}
@@ -10763,7 +10779,10 @@ L'émetteur commun\index{émetteur commun} amplifie la tension. Mais que faire q
 
 \textbf{Hypothèses :} régime actif, petit signal.
 \[
-A_v = +g_m R_C \;\; (\text{non inverseur}) \qquad Z_{\text{in}} \approx \frac{1}{g_m} \;\; (\text{très faible~: quelques dizaines d'}\Omega) \qquad Z_{\text{out}} \approx R_C
+\begin{gathered}
+A_v = +g_m R_C \;\; (\text{non inverseur}) \qquad Z_{\text{out}} \approx R_C \\[1mm]
+Z_{\text{in}} \approx \frac{1}{g_m} \;\; (\text{très faible~: quelques dizaines d'}\Omega)
+\end{gathered}
 \]
 
 \textbf{La propriété décisive : pas d'effet Miller.} La base étant à la masse, $C_\mu$ n'est pas ``multipliée'' par le gain (voir section suivante) : la bande passante est \textbf{maximale}. C'est précisément pour cela que le cascode (niveau ingénieur) confie l'étage de sortie à une base commune.
@@ -12325,12 +12344,12 @@ Bruit total ramené à l'entrée~:
 \begin{pratique}
 \begin{center}
 \renewcommand{\arraystretch}{1.4}
-\begin{tabular}{p{2.5cm}p{2.5cm}p{2cm}p{5cm}}
+\begin{tabular}{P{2.5cm}P{2.5cm}P{2cm}P{5cm}}
 \toprule
 \textbf{Application} & \textbf{$R_s$ typique} & \textbf{Entrée} & \textbf{Justification} \\
 \midrule
 Audio (micro) & $< \SI{1}{k\ohm}$ & BJT & $e_n$ minimal ($\SI{1}{nV/\sqrt{Hz}}$) \\
-Capteur piezo & $> \SI{10}{M\ohm}$ & JFET/CMOS & $i_n$ minimal \\
+Capteur piezo & $> \SI{10}{M\ohm}$ & JFET/\allowbreak CMOS & $i_n$ minimal \\
 Instrumentation DC & $\SI{100}{\ohm}$--$\SI{10}{k\ohm}$ & BJT chopper & Offset $< \SI{1}{\micro V}$ \\
 Transimpédance & $> \SI{1}{M\ohm}$ & JFET & $i_n$ faible \\
 \bottomrule
@@ -12343,7 +12362,7 @@ Transimpédance & $> \SI{1}{M\ohm}$ & JFET & $i_n$ faible \\
 \begin{formule}
 \begin{itemize}[nosep]
 \item \textbf{Offset}~: dérive \SI{1}{\micro V/°C} (BJT) à \SI{10}{\micro V/°C} (CMOS). Chopper~: $< \SI{0.05}{\micro V/°C}$.
-\item \textbf{$I_B$}~: pour les entrées JFET/CMOS (fuite de jonction), il double tous les \SI{10}{°C} --- piège classique à chaud. Pour les entrées BJT ($I_B = I_C/\beta$), il est quasi stable, $\beta$ augmentant avec $T$.
+\item \textbf{$I_B$}~: pour les entrées JFET/\allowbreak CMOS (fuite de jonction), il double tous les \SI{10}{°C} --- piège classique à chaud. Pour les entrées BJT ($I_B = I_C/\beta$), il est quasi stable, $\beta$ augmentant avec $T$.
 \item \textbf{$g_m$}~: diminue avec $T$ (MOSFET\index{MOSFET}, $\mu \downarrow$), augmente (BJT, $V_T \downarrow$). $A_{OL}$ varie, mais la rétroaction absorbe ($\div(1+T)$).
 \item \textbf{GBW}~: varie de $\pm 20\%$ sur la plage de température.
 \end{itemize}
@@ -12368,7 +12387,7 @@ Transimpédance & $> \SI{1}{M\ohm}$ & JFET & $i_n$ faible \\
 \item \textbf{Toujours vérifier les rails.} $V_{\text{out}}$ peut-il physiquement atteindre la valeur calculée~?
 \item \textbf{Comparer la fréquence de travail au GBW.} Si $f > GBW/A_{CL}$~: le gain n'est plus garanti.
 \item \textbf{Vérifier le slew rate pour les grands signaux.} $SR > 2\pi f V_p$~? Sinon~: distorsion.
-\item \textbf{Attention aux sources haute impédance.} $I_B \times R_s$ crée un offset. Choisir BJT ($R_s$ faible), JFET/CMOS ($R_s$ élevé).
+\item \textbf{Attention aux sources haute impédance.} $I_B \times R_s$ crée un offset. Choisir BJT ($R_s$ faible), JFET/\allowbreak CMOS ($R_s$ élevé).
 \item \textbf{Ne jamais supposer un AOP idéal} pour un design réel. Lire la datasheet.
 \item \textbf{Charge capacitive~:} ajouter une résistance d'isolation si $C_L > \SI{100}{pF}$.
 \item \textbf{Découplage\index{découplage} d'alimentation~:} un condensateur de $\SI{100}{nF}$ au plus près de chaque broche $V_{CC}$/$V_{EE}$.
@@ -12684,7 +12703,7 @@ Ces spécifications se résument graphiquement en un \textbf{gabarit} que la ré
 
 \begin{center}
 \renewcommand{\arraystretch}{1.5}
-\begin{tabular}{p{2.5cm}p{3cm}p{3cm}p{4.5cm}}
+\begin{tabular}{P{2.5cm}P{3cm}P{3cm}P{4.5cm}}
 \toprule
 \textbf{Type} & \textbf{Bande passante} & \textbf{Transition} & \textbf{Phase / temporel} \\
 \midrule
@@ -13231,12 +13250,12 @@ Ce chapitre & Complète le Ch.~\ref{ch:filtres} : conception réelle, limites AO
 \begin{approfondissement}[title={\color{white} Résumé --- Approfondissement}]
 \begin{center}
 \renewcommand{\arraystretch}{1.3}
-\begin{tabular}{p{3.5cm}p{9.5cm}}
+\begin{tabular}{P{3.5cm}P{9.5cm}}
 \toprule
 Méthodologie & Spéc $\to$ type $\to$ ordre $\to$ $Q_k$ $\to$ topologie $\to$ composants $\to$ vérification \\
 Types & Butterworth (plat), Bessel (phase), Tchebychev (raide) \\
 Normalisation & Prototype $\omega_0=1$ puis $C_{\text{réel}} = C_{\text{norm}}/(\omega_c Z_0)$ \\
-Temporel/fréquentiel & $D\% = 100\,e^{-\pi/\sqrt{4Q^2-1}}$. Même physique, deux vues \\
+Temporel/\allowbreak fréquentiel & $D\% = 100\,e^{-\pi/\sqrt{4Q^2-1}}$. Même physique, deux vues \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -14085,7 +14104,9 @@ Toute opération logique peut être construite à partir de trois opérations é
 
 \begin{center}
 \renewcommand{\arraystretch}{1.4}
-\begin{tabular}{lcccp{5cm}}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lcccp{3.4cm}}
 \toprule
 \textbf{Porte} & \textbf{Notation} & \textbf{Équation} & \textbf{Table de vérité} & \textbf{Physiquement} \\
 \midrule
@@ -14522,14 +14543,14 @@ Le fan-out est donc limité par le \textbf{délai} ($t_p \propto C_L$) et non pa
 \begin{pratique}
 \begin{center}
 \renewcommand{\arraystretch}{1.3}
-\begin{tabular}{p{2.5cm}p{2cm}p{2cm}p{2cm}p{3.5cm}}
+\begin{tabular}{P{2.5cm}P{2cm}P{2cm}P{2cm}P{3.5cm}}
 \toprule
 \textbf{Famille} & \textbf{$V_{DD}$} & \textbf{$t_p$ typ.} & \textbf{Techno} & \textbf{Usage} \\
 \midrule
 HC/HCT & \SI{2}{V}--\SI{6}{V} & \SI{8}{ns} & CMOS & Logique générale \\
 LVC/LVT & \SI{1.65}{V}--\SI{3.6}{V} & \SI{3}{ns} & CMOS & Basse tension, interface \\
 AUC & \SI{0.8}{V}--\SI{2.7}{V} & \SI{1.5}{ns} & CMOS & Ultra basse tension \\
-LVTTL & \SI{3.3}{V} & \SI{5}{ns} & CMOS/BiCMOS & Legacy, compatible TTL \\
+LVTTL & \SI{3.3}{V} & \SI{5}{ns} & CMOS/\allowbreak BiCMOS & Legacy, compatible TTL \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -17300,7 +17321,9 @@ Les additionneurs modernes haute performance (utilisés dans tous les CPU haut d
 
 \begin{center}
 \renewcommand{\arraystretch}{1.4}
-\begin{tabular}{lccc}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lccP{3.3cm}}
 \toprule
 \textbf{Architecture} & \textbf{Profondeur} & \textbf{Surface (cellules)} & \textbf{Usage} \\
 \midrule
@@ -17391,7 +17414,7 @@ Toute architecture arithmétique se situe sur un triangle vitesse--surface--puis
 
 \begin{center}
 \renewcommand{\arraystretch}{1.4}
-\begin{tabular}{p{3cm}p{2.5cm}p{2.5cm}p{4cm}}
+\begin{tabular}{P{3cm}P{2.5cm}P{2.5cm}P{4cm}}
 \toprule
 \textbf{Architecture} & \textbf{Vitesse} & \textbf{Surface} & \textbf{Quand l'utiliser} \\
 \midrule
@@ -17420,7 +17443,9 @@ Un nombre flottant IEEE 754 est codé en trois champs~:
 
 \begin{center}
 \renewcommand{\arraystretch}{1.3}
-\begin{tabular}{lccccc}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lccccp{3.1cm}}
 \toprule
 \textbf{Format} & \textbf{Total} & \textbf{Signe} & \textbf{Exposant} & \textbf{Mantisse} & \textbf{Précision} \\
 \midrule
@@ -17738,7 +17763,7 @@ Les quatre premiers éléments forment le \textbf{datapath}. Le cinquième est l
 
 \begin{center}
 \renewcommand{\arraystretch}{1.4}
-\begin{tabular}{p{2.8cm}p{4.5cm}p{5.5cm}}
+\begin{tabular}{P{2.8cm}P{4.5cm}P{5.5cm}}
 \toprule
 \textbf{Bloc} & \textbf{Fonction} & \textbf{Origine} \\
 \midrule
@@ -18481,7 +18506,7 @@ Résultat~: \textbf{16 à 24 bits effectifs} avec un quantificateur grossier (so
 \textbf{Tableau de choix :}
 \begin{center}
 \renewcommand{\arraystretch}{1.4}
-\begin{tabular}{p{2.5cm}p{2.0cm}p{2.5cm}p{1.9cm}p{2.8cm}}
+\begin{tabular}{P{2.5cm}P{2.0cm}P{2.5cm}P{1.9cm}P{2.8cm}}
 \toprule
 \textbf{Architecture} & \textbf{Résolution} & \textbf{Débit} & \textbf{Latence} & \textbf{Usage type} \\
 \midrule
@@ -18920,7 +18945,7 @@ Deux paramètres définissent \textit{quand} les bits sont posés et capturés~:
 
 \begin{center}
 \renewcommand{\arraystretch}{1.35}
-\begin{tabular}{p{1.5cm}p{1.3cm}p{1.3cm}p{3.6cm}p{3.6cm}}
+\begin{tabular}{P{1.5cm}P{1.6cm}P{1.6cm}P{3.6cm}P{3.6cm}}
 \toprule
 \textbf{Mode} & \textbf{CPOL} & \textbf{CPHA} & \textbf{Capture sur} & \textbf{Donnée posée sur} \\
 \midrule
@@ -19207,7 +19232,7 @@ I\textsuperscript{2}C & 2 fils partagés, adresses 7 bits, ACK, wired-AND \\
 \begin{approfondissement}[title={\color{white} Résumé --- Approfondissement}]
 \begin{center}
 \renewcommand{\arraystretch}{1.3}
-\begin{tabular}{p{3.5cm}p{9.5cm}}
+\begin{tabular}{P{3.5cm}P{9.5cm}}
 \toprule
 Open-drain & Bas dominant, haut récessif. Montée $= 0{,}85\,R_p C_b$ (Ch.~\ref{ch:rc-rl-rlc}) : c'est elle qui limite le débit \\
 Pull-up & $R_{p,\min}$ (tenir $V_{OL}$) $< R_p < R_{p,\max}$ (tenir $t_r$) \\
@@ -20185,7 +20210,7 @@ Série & Ballast suiveur (Ch.~\ref{ch:bjt}) recopiant une référence : $Z_{\tex
 \begin{approfondissement}[title={\color{white} Résumé --- Approfondissement}]
 \begin{center}
 \renewcommand{\arraystretch}{1.3}
-\begin{tabular}{p{3.5cm}p{9.5cm}}
+\begin{tabular}{P{3.5cm}P{9.5cm}}
 \toprule
 Architecture & Référence (bandgap) + diviseur capteur + ampli d'erreur (Ch.~\ref{ch:aop}) + ballast \\
 Boucle & $V_{\text{out}} = V_{\text{ref}}(1+R_a/R_b)$ ; $Z_{\text{out}}$ divisée par $1+A\beta$, remonte en HF \\
@@ -21381,7 +21406,7 @@ H(s) = \frac{K\,\omega_0^2}{s^2 + 2\zeta\omega_0\,s + \omega_0^2}
 \end{itemize}
 \begin{center}
 \renewcommand{\arraystretch}{1.3}
-\begin{tabular}{p{3.1cm}p{2.7cm}p{6.0cm}}
+\begin{tabular}{P{3.1cm}P{2.7cm}P{6.0cm}}
 \toprule
 \textbf{Amortissement} & \textbf{Pôles} & \textbf{Réponse à l'échelon} \\
 \midrule
@@ -21819,6 +21844,7 @@ Le \textbf{lieu des racines} (\textit{root locus}) trace le déplacement des \te
 
 \begin{figure}[h]
 \centering
+\resizebox{\textwidth}{!}{%
 \begin{tikzpicture}[x=1cm, y=1cm, >=Stealth]
   \fill[green!8] (-4.7,-2.7) rectangle (0,2.65);
   \fill[red!7] (0,-2.7) rectangle (1.6,2.65);
@@ -21846,7 +21872,8 @@ Le \textbf{lieu des racines} (\textit{root locus}) trace le déplacement des \te
   \node[font=\tiny, red!70!black, align=center, right] at (0.14,1.72) {3. $K_{\text{crit}} = 48$ :\\$\sigma$ passe à droite,\\instable};
   \node[font=\tiny, gray!25!black] at (-3.65,-0.35) {le 3\textsuperscript{e} pôle file vers $-\infty$};
   \node[font=\scriptsize, gray!30!black, align=center] at (-1.55,-3.05) {$\times$ = pôles en boucle ouverte ($K=0$) \; ; \; courbe rouge = trajet des pôles quand $K$ croît \; ; \; $\bullet$ = les trois pôles pour $K=10$};
-\end{tikzpicture}
+\end{tikzpicture}%
+}
 \caption{Le lieu des racines de $K/[s(s+2)(s+4)]$, mode d'emploi : pour chaque réglage du gain, la boucle fermée a trois pôles --- les points noirs montrent où ils sont pour $K = 10$ (un réel loin à gauche, une paire complexe déjà oscillante). Quand $K$ croît, chaque pôle suit sa branche rouge : rapprochement, fusion en $-0{,}85$, départ en complexes, et croisement de l'axe pour $K_{\text{crit}} = 48$ --- au-delà, l'instabilité. D'un coup d'\oe il : jusqu'où pousser le gain, et à partir de quand ça sonne.}
 \end{figure}
 
@@ -22572,8 +22599,10 @@ $R$~: pertes par \textbf{réflexion} (désadaptation d'impédance onde/métal)~;
 \quad\Rightarrow\quad
 A = 8{,}69\,\frac{t}{\delta}\ [\si{dB}]
 \qquad
-\delta_{\mathrm{Cu}} \approx \frac{\SI{66}{\micro m}}{\sqrt{f\,[\si{MHz}]}}
-\ \ (\SI{9.3}{mm}\ \text{à}\ \SI{50}{Hz},\ \SI{66}{\micro m}\ \text{à}\ \SI{1}{MHz}).
+\begin{gathered}
+\delta_{\mathrm{Cu}} \approx \frac{\SI{66}{\micro m}}{\sqrt{f\,[\si{MHz}]}} \\[1mm]
+(\SI{9.3}{mm}\ \text{à}\ \SI{50}{Hz},\ \SI{66}{\micro m}\ \text{à}\ \SI{1}{MHz}).
+\end{gathered}
 \]
 
 \textbf{Réflexion.} $R$ croît avec la désadaptation entre l'impédance d'onde incidente $Z_w$ et l'impédance intrinsèque du métal $Z_m = \sqrt{\pi f \mu / \sigma}$ (quelques centaines de \si{\micro\ohm} pour le cuivre en HF). Pour une onde plane sur du cuivre : $R \approx \SI{108}{dB}$ à $\SI{1}{MHz}$, encore $\approx \SI{88}{dB}$ à $\SI{100}{MHz}$. Trois conséquences structurantes :
