@@ -11,6 +11,11 @@
 
 % === MISE EN PAGE ===
 \usepackage[top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm, headheight=15pt]{geometry}
+%% Derniere ressource de l'algorithme de coupure : autorise un etirement
+%% supplementaire du blanc inter-mot uniquement sur les paragraphes qui
+%% deborderaient sinon. Sans hyphenation francaise chargee, c'est le seul
+%% garde-fou contre les lignes qui sortent dans la marge.
+\emergencystretch=3em
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhf{}
