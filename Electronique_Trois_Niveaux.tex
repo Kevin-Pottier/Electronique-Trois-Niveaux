@@ -24,6 +24,19 @@
 \fancyfoot[C]{\thepage}
 \renewcommand{\headrulewidth}{0.4pt}
 
+%% === CESURE FRANCAISE ===
+%% Les motifs de coupure francais sont deja presents dans le format pdflatex
+%% (language.dat : french loadhyph-fr.tex). On bascule dessus sans charger
+%% babel, dont les caracteres actifs : ; ! ? cassent l'analyse de circuitikz
+%% et qui doublerait les espaces insecables deja posees a la main.
+\makeatletter
+\ifcsname l@french\endcsname
+  \language=\l@french
+  \lefthyphenmin=2
+  \righthyphenmin=3
+\fi
+\makeatother
+
 % === MATHS ===
 \usepackage{amsmath, amssymb, amsfonts}
 \usepackage{mathtools}
