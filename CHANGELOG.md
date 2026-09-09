@@ -1,5 +1,38 @@
 # Historique des versions
 
+## v1.2 — 9 septembre 2026
+Ajout du chapitre 7, **Instrumentation et Mesures**, en fin de partie I :
+l'oscilloscope et son déclenchement, l'effet de charge chiffré par Thévenin,
+la sonde 10× et sa compensation, bande passante et temps de montée,
+échantillonnage et repliement, le piège de la masse reliée à la terre, la
+mesure quatre fils, le plancher de bruit thermique, étalonnage et
+traçabilité. 14 pages, 6 exercices corrigés, 4 questions de compréhension,
+toutes les valeurs vérifiées par le calcul. Les chapitres 7 à 38 deviennent
+8 à 39.
+
+Le livre traitait le branchement du multimètre au fil des grandeurs mais
+n'expliquait nulle part l'oscilloscope — onze mentions, aucune section.
+
+Passe typographique et de fond menée dans le même cycle :
+- **421 caractères manquaient à l'impression depuis la v1.0.** siunitx compose
+  ses unités en mode mathématique, où un `°` ou un accent tapé littéralement
+  n'existe pas : LaTeX les jetait en silence. Le livre imprimait « 25 C » et
+  « dB/dcade ». Corrigé par les macros idoines et deux unités françaises
+  déclarées ;
+- césure française activée sans babel — les motifs sont déjà dans le format
+  pdflatex, inutile de charger un paquet qui casserait CircuiTikZ ;
+- 47 débordements de ligne ramenés à zéro, dont deux tiers venaient d'une
+  règle méconnue : TeX ne coupe jamais le premier mot d'un paragraphe, et
+  chaque cellule `p{}` en ouvre un ;
+- les 172 figures reprennent leur place dans le texte (`[!ht]`) ;
+- index resserré de 995 à 653 entrées par retrait des recopies de titres ;
+- en-tête agrandi pour les six titres de chapitre tenant sur deux lignes.
+
+Le journal de compilation est vierge : 0 erreur, 0 avertissement, 0
+débordement, 0 caractère perdu.
+
+667 pages, 39 chapitres, 238 exercices corrigés, 653 entrées d'index.
+
 ## v1.1.1 — 9 septembre 2026
 Ajout du chapitre 20, **Les Oscillateurs** (Barkhausen, pont de Wien,
 relaxation 555, Colpitts, quartz, bruit de phase), en fin de partie V :

@@ -247,7 +247,7 @@ un ingénieur doit pouvoir s'y référer comme source de qualité.~»}
 
 \vfill
 {\small Distribué librement sous licence CC BY-NC-SA 4.0}\\[1mm]
-{\small Version 1.1.1 --- Septembre 2026}
+{\small Version 1.2 --- Septembre 2026}
 \end{titlepage}
 
 % === COLOPHON / LICENCE ===
@@ -262,7 +262,7 @@ Cet ouvrage est mis à disposition selon les termes de la licence \textbf{Creati
 Vous êtes libres de \textbf{partager} (copier, redistribuer) et d'\textbf{adapter} (modifier, transformer, améliorer) ce document, sous trois conditions : \textbf{créditer l'auteur}, \textbf{ne pas en faire un usage commercial}, et \textbf{rediffuser toute version modifiée sous cette même licence}. Texte intégral : \url{https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr}\\[4mm]
 Composé en \LaTeX{} (pdflatex)~; schémas et figures en CircuiTikZ et TikZ.\\
 Rédigé avec l'assistance de l'intelligence artificielle Claude (Anthropic), sous la direction et la vérification de l'auteur.\\
-Version 1.1.1 --- compilé le \datefr.\\
+Version 1.2 --- compilé le \datefr.\\
 Corrections, suggestions et contributions : \texttt{kevin.pottier@eseo.fr}
 \end{minipage}
 \end{center}
@@ -334,6 +334,7 @@ Le texte s'appuie sur des encadrés récurrents, toujours les mêmes~: \textbf{f
 0.75 & juillet 2026 & Appareil éditorial : page de garde, licence, avant-propos, guide de lecture, table des figures, pages de partie, annexes, bibliographie, glossaires. \\
 1.0 & juillet 2026 & Index complet (956 entrées), typographie française (espaces insécables), version de référence. \\
 1.1.1 & septembre 2026 & Renvois croisés convertis en références symboliques (951 renvois, 49 \texttt{\textbackslash label}). Ajout du chapitre~\ref{ch:oscillateurs}, \emph{Les Oscillateurs}, en fin de partie~\ref{part:semiconducteurs}~: les chapitres suivants sont décalés d'un rang. \\
+1.2 & septembre 2026 & Ajout du chapitre~\ref{ch:instrumentation}, \emph{Instrumentation et Mesures}, en fin de partie~\ref{part:fondamentaux}. Césure française, index resserré aux termes, 424 caractères retrouvés à l'impression, débordements de ligne supprimés. \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -2744,7 +2745,7 @@ Un petit radiateur à ailettes en aluminium ($\sim\SI{10}{\degreeCelsius\per\wat
 \textbf{Crête vs moyenne : l'impédance thermique $Z_{\text{th}}(t)$.} La chaleur met du temps à diffuser : sur une impulsion brève, seule la capacité thermique proche de la jonction absorbe l'énergie, et l'échauffement est bien moindre que $R_{\text{th}} \cdot P$. Les datasheets donnent la courbe $Z_{\text{th}}(t) < R_{\text{th}}$ (\emph{single pulse}) : un MOSFET limité à \SI{50}{W} continus encaisse des kilowatts pendant quelques microsecondes. C'est ce qui rend possible le découpage (chapitre~\ref{ch:magnetiques}) --- et c'est l'aire de sécurité (SOA, chapitre~\ref{ch:bjt}) qui en fixe les limites.
 \end{pratique}
 
-\subsection{Densité spectrale de puissance et bruit (lien avec Ch.\ 2 et 3)}
+\subsection{Densité spectrale de puissance et bruit (lien avec Ch.~\ref{ch:tension} et~\ref{ch:resistance})}
 
 En conception, le bruit est caractérisé par sa \textbf{densité spectrale de puissance} (DSP) en $\si{V^2/Hz}$ ou $\si{A^2/Hz}$. La puissance totale de bruit dans une bande $[f_1, f_2]$ est~:
 \[
@@ -3829,7 +3830,7 @@ Pour trouver $R_{\text{th}}$ dans ce cas, deux méthodes~:
 \end{enumerate}
 \end{attention}
 
-\subsection{Transfert maximal de puissance (rappel Ch.\ 4)}
+\subsection{Transfert maximal de puissance (rappel Ch.~\ref{ch:puissance})}
 
 On a montré au chapitre~\ref{ch:puissance} que la puissance délivrée à une charge $R_L$ est maximale quand $R_L = R_s$. Avec Thévenin, cela se reformule élégamment~:
 
@@ -4063,7 +4064,7 @@ Millman & $V = \sum(E_k/R_k) \,/\, \sum(1/R_k)$ --- moyenne pondérée \\
 \toprule
 Linéarité & Condition nécessaire pour les 4 théorèmes \\
 Sources dépendantes & Ne pas éteindre ! Utiliser $R_{\text{th}} = E_{\text{th}}/I_{\text{cc}}$ \\
-Adaptation & $P_{\max}$ quand $R_L = R_{\text{th}}$ (rappel Ch.\ 4) \\
+Adaptation & $P_{\max}$ quand $R_L = R_{\text{th}}$ (rappel Ch.~\ref{ch:puissance}) \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -4088,9 +4089,756 @@ Bruit & Superposition quadratique : $\overline{v_n^2} = \sum \overline{v_{n,k}^2
 \vspace{0.4cm}
 
 \begin{retenir}
-Superposition, Thévenin, Norton, Millman~: la boîte à outils du circuit \emph{résistif} linéaire est complète. Reste que ces circuits ne savent ni retarder, ni filtrer, ni stocker d'énergie --- tout y est instantané. Le premier composant qui brise cette immédiateté, en opposant au courant non plus une résistance mais une \emph{mémoire}, est le condensateur~: il ouvre la Partie~\ref{part:passifs} et le chapitre~\ref{ch:condensateur}.
+Superposition, Thévenin, Norton, Millman~: la boîte à outils du circuit \emph{résistif} linéaire est complète. Nous savons désormais prédire ce que fait un circuit. Reste à savoir le \emph{constater} --- et cela suppose des instruments, qui ont leurs propres limites et perturbent toujours un peu ce qu'ils observent. Le chapitre~\ref{ch:instrumentation} s'y consacre~; Thévenin, qu'on vient d'établir, y devient l'outil qui chiffre exactement cette perturbation.
 \end{retenir}
 
+
+% ############################################################################
+% CHAPITRE 7 : INSTRUMENTATION ET MESURES
+% ############################################################################
+\chapter{Instrumentation et Mesures}\index{instrumentation}\label{ch:instrumentation}
+
+\begin{center}
+\textit{Un circuit ne dit rien de lui-même. Tout ce que nous croyons savoir\\
+d'un montage nous vient d'un instrument --- lequel a ses propres limites,\\
+et perturbe toujours un peu ce qu'il prétend observer.}
+\end{center}
+
+\vspace{0.5cm}
+
+% ----------------------------------------------------------------------------
+% SECTION 1 : LES BASES
+% ----------------------------------------------------------------------------
+\section{Les Bases}\index{bases}
+
+\begin{bases}
+Le panorama des instruments, l'oscilloscope\index{oscilloscope} et son
+déclenchement\index{déclenchement (trigger)}, l'effet de
+charge\index{effet de charge} quantifié, et ce que veut dire un chiffre affiché.
+Prérequis~: la loi d'Ohm (chapitre~\ref{ch:resistance}), la puissance
+(chapitre~\ref{ch:puissance}) et le théorème de Thévenin
+(chapitre~\ref{ch:theoremes}).
+\end{bases}
+
+\subsection{Ce que l'on mesure, et avec quoi}\index{ce que l'on mesure, et avec quoi}
+
+Les chapitres précédents ont introduit le multimètre\index{multimètre} au fil
+des grandeurs~: l'ampèremètre en série (chapitre~\ref{ch:courant}), le
+voltmètre en parallèle (chapitre~\ref{ch:tension}), le wattmètre
+(chapitre~\ref{ch:puissance}). Ces règles de branchement suffisent pour un
+circuit continu. Elles ne suffisent plus dès que le signal varie, et elles ne
+disent rien de la confiance à accorder au nombre affiché.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{P{3.2cm}P{4.6cm}P{5.4cm}}
+\toprule
+\textbf{Instrument} & \textbf{Ce qu'il donne} & \textbf{Ce qu'il ne donne pas} \\
+\midrule
+Multimètre & Une valeur moyenne ou efficace, lentement & La forme du signal, les transitoires \\
+Oscilloscope & La tension en fonction du temps & Une précision meilleure que 1 à \SI{3}{\percent} \\
+Générateur & Un signal connu à injecter & Une impédance de sortie nulle (\SI{50}{\ohm}) \\
+Alimentation & Une tension stable et un courant limité & Une réponse instantanée aux appels de courant \\
+Analyseur de spectre & La répartition en fréquence & La phase, et donc la forme d'onde \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{intuition}
+Le multimètre répond à «~combien~?~», l'oscilloscope à «~quand, et sous quelle
+forme~?~». Un montage qui affiche la bonne tension moyenne et qui oscille à
+\SI{2}{MHz} paraît sain au premier et malade au second. C'est la raison
+d'être de l'oscilloscope~: la moyenne cache tout ce qui bouge.
+\end{intuition}
+
+\subsection{L'oscilloscope~: voir le temps}\index{oscilloscope!principe}
+
+Un oscilloscope trace la tension en ordonnée, le temps en abscisse. Trois
+réglages gouvernent l'image, et ils se règlent toujours dans cet ordre.
+
+\begin{itemize}[nosep]
+\item La \textbf{sensibilité verticale} (V/div) fixe l'échelle des tensions.
+On la choisit pour que le signal occupe les deux tiers de l'écran~: plus
+petit, on perd de la résolution~; plus grand, on écrête.
+\item La \textbf{base de temps} (s/div) fixe la fenêtre d'observation. On la
+choisit pour voir deux à cinq périodes du signal.
+\item Le \textbf{déclenchement} décide de l'instant où commence chaque
+balayage. C'est lui qui fige l'image.
+\end{itemize}
+
+\subsection{Le déclenchement, ou pourquoi la trace danse}\index{déclenchement, ou pourquoi la trace danse}
+
+C'est le réglage que l'on comprend en dernier et qui fait perdre le plus de
+temps. Sans déclenchement, chaque balayage commencerait à un instant
+quelconque du signal~: les tracés successifs se superposeraient décalés, et
+l'écran montrerait une bouillie mouvante.
+
+Le déclenchement impose une condition de départ~: commencer le balayage
+lorsque le signal traverse un \textbf{niveau} donné dans un \textbf{sens}
+donné. Tous les balayages partent alors du même point de la forme d'onde, et
+se superposent exactement.
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[line width=1pt, scale=1.0]
+\draw[->] (-0.3,0) -- (8.4,0) node[right] {$t$};
+\draw[->] (0,-1.6) -- (0,1.9) node[above] {$v$};
+\draw[domain=0:8, samples=140, smooth, blue!70!black]
+  plot (\x, {1.35*sin(deg(\x*1.7))});
+\draw[dashed, red!75!black] (-0.3,0.62) -- (8.4,0.62)
+  node[right, font=\small] {niveau};
+\filldraw[red!75!black] (0.39,0.62) circle (2pt);
+\draw[->, red!75!black] (0.39,1.15) -- (0.39,0.72);
+\node[above, font=\small, red!70!black] at (0.55,1.15) {déclenchement};
+\node[below, font=\small] at (0.39,-0.15) {front montant};
+\end{tikzpicture}
+\caption{Le déclenchement fige l'image en imposant à chaque balayage de
+commencer au même point de la forme d'onde~: ici, au passage par un niveau
+donné, sur un front montant.}
+\end{figure}
+
+\begin{attention}
+Une trace qui défile horizontalement n'est presque jamais le signe d'un
+circuit malade~: c'est un déclenchement mal réglé. Réflexe~: vérifier que le
+niveau tombe bien \emph{entre} le minimum et le maximum du signal. Un niveau
+placé au-dessus du sommet ne sera jamais franchi, et rien ne se déclenchera.
+\end{attention}
+
+\subsection{L'effet de charge, quantifié}\index{effet de charge, quantifié}
+
+Le chapitre~\ref{ch:tension} l'annonçait~: un voltmètre prélève un peu de
+courant et fausse la mesure. Thévenin (chapitre~\ref{ch:theoremes}) permet
+maintenant de chiffrer l'erreur exactement.
+
+\begin{figure}[!ht]
+\centering
+\begin{circuitikz}[line width=1pt, scale=1.0, transform shape]
+\draw (0,0) to[V, l=$E_{th}$] (0,2.6);
+\draw (0,2.6) to[R, l=$R_{th}$] (3,2.6);
+\draw (3,2.6) -- (4.2,2.6);
+\draw (4.2,2.6) to[R, l=$R_V$] (4.2,0);
+\draw (4.2,0) -- (0,0) node[ground]{};
+\node[right, align=left] at (4.6,1.3) {voltmètre};
+\end{circuitikz}
+\caption{Vu de ses deux bornes, tout circuit linéaire se ramène à un
+générateur de Thévenin. Le voltmètre lui ajoute simplement une résistance
+$R_V$ en parallèle~: la tension lue est celle d'un diviseur, pas celle du
+circuit seul.}
+\end{figure}
+
+\begin{formule}
+La tension lue vaut
+\[
+V_{\text{lue}} = E_{th}\,\frac{R_V}{R_{th}+R_V}
+\]
+soit une erreur relative par défaut
+\[
+\boxed{\frac{\Delta V}{V} = \frac{R_{th}}{R_{th}+R_V}}
+\]
+\end{formule}
+
+\begin{pratique}
+\textbf{Un pont diviseur de deux \SI{1}{M\ohm}.} Sa résistance de Thévenin
+vaut \SI{500}{k\ohm}. Mesuré avec un voltmètre de \SI{10}{M\ohm}, l'erreur
+atteint $500\times10^3/(500\times10^3 + 10\times10^6) = \SI{4.8}{\percent}$~:
+un montage qui délivre \SI{5}{V} en affichera \SI{4.76}{V}.
+
+Avec un voltmètre de \SI{1}{M\ohm} --- ce qu'est l'entrée d'un oscilloscope
+--- l'erreur monterait à \SI{33}{\percent}. La règle pratique~: l'instrument
+doit présenter au moins vingt fois la résistance de Thévenin du point mesuré.
+\end{pratique}
+
+\subsection{Lire un chiffre~: résolution, justesse, précision}\index{résolution, justesse, précision}
+
+Trois mots que l'usage confond et qu'un ingénieur distingue.
+
+\begin{itemize}[nosep]
+\item La \textbf{résolution}\index{résolution} est le plus petit écart que
+l'instrument sait afficher. Un multimètre «~3~$\frac{1}{2}$ digits~» compte
+jusqu'à 1999~: sur le calibre \SI{20}{V}, sa résolution vaut \SI{10}{mV}.
+\item La \textbf{justesse}\index{justesse} est l'écart entre la valeur
+affichée et la valeur vraie. Elle se spécifie en $\pm(a\,\% \text{ de la
+lecture} + n \text{ points})$.
+\item La \textbf{fidélité} est la dispersion des mesures répétées. Un
+instrument peut être fidèle et faux~: il se trompe alors toujours pareil.
+\end{itemize}
+
+\begin{pratique}
+\textbf{Que vaut vraiment «~12,34~V~»~?} Sur un multimètre
+3~$\frac{1}{2}$ digits spécifié $\pm(\SI{0.5}{\percent} + 3$~points$)$,
+calibre \SI{20}{V}~:
+\[
+\Delta V = 0{,}005 \times 12{,}34 + 3\times\SI{10}{mV} = \SI{92}{mV}
+\]
+La mesure vaut donc $\SI{12.34}{V} \pm \SI{0.09}{V}$, soit
+\SI{0.74}{\percent}. Les deux dernières décimales affichées ne sont pas
+significatives~: écrire «~\SI{12.34}{V}~» sans incertitude est une faute de
+rigueur, pas une précision.
+\end{pratique}
+
+% ----------------------------------------------------------------------------
+% SECTION 2 : APPROFONDISSEMENT
+% ----------------------------------------------------------------------------
+\section{Approfondissement}
+
+\begin{approfondissement}
+La sonde d'oscilloscope\index{sonde d'oscilloscope} et sa compensation, le
+lien entre bande passante et temps de montée, l'échantillonnage et le
+repliement, le piège de la masse reliée à la terre, et la composition des
+incertitudes. Prérequis~: les circuits RC (chapitre~\ref{ch:rc-rl-rlc}) et les
+diagrammes de Bode (chapitre~\ref{ch:bode}).
+\end{approfondissement}
+
+\subsection{La sonde d'oscilloscope}\index{sonde d'oscilloscope!compensation}
+
+Relier un circuit à un oscilloscope avec un simple fil serait désastreux~: un
+câble coaxial d'un mètre présente environ \SI{100}{pF}, qui viendraient se
+poser en parallèle sur le point mesuré. La sonde dite \textbf{10$\times$}
+résout le problème en insérant une résistance de \SI{9}{M\ohm} en série.
+
+\begin{figure}[!ht]
+\centering
+\begin{circuitikz}[line width=1pt, scale=1.0, transform shape]
+\draw (0,0) node[left]{pointe} -- (0.6,0);
+\draw (0.6,0) to[R, l=$R_1$] (3.4,0);
+\draw (0.6,1.3) to[C, l=$C_1$] (3.4,1.3);
+\draw (0.6,0) -- (0.6,1.3);
+\draw (3.4,0) -- (3.4,1.3);
+\draw (3.4,0) -- (4.6,0);
+\draw (4.6,0) to[R, l=$R_2$] (4.6,-2.2);
+\draw (6.1,0) to[C, l=$C_2$] (6.1,-2.2);
+\draw (4.6,0) -- (6.1,0);
+\draw (4.6,-2.2) -- (6.1,-2.2);
+\draw (4.6,-2.2) -- (3.2,-2.2) node[ground]{};
+\node[above, font=\small] at (2,1.8) {sonde};
+\node[above, font=\small] at (5.35,0.35) {oscilloscope};
+\end{circuitikz}
+\caption{Sonde 10$\times$~: $R_1 = \SI{9}{M\ohm}$ et $R_2 = \SI{1}{M\ohm}$
+forment un diviseur par 10 en continu. $C_1$, ajustable, compense la capacité
+$C_2$ du câble et de l'entrée pour que le rapport reste 10 à toute fréquence.}
+\end{figure}
+
+\begin{formule}
+En continu, le diviseur résistif donne
+\[
+\frac{v_{\text{scope}}}{v_{\text{sonde}}} = \frac{R_2}{R_1+R_2} = \frac{1}{10}
+\]
+En alternatif, le diviseur devient capacitif. Pour que le rapport ne dépende
+pas de la fréquence, il faut égaliser les constantes de temps des deux
+branches~:
+\[
+\boxed{R_1 C_1 = R_2 C_2}
+\]
+\end{formule}
+
+\begin{pratique}
+\textbf{Valeur de la capacité de compensation.} Avec
+$C_2 = \SI{100}{pF}$ (câble et entrée réunis), $R_1 = \SI{9}{M\ohm}$ et
+$R_2 = \SI{1}{M\ohm}$~:
+\[
+C_1 = \frac{R_2 C_2}{R_1} = \frac{\SI{100}{pF}}{9} \approx \SI{11}{pF}
+\]
+On retrouve la valeur annoncée par les fiches techniques des sondes du
+commerce. C'est aussi la capacité que la sonde impose au circuit mesuré~:
+\SI{11}{pF} au lieu des \SI{100}{pF} du câble nu, neuf fois moins.
+\end{pratique}
+
+\begin{attention}
+Une sonde mal compensée fausse toutes les mesures de forme d'onde, et
+l'erreur est silencieuse~: le signal reste beau, seulement déformé. Le
+réflexe est de vérifier la compensation sur le signal carré d'étalonnage de
+l'appareil, à chaque changement de voie. Un sommet bombé signale une
+surcompensation, un sommet creusé une sous-compensation~; on cherche le plat.
+\end{attention}
+
+\subsection{Bande passante et temps de montée}\index{bande passante et temps de montée}
+
+La bande passante d'un oscilloscope est la fréquence à laquelle son gain a
+chuté de \SI{3}{dB}. Comme sa réponse est, en première approximation, celle
+d'un premier ordre (chapitre~\ref{ch:bode}), elle se traduit directement en
+temps de montée.
+
+\begin{formule}
+Pour un premier ordre, le temps de montée à \SI{10}{\percent}--\SI{90}{\percent}
+vaut $t_r = 2{,}2\,\tau$ et la bande passante $B = 1/(2\pi\tau)$, d'où
+\[
+\boxed{t_r \times B = \frac{2{,}2}{2\pi} \approx 0{,}35}
+\]
+Les temps de montée du signal et de l'instrument se composent
+quadratiquement~:
+\[
+\boxed{t_{r,\text{lu}} = \sqrt{t_{r,\text{signal}}^2 + t_{r,\text{scope}}^2}}
+\]
+\end{formule}
+
+\begin{pratique}
+\textbf{Un front de \SI{10}{ns} vu par un oscilloscope de \SI{100}{MHz}.}
+L'instrument a lui-même $t_r = 0{,}35/10^8 = \SI{3.5}{ns}$. L'écran affichera
+\[
+t_{r,\text{lu}} = \sqrt{10^2+3{,}5^2} = \SI{10.6}{ns}
+\]
+soit une surestimation de \SI{6}{\percent} --- acceptable. Le même front vu
+par un oscilloscope de \SI{20}{MHz} ($t_r = \SI{17.5}{ns}$) donnerait
+\SI{20}{ns}~: le double de la réalité. La règle usuelle est de choisir une
+bande passante au moins trois à cinq fois supérieure à celle du signal.
+\end{pratique}
+
+\subsection{Échantillonnage, repliement et profondeur mémoire}\index{échantillonnage, repliement et profondeur mémoire}
+
+Un oscilloscope numérique ne voit pas un signal continu~: il en prélève des
+échantillons. Deux nombres, souvent confondus, gouvernent ce qu'il en reste.
+
+\begin{itemize}[nosep]
+\item La \textbf{fréquence d'échantillonnage} $f_e$ (en Sa/s) fixe la
+finesse temporelle. Un signal de fréquence supérieure à $f_e/2$ ne disparaît
+pas~: il réapparaît à une fréquence fausse. C'est le
+\textbf{repliement}\index{repliement (aliasing)}.
+\item La \textbf{profondeur mémoire} fixe la durée observable à cette
+finesse. Elle est la contrainte que l'on oublie~: allonger la base de temps
+force l'appareil à réduire $f_e$.
+\end{itemize}
+
+\begin{pratique}
+\textbf{Deux calculs qui évitent des heures d'égarement.} Un signal de
+\SI{60}{MHz} échantillonné à \SI{100}{MSa/s} apparaît à
+$|60-100| = \SI{40}{MHz}$~: une raie parfaitement nette, parfaitement fausse.
+
+Une mémoire de \SI{1}{Mpt} à \SI{1}{GSa/s} n'observe que
+$10^6/10^9 = \SI{1}{ms}$. Pour voir \SI{100}{ms}, l'appareil descendra à
+\SI{10}{MSa/s} et perdra tout ce qui dépasse \SI{5}{MHz}.
+\end{pratique}
+
+\begin{attention}
+Bande passante analogique et fréquence d'échantillonnage sont deux limites
+distinctes. Un appareil de \SI{100}{MHz} échantillonnant à \SI{1}{GSa/s} est
+cohérent~; le même à \SI{100}{MSa/s} repliera tout ce qui vit entre 50 et
+\SI{100}{MHz}, à l'intérieur même de sa bande annoncée.
+\end{attention}
+
+\subsection{La masse de l'oscilloscope est reliée à la terre}\index{masse de l'oscilloscope}
+
+C'est le piège le plus dangereux du laboratoire, et il ne se voit pas.
+
+La pince crocodile de la sonde n'est pas un point de référence flottant~:
+elle est reliée au châssis de l'appareil, donc à la terre du secteur. La
+poser sur un point qui n'est pas au potentiel de la terre revient à
+court-circuiter ce point à la terre, à travers la tresse de la sonde.
+
+\begin{attention}
+Sur un montage alimenté par le secteur sans transformateur d'isolement ---
+une alimentation à découpage, un variateur, un pont redresseur direct --- ce
+court-circuit est franc et instantané~: destruction du montage, de la sonde,
+parfois de l'entrée de l'oscilloscope, et risque électrique pour
+l'opérateur. Les deux parades légitimes sont la \textbf{sonde
+différentielle}\index{sonde différentielle} et le \textbf{transformateur
+d'isolement} placé en amont du montage. Faire flotter l'oscilloscope en
+coupant sa terre n'en est pas une~: son châssis se retrouve alors au
+potentiel du point mesuré.
+\end{attention}
+
+\begin{intuition}
+Une mesure différentielle légitime se reconnaît à une question simple~: la
+pince de masse peut-elle être reliée à la terre sans conséquence~? Si la
+réponse n'est pas un oui immédiat, il faut une sonde différentielle.
+\end{intuition}
+
+\subsection{Composer les incertitudes}\index{composition des incertitudes}
+
+Une grandeur calculée à partir de plusieurs mesures hérite de leurs
+incertitudes. Si celles-ci sont indépendantes, elles ne s'ajoutent pas~:
+elles se composent quadratiquement.
+
+\begin{formule}
+Pour un produit ou un quotient $y = a\,b$ ou $y = a/b$~:
+\[
+\boxed{\frac{\Delta y}{y} = \sqrt{\left(\frac{\Delta a}{a}\right)^2
++ \left(\frac{\Delta b}{b}\right)^2}}
+\]
+\end{formule}
+
+\begin{pratique}
+Une résistance déduite de $R = V/I$, avec \SI{1}{\percent} sur la tension et
+\SI{2}{\percent} sur le courant, est connue à
+$\sqrt{1^2+2^2} = \SI{2.2}{\percent}$ --- et non \SI{3}{\percent}. La
+composante dominante écrase les autres~: améliorer la mesure de tension au
+delà de \SI{1}{\percent} ne servirait à rien tant que le courant reste à
+\SI{2}{\percent}. C'est le premier réflexe de conception d'une chaîne de
+mesure~: chercher le maillon faible avant d'affiner les autres.
+\end{pratique}
+
+% ----------------------------------------------------------------------------
+% SECTION 3 : NIVEAU INGÉNIEUR
+% ----------------------------------------------------------------------------
+\section{Niveau Ingénieur}
+
+\begin{ingenieur}
+La mesure quatre fils, les capteurs de courant sans ouverture du circuit, le
+plancher de bruit d'une chaîne de mesure, et ce que garantit un certificat
+d'étalonnage\index{étalonnage}.
+\end{ingenieur}
+
+\subsection{La mesure quatre fils}\index{mesure quatre fils (Kelvin)}
+
+Mesurer une petite résistance avec deux fils, c'est mesurer la somme de cette
+résistance et de tout ce qui se trouve sur le trajet~: fils, connecteurs,
+oxydation des contacts. Ces derniers pèsent couramment quelques dizaines de
+milliohms, et ils dérivent avec la pression et la température.
+
+\begin{formule}
+Le montage \textbf{quatre fils}, ou montage de
+Kelvin\index{Kelvin, montage de}, sépare les fonctions~: deux fils imposent
+le courant, deux autres mesurent la tension.
+\[
+R = \frac{V_{\text{mesuré}}}{I_{\text{imposé}}}
+\]
+Le voltmètre étant de très haute impédance, le courant qui parcourt ses fils
+est négligeable~: leur résistance ne produit aucune chute, et n'entre plus
+dans le résultat.
+\end{formule}
+
+\begin{pratique}
+\textbf{Un shunt de \SI{100}{m\ohm} parcouru par \SI{1}{A}.} Deux contacts de
+\SI{50}{m\ohm} ajoutent \SI{50}{mV} à la mesure, pour une chute utile de
+\SI{100}{mV}~: l'erreur atteint \SI{50}{\percent}. En quatre fils, elle
+disparaît. En dessous de quelques ohms, la mesure deux fils n'a tout
+simplement pas de sens.
+\end{pratique}
+
+\subsection{Mesurer un courant sans ouvrir le circuit}\index{mesure de courant sans ouverture}
+
+Le shunt (chapitre~\ref{ch:courant}) impose d'interrompre le circuit et
+introduit une tension parasite. Trois familles s'en affranchissent.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{P{3.2cm}P{4.4cm}P{5.4cm}}
+\toprule
+\textbf{Principe} & \textbf{Domaine} & \textbf{Limite} \\
+\midrule
+Shunt & Continu et alternatif, du \si{\micro\ampere} au \si{\kilo\ampere} & Insertion, échauffement, pas d'isolement \\
+Effet Hall\index{effet Hall} & Continu et alternatif, jusqu'à quelques \SI{100}{kHz} & Dérive d'offset, sensible à la température \\
+Transformateur de courant & Alternatif seulement, dès quelques \si{\hertz} & Ne voit pas le continu, saturation du noyau \\
+Bobine de Rogowski\index{Rogowski, bobine de} & Transitoires rapides, forts courants & Ne voit pas le continu, exige un intégrateur \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{attention}
+Une pince ampèremétrique à transformateur affiche zéro sur un courant
+continu, sans le signaler. Sur une alimentation à découpage, elle ignorera la
+composante continue et ne montrera que l'ondulation~: la lecture n'est pas
+fausse, elle répond à une autre question que celle posée.
+\end{attention}
+
+\subsection{Le plancher de bruit de la mesure}\index{plancher de bruit}
+
+Toute chaîne de mesure a une limite basse, en deçà de laquelle elle ne mesure
+plus que son propre bruit. La résistance de source y contribue déjà, par
+agitation thermique (chapitre~\ref{ch:tension}).
+
+\begin{formule}
+La tension de bruit thermique d'une résistance $R$ dans une bande $B$ vaut
+\[
+\boxed{v_n = \sqrt{4kTRB}}
+\]
+avec $k = \SI{1.38e-23}{J/K}$ la constante de Boltzmann et $T$ en kelvins.
+\end{formule}
+
+\begin{pratique}
+\textbf{Ce que coûte la bande passante.} Une source de \SI{1}{k\ohm} à
+\SI{300}{K} produit \SI{4.07}{nV} par racine de hertz. Sur \SI{1}{MHz} de
+bande, cela fait \SI{4.07}{\micro V} efficaces~; sur \SI{1}{Hz}, quatre
+nanovolts.
+
+D'où la seule stratégie qui vaille pour descendre le plancher~: réduire la
+bande à ce qui est strictement nécessaire. Diviser la bande par cent divise le
+bruit par dix. Moyenner cent acquisitions produit exactement le même gain,
+pour la même raison.
+\end{pratique}
+
+\subsection{Du temporel au fréquentiel}\index{analyseur de spectre}
+
+L'oscilloscope montre $v(t)$. Deux instruments montrent autre chose.
+
+\begin{itemize}[nosep]
+\item L'\textbf{analyseur de spectre} affiche l'amplitude en fonction de la
+fréquence. Il révèle une raie parasite à \SI{-80}{dB} qu'aucun oscilloscope
+ne verrait, noyée dans huit bits de quantification. Il perd en revanche la
+phase, donc la forme d'onde.
+\item L'\textbf{analyseur de réseau} injecte un signal et mesure le rapport
+entrée/sortie en module et en phase~: c'est l'instrument du diagramme de Bode
+expérimental (chapitre~\ref{ch:bode}) et des marges de stabilité
+(chapitre~\ref{ch:pid}).
+\end{itemize}
+
+\subsection{Étalonnage, traçabilité, dérive}\index{traçabilité}
+
+Un certificat d'étalonnage n'affirme pas qu'un instrument est juste~: il
+affirme qu'à une date donnée, ses écarts ont été comparés à un étalon
+lui-même raccordé, de proche en proche, aux étalons nationaux. C'est la
+\textbf{traçabilité}.
+
+Entre deux étalonnages, l'instrument dérive --- vieillissement des
+références de tension, des diviseurs, du quartz de la base de temps. La
+spécification annuelle intègre cette dérive~; c'est pourquoi elle est
+toujours moins bonne que la spécification à 24~heures.
+
+\begin{attention}
+Une mesure ne vaut jamais mieux que sa référence. Comparer deux montages avec
+le même instrument non étalonné reste légitime~: l'erreur systématique
+s'élimine dans la différence. Annoncer une valeur absolue ne l'est pas.
+\end{attention}
+
+% ----------------------------------------------------------------------------
+% EXERCICES DU CHAPITRE 7
+% ----------------------------------------------------------------------------
+\section*{Exercices}
+\addcontentsline{toc}{section}{Exercices}
+
+\subsection*{Niveau débutant}
+
+\textbf{Exercice 7.1 ---} Un pont diviseur alimenté en \SI{10}{V} est formé de
+deux résistances de \SI{470}{k\ohm}. On mesure la tension au point milieu.
+\begin{enumerate}[nosep]
+\item Quelle tension attend-on sans instrument~?
+\item Que lit un voltmètre de \SI{10}{M\ohm}~?
+\item Que lirait l'entrée d'un oscilloscope, de \SI{1}{M\ohm}~?
+\end{enumerate}
+
+\begin{pratique}
+\textbf{Solution :}
+Sans charge, \SI{5}{V}. La résistance de Thévenin du point milieu vaut
+$470/2 = \SI{235}{k\ohm}$.
+
+Avec \SI{10}{M\ohm}~: $V = 5 \times 10/(10+0{,}235) = \SI{4.885}{V}$, erreur
+\SI{2.3}{\percent}.
+Avec \SI{1}{M\ohm}~: $V = 5 \times 1/(1+0{,}235) = \SI{4.05}{V}$, erreur
+\SI{19}{\percent}. Le même circuit, deux instruments, deux réponses~: c'est
+l'instrument qu'il faut interroger, pas le montage.
+\end{pratique}
+
+\vspace{2mm}
+\textbf{Exercice 7.2 ---} Un oscilloscope de \SI{50}{MHz} observe un signal
+carré dont les fronts durent \SI{8}{ns}.
+\begin{enumerate}[nosep]
+\item Quel est le temps de montée propre de l'appareil~?
+\item Quelle durée de front va-t-il afficher~?
+\item L'erreur est-elle acceptable~?
+\end{enumerate}
+
+\begin{pratique}
+\textbf{Solution :}
+$t_{r,\text{scope}} = 0{,}35/(50\times10^6) = \SI{7}{ns}$.
+L'écran affichera $\sqrt{8^2+7^2} = \SI{10.6}{ns}$, soit \SI{33}{\percent} de
+trop. C'est excessif~: rester sous \SI{10}{\percent} impose
+$\sqrt{8^2+t_r^2} < 8{,}8$, soit $t_r < \SI{3.7}{ns}$ et une bande passante
+d'au moins \SI{95}{MHz}. En pratique, on prendrait \SI{200}{MHz}~: la marge
+coûte peu à l'achat et évite de recalculer à chaque mesure.
+\end{pratique}
+
+\subsection*{Niveau intermédiaire}
+
+\textbf{Exercice 7.3 ---} Une sonde 10$\times$ présente $R_1 = \SI{9}{M\ohm}$.
+Le câble et l'entrée de l'oscilloscope totalisent \SI{85}{pF}, et l'entrée
+vaut \SI{1}{M\ohm}.
+\begin{enumerate}[nosep]
+\item Quelle valeur doit prendre la capacité de compensation~?
+\item Quelle capacité la sonde impose-t-elle au circuit mesuré~?
+\item Sur un circuit de \SI{10}{k\ohm} de résistance de Thévenin, quelle
+fréquence de coupure cette capacité introduit-elle~?
+\end{enumerate}
+
+\begin{pratique}
+\textbf{Solution :}
+$C_1 = R_2C_2/R_1 = 85/9 = \SI{9.4}{pF}$.
+C'est aussi ce que voit le circuit, la sonde se comportant en série.
+La coupure vaut $f_c = 1/(2\pi \times 10^4 \times 9{,}4\times10^{-12})
+= \SI{1.69}{MHz}$~: au-delà, la sonde elle-même filtre le signal qu'elle
+prétend observer. Sur un point de haute impédance, la sonde fait partie du
+circuit.
+\end{pratique}
+
+\vspace{2mm}
+\textbf{Exercice 7.4 ---} Un oscilloscope numérique dispose de \SI{10}{Mpt} de
+mémoire et échantillonne au maximum à \SI{2}{GSa/s}.
+\begin{enumerate}[nosep]
+\item Quelle durée peut-il observer à pleine cadence~?
+\item Pour observer \SI{50}{ms}, à quelle cadence descendra-t-il~?
+\item Quelle fréquence maximale restera alors visible sans repliement~?
+\end{enumerate}
+
+\begin{pratique}
+\textbf{Solution :}
+$10\times10^6/2\times10^9 = \SI{5}{ms}$.
+Pour \SI{50}{ms} avec \SI{10}{Mpt}~: $f_e = 10^7/0{,}05 = \SI{200}{MSa/s}$.
+Le critère de Shannon limite alors à \SI{100}{MHz}, et en pratique on
+resterait sous \SI{20}{MHz} pour reconstruire une forme d'onde exploitable.
+Allonger la fenêtre coûte toujours de la finesse~: c'est le compromis central
+d'un oscilloscope numérique.
+\end{pratique}
+
+\subsection*{Niveau ingénieur}
+
+\textbf{Exercice 7.5 ---} On mesure un shunt de \SI{50}{m\ohm} en deux fils.
+Les contacts valent \SI{30}{m\ohm} chacun, le courant imposé est \SI{2}{A}.
+\begin{enumerate}[nosep]
+\item Quelle tension le voltmètre lit-il~?
+\item Quelle valeur de résistance en déduit-il~?
+\item Quelle erreur commet-il, et que donnerait un montage quatre fils~?
+\item À partir de quelle valeur de shunt l'erreur passe-t-elle sous
+\SI{1}{\percent} en deux fils~?
+\end{enumerate}
+
+\begin{pratique}
+\textbf{Solution :}
+La résistance vue vaut $50+2\times30 = \SI{110}{m\ohm}$, d'où
+$V = 0{,}110 \times 2 = \SI{220}{mV}$ au lieu de \SI{100}{mV}.
+Le voltmètre en déduit \SI{110}{m\ohm}~: erreur de \SI{120}{\percent}.
+En quatre fils, les contacts ne portent plus le courant de mesure~: la
+lecture donne \SI{100}{mV} et \SI{50}{m\ohm} exactement.
+L'erreur relative vaut $60\times10^{-3}/R$~; elle passe sous
+\SI{1}{\percent} pour $R > \SI{6}{\ohm}$. En dessous, le quatre fils n'est
+pas un raffinement mais une nécessité.
+\end{pratique}
+
+\vspace{2mm}
+\textbf{Exercice 7.6 ---} Une chaîne de mesure amplifie la tension d'un
+capteur de résistance interne \SI{10}{k\ohm}. On souhaite une résolution de
+\SI{1}{\micro V} efficace à \SI{300}{K}.
+\begin{enumerate}[nosep]
+\item Quelle est la densité de bruit thermique de la source~?
+\item Quelle bande passante maximale respecte l'objectif~?
+\item Combien de temps faut-il moyenner pour l'atteindre si la bande est
+imposée à \SI{10}{kHz}~?
+\item Conclure sur la conception de la chaîne.
+\end{enumerate}
+
+\begin{pratique}
+\textbf{Solution :}
+$v_n = \sqrt{4kTR} = \sqrt{4\times1{,}38\times10^{-23}\times300\times10^4}
+= \SI{12.9}{nV/\sqrt{Hz}}$.
+Pour rester sous \SI{1}{\micro V}~: $B < (10^{-6}/12{,}9\times10^{-9})^2
+= \SI{6}{kHz}$.
+À \SI{10}{kHz}, le bruit vaut \SI{1.29}{\micro V}~; le moyennage divise par
+$\sqrt{N}$, il faut donc $N = (1{,}29)^2 \approx 2$ acquisitions --- chacune
+demandant au moins le temps d'établissement $1/(2\pi B) \approx \SI{16}{\micro s}$,
+soit une trentaine de microsecondes en tout. Le résultat est rassurant, mais la leçon est ailleurs~:
+la résistance de source fixe à elle seule un plancher que ni l'amplificateur
+ni le convertisseur ne pourront franchir. On conçoit une chaîne de mesure en
+partant de la source, pas de l'électronique.
+\end{pratique}
+
+\subsection*{Questions de compréhension}
+
+\textbf{Q1.} Pourquoi une sonde 10$\times$, qui atténue le signal par dix,
+donne-t-elle une meilleure mesure qu'une liaison directe~?
+
+\textit{Réponse : parce que ce qu'elle atténue n'est pas ce qui compte. En
+insérant \SI{9}{M\ohm} en série, elle divise par neuf la capacité que le
+câble impose au circuit --- de \SI{100}{pF} à environ \SI{11}{pF} --- et
+multiplie par dix la résistance présentée. Le circuit est donc bien moins
+perturbé. L'atténuation se rattrape par un simple changement de calibre, la
+perturbation ne se rattrape pas.}
+
+\textbf{Q2.} Un oscilloscope annonce \SI{100}{MHz} de bande passante et
+\SI{100}{MSa/s}. Où est le piège~?
+
+\textit{Réponse : ces deux nombres sont incohérents. Le critère de Shannon
+impose de ne reconstruire que jusqu'à $f_e/2 = \SI{50}{MHz}$, alors que
+l'étage d'entrée laisse passer jusqu'à \SI{100}{MHz}. Tout signal entre 50 et
+\SI{100}{MHz} sera donc replié et affiché à une fréquence fausse, à
+l'intérieur même de la bande annoncée. Un appareil cohérent échantillonne à
+cinq ou dix fois sa bande passante.}
+
+\textbf{Q3.} Pourquoi la mesure quatre fils ne sert-elle à rien pour une
+résistance de \SI{1}{M\ohm}~?
+
+\textit{Réponse : parce qu'elle corrige une erreur devenue négligeable.
+Quelques dizaines de milliohms de contact pèsent \SI{50}{\percent} sur un
+shunt de \SI{100}{m\ohm} et $6\times10^{-8}$ sur \SI{1}{M\ohm}. À cette
+valeur, les erreurs dominantes sont ailleurs~: courants de fuite, courant de
+polarisation du voltmètre, humidité de surface du support.}
+
+\textbf{Q4.} Deux montages sont comparés avec un multimètre dont on sait
+qu'il est déréglé. La comparaison a-t-elle une valeur~?
+
+\textit{Réponse : oui, à condition de s'en tenir à la comparaison. Un
+déréglage est une erreur systématique~: il déplace les deux lectures dans le
+même sens et s'élimine largement dans leur différence. Dire «~le montage A
+consomme moins que le montage B~» reste fondé~; dire «~le montage A consomme
+\SI{12.3}{mA}~» ne l'est pas. C'est toute la différence entre la fidélité,
+que cet instrument possède, et la justesse, qu'il a perdue.}
+
+% ----------------------------------------------------------------------------
+% RÉSUMÉ DU CHAPITRE 7
+% ----------------------------------------------------------------------------
+\section*{Résumé du chapitre}
+\addcontentsline{toc}{section}{Résumé du chapitre}
+
+\begin{bases}[title={\color{white} Résumé --- Les Bases}]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{P{4cm}P{9cm}}
+\toprule
+Multimètre / oscilloscope & «~Combien~?~» contre «~quand, et sous quelle forme~?~» \\
+Réglages & Sensibilité, base de temps, puis déclenchement \\
+Déclenchement & Une trace qui défile est un niveau mal placé, pas une panne \\
+Effet de charge & $\Delta V/V = R_{th}/(R_{th}+R_V)$ ; viser $R_V > 20\,R_{th}$ \\
+Lire un chiffre & Résolution, justesse et fidélité sont trois choses distinctes \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{bases}
+
+\begin{approfondissement}[title={\color{white} Résumé --- Approfondissement}]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{P{4cm}P{9cm}}
+\toprule
+Sonde 10$\times$ & $R_1C_1 = R_2C_2$ ; divise par neuf la capacité imposée \\
+Compensation & À vérifier sur le carré d'étalonnage, à chaque voie \\
+Bande passante & $t_r \times B \approx 0{,}35$ ; composition quadratique des fronts \\
+Échantillonnage & $f_e$ et profondeur mémoire sont deux limites distinctes \\
+Repliement & Une raie nette et fausse, à $|f - f_e|$ \\
+Masse & Reliée à la terre : sonde différentielle ou transformateur d'isolement \\
+Incertitudes & Composition quadratique ; le maillon faible écrase les autres \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{approfondissement}
+
+\begin{ingenieur}[title={\color{white} Résumé --- Niveau Ingénieur}]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{P{4cm}P{9cm}}
+\toprule
+Quatre fils & Indispensable sous quelques ohms ; sépare courant et tension \\
+Courant & Shunt, Hall, transformateur, Rogowski : quatre domaines de validité \\
+Plancher de bruit & $v_n = \sqrt{4kTRB}$ ; réduire la bande, ou moyenner \\
+Analyseurs & Spectre : l'amplitude sans la phase. Réseau : Bode expérimental \\
+Étalonnage & Traçabilité à une date ; la dérive est dans la spécification \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{ingenieur}
+
+\vspace{0.4cm}
+
+\begin{retenir}
+\textbf{Ce qu'il faut emporter de ce chapitre :} un instrument ne révèle pas
+un circuit, il en donne une image déformée dont on doit connaître les
+déformations. Trois d'entre elles reviennent partout --- la charge que
+l'instrument impose au point mesuré, la bande passante qui arrondit les
+fronts, et l'incertitude qui rend les dernières décimales muettes. Les
+ignorer, c'est prendre les limites de l'appareil pour des propriétés du
+montage~; c'est l'erreur qui coûte le plus d'heures en laboratoire.
+
+Nos circuits, jusqu'ici, ne savaient ni retarder, ni filtrer, ni stocker
+d'énergie~: tout y était instantané. Le premier composant qui brise cette
+immédiateté, en opposant au courant non plus une résistance mais une
+\emph{mémoire}, est le condensateur~: il ouvre la
+partie~\ref{part:passifs} et le chapitre~\ref{ch:condensateur}.
+\end{retenir}
 
 % ============================================================================
 % PARTIE II : COMPOSANTS PASSIFS
@@ -4105,7 +4853,7 @@ Le condensateur stocke des charges, la bobine stocke un champ~: avec eux, le tem
 \end{center}
 
 % ============================================================================
-% CHAPITRE 7 : LE CONDENSATEUR
+% CHAPITRE 8 : LE CONDENSATEUR
 % ============================================================================
 \chapter{Le Condensateur}\index{condensateur}\label{ch:condensateur}
 
@@ -4514,7 +5262,7 @@ w = \frac{1}{2}\varepsilon_0\varepsilon_r E^2 \qquad (\si{J/m^3})
 \]
 Pour un condensateur plan ($E = U/d$)~: $W = w \cdot Sd = \frac{1}{2}\varepsilon_0\varepsilon_r\frac{S}{d}U^2 = \frac{1}{2}CU^2$. \hfill$\blacksquare$
 
-% === EXERCICES DU CHAPITRE 7 ===
+% === EXERCICES DU CHAPITRE 8 ===
 \section*{Exercices}
 \addcontentsline{toc}{section}{Exercices}
 
@@ -4594,7 +5342,7 @@ Solution~: film PP ou céramique C0G, ou surdimensionner (prendre \SI{22}{\micro
 
 \textit{Réponse : oui, et durablement. $W = \frac12(10^{-3})(400^2) = \SI{80}{J}$ --- largement de quoi tuer. La fuite interne le décharge en heures à jours seulement ; sans résistance de décharge (\emph{bleeder}), il reste chargé longtemps. Règle : toujours mesurer puis décharger via une résistance avant d'intervenir. Le \emph{bleeder} permanent est une bonne pratique de conception sur les rails haute tension.}
 
-% === RÉSUMÉ DU CHAPITRE 7 ===
+% === RÉSUMÉ DU CHAPITRE 8 ===
 \section*{Résumé du chapitre}
 \addcontentsline{toc}{section}{Résumé du chapitre}
 
@@ -4650,7 +5398,7 @@ Le condensateur stocke l'énergie dans un champ \emph{électrique} et s'oppose a
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 8 : LA BOBINE (INDUCTANCE)
+% CHAPITRE 9 : LA BOBINE (INDUCTANCE)
 % ============================================================================
 \chapter{La Bobine (Inductance)}\index{bobine (inductance)}\label{ch:bobine}
 
@@ -5106,7 +5854,7 @@ w = \frac{1}{2}\frac{B^2}{\mu_0 \mu_r} = \frac{1}{2}\mu_0\mu_r H^2 \qquad (\si{J
 Paradoxe apparent~: un matériau à fort $\mu_r$ (ferrite) stocke \textit{moins} d'énergie par unité de volume qu'un entrefer à $\mu_r = 1$ (pour un même $B$). C'est pourquoi les inductances de puissance ont un \textbf{entrefer} (gap)~: c'est dans l'air de l'entrefer que l'essentiel de l'énergie est stocké, pas dans la ferrite. La ferrite sert à ``canaliser'' le flux magnétique, pas à stocker l'énergie.
 \end{attention}
 
-% === EXERCICES DU CHAPITRE 8 ===
+% === EXERCICES DU CHAPITRE 9 ===
 \section*{Exercices}
 \addcontentsline{toc}{section}{Exercices}
 
@@ -5196,7 +5944,7 @@ Le couplage peut \textbf{augmenter ou diminuer} l'inductance totale selon le sen
 
 \textit{Réponse : $u = L\,\mathrm{d}i/\mathrm{d}t = 10^{-8} \times 1/10^{-9} = \SI{10}{V}$. Massif --- sur un rail \SI{3.3}{V}, c'est rédhibitoire. C'est le \emph{ground bounce} : la piste de retour n'est pas idéale, son inductance transforme les appels de courant en bruit de masse. La parade est géométrique : minimiser la surface de boucle (plan de masse, découplage au ras des broches, chapitre~\ref{ch:pcb}). Confirme pourquoi $\SI{1}{nH/mm}$ n'est jamais négligeable en numérique rapide (chapitre~\ref{ch:integrite-signal}).}
 
-% === RÉSUMÉ DU CHAPITRE 8 ===
+% === RÉSUMÉ DU CHAPITRE 9 ===
 \section*{Résumé du chapitre}
 \addcontentsline{toc}{section}{Résumé du chapitre}
 
@@ -5250,7 +5998,7 @@ Condensateur et bobine sont posés~: deux composants réactifs, duaux, régis pa
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 9 : CIRCUITS RC, RL, RLC
+% CHAPITRE 10 : CIRCUITS RC, RL, RLC
 % ============================================================================
 \chapter{Circuits RC, RL et RLC}\index{circuits RC, RL et RLC}\label{ch:rc-rl-rlc}
 
@@ -5506,7 +6254,7 @@ La fréquence propre reste $\omega_0 = 1/\sqrt{LC}$.
 \textbf{Piège classique :} dans le RLC série, $Q$ augmente quand $R$ diminue. Dans le RLC parallèle, c'est l'inverse : $Q$ augmente quand $R$ augmente. C'est la conséquence de la dualité série/parallèle.
 \end{attention}
 
-\subsection{Résonance (aperçu --- développé au Ch.\ 12)}
+\subsection{Résonance (aperçu --- développé au Ch.~\ref{ch:resonance})}
 
 Quand on excite un circuit RLC par une source sinusoïdale à la fréquence $f_0$, l'impédance du circuit atteint un \textbf{extremum}~:
 \begin{itemize}[nosep]
@@ -5625,7 +6373,7 @@ En conception réelle, les circuits RLC apparaissent \textbf{sans qu'on le veuil
 Ces résonances parasites sont une source majeure de problèmes en CEM, en intégrité du signal et en stabilité des alimentations. Le travail de l'ingénieur consiste souvent à \textbf{amortir} ces résonances (résistances d'amortissement, composants à faible $Q$, placement des découplages --- chapitre~\ref{ch:pcb}).
 \end{attention}
 
-% === EXERCICES DU CHAPITRE 9 ===
+% === EXERCICES DU CHAPITRE 10 ===
 \section*{Exercices}
 \addcontentsline{toc}{section}{Exercices}
 
@@ -5715,7 +6463,7 @@ Si on avait un condensateur céramique (ESR $\sim\SI{1}{m\ohm}$)~: $Q \approx 0{
 
 \textit{Réponse : la stabilité fréquentielle et la sélectivité vont comme $Q$. Bande passante $\Delta f = f_0/Q$ : à \SI{10}{MHz}, \SI{200}{Hz} pour le quartz contre \SI{100}{kHz} pour le LC --- 500× plus sélectif. Un oscillateur à quartz dérive de quelques ppm, un LC de plusieurs \% (température, tolérances). D'où le quartz pour les horloges/références, le LC pour l'accord large bande où la stabilité importe peu.}
 
-% === RÉSUMÉ DU CHAPITRE 9 ===
+% === RÉSUMÉ DU CHAPITRE 10 ===
 \section*{Résumé du chapitre}
 \addcontentsline{toc}{section}{Résumé du chapitre}
 
@@ -5782,7 +6530,7 @@ Le sinus est le signal-roi de l'électricité~: celui du réseau, celui des port
 \end{center}
 
 % ============================================================================
-% CHAPITRE 10 : NOTATION COMPLEXE ET IMPÉDANCES
+% CHAPITRE 11 : NOTATION COMPLEXE ET IMPÉDANCES
 % ============================================================================
 \chapter{Notation Complexe et Impédances}\index{notation complexe}\label{ch:complexes}
 
@@ -6282,7 +7030,7 @@ S_{11} = \frac{\underline{Z}_{\text{in}} - Z_0}{\underline{Z}_{\text{in}} + Z_0}
 Si $\underline{Z}_{\text{in}} = Z_0 = \SI{50}{\ohm}$~: $S_{11} = 0$ (adaptation parfaite, aucune réflexion). Ce sujet est développé au chapitre~\ref{ch:integrite-signal} (lignes de transmission).
 \end{attention}
 
-% === EXERCICES DU CHAPITRE 10 ===
+% === EXERCICES DU CHAPITRE 11 ===
 \section*{Exercices}
 \addcontentsline{toc}{section}{Exercices}
 
@@ -6384,7 +7132,7 @@ $|S_{11}| = 0{,}667$, soit $|S_{11}|^2 = 44\%$ de la puissance réfléchie. L'ad
 
 \textit{Réponse : ces théorèmes ne reposent que sur la \emph{linéarité} et sur les lois de conservation (KCL/KVL), pas sur la nature réelle des coefficients. En régime sinusoïdal permanent, $\underline{U} = \underline{Z}\,\underline{I}$ est une relation linéaire à coefficients complexes : toute la machinerie algébrique se transpose en remplaçant $R$ par $\underline{Z}$ et les réels par des complexes. La structure des équations est identique.}
 
-% === RÉSUMÉ DU CHAPITRE 10 ===
+% === RÉSUMÉ DU CHAPITRE 11 ===
 \section*{Résumé du chapitre}
 \addcontentsline{toc}{section}{Résumé du chapitre}
 
@@ -6438,7 +7186,7 @@ L'impédance donne le rapport $\underline{U}/\underline{I}$~: module (gain) et a
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 11 : PUISSANCE EN RÉGIME SINUSOÏDAL
+% CHAPITRE 12 : PUISSANCE EN RÉGIME SINUSOÏDAL
 % ============================================================================
 \chapter{Puissance en Régime Sinusoïdal}\index{puissance en régime sinusoïdal}\label{ch:puissance-sinus}
 
@@ -6822,7 +7570,7 @@ P = W_1 + W_2 \qquad Q = \sqrt{3}(W_1 - W_2)
 
 C'est la méthode d'Aron, standard en mesure industrielle. Elle fonctionne même en charge déséquilibrée.
 
-% === EXERCICES DU CHAPITRE 11 ===
+% === EXERCICES DU CHAPITRE 12 ===
 \section*{Exercices}
 \addcontentsline{toc}{section}{Exercices}
 
@@ -6986,7 +7734,7 @@ La compensation annule le réactif en \emph{ajoutant} un condensateur qui contra
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 12 : RÉSONANCE
+% CHAPITRE 13 : RÉSONANCE
 % ============================================================================
 \chapter{Résonance}\index{résonance}\label{ch:resonance}
 
@@ -7438,7 +8186,7 @@ C'est pourquoi toutes les horloges numériques (montres, microcontrôleurs, ordi
 \textbf{Solution systématique :} amortir les résonances par des résistances (réduire $Q$), multiplier les condensateurs de découplage (couvrir toutes les fréquences), et simuler l'impédance du réseau de distribution d'alimentation ($Z_{\text{PDN}}$) dès la conception (chapitre~\ref{ch:pcb}).
 \end{attention}
 
-% === EXERCICES DU CHAPITRE 12 ===
+% === EXERCICES DU CHAPITRE 13 ===
 \section*{Exercices}
 \addcontentsline{toc}{section}{Exercices}
 
@@ -7611,7 +8359,7 @@ Que fait un circuit à un signal~? La fonction de transfert répond en une expre
 \end{center}
 
 % ============================================================================
-% CHAPITRE 13 : FONCTIONS DE TRANSFERT ET DIAGRAMMES DE BODE
+% CHAPITRE 14 : FONCTIONS DE TRANSFERT ET DIAGRAMMES DE BODE
 % ============================================================================
 \chapter{Fonctions de Transfert et Diagrammes de Bode}\index{fonctions de transfert}\label{ch:bode}
 
@@ -8390,7 +9138,7 @@ Cette commande balaye la fréquence de \SI{1}{Hz} à \SI{100}{MHz} avec 100 poin
 \textbf{Pour l'analyse de stabilité d'une boucle :} on ``coupe'' la boucle en un point, on injecte un signal de test, et on mesure la FTBO. Les marges se lisent directement sur le Bode résultant. Des outils comme LTspice, ngspice ou QSPICE le font nativement.
 \end{pratique}
 
-% === EXERCICES DU CHAPITRE 13 ===
+% === EXERCICES DU CHAPITRE 14 ===
 \section*{Exercices}
 \addcontentsline{toc}{section}{Exercices}
 
@@ -8566,7 +9314,7 @@ De plus, le $Q = 5$ crée un pic de $\SI{14}{dB}$ qui peut provoquer de la satur
 
 \textit{Réponse : deux pôles apportent au plus $-180^\circ$. S'ils sont proches (rapport 2) et encadrent le croisement \SI{0}{dB}, la phase y est déjà voisine de $-135^\circ$ à $-160^\circ$ : la marge fond, transitoire très oscillant ($Q$ élevé en BF), voire instabilité. Un système à deux pôles \emph{seuls} reste toutefois stable (phase $> -180^\circ$ strictement). Ajouter un 3\textsuperscript{e} pôle fait franchir $-180^\circ$ avec un gain encore $> \SI{0}{dB}$ possible : là, instabilité franche. D'où la règle : viser un croisement à pente $-\SI{20}{\decibel\per\dec}$ (un seul pôle actif au croisement), en repoussant les autres pôles au-delà.}
 
-% === RÉSUMÉ DU CHAPITRE 13 ===
+% === RÉSUMÉ DU CHAPITRE 14 ===
 \section*{Résumé du chapitre}
 \addcontentsline{toc}{section}{Résumé du chapitre}
 
@@ -8621,7 +9369,7 @@ La fonction de transfert et le diagramme de Bode sont désormais l'outil univers
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 14 : FILTRES PASSIFS ET ACTIFS
+% CHAPITRE 15 : FILTRES PASSIFS ET ACTIFS
 % ============================================================================
 \chapter{Filtres Passifs et Actifs}\index{filtres passifs et actifs}\label{ch:filtres}
 
@@ -9089,7 +9837,7 @@ Les filtres analogiques ont des limites fondamentales~:
 Pour les applications exigeantes (audio haute fidélité, télécoms, radar), on préfère souvent un filtre \textbf{numérique} (FIR ou IIR) implémenté dans un DSP ou un FPGA. Le filtre analogique subsiste en amont comme \textbf{anti-aliasing} avant l'ADC, et en aval comme \textbf{filtre de reconstruction} après le DAC.
 \end{attention}
 
-% === EXERCICES DU CHAPITRE 14 ===
+% === EXERCICES DU CHAPITRE 15 ===
 \section*{Exercices}
 \addcontentsline{toc}{section}{Exercices}
 
@@ -9207,7 +9955,7 @@ $\Delta f = f_0/Q_L = 433/0{,}587 \approx \SI{738}{MHz}$. Le filtre est \textbf{
 
 \textit{Réponse : parce qu'il \emph{échantillonne} le signal à $f_{\text{clk}}$. Tout signal d'entrée au-dessus de $f_{\text{clk}}/2$ se replie (aliasing) dans la bande utile — le filtre SC lui-même ne peut pas l'éviter puisqu'il est la cause. Un filtre analogique continu (RC simple suffit souvent) doit donc limiter le spectre d'entrée sous $f_{\text{clk}}/2$ avant l'échantillonnage. C'est la même contrainte que devant un ADC (chapitre~\ref{ch:conversion}) : on ne peut pas filtrer numériquement un repliement déjà produit.}
 
-% === RÉSUMÉ DU CHAPITRE 14 ===
+% === RÉSUMÉ DU CHAPITRE 15 ===
 \section*{Résumé du chapitre}
 \addcontentsline{toc}{section}{Résumé du chapitre}
 
@@ -9274,7 +10022,7 @@ Le silicium change tout~: avec la jonction PN, le courant ne circule plus que si
 \end{center}
 
 % ============================================================================
-% CHAPITRE 15 : LA DIODE
+% CHAPITRE 16 : LA DIODE
 % ============================================================================
 \chapter{La Diode}\index{diode}\label{ch:diode}
 
@@ -10094,7 +10842,7 @@ La méthode rigoureuse est identique à celle des circuits à diode~:
 En pratique, la régulation Zener n'est utilisée que pour les \textbf{faibles courants} ($< \SI{50}{mA}$), comme référence de tension\index{référence de tension}, ou comme protection (écrêtage). Pour les courants plus élevés, on utilise un \textbf{régulateur intégré} (LDO\index{LDO} ou DC-DC, chapitres~\ref{ch:ldo}--\ref{ch:decoupage}).
 \end{attention}
 
-% === EXERCICES DU CHAPITRE 15 ===
+% === EXERCICES DU CHAPITRE 16 ===
 \section*{Exercices}
 \addcontentsline{toc}{section}{Exercices}
 
@@ -10240,7 +10988,7 @@ La tension de sortie n'est que \SI{1.875}{V} --- bien en dessous de $V_Z$. La Ze
 
 \textit{Réponse : oui, c'est une jonction PN en direct. En conduction, électrons et trous se recombinent et libèrent l'énergie du gap. La différence est la nature du gap : le silicium est à gap \emph{indirect} --- la recombinaison exige l'assistance d'un phonon et l'énergie part majoritairement en chaleur. Les LED utilisent des semi-conducteurs à gap \emph{direct} (GaAs, GaN, InGaN\ldots) où la recombinaison émet directement un photon, avec un rendement radiatif élevé. La couleur est fixée par la largeur du gap ($E = h\nu$), d'où $V_F$ croissant du rouge au bleu.}
 
-% === RÉSUMÉ DU CHAPITRE 15 ===
+% === RÉSUMÉ DU CHAPITRE 16 ===
 \section*{Résumé du chapitre}
 \addcontentsline{toc}{section}{Résumé du chapitre}
 
@@ -10294,14 +11042,14 @@ La diode, c'est \emph{une} jonction PN~: elle conduit dans un sens, bloque dans 
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 16 : LE TRANSISTOR BIPOLAIRE (BJT)
+% CHAPITRE 17 : LE TRANSISTOR BIPOLAIRE (BJT)
 % ============================================================================
 
 % ============================================================================
-% CHAPITRE 16 : LE TRANSISTOR BIPOLAIRE (BJT) — VERSION PEER-REVIEW
+% CHAPITRE 17 : LE TRANSISTOR BIPOLAIRE (BJT) — VERSION PEER-REVIEW
 % ============================================================================
 % ============================================================================
-% CHAPITRE 16 : LE TRANSISTOR BIPOLAIRE (BJT)
+% CHAPITRE 17 : LE TRANSISTOR BIPOLAIRE (BJT)
 % VERSION RÉVISÉE — niveau peer-review
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -11186,10 +11934,10 @@ Ses limites sont doubles~: le courant de base charge la source de commande, et l
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 17 : LE MOSFET — VERSION PEER-REVIEW
+% CHAPITRE 18 : LE MOSFET — VERSION PEER-REVIEW
 % ============================================================================
 % ============================================================================
-% CHAPITRE 17 : LE MOSFET
+% CHAPITRE 18 : LE MOSFET
 % VERSION RÉVISÉE — niveau peer-review
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -11879,10 +12627,10 @@ Avec le BJT du chapitre~\ref{ch:bjt}, nous disposons maintenant de toutes les br
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 18 : L'AMPLIFICATEUR OPÉRATIONNEL — VERSION PEER-REVIEW
+% CHAPITRE 19 : L'AMPLIFICATEUR OPÉRATIONNEL — VERSION PEER-REVIEW
 % ============================================================================
 % ============================================================================
-% CHAPITRE 18 : L'AMPLIFICATEUR OPÉRATIONNEL (AOP)
+% CHAPITRE 19 : L'AMPLIFICATEUR OPÉRATIONNEL (AOP)
 % VERSION AUGMENTÉE — peer-review + pédagogie
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -12575,10 +13323,10 @@ Ce sont exactement ces limites qui décident si un filtre actif tient ses promes
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 19 : FILTRES ACTIFS — LIMITES, CONCEPTION ET RÉALITÉ
+% CHAPITRE 20 : FILTRES ACTIFS — LIMITES, CONCEPTION ET RÉALITÉ
 % ============================================================================
 % ============================================================================
-% CHAPITRE 19 : FILTRES ACTIFS — LIMITES, CONCEPTION ET RÉALITÉ
+% CHAPITRE 20 : FILTRES ACTIFS — LIMITES, CONCEPTION ET RÉALITÉ
 % Complément au chapitre 14 (topologies et calculs de base)
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -13297,7 +14045,7 @@ Le filtre anti-aliasing de notre cas d'étude est la dernière ligne analogique 
 \end{retenir}
 
 % ############################################################################
-% CHAPITRE 20 : LES OSCILLATEURS
+% CHAPITRE 21 : LES OSCILLATEURS
 % ############################################################################
 \chapter{Les Oscillateurs}\index{oscillateur}\label{ch:oscillateurs}
 
@@ -13798,7 +14546,7 @@ choix de l'oscillateur n'est donc jamais un détail périphérique.
 \end{attention}
 
 % ----------------------------------------------------------------------------
-% EXERCICES DU CHAPITRE 20
+% EXERCICES DU CHAPITRE 21
 % ----------------------------------------------------------------------------
 \section*{Exercices}
 \addcontentsline{toc}{section}{Exercices}
@@ -13965,7 +14713,7 @@ pourquoi sa stabilité est médiocre : tout ce qui affecte les seuils ou la
 constante de temps affecte directement la fréquence.}
 
 % ----------------------------------------------------------------------------
-% RÉSUMÉ DU CHAPITRE 20
+% RÉSUMÉ DU CHAPITRE 21
 % ----------------------------------------------------------------------------
 \section*{Résumé du chapitre}
 \addcontentsline{toc}{section}{Résumé du chapitre}
@@ -14047,10 +14795,10 @@ Deux niveaux, 0 et 1, et tout un monde. De la porte logique au processeur~: comb
 % ############################################################################
 
 % ============================================================================
-% CHAPITRE 21 : LOGIQUE COMBINATOIRE — VERSION FINALISÉE
+% CHAPITRE 22 : LOGIQUE COMBINATOIRE — VERSION FINALISÉE
 % ============================================================================
 % ============================================================================
-% CHAPITRE 21 : LOGIQUE COMBINATOIRE
+% CHAPITRE 22 : LOGIQUE COMBINATOIRE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -14731,10 +15479,10 @@ Les aléas rappellent la limite de ce monde sans mémoire~: ces circuits vivent 
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 22 : LOGIQUE SÉQUENTIELLE — VERSION FINALISÉE
+% CHAPITRE 23 : LOGIQUE SÉQUENTIELLE — VERSION FINALISÉE
 % ============================================================================
 % ============================================================================
-% CHAPITRE 22 : LOGIQUE SÉQUENTIELLE
+% CHAPITRE 23 : LOGIQUE SÉQUENTIELLE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -15448,10 +16196,10 @@ Nous n'avons fait qu'entrouvrir cette porte~: le chapitre~\ref{ch:timing} fait d
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 23 : CONTRAINTES TEMPORELLES ET SYNCHRONISATION
+% CHAPITRE 24 : CONTRAINTES TEMPORELLES ET SYNCHRONISATION
 % ============================================================================
 % ============================================================================
-% CHAPITRE 23 : CONTRAINTES TEMPORELLES ET SYNCHRONISATION
+% CHAPITRE 24 : CONTRAINTES TEMPORELLES ET SYNCHRONISATION
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -15985,10 +16733,10 @@ Avec des bascules disciplinées et des frontières d'horloge maîtrisées, on pe
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 24 : MACHINES À ÉTATS (FSM)
+% CHAPITRE 25 : MACHINES À ÉTATS (FSM)
 % ============================================================================
 % ============================================================================
-% CHAPITRE 24 : MACHINES À ÉTATS (FSM)
+% CHAPITRE 25 : MACHINES À ÉTATS (FSM)
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -16590,10 +17338,10 @@ Nos machines savent maintenant décider et séquencer. Mais un état de quelques
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 25 : MÉMOIRE — DU BIT PHYSIQUE AU SYSTÈME
+% CHAPITRE 26 : MÉMOIRE — DU BIT PHYSIQUE AU SYSTÈME
 % ============================================================================
 % ============================================================================
-% CHAPITRE 25 : MÉMOIRE — DU BIT PHYSIQUE AU SYSTÈME
+% CHAPITRE 26 : MÉMOIRE — DU BIT PHYSIQUE AU SYSTÈME
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -17120,7 +17868,7 @@ Nos systèmes savent désormais séquencer et stocker. Reste à \textbf{calculer
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 26 : CIRCUITS ARITHMÉTIQUES
+% CHAPITRE 27 : CIRCUITS ARITHMÉTIQUES
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -17690,7 +18438,7 @@ Nous disposons maintenant de toutes les briques~: logique, séquentiel, timing, 
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 27 : ARCHITECTURE NUMÉRIQUE
+% CHAPITRE 28 : ARCHITECTURE NUMÉRIQUE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -18284,7 +19032,7 @@ Notre système numérique est complet --- mais il vit en vase clos. Le monde, lu
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 28 : CONVERSION ANALOGIQUE-NUMÉRIQUE ET NUMÉRIQUE-ANALOGIQUE
+% CHAPITRE 29 : CONVERSION ANALOGIQUE-NUMÉRIQUE ET NUMÉRIQUE-ANALOGIQUE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -18762,7 +19510,7 @@ Le monde analogique entre et sort désormais du système numérique. Reste à fa
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 29 : PROTOCOLES DE COMMUNICATION
+% CHAPITRE 30 : PROTOCOLES DE COMMUNICATION
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -19279,7 +20027,7 @@ Ce dernier point n'est pas un détail~: c'est un aperçu. Bruit, propagation, é
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 30 : LIMITES PHYSIQUES DU NUMÉRIQUE
+% CHAPITRE 31 : LIMITES PHYSIQUES DU NUMÉRIQUE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -19692,7 +20440,7 @@ Aucun montage ne vaut mieux que son alimentation. Réguler proprement une tensio
 % ============================================================================
 
 % ============================================================================
-% CHAPITRE 31 : RÉGULATION LINÉAIRE ET LDO
+% CHAPITRE 32 : RÉGULATION LINÉAIRE ET LDO
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % Ouvre la PARTIE VII : ALIMENTATIONS
@@ -20255,7 +21003,7 @@ Pour casser cette limite, il faut refuser le compromis lui-même~: un interrupte
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 32 : ALIMENTATIONS À DÉCOUPAGE
+% CHAPITRE 33 : ALIMENTATIONS À DÉCOUPAGE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -20742,7 +21490,7 @@ Deux boîtes noires restent fermées~: la bobine elle-même --- saturation, pert
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 33 : COMPOSANTS MAGNÉTIQUES ET STABILITÉ DES ALIMENTATIONS
+% CHAPITRE 34 : COMPOSANTS MAGNÉTIQUES ET STABILITÉ DES ALIMENTATIONS
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % Clôt la PARTIE VII : ALIMENTATIONS
@@ -21183,7 +21931,7 @@ Mesurer, comparer, corriger~: la boucle fermée est l'une des idées les plus pu
 % ============================================================================
 
 % ============================================================================
-% CHAPITRE 34 : ASSERVISSEMENT ET TRANSFORMÉE DE LAPLACE
+% CHAPITRE 35 : ASSERVISSEMENT ET TRANSFORMÉE DE LAPLACE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % Ouvre la PARTIE VIII : ASSERVISSEMENT
@@ -21664,7 +22412,7 @@ Il reste à passer de l'analyse à la \textbf{conception}~: régler $C(s)$ pour 
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 35 : CORRECTEUR PID, LIEU DES RACINES ET MARGES DE STABILITÉ
+% CHAPITRE 36 : CORRECTEUR PID, LIEU DES RACINES ET MARGES DE STABILITÉ
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % Clôt la PARTIE VIII : ASSERVISSEMENT
@@ -22136,7 +22884,7 @@ C'est ici que le schéma rencontre la matière. Perturbations, couplages, blinda
 % ============================================================================
 
 % ============================================================================
-% CHAPITRE 36 : COMPATIBILITÉ ÉLECTROMAGNÉTIQUE — SOURCES, COUPLAGES, REMÈDES
+% CHAPITRE 37 : COMPATIBILITÉ ÉLECTROMAGNÉTIQUE — SOURCES, COUPLAGES, REMÈDES
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % Ouvre la PARTIE IX : CEM ET CONCEPTION DE CARTES
@@ -22886,7 +23634,7 @@ Ce chapitre a donné les lois et les remèdes~; mais la CEM se gagne ou se perd 
 
 
 % ============================================================================
-% CHAPITRE 37 : CONCEPTION DE PCB — LE CIRCUIT IMPRIMÉ EST UN COMPOSANT
+% CHAPITRE 38 : CONCEPTION DE PCB — LE CIRCUIT IMPRIMÉ EST UN COMPOSANT
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -23519,7 +24267,7 @@ Ce chapitre a traité le routage tant que la piste reste «~petite~»~: ses para
 
 
 % ============================================================================
-% CHAPITRE 38 : INTÉGRITÉ DU SIGNAL — QUAND LA PISTE DEVIENT UNE LIGNE
+% CHAPITRE 39 : INTÉGRITÉ DU SIGNAL — QUAND LA PISTE DEVIENT UNE LIGNE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
