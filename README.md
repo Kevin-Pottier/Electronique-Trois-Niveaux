@@ -1,6 +1,6 @@
 # L'Électronique en trois niveaux
 
-**Du débutant absolu à l'ingénieur confirmé** — un livre libre de 659 pages,
+**Du débutant absolu à l'ingénieur confirmé** — un livre libre de 653 pages,
 écrit en français, du courant électrique au circuit imprimé.
 
 > « Un bébé doit pouvoir comprendre les bases, un ingénieur doit pouvoir s'y
@@ -25,8 +25,8 @@ sinusoïdal · Fonctions de transfert et filtres · Semi-conducteurs ·
 de cartes. Plus : annexes (séries E, constantes, notations), bibliographie
 commentée, glossaire, lexique français–anglais, index.
 
-En chiffres : **659 pages** · **232 exercices corrigés** · **172 figures**
-(CircuiTikZ/TikZ) · **995 entrées d'index** · toutes les valeurs numériques
+En chiffres : **653 pages** · **232 exercices corrigés** · **172 figures**
+(CircuiTikZ/TikZ) · **623 entrées d'index** · toutes les valeurs numériques
 vérifiées par le calcul.
 
 ## Obtenir le livre

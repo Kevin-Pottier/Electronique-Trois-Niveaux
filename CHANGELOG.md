@@ -16,7 +16,12 @@ découpage, qui pointait le chapitre Laplace là où le sujet — l'EMI — rel�
 du chapitre CEM. Débordements de ligne ramenés de 47 à 24 par
 `\emergencystretch`.
 
-659 pages, 232 exercices corrigés, 995 entrées d'index.
+Passe typographique dans la foulée : césure française activée sans babel (les
+motifs sont déjà dans le format pdflatex, inutile de charger un paquet qui
+casserait CircuiTikZ), 47 débordements de ligne ramenés à zéro, index resserré
+de 995 à 623 entrées par retrait des recopies mécaniques de titres.
+
+653 pages, 232 exercices corrigés, 623 entrées d'index.
 
 ## v1.01 — 28 août 2026
 Publication du dépôt : licence CC BY-NC-SA, README public, guide de
