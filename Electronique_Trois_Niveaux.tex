@@ -308,7 +308,7 @@ Le texte s'appuie sur des encadrés récurrents, toujours les mêmes~: \textbf{f
 % ============================================================================
 % PARTIE I : FONDAMENTAUX
 % ============================================================================
-\part{Fondamentaux}
+\part{Fondamentaux}\label{part:fondamentaux}
 \vspace{2.2cm}
 \begin{center}
 \begin{minipage}{0.78\textwidth}
@@ -4039,14 +4039,14 @@ Bruit & Superposition quadratique : $\overline{v_n^2} = \sum \overline{v_{n,k}^2
 \vspace{0.4cm}
 
 \begin{retenir}
-Superposition, Thévenin, Norton, Millman~: la boîte à outils du circuit \emph{résistif} linéaire est complète. Reste que ces circuits ne savent ni retarder, ni filtrer, ni stocker d'énergie --- tout y est instantané. Le premier composant qui brise cette immédiateté, en opposant au courant non plus une résistance mais une \emph{mémoire}, est le condensateur~: il ouvre la Partie II et le chapitre~\ref{ch:condensateur}.
+Superposition, Thévenin, Norton, Millman~: la boîte à outils du circuit \emph{résistif} linéaire est complète. Reste que ces circuits ne savent ni retarder, ni filtrer, ni stocker d'énergie --- tout y est instantané. Le premier composant qui brise cette immédiateté, en opposant au courant non plus une résistance mais une \emph{mémoire}, est le condensateur~: il ouvre la Partie~\ref{part:passifs} et le chapitre~\ref{ch:condensateur}.
 \end{retenir}
 
 
 % ============================================================================
 % PARTIE II : COMPOSANTS PASSIFS
 % ============================================================================
-\part{Composants Passifs}
+\part{Composants Passifs}\label{part:passifs}
 \vspace{2.2cm}
 \begin{center}
 \begin{minipage}{0.78\textwidth}
@@ -5723,7 +5723,7 @@ Le régime transitoire\index{régime transitoire} (échelon, décharge) se réso
 % ============================================================================
 % PARTIE III : RÉGIME SINUSOÏDAL
 % ============================================================================
-\part{Régime Sinusoïdal}
+\part{Régime Sinusoïdal}\label{part:sinusoidal}
 \vspace{2.2cm}
 \begin{center}
 \begin{minipage}{0.78\textwidth}
@@ -7545,14 +7545,14 @@ Parasites & Tout composant réel résonne --- amortir systématiquement \\
 \vspace{0.4cm}
 
 \begin{retenir}
-La résonance est le cas particulier où la réponse d'un circuit du 2\textsuperscript{e} ordre culmine à une fréquence précise. Mais tout circuit --- filtre, ampli, boucle de régulation --- possède une réponse en fréquence complète~: gain et phase sur tout le spectre. L'outil qui la décrit et la trace systématiquement, la fonction de transfert\index{fonction de transfert} et son diagramme de Bode\index{Bode, diagramme de}, ouvre la Partie IV au chapitre~\ref{ch:bode}.
+La résonance est le cas particulier où la réponse d'un circuit du 2\textsuperscript{e} ordre culmine à une fréquence précise. Mais tout circuit --- filtre, ampli, boucle de régulation --- possède une réponse en fréquence complète~: gain et phase sur tout le spectre. L'outil qui la décrit et la trace systématiquement, la fonction de transfert\index{fonction de transfert} et son diagramme de Bode\index{Bode, diagramme de}, ouvre la Partie~\ref{part:filtres} au chapitre~\ref{ch:bode}.
 \end{retenir}
 
 
 % ============================================================================
 % PARTIE IV : FONCTIONS DE TRANSFERT ET FILTRES
 % ============================================================================
-\part{Fonctions de Transfert et Filtres}
+\part{Fonctions de Transfert et Filtres}\label{part:filtres}
 \vspace{2.2cm}
 \begin{center}
 \begin{minipage}{0.78\textwidth}
@@ -9208,14 +9208,14 @@ Numérique & FIR/IIR dans DSP/FPGA pour les besoins exigeants \\
 \vspace{0.4cm}
 
 \begin{retenir}
-Les filtres actifs reposent entièrement sur l'amplificateur opérationnel --- lui-même construit à partir de transistors, eux-mêmes bâtis sur une brique plus élémentaire~: la jonction PN. Avant de comprendre l'AOP (chapitre~\ref{ch:aop}), il faut comprendre le premier composant non-linéaire, celui qui ne laisse passer le courant que dans un sens~: la diode. Elle ouvre la Partie V et le chapitre~\ref{ch:diode}.
+Les filtres actifs reposent entièrement sur l'amplificateur opérationnel --- lui-même construit à partir de transistors, eux-mêmes bâtis sur une brique plus élémentaire~: la jonction PN. Avant de comprendre l'AOP (chapitre~\ref{ch:aop}), il faut comprendre le premier composant non-linéaire, celui qui ne laisse passer le courant que dans un sens~: la diode. Elle ouvre la Partie~\ref{part:semiconducteurs} et le chapitre~\ref{ch:diode}.
 \end{retenir}
 
 
 % ============================================================================
 % PARTIE V : SEMI-CONDUCTEURS
 % ============================================================================
-\part{Semi-conducteurs}
+\part{Semi-conducteurs}\label{part:semiconducteurs}
 \vspace{2.2cm}
 \begin{center}
 \begin{minipage}{0.78\textwidth}
@@ -13238,7 +13238,7 @@ Le filtre anti-aliasing de notre cas d'étude est la dernière ligne analogique 
 \end{retenir}
 
 % ############################################################################
-\part{Électronique Numérique}
+\part{Électronique Numérique}\label{part:numerique}
 \vspace{2.2cm}
 \begin{center}
 \begin{minipage}{0.78\textwidth}
@@ -17709,7 +17709,7 @@ Résultat~: \textbf{16 à 24 bits effectifs} avec un quantificateur grossier (so
 \end{formule}
 
 \begin{intuition}
-\textbf{Le sigma-delta est une boucle d'asservissement} (au sens du chapitre~\ref{ch:aop} et de la future partie VIII) : l'intégrateur accumule l'erreur entre l'entrée et la sortie reconstruite, et la boucle force la \textit{moyenne} de la sortie 1 bit à suivre l'entrée. La précision ne vient pas du quantificateur (grossier) mais de la \textbf{rétroaction} --- exactement comme un AOP contre-réactionné tire sa précision de la boucle, pas de son gain brut.
+\textbf{Le sigma-delta est une boucle d'asservissement} (au sens du chapitre~\ref{ch:aop} et de la future partie~\ref{part:asservissement}) : l'intégrateur accumule l'erreur entre l'entrée et la sortie reconstruite, et la boucle force la \textit{moyenne} de la sortie 1 bit à suivre l'entrée. La précision ne vient pas du quantificateur (grossier) mais de la \textbf{rétroaction} --- exactement comme un AOP contre-réactionné tire sa précision de la boucle, pas de son gain brut.
 \end{intuition}
 
 \begin{pratique}
@@ -18220,13 +18220,13 @@ Le mode est imposé par \textit{chaque périphérique} (datasheet). Les modes 0 
 \section{Niveau Ingénieur}
 
 \begin{ingenieur}
-La signalisation différentielle (CAN, RS-485, USB), l'arbitrage CAN, et le choix raisonné d'un protocole. Liens~: chapitre~\ref{ch:bjt} (paire différentielle\index{paire différentielle}), chapitre~\ref{ch:timing} (CDC), partie IX à venir (intégrité du signal).
+La signalisation différentielle (CAN, RS-485, USB), l'arbitrage CAN, et le choix raisonné d'un protocole. Liens~: chapitre~\ref{ch:bjt} (paire différentielle\index{paire différentielle}), chapitre~\ref{ch:timing} (CDC), partie~\ref{part:cem} à venir (intégrité du signal).
 \end{ingenieur}
 
 \subsection{La signalisation différentielle~: l'immunité par construction}\index{signalisation différentielle : l'immunité par construction}
 
 \begin{formule}
-UART, SPI et I\textsuperscript{2}C sont \textit{single-ended}~: le niveau est mesuré par rapport à la masse. Sur quelques centimètres de PCB, très bien. Sur des mètres de câble dans un environnement industriel ou automobile, la masse elle-même bouge (chutes ohmiques, boucles --- partie IX) et les parasites s'additionnent au signal.
+UART, SPI et I\textsuperscript{2}C sont \textit{single-ended}~: le niveau est mesuré par rapport à la masse. Sur quelques centimètres de PCB, très bien. Sur des mètres de câble dans un environnement industriel ou automobile, la masse elle-même bouge (chutes ohmiques, boucles --- partie~\ref{part:cem}) et les parasites s'additionnent au signal.
 
 \textbf{La parade : transmettre la \textit{différence}.} Deux fils portent $V_+$ et $V_-$ en opposition ; le récepteur ne lit que $V_+ - V_-$ :
 \begin{itemize}[nosep]
@@ -18286,7 +18286,7 @@ UART, SPI et I\textsuperscript{2}C sont \textit{single-ended}~: le niveau est me
 \textbf{Ce que l'électronicien doit retenir :}
 \begin{itemize}[nosep]
 \item \textbf{Détection de vitesse par pull-up}~: une résistance de $\SI{1.5}{k\ohm}$ sur D+ (full-speed, \SI{12}{Mbit/s}) ou D$-$ (low-speed) signale la présence et la vitesse. En high-speed (\SI{480}{Mbit/s}), négociation électrique supplémentaire (\textit{chirp}).
-\item \textbf{Impédance contrôlée}~: la paire D+/D$-$ doit être routée à $\SI{90}{\ohm}$ différentiel, longueurs appariées --- premier contact avec l'intégrité du signal de la partie IX.
+\item \textbf{Impédance contrôlée}~: la paire D+/D$-$ doit être routée à $\SI{90}{\ohm}$ différentiel, longueurs appariées --- premier contact avec l'intégrité du signal de la partie~\ref{part:cem}.
 \item \textbf{Alimentation}~: \SI{5}{V}, négociation de courant (100/500 mA, et bien plus en USB-C Power Delivery).
 \end{itemize}
 \end{formule}
@@ -18461,7 +18461,7 @@ I\textsuperscript{2}C avancé & Arbitrage non destructif, clock stretching, réc
 Différentiel & Le parasite est en mode commun $\Rightarrow$ rejeté par la paire diff (Ch.~\ref{ch:bjt}). RS-485, CAN, USB \\
 CAN & Dominant/récessif différentiel, arbitrage par identifiant = priorité, CRC + ACK + stuffing \\
 Limite physique & Débit $\times$ longueur borné par la propagation (arbitrage en 1 temps bit) \\
-USB & NRZI + CDR, pull-up de détection, $\SI{90}{\ohm}$ différentiel (annonce partie IX) \\
+USB & NRZI + CDR, pull-up de détection, $\SI{90}{\ohm}$ différentiel (annonce partie~\ref{part:cem}) \\
 CDC & Tout récepteur série $=$ synchroniseur (Ch.~\ref{ch:timing}) $+$ FSM (Ch.~\ref{ch:fsm}) $+$ couche électrique \\
 \bottomrule
 \end{tabular}
@@ -18493,7 +18493,7 @@ en montrant où sont les murs --- et comment l'ingénieur compose avec.}
 
 \vspace{0.5cm}
 
-Les chapitres~\ref{ch:combinatoire} à~\ref{ch:protocoles} ont construit le numérique comme si les transistors étaient parfaits, identiques et éternels. Ils ne le sont pas. Ce chapitre rassemble les limites physiques qui gouvernent la conception moderne~: le \textbf{bruit} (chapitres~\ref{ch:bjt}--\ref{ch:mosfet}) qui fixe un plancher, la \textbf{consommation} (chapitre~\ref{ch:combinatoire}) qui fixe un plafond, la \textbf{variabilité} (chapitres~\ref{ch:timing}, \ref{ch:memoire}) qui mange les marges, et le \textbf{vieillissement} qui dégrade tout dans le temps. C'est la synthèse physique de toute la partie VI --- et la raison d'être des parties suivantes (alimentations, CEM).
+Les chapitres~\ref{ch:combinatoire} à~\ref{ch:protocoles} ont construit le numérique comme si les transistors étaient parfaits, identiques et éternels. Ils ne le sont pas. Ce chapitre rassemble les limites physiques qui gouvernent la conception moderne~: le \textbf{bruit} (chapitres~\ref{ch:bjt}--\ref{ch:mosfet}) qui fixe un plancher, la \textbf{consommation} (chapitre~\ref{ch:combinatoire}) qui fixe un plafond, la \textbf{variabilité} (chapitres~\ref{ch:timing}, \ref{ch:memoire}) qui mange les marges, et le \textbf{vieillissement} qui dégrade tout dans le temps. C'est la synthèse physique de toute la partie~\ref{part:numerique} --- et la raison d'être des parties suivantes (alimentations, CEM).
 
 % ============================================================================
 \section{Les Bases}\index{bases}
@@ -18631,7 +18631,7 @@ Plus le transistor est \textbf{petit}, plus il est \textbf{dispersé}. À surfac
 Rappel du chapitre~\ref{ch:timing}, vu maintenant comme une \textit{conséquence} de la physique~:
 \begin{itemize}[nosep]
 \item \textbf{P (process)}~: RDF + LER + gradients de fabrication $\Rightarrow$ puces ``rapides'' (FF) et ``lentes'' (SS) dans le même lot.
-\item \textbf{V (voltage)}~: l'alimentation réelle varie de $\pm 5$--$10\%$ (chutes ohmiques, transitoires --- ce sera la partie VII).
+\item \textbf{V (voltage)}~: l'alimentation réelle varie de $\pm 5$--$10\%$ (chutes ohmiques, transitoires --- ce sera la partie~\ref{part:alimentations}).
 \item \textbf{T (température)}~: $-40$ à $+125\,$°C en automobile. La mobilité baisse avec $T$ (plus lent), $I_{\text{off}}$ explose (plus de fuite), $V_{th}$ baisse.
 \end{itemize}
 
@@ -18722,12 +18722,14 @@ Dès \SI{8}{nm}, des études (Esmaeilzadeh et al., 2011) prédisaient que \textb
 \end{enumerate}
 \end{pratique}
 
-\subsection{Synthèse~: la partie VI en une page}\index{synthèse : la partie VI en une page}
+%% NOTE : numero en dur dans la cle \index{} (makeindex trie sur la chaine litterale
+%% et ne developpe pas \ref). A verifier si la partie VI change de rang.
+\subsection{Synthèse~: la partie~\ref{part:numerique} en une page}\index{synthèse : la partie VI en une page}
 
 \begin{intuition}
 \textbf{La chaîne causale complète du numérique réel :}
 
-La physique du transistor (chapitre~\ref{ch:mosfet}~: $I_{\text{off}}$, $\SI{60}{mV/dec}$, porteurs chauds) fixe les délais et les fuites $\to$ qui fixent le timing (chapitres~\ref{ch:combinatoire}--\ref{ch:timing}) $\to$ qui contraint les architectures (chapitres~\ref{ch:fsm}--\ref{ch:architecture}~: pipeline\index{pipeline}, hiérarchie mémoire, multicœur) $\to$ tandis que le bruit et la variabilité (ce chapitre) limitent les marges des mémoires (chapitre~\ref{ch:memoire}) et des convertisseurs (chapitre~\ref{ch:conversion}) $\to$ et que le budget thermique (ce chapitre) impose la spécialisation (dark silicon) et la gestion fine de l'énergie. \textbf{Aucun de ces étages n'est ``de l'informatique''~: tout est de l'électronique.} Et la gestion de l'énergie qui vient d'apparaître partout en filigrane mérite sa propre partie~: les \textbf{alimentations} (partie VII).
+La physique du transistor (chapitre~\ref{ch:mosfet}~: $I_{\text{off}}$, $\SI{60}{mV/dec}$, porteurs chauds) fixe les délais et les fuites $\to$ qui fixent le timing (chapitres~\ref{ch:combinatoire}--\ref{ch:timing}) $\to$ qui contraint les architectures (chapitres~\ref{ch:fsm}--\ref{ch:architecture}~: pipeline\index{pipeline}, hiérarchie mémoire, multicœur) $\to$ tandis que le bruit et la variabilité (ce chapitre) limitent les marges des mémoires (chapitre~\ref{ch:memoire}) et des convertisseurs (chapitre~\ref{ch:conversion}) $\to$ et que le budget thermique (ce chapitre) impose la spécialisation (dark silicon) et la gestion fine de l'énergie. \textbf{Aucun de ces étages n'est ``de l'informatique''~: tout est de l'électronique.} Et la gestion de l'énergie qui vient d'apparaître partout en filigrane mérite sa propre partie~: les \textbf{alimentations} (partie~\ref{part:alimentations}).
 \end{intuition}
 
 % === EXERCICES ===
@@ -18863,7 +18865,7 @@ Vieillissement & NBTI/PBTI ($V_{th}$ dérive), HCI (porteurs chauds, Ch.~\ref{ch
 Électromigration & Black : $MTTF = AJ^{-n}e^{E_a/kT}$. Dimensionne les rails ($J_{\max}\sim\SI{1.5}{MA/cm^2}$) \\
 Dark silicon & Budget fixe + transistors $\uparrow$ $\Rightarrow$ $>50\%$ de la puce éteinte \\
 Stratégies & Spécialisation ($10$--$100\times$), DVFS + power gating, near-threshold, 3D \\
-Transition & La gestion d'énergie est partout $\Rightarrow$ partie VII : les alimentations \\
+Transition & La gestion d'énergie est partout $\Rightarrow$ partie~\ref{part:alimentations} : les alimentations \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -18871,13 +18873,13 @@ Transition & La gestion d'énergie est partout $\Rightarrow$ partie VII : les al
 
 
 \begin{retenir}
-\textbf{Ce qu'il faut emporter de ce chapitre --- et de toute la partie :} le numérique bute sur trois murs. Un mur thermodynamique : la pente sous-seuil fige $V_{DD}$, et Dennard est mort. Un mur statistique : Pelgrom et $kT/C$ font de chaque transistor un individu, et des marges une taxe permanente. Un mur thermique : le budget est fixe, les fuites croissent, et plus de la moitié de la puce reste éteinte. Toute la partie VI se relit à cette lumière : le timing, les marges PVT, le multic\oe ur, la hiérarchie mémoire, la spécialisation ne sont pas des choix d'informaticiens --- ce sont les conséquences directes de la physique du chapitre~\ref{ch:mosfet}.
+\textbf{Ce qu'il faut emporter de ce chapitre --- et de toute la partie :} le numérique bute sur trois murs. Un mur thermodynamique : la pente sous-seuil fige $V_{DD}$, et Dennard est mort. Un mur statistique : Pelgrom et $kT/C$ font de chaque transistor un individu, et des marges une taxe permanente. Un mur thermique : le budget est fixe, les fuites croissent, et plus de la moitié de la puce reste éteinte. Toute la partie~\ref{part:numerique} se relit à cette lumière : le timing, les marges PVT, le multic\oe ur, la hiérarchie mémoire, la spécialisation ne sont pas des choix d'informaticiens --- ce sont les conséquences directes de la physique du chapitre~\ref{ch:mosfet}.
 
 Une variable domine désormais tout~: l'\textbf{énergie} --- la produire proprement, la distribuer sans chute, l'adapter à la microseconde. C'est l'objet de la partie qui s'ouvre~: les alimentations, en commençant par la régulation linéaire.
 \end{retenir}
 
 % ============================================================================
-\part{Alimentations}
+\part{Alimentations}\label{part:alimentations}
 \vspace{2.2cm}
 \begin{center}
 \begin{minipage}{0.78\textwidth}
@@ -18907,7 +18909,7 @@ puis construit la vraie~: le régulateur linéaire.}
 
 \vspace{0.5cm}
 
-La partie VI s'est conclue sur un constat~: l'énergie est devenue \textit{la} contrainte du numérique (chapitre~\ref{ch:limites-numerique}). Cette partie VII traite la discipline qui la gouverne~: les alimentations. Nous commençons par la régulation \textbf{linéaire} --- la plus simple, la plus propre, la moins efficace --- avant le découpage (chapitre~\ref{ch:decoupage}). Au passage, ce chapitre referme une boucle ouverte au chapitre~\ref{ch:resistance}~: le diviseur de tension, et pourquoi il ne faut \textit{jamais} le confondre avec une alimentation.
+La partie~\ref{part:numerique} s'est conclue sur un constat~: l'énergie est devenue \textit{la} contrainte du numérique (chapitre~\ref{ch:limites-numerique}). Cette partie~\ref{part:alimentations} traite la discipline qui la gouverne~: les alimentations. Nous commençons par la régulation \textbf{linéaire} --- la plus simple, la plus propre, la moins efficace --- avant le découpage (chapitre~\ref{ch:decoupage}). Au passage, ce chapitre referme une boucle ouverte au chapitre~\ref{ch:resistance}~: le diviseur de tension, et pourquoi il ne faut \textit{jamais} le confondre avec une alimentation.
 
 % ============================================================================
 \section{Les Bases}\index{bases}
@@ -19126,7 +19128,7 @@ La boucle force $V_{\text{out}}\frac{R_b}{R_a+R_b} = V_{\text{ref}}$, d'où~:
 \[
 Z_{\text{out,BF}} = \frac{Z_{\text{out,BO}}}{1 + A\beta} \;\;\sim\; \text{m}\Omega \text{ en basse fréquence}
 \]
-Mais $A\beta$ chute avec la fréquence (pôle dominant, chapitre~\ref{ch:aop})~: $Z_{\text{out}}$ \textbf{remonte} en HF. C'est pourquoi un régulateur seul ne suffit jamais~: les \textbf{condensateurs de découplage\index{découplage}} prennent le relais là où la boucle ne suit plus --- partage des rôles que la partie IX (PCB) mettra en pratique.
+Mais $A\beta$ chute avec la fréquence (pôle dominant, chapitre~\ref{ch:aop})~: $Z_{\text{out}}$ \textbf{remonte} en HF. C'est pourquoi un régulateur seul ne suffit jamais~: les \textbf{condensateurs de découplage\index{découplage}} prennent le relais là où la boucle ne suit plus --- partage des rôles que la partie~\ref{part:cem} (PCB) mettra en pratique.
 \end{intuition}
 
 \subsection{Régulateur classique vs LDO~: une affaire de ballast}\index{régulateur classique vs LDO : une affaire de ballast}
@@ -19290,7 +19292,7 @@ Ces trois protections, inventées pour le \textit{µA723} puis généralisées (
 \midrule
 Rendement & $V_{\text{out}}/V_{\text{in}}$ (faible si écart grand) & 80--95\%, peu sensible au rapport \\
 Bruit de sortie & \textbf{Très faible} (\si{\micro V}), pas d'ondulation & Ondulation au $f_{\text{sw}}$ + harmoniques \\
-CEM & Silencieux & Source d'EMI (partie IX) \\
+CEM & Silencieux & Source d'EMI (partie~\ref{part:cem}) \\
 Complexité / coût & 3 broches + 2 condensateurs & Inductance, diode/FET, contrôle \\
 Élévation possible & Non (abaisseur seulement) & Oui (boost, inverseur\ldots) \\
 \bottomrule
@@ -19364,7 +19366,7 @@ Pire cas pour la Zener~: $V_{\text{in,max}} = \SI{10}{V}$, $I_L = 0$~: $I_Z = (1
 
 (b) 1 LSB $= 3{,}3/4096 = \SI{0.81}{mV}$. $3{,}8 \gg 0{,}81$~: \textbf{insuffisant} --- l'ondulation injecte $\sim 4{,}7$ LSB de perturbation (via la référence ou l'alimentation analogique).
 
-(c) Dans l'ordre d'efficacité~: filtre LC ou perle ferrite\index{ferrite} + condensateur \textit{avant} le LDO (20--30 dB à \SI{500}{kHz}), choisir un LDO à PSRR HF renforcé, monter $f_{\text{sw}}$ du buck là où le PSRR et le filtre sont meilleurs, et soigner le routage (partie IX~: c'est souvent le couplage, pas la conduction). Le LDO seul ne fait pas le travail --- c'est tout le sens de son PSRR en fréquence.
+(c) Dans l'ordre d'efficacité~: filtre LC ou perle ferrite\index{ferrite} + condensateur \textit{avant} le LDO (20--30 dB à \SI{500}{kHz}), choisir un LDO à PSRR HF renforcé, monter $f_{\text{sw}}$ du buck là où le PSRR et le filtre sont meilleurs, et soigner le routage (partie~\ref{part:cem}~: c'est souvent le couplage, pas la conduction). Le LDO seul ne fait pas le travail --- c'est tout le sens de son PSRR en fréquence.
 \end{pratique}
 
 \textbf{Exercice 30.6 ---} Sur un LDO à ballast PMOS, le pôle de sortie vaut $f_p = 1/(2\pi R_L C_{\text{out}})$ avec $C_{\text{out}} = \SI{10}{\micro F}$, et le zéro ESR $f_z = 1/(2\pi\cdot ESR\cdot C_{\text{out}})$. La datasheet exige $f_z$ entre \SI{10}{kHz} et \SI{200}{kHz}. (a) Plage d'ESR acceptable ? (b) Une céramique X7R ($ESR = \SI{5}{m\ohm}$) convient-elle ? (c) Pourquoi le problème dépend-il de la charge ?
@@ -19751,7 +19753,7 @@ Le rendement réel (85--98\,\%) est limité par cinq familles de pertes~:
 \textbf{Le compromis fréquence fondamental :}
 \begin{itemize}[nosep]
 \item $f_{\text{sw}} \uparrow$ $\Rightarrow$ bobine et condensateurs plus \textbf{petits} (l'ondulation $\Delta i_L \propto 1/f_{\text{sw}}$ baisse)~: SMPS compact, c'est pourquoi les chargeurs modernes (GaN) montent à plusieurs MHz.
-\item $f_{\text{sw}} \uparrow$ $\Rightarrow$ pertes de commutation et de grille \textbf{augmentent} (linéaire en $f$), et l'EMI empire (chapitre~\ref{ch:laplace}, à venir, partie IX).
+\item $f_{\text{sw}} \uparrow$ $\Rightarrow$ pertes de commutation et de grille \textbf{augmentent} (linéaire en $f$), et l'EMI empire (chapitre~\ref{ch:laplace}, à venir, partie~\ref{part:cem}).
 \end{itemize}
 L'optimum se situe typiquement entre \SI{100}{kHz} et quelques MHz, repoussé vers le haut par les transistors rapides (GaN, SiC) qui réduisent $t_r, t_f$ et $Q_g$.
 \end{attention}
@@ -19772,12 +19774,12 @@ La sortie n'est jamais parfaitement continue~: elle porte une \textbf{ondulation
 \textbf{Un SMPS mal routé ne fonctionne pas --- ou pollue tout le circuit.} Les courants commutés ont des $di/dt$ énormes (ampères en nanosecondes). La règle cardinale : \textbf{minimiser la surface des boucles à fort $di/dt$}.
 
 \begin{itemize}[nosep]
-\item \textbf{La boucle chaude} (\textit{hot loop}) --- entrée, interrupteur haut, interrupteur bas/diode, condensateur d'entrée --- doit être la plus petite possible~: son inductance parasite $\times\,di/dt$ crée des surtensions (\textit{ringing}) et rayonne (antenne-cadre, partie IX).
+\item \textbf{La boucle chaude} (\textit{hot loop}) --- entrée, interrupteur haut, interrupteur bas/diode, condensateur d'entrée --- doit être la plus petite possible~: son inductance parasite $\times\,di/dt$ crée des surtensions (\textit{ringing}) et rayonne (antenne-cadre, partie~\ref{part:cem}).
 \item Le condensateur d'entrée doit être \textbf{au plus près} des interrupteurs.
 \item Le nœud de commutation $V_{sw}$ (qui bascule de plusieurs volts en nanosecondes) est la principale source d'EMI~: le garder \textbf{compact}, jamais étalé.
 \item Masse en plan, séparation des retours de puissance et de signal.
 \end{itemize}
-C'est le premier sujet où l'électronique de puissance et l'intégrité du signal (partie IX) se rejoignent~: \textbf{le schéma juste ne suffit pas, le dessin du circuit imprimé fait la moitié du travail}.
+C'est le premier sujet où l'électronique de puissance et l'intégrité du signal (partie~\ref{part:cem}) se rejoignent~: \textbf{le schéma juste ne suffit pas, le dessin du circuit imprimé fait la moitié du travail}.
 \end{attention}
 
 \subsection{Choisir et dimensionner~: la démarche}\index{choisir et dimensionner : la démarche}
@@ -19957,7 +19959,7 @@ le magnétique réel, et la stabilité de la régulation.}
 
 \vspace{0.5cm}
 
-Le chapitre~\ref{ch:decoupage} a construit les convertisseurs à découpage en supposant la bobine parfaite et la régulation acquise. Deux idéalisations dangereuses. D'abord, les \textbf{composants magnétiques réels} (bobines, transformateurs) saturent et dissipent --- ils sont souvent le maillon qui limite un SMPS. Ensuite, un convertisseur est une \textbf{boucle de contre-réaction\index{contre-réaction}} (chapitre~\ref{ch:aop}) avec un filtre LC en sortie~: sa stabilité n'est jamais gratuite. Ce chapitre referme la partie VII en reliant le magnétique (chapitre~\ref{ch:bobine}) et l'asservissement (chapitre~\ref{ch:aop}, et la future partie VIII).
+Le chapitre~\ref{ch:decoupage} a construit les convertisseurs à découpage en supposant la bobine parfaite et la régulation acquise. Deux idéalisations dangereuses. D'abord, les \textbf{composants magnétiques réels} (bobines, transformateurs) saturent et dissipent --- ils sont souvent le maillon qui limite un SMPS. Ensuite, un convertisseur est une \textbf{boucle de contre-réaction\index{contre-réaction}} (chapitre~\ref{ch:aop}) avec un filtre LC en sortie~: sa stabilité n'est jamais gratuite. Ce chapitre referme la partie~\ref{part:alimentations} en reliant le magnétique (chapitre~\ref{ch:bobine}) et l'asservissement (chapitre~\ref{ch:aop}, et la future partie~\ref{part:asservissement}).
 
 % ============================================================================
 \section{Les Bases}\index{bases}
@@ -20129,7 +20131,7 @@ La bobine couplée est donc une \textbf{inductance de stockage à deux enrouleme
 \end{figure}
 
 \begin{intuition}
-\textbf{Pourquoi l'isolation galvanique est non négociable sur secteur :} relier directement le \SI{230}{V} secteur à un circuit accessible mettrait l'utilisateur en contact avec le réseau (danger mortel, et masses référencées au neutre/phase). Le transformateur (ou la bobine couplée du flyback) coupe toute liaison conductrice : le secondaire ``flotte'', référencé à sa propre masse. C'est la barrière de sécurité de toute alimentation murale --- et un sujet central de la partie IX (CEM, courants de fuite, condensateurs Y).
+\textbf{Pourquoi l'isolation galvanique est non négociable sur secteur :} relier directement le \SI{230}{V} secteur à un circuit accessible mettrait l'utilisateur en contact avec le réseau (danger mortel, et masses référencées au neutre/phase). Le transformateur (ou la bobine couplée du flyback) coupe toute liaison conductrice : le secondaire ``flotte'', référencé à sa propre masse. C'est la barrière de sécurité de toute alimentation murale --- et un sujet central de la partie~\ref{part:cem} (CEM, courants de fuite, condensateurs Y).
 \end{intuition}
 
 % ============================================================================
@@ -20220,7 +20222,7 @@ On place les zéros du compensateur \textit{avant} ou \textit{autour} de $f_{LC}
 \end{formule}
 
 \begin{intuition}
-\textbf{Tout converge vers le chapitre~\ref{ch:aop}.} La stabilité d'une alimentation n'est pas un sujet à part : c'est l'analyse de boucle (gain de boucle, marges de phase et de gain, pôles et zéros sur le diagramme de Bode) appliquée à un système de puissance. Le filtre LC, le zéro ESR, le RHPZ ne sont que des pôles et zéros supplémentaires à placer sur le tracé. \textbf{Concevoir l'alimentation, c'est faire de l'asservissement} --- ce que la partie VIII formalisera complètement avec Laplace, le lieu des racines et les correcteurs PID. L'alimentation est le premier grand système asservi de ce livre.
+\textbf{Tout converge vers le chapitre~\ref{ch:aop}.} La stabilité d'une alimentation n'est pas un sujet à part : c'est l'analyse de boucle (gain de boucle, marges de phase et de gain, pôles et zéros sur le diagramme de Bode) appliquée à un système de puissance. Le filtre LC, le zéro ESR, le RHPZ ne sont que des pôles et zéros supplémentaires à placer sur le tracé. \textbf{Concevoir l'alimentation, c'est faire de l'asservissement} --- ce que la partie~\ref{part:asservissement} formalisera complètement avec Laplace, le lieu des racines et les correcteurs PID. L'alimentation est le premier grand système asservi de ce livre.
 \end{intuition}
 
 % === EXERCICES ===
@@ -20368,7 +20370,7 @@ Il est temps de donner à tout cela son langage exact. La partie qui s'ouvre for
 \end{retenir}
 
 % ============================================================================
-\part{Asservissement}
+\part{Asservissement}\label{part:asservissement}
 \vspace{2.2cm}
 \begin{center}
 \begin{minipage}{0.78\textwidth}
@@ -20792,7 +20794,7 @@ $\zeta = \frac{10}{2}\sqrt{10^{-6}/10^{-3}} = 5\times\sqrt{10^{-3}} = 5\times0{,
 
 \textbf{Q1.} En quoi une commande en boucle fermée est-elle fondamentalement supérieure à une boucle ouverte face aux perturbations et aux erreurs de modèle ? Donnez l'intuition, pas la formule.
 
-\textit{Réponse : la boucle ouverte est un pari sur un modèle --- elle calcule la commande en supposant connaître le procédé, et toute erreur de modèle, toute perturbation, passe intégralement en sortie sans que rien ne le signale. La boucle fermée ne prédit pas : elle \textbf{constate}. Elle mesure le résultat réel, le compare à la cible, et corrige l'écart --- peu importe d'où il vient. Les causes d'erreur n'ont plus besoin d'être connues, ni même connaissables : seul l'écart compte. On remplace la connaissance a priori par de l'information en temps réel. Le prix de ce miracle : la boucle a sa propre dynamique, et peut osciller --- tout le reste de la partie VIII.}
+\textit{Réponse : la boucle ouverte est un pari sur un modèle --- elle calcule la commande en supposant connaître le procédé, et toute erreur de modèle, toute perturbation, passe intégralement en sortie sans que rien ne le signale. La boucle fermée ne prédit pas : elle \textbf{constate}. Elle mesure le résultat réel, le compare à la cible, et corrige l'écart --- peu importe d'où il vient. Les causes d'erreur n'ont plus besoin d'être connues, ni même connaissables : seul l'écart compte. On remplace la connaissance a priori par de l'information en temps réel. Le prix de ce miracle : la boucle a sa propre dynamique, et peut osciller --- tout le reste de la partie~\ref{part:asservissement}.}
 
 \textbf{Q2.} La transformée de Laplace change la dérivation en multiplication par $s$. Pourquoi cette simple propriété rend-elle les équations différentielles solubles par algèbre ?
 
@@ -21315,11 +21317,11 @@ Démarche & Modéliser $G$, choisir P/PI/PID, régler (pôles ou marges), proté
 \begin{retenir}
 \textbf{Ce qu'il faut emporter de ce chapitre :} le PID, ce sont trois verbes --- réagir (P), mémoriser (I), anticiper (D) --- et une fonction de transfert : un pôle à l'origine pour la précision, deux zéros à placer pour la phase. La stabilité se lit indifféremment sur deux cartes : le lieu des racines (où vont les pôles quand le gain monte, jusqu'au $K_{\text{crit}}$) et les marges de Bode (\SI{45}{°} et \SI{6}{dB} de réserve au croisement) --- deux projections du même critère. Et le PID réel exige ses trois garde-fous : dérivé filtré, anti-windup, échantillonnage assez rapide.
 
-La partie VIII se referme~: nous savons analyser \textit{et} concevoir une boucle. Reste le monde extérieur --- nos circuits rayonnent, se polluent, cohabitent sur des cartes. La dernière partie s'ouvre sur la compatibilité électromagnétique~: chapitre~\ref{ch:cem}.
+La partie~\ref{part:asservissement} se referme~: nous savons analyser \textit{et} concevoir une boucle. Reste le monde extérieur --- nos circuits rayonnent, se polluent, cohabitent sur des cartes. La dernière partie s'ouvre sur la compatibilité électromagnétique~: chapitre~\ref{ch:cem}.
 \end{retenir}
 
 % ============================================================================
-\part{CEM et Conception de Cartes}
+\part{CEM et Conception de Cartes}\label{part:cem}
 \vspace{2.2cm}
 \begin{center}
 \begin{minipage}{0.78\textwidth}
@@ -23453,7 +23455,7 @@ C'est l'ouvrage qui a servi d'étalon au présent livre~: pour la clarté des ex
 \section*{Électronique générale et pratique}
 
 \noindent Paul \textsc{Horowitz}, Winfield \textsc{Hill}, \emph{The Art of Electronics}, 3\textsuperscript{e}~éd., Cambridge University Press, 2015.\\[1mm]
-Unanimement décrit comme la référence mondiale de la conception de circuits --- beaucoup l'appellent simplement «~la bible~». Écrit par des praticiens, d'un style informel, rempli de schémas réels, de mesures et de tables de composants~: on y pioche plus qu'on ne l'apprend. La 2\textsuperscript{e}~édition existe en français sous le titre \emph{Traité de l'électronique analogique et numérique} (deux volumes)~; la 3\textsuperscript{e} n'est pas traduite. Prolonge naturellement les parties IV à VI.
+Unanimement décrit comme la référence mondiale de la conception de circuits --- beaucoup l'appellent simplement «~la bible~». Écrit par des praticiens, d'un style informel, rempli de schémas réels, de mesures et de tables de composants~: on y pioche plus qu'on ne l'apprend. La 2\textsuperscript{e}~édition existe en français sous le titre \emph{Traité de l'électronique analogique et numérique} (deux volumes)~; la 3\textsuperscript{e} n'est pas traduite. Prolonge naturellement les parties~\ref{part:filtres} à~\ref{part:numerique}.
 
 \vspace{4mm}
 
