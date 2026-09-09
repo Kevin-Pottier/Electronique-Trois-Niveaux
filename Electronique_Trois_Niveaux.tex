@@ -205,7 +205,7 @@ un ingénieur doit pouvoir s'y référer comme source de qualité.~»}
 
 \vfill
 {\small Distribué librement sous licence CC BY-NC-SA 4.0}\\[1mm]
-{\small Version 1.0 --- Juillet 2026}
+{\small Version 1.1.1 --- Septembre 2026}
 \end{titlepage}
 
 % === COLOPHON / LICENCE ===
@@ -220,7 +220,7 @@ Cet ouvrage est mis à disposition selon les termes de la licence \textbf{Creati
 Vous êtes libres de \textbf{partager} (copier, redistribuer) et d'\textbf{adapter} (modifier, transformer, améliorer) ce document, sous trois conditions : \textbf{créditer l'auteur}, \textbf{ne pas en faire un usage commercial}, et \textbf{rediffuser toute version modifiée sous cette même licence}. Texte intégral : \url{https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr}\\[4mm]
 Composé en \LaTeX{} (pdflatex)~; schémas et figures en CircuiTikZ et TikZ.\\
 Rédigé avec l'assistance de l'intelligence artificielle Claude (Anthropic), sous la direction et la vérification de l'auteur.\\
-Version 1.0 --- compilé le \today.\\
+Version 1.1.1 --- compilé le \today.\\
 Corrections, suggestions et contributions : \texttt{kevin.pottier@eseo.fr}
 \end{minipage}
 \end{center}
@@ -291,6 +291,7 @@ Le texte s'appuie sur des encadrés récurrents, toujours les mêmes~: \textbf{f
 0.5 & juillet 2026 & Relecture technique intégrale : trois passes par chapitre, tous les exercices vérifiés par le calcul, une soixantaine de figures créées ou refaites. \\
 0.75 & juillet 2026 & Appareil éditorial : page de garde, licence, avant-propos, guide de lecture, table des figures, pages de partie, annexes, bibliographie, glossaires. \\
 1.0 & juillet 2026 & Index complet (956 entrées), typographie française (espaces insécables), version de référence. \\
+1.1.1 & septembre 2026 & Renvois croisés convertis en références symboliques (951 renvois, 49 \texttt{\textbackslash label}). Ajout du chapitre~\ref{ch:oscillateurs}, \emph{Les Oscillateurs}, en fin de partie~\ref{part:semiconducteurs}~: les chapitres suivants sont décalés d'un rang. \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -13239,7 +13240,746 @@ Composants & \textbf{C0G/NP0} obligatoires. X7R/X5R \textbf{interdits} en filtra
 \begin{retenir}
 \textbf{Ce qu'il faut emporter de ce chapitre :} un filtre réel se conçoit, il ne se calcule pas seulement --- gabarit, type (Butterworth par défaut, Bessel pour la phase, Tchebychev pour la raideur), ordre, tables de $Q$, cellules, puis vérification. Trois verrous physiques gouvernent le passage au réel : le GBW de l'AOP ($> 10\,Q f_0$, sinon le $Q$ dérive jusqu'à l'oscillation), le slew rate ($> 2\pi f_0 Q V_{\text{crête}}$, car le pic amplifie de $Q$), et les composants eux-mêmes (C0G obligatoire, X7R interdit). Au-delà de $Q \approx 10$, changer de topologie.
 
-Le filtre anti-aliasing de notre cas d'étude est la dernière ligne analogique avant l'ADC. La partie qui s'ouvre change de monde~: la tension cesse d'être une grandeur pour devenir un symbole. Le chapitre~\ref{ch:combinatoire} pose la première brique de cet édifice --- la logique combinatoire.
+Le filtre anti-aliasing de notre cas d'étude est la dernière ligne analogique avant l'ADC. Reste une menace que ce chapitre a nommée trois fois sans jamais la regarder en face~: un filtre à fort $Q$ dont l'AOP manque de gain-bande ne se contente pas de dériver, il finit par osciller. Le chapitre~\ref{ch:oscillateurs} retourne le problème~: que faut-il réunir pour qu'un montage oscille \emph{exprès}, et proprement~?
+\end{retenir}
+
+% ############################################################################
+% CHAPITRE 20 : LES OSCILLATEURS
+% ############################################################################
+\chapter{Les Oscillateurs}\index{oscillateur}\label{ch:oscillateurs}
+
+\begin{center}
+\textit{Jusqu'ici, tous nos montages transformaient un signal d'entrée.\\
+Un oscillateur n'a pas d'entrée~: il fabrique son signal à partir de rien,\\
+ou plus exactement à partir du bruit qui traîne dans le circuit.}
+\end{center}
+
+\vspace{0.5cm}
+
+% ----------------------------------------------------------------------------
+% SECTION 1 : LES BASES
+% ----------------------------------------------------------------------------
+\section{Les Bases}\index{bases}
+
+\begin{bases}
+Ce qu'est un oscillateur, à quoi il sert, les deux grandes familles
+(sinusoïdaux et à relaxation\index{oscillateur!à relaxation}), et pourquoi il
+faut une boucle fermée pour en construire un. Prérequis~: la loi d'Ohm
+(chapitre~\ref{ch:resistance}) et la notion de fréquence.
+\end{bases}
+
+\subsection{Un circuit qui produit son propre signal}\index{circuit qui produit son propre signal}
+
+Tous les montages étudiés jusqu'ici ont un point commun~: on leur applique un
+signal, ils en délivrent un autre. Un amplificateur amplifie ce qu'on lui
+donne, un filtre trie ce qu'on lui envoie. Sans entrée, la sortie reste à zéro.
+
+Or un système électronique a besoin de signaux qui n'existent nulle part
+ailleurs~: l'horloge\index{horloge} d'un microcontrôleur, la porteuse d'un
+émetteur radio, la note d'un synthétiseur, le tic d'un chronomètre. Il faut
+donc des circuits capables de produire un signal périodique \emph{sans qu'on
+leur en fournisse un}.
+
+\begin{intuition}
+Un oscillateur, c'est une balançoire qu'on pousse au bon moment. Si vous
+poussez à chaque passage, avec exactement l'énergie perdue par frottement, le
+mouvement s'entretient indéfiniment. Trop peu, il s'éteint~; trop, il s'emballe
+jusqu'à la butée.
+\end{intuition}
+
+\subsection{Deux familles d'oscillateurs}\index{deux familles d'oscillateurs}
+
+Les oscillateurs se répartissent en deux grandes familles, selon la forme du
+signal produit.
+
+\begin{itemize}[nosep]
+\item Les \textbf{oscillateurs sinusoïdaux}\index{oscillateur!sinusoïdal}
+produisent une sinusoïde. Ils reposent sur un circuit sélectif en fréquence
+(RC, LC ou quartz\index{quartz}) associé à un amplificateur. On les emploie en
+radio, en instrumentation, en audio.
+\item Les \textbf{oscillateurs à relaxation} produisent un signal carré ou
+triangulaire. Ils reposent sur la charge et la décharge répétées d'un
+condensateur entre deux seuils. On les emploie en logique, en temporisation, en
+génération de rythme.
+\end{itemize}
+
+\begin{attention}
+Un signal carré n'est pas «~une sinusoïde déformée~»~: c'est une somme de
+sinusoïdes (fondamental et harmoniques impairs). Un oscillateur à relaxation
+produit donc un spectre riche, là où un oscillateur sinusoïdal vise une raie
+unique. Ce n'est pas un défaut de l'un ou de l'autre~: ce sont deux usages
+différents.
+\end{attention}
+
+\subsection{Ordres de grandeur}\index{ordres de grandeur}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{llp{6.6cm}}
+\toprule
+\textbf{Fréquence} & \textbf{Technologie} & \textbf{Application} \\
+\midrule
+\SI{0.1}{Hz} à \SI{20}{Hz} & RC, relaxation & Clignotants, rythmes, LFO de synthétiseur \\
+\SI{20}{Hz} à \SI{20}{kHz} & RC (pont de Wien) & Audio, générateurs de laboratoire \\
+\SI{32.768}{kHz} & Quartz & Horloges temps réel, montres \\
+\SI{1}{MHz} à \SI{50}{MHz} & Quartz & Horloges de microcontrôleurs, bus \\
+\SI{50}{MHz} à \SI{3}{GHz} & LC, VCO & Radio, téléphonie, synthèse de fréquence \\
+au-delà de \SI{3}{GHz} & Résonateurs distribués & Hyperfréquences, radar \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Dix décades séparent le clignotant du radar, et pourtant le principe reste le
+même~: une boucle qui s'entretient.
+
+\subsection{Le principe~: une boucle fermée}\index{principe : une boucle fermée}
+
+Un oscillateur associe deux blocs montés en boucle fermée.
+
+\begin{itemize}[nosep]
+\item Un \textbf{amplificateur}, de gain $A$, qui apporte l'énergie~;
+\item Un \textbf{réseau de retour}\index{réseau de retour}, de transmittance
+$\beta$, qui ramène une partie de la sortie vers l'entrée, en ne privilégiant
+qu'une seule fréquence.
+\end{itemize}
+
+Le réseau de retour joue deux rôles simultanés~: il sélectionne la fréquence,
+et il fixe la fraction du signal réinjectée. C'est lui qui décide de tout.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[line width=1pt, scale=1.0]
+% amplificateur
+\draw (0,0) -- (1.2,0.9) -- (1.2,-0.9) -- cycle;
+\node at (0.55,0) {$A$};
+\node[above] at (0.6,0.95) {amplificateur};
+% sortie
+\draw[->] (1.2,0) -- (3.6,0) node[right] {$v_s$};
+\filldraw (2.6,0) circle (1.6pt);
+% retour
+\draw (2.6,0) -- (2.6,-1.9) -- (1.9,-1.9);
+\draw (1.9,-2.35) rectangle (0.3,-1.45);
+\node at (1.1,-1.9) {$\beta$};
+\node[below] at (1.1,-2.4) {réseau sélectif};
+\draw[->] (0.3,-1.9) -- (-0.7,-1.9) -- (-0.7,0) -- (0,0);
+\end{tikzpicture}
+\caption{Structure universelle d'un oscillateur~: un amplificateur et un réseau
+de retour sélectif, montés en boucle fermée. Aucune entrée n'est nécessaire.}
+\end{figure}
+
+\begin{formule}
+Pour que l'oscillation s'entretienne, le signal qui fait un tour de boucle doit
+se retrouver identique à lui-même~:
+\[
+\boxed{A\,\beta = 1}
+\]
+Cette égalité porte sur un nombre complexe~: elle impose donc \emph{deux}
+conditions simultanées, sur le module et sur la phase.
+\end{formule}
+
+\begin{intuition}
+Reprenons la balançoire~: la condition sur le module dit «~pousser avec
+exactement l'énergie perdue~», et la condition sur la phase dit «~pousser au
+bon moment~». Les deux sont nécessaires. Pousser trop tôt ou trop tard freine
+le mouvement, même avec la bonne force.
+\end{intuition}
+
+\subsection{D'où part l'oscillation~?}\index{d'où part l'oscillation ?}
+
+Une question légitime se pose~: si le circuit n'a pas d'entrée, qu'est-ce qui
+démarre le mouvement~?
+
+La réponse est le bruit. Tout circuit contient du bruit
+thermique\index{bruit!thermique} (chapitre~\ref{ch:tension}), un signal
+aléatoire de quelques microvolts contenant \emph{toutes} les fréquences. Le
+réseau de retour ne laisse repasser que la sienne~; à chaque tour de boucle,
+cette composante est réamplifiée. Si le gain de boucle dépasse 1, elle croît
+jusqu'à ce que quelque chose la limite.
+
+\begin{pratique}
+\textbf{Ordre de grandeur du démarrage.} Un oscillateur dont le gain de boucle
+vaut $1{,}05$ multiplie l'amplitude par $1{,}05$ à chaque période. Partant de
+\SI{10}{\micro V}, il atteint \SI{1}{V} au bout de
+$\ln(10^5)/\ln(1{,}05) \approx 236$ périodes. À \SI{1}{kHz}, cela représente
+\SI{0.24}{s}~: le démarrage est perceptible à l'oscilloscope.
+\end{pratique}
+
+% ----------------------------------------------------------------------------
+% SECTION 2 : APPROFONDISSEMENT
+% ----------------------------------------------------------------------------
+\section{Approfondissement}
+
+\begin{approfondissement}
+Établissement de la condition de Barkhausen\index{Barkhausen, condition de},
+application au pont de Wien\index{Wien, pont de} et à l'oscillateur à
+relaxation, et traitement de la question centrale~: la stabilisation
+d'amplitude. Prérequis~: chapitres~\ref{ch:complexes} (impédances complexes),
+\ref{ch:bode} (fonctions de transfert) et~\ref{ch:aop} (AOP).
+\end{approfondissement}
+
+\subsection{La condition de Barkhausen}\index{condition de Barkhausen}
+
+L'égalité $A\beta = 1$ portant sur un complexe, elle se décompose en deux
+conditions.
+
+\begin{formule}
+\[
+\boxed{|A\,\beta| = 1}
+\qquad\text{et}\qquad
+\boxed{\arg(A\,\beta) = 0 \;[2\pi]}
+\]
+La première fixe l'amplitude, la seconde fixe la fréquence.
+\end{formule}
+
+La condition de phase est celle qui \emph{détermine} la fréquence
+d'oscillation~: parmi toutes les fréquences possibles, une seule (en général)
+satisfait $\arg(A\beta) = 0$. La condition de module, elle, dit seulement si
+l'oscillation peut vivre à cette fréquence.
+
+\begin{attention}
+Barkhausen est une condition \emph{nécessaire}, pas suffisante. Un circuit qui
+la vérifie n'oscille pas forcément, et certains circuits oscillent sans la
+vérifier strictement. En pratique, elle suffit pour concevoir, mais elle ne
+remplace pas une vérification en simulation puis en mesure.
+\end{attention}
+
+\subsection{Le paradoxe du démarrage}\index{paradoxe du démarrage}
+
+Si l'on dimensionne exactement $|A\beta| = 1$, le circuit conserve indéfiniment
+l'amplitude qu'il a --- c'est-à-dire les quelques microvolts du bruit initial.
+Il n'oscille pas, il stagne.
+
+Il faut donc $|A\beta| > 1$ pour démarrer. Mais alors l'amplitude croît sans
+fin, jusqu'à ce que l'amplificateur sature contre ses alimentations, et le
+signal devient un carré écrêté.
+
+\begin{formule}
+La résolution de ce paradoxe est la clé de tout oscillateur sinusoïdal~:
+\[
+|A\beta| > 1 \quad\text{au démarrage}
+\qquad\longrightarrow\qquad
+|A\beta| = 1 \quad\text{en régime établi}
+\]
+Le gain doit donc \textbf{diminuer quand l'amplitude augmente}. Cela exige un
+élément non linéaire dans la boucle.
+\end{formule}
+
+\begin{intuition}
+Un oscillateur parfaitement linéaire n'existe pas. La
+non-linéarité\index{non-linéarité} n'est pas un défaut qu'on tolère~: c'est le
+mécanisme même qui fixe l'amplitude. Sans elle, il n'y a que deux issues ---
+l'extinction ou la saturation.
+\end{intuition}
+
+\subsection{Le réseau de Wien}\index{réseau de Wien}
+
+C'est le montage RC de référence en audio et en instrumentation. Le réseau de
+retour associe une cellule RC série et une cellule RC parallèle.
+
+\begin{figure}[h]
+\centering
+\begin{circuitikz}[line width=1pt, scale=1.0, transform shape]
+\draw (0,0) node[left]{$v_s$} to[R, l=$R$] (2.2,0) to[C, l=$C$] (4.4,0);
+\draw (4.4,0) -- (5.4,0) node[right]{$v_r$};
+\draw (4.4,0) -- (4.4,-0.6);
+\draw (4.4,-0.6) to[R, l_=$R$] (4.4,-2.2);
+\draw (5.6,-0.6) to[C, l=$C$] (5.6,-2.2);
+\draw (4.4,-0.6) -- (5.6,-0.6);
+\draw (4.4,-2.2) -- (5.6,-2.2);
+\draw (4.4,-2.2) -- (2.2,-2.2) node[ground]{};
+\end{circuitikz}
+\caption{Le réseau de Wien~: une cellule RC série suivie d'une cellule RC
+parallèle. Sa transmittance passe par un maximum, avec une phase nulle, à une
+seule fréquence.}
+\end{figure}
+
+\begin{formule}
+En posant $\underline{Z}_s = R + \dfrac{1}{jC\omega}$ et
+$\underline{Z}_p = \dfrac{R}{1 + jRC\omega}$, la transmittance vaut
+\[
+\underline{\beta} = \frac{\underline{Z}_p}{\underline{Z}_s + \underline{Z}_p}
+= \frac{1}{3 + j\left(RC\omega - \dfrac{1}{RC\omega}\right)}
+\]
+La partie imaginaire s'annule pour
+\[
+\boxed{f_0 = \frac{1}{2\pi RC}}
+\qquad\text{et alors}\qquad
+\boxed{\beta = \frac{1}{3}}
+\]
+\end{formule}
+
+Le résultat est remarquable~: à $f_0$, le réseau atténue exactement d'un
+facteur 3, sans aucun déphasage. La condition de phase de Barkhausen est donc
+satisfaite \emph{si l'amplificateur lui-même ne déphase pas}.
+
+\subsection{L'oscillateur à pont de Wien}\index{oscillateur!à pont de Wien}
+
+On associe le réseau de Wien à un amplificateur non inverseur à AOP
+(chapitre~\ref{ch:aop}), qui ne déphase pas et dont le gain vaut $1 + R_2/R_1$.
+
+\begin{formule}
+La condition de module impose $A = 1/\beta = 3$, soit
+\[
+\boxed{1 + \frac{R_2}{R_1} = 3
+\qquad\Longleftrightarrow\qquad
+R_2 = 2\,R_1}
+\]
+\end{formule}
+
+\begin{pratique}
+\textbf{Dimensionnement pour \SI{1.6}{kHz}.} Avec $R = \SI{10}{k\ohm}$ et
+$C = \SI{10}{nF}$~:
+\[
+f_0 = \frac{1}{2\pi \times 10^4 \times 10^{-8}} = \SI{1592}{Hz}
+\]
+Pour le gain, on prend $R_1 = \SI{10}{k\ohm}$ et $R_2 = \SI{20}{k\ohm}$. En
+pratique, on ajustera $R_2$ légèrement au-dessus de \SI{20}{k\ohm} pour
+garantir le démarrage, et l'on ajoutera un limiteur d'amplitude.
+\end{pratique}
+
+\subsection{La stabilisation d'amplitude}\index{stabilisation d'amplitude}
+
+Avec $R_2 = 2R_1$ exactement, le gain vaut 3 et rien ne démarre. Avec $R_2$ un
+peu plus grand, le gain dépasse 3 et l'amplitude croît jusqu'à la saturation de
+l'AOP. Il faut donc un mécanisme qui \emph{réduise le gain quand l'amplitude
+monte}.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{p{3.4cm}p{5.4cm}p{4.4cm}}
+\toprule
+\textbf{Solution} & \textbf{Principe} & \textbf{Compromis} \\
+\midrule
+Lampe à incandescence en $R_1$ &
+Sa résistance croît avec la température, donc avec l'amplitude &
+Excellente pureté, mais lente et fragile \\
+Deux diodes tête-bêche en parallèle sur $R_2$ &
+Au-delà de \SI{0.7}{V}, elles conduisent et abaissent le gain &
+Simple, mais introduit de la distorsion \\
+JFET en résistance commandée &
+Une boucle de détection règle la conductance du canal &
+Bonne pureté, réglage délicat \\
+Régulation par AGC\index{AGC} &
+Détection d'amplitude et correction active &
+Le plus performant, le plus complexe \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{attention}
+La qualité d'un oscillateur sinusoïdal se juge d'abord à sa distorsion
+harmonique\index{distorsion!harmonique}. Un montage sans limiteur donne un
+signal fortement écrêté~: il oscille, mais il ne produit pas une sinusoïde.
+C'est l'erreur la plus fréquente sur les premiers montages.
+\end{attention}
+
+\subsection{Les oscillateurs à relaxation}\index{oscillateurs à relaxation}
+
+Ici, aucune sélectivité fréquentielle~: le circuit charge un condensateur
+jusqu'à un seuil haut, bascule, le décharge jusqu'à un seuil bas, rebascule. La
+fréquence découle de la constante de temps et de l'écart entre les seuils.
+
+\begin{formule}
+Pour un astable construit autour d'un temporisateur 555\index{555 (temporisateur)}
+avec $R_1$, $R_2$ et $C$~:
+\[
+t_{\text{haut}} = 0{,}693\,(R_1+R_2)\,C
+\qquad
+t_{\text{bas}} = 0{,}693\,R_2\,C
+\]
+\[
+\boxed{f = \frac{1{,}44}{(R_1 + 2R_2)\,C}}
+\]
+\end{formule}
+
+\begin{pratique}
+\textbf{Application.} Avec $R_1 = R_2 = \SI{10}{k\ohm}$ et $C = \SI{100}{nF}$~:
+$t_{\text{haut}} = \SI{1.39}{ms}$, $t_{\text{bas}} = \SI{0.69}{ms}$, soit
+$f = \SI{480}{Hz}$ et un rapport cyclique de $67\%$.
+
+Le rapport cyclique ne peut jamais descendre sous $50\%$ dans ce montage,
+puisque $t_{\text{haut}} > t_{\text{bas}}$ toujours. Pour l'abaisser, il faut
+ajouter une diode qui court-circuite $R_2$ pendant la charge.
+\end{pratique}
+
+\begin{intuition}
+Un oscillateur à relaxation, c'est le principe du siphon des toilettes~: on
+remplit lentement, ça bascule d'un coup, ça se vide, et ça recommence. Aucune
+fréquence propre là-dedans --- juste un remplissage et deux seuils.
+\end{intuition}
+
+% ----------------------------------------------------------------------------
+% SECTION 3 : NIVEAU INGÉNIEUR
+% ----------------------------------------------------------------------------
+\section{Niveau Ingénieur}
+
+\begin{ingenieur}
+Les oscillateurs LC\index{oscillateur!LC}, le quartz et son modèle électrique,
+puis les limites réelles~: stabilité, dérive et bruit de
+phase\index{bruit!de phase}. Prérequis~: chapitre~\ref{ch:resonance}
+(résonance, facteur de qualité).
+\end{ingenieur}
+
+\subsection{Les oscillateurs LC}\index{oscillateurs LC}
+
+Au-delà de quelques centaines de kilohertz, les réseaux RC deviennent
+inutilisables~: les valeurs de résistance et de capacité nécessaires descendent
+au niveau des parasites du montage. On passe alors aux circuits résonants LC
+(chapitre~\ref{ch:resonance}), dont le facteur de
+qualité\index{facteur de qualité} assure une bien meilleure sélectivité.
+
+Le montage le plus répandu, le \textbf{Colpitts}\index{Colpitts, oscillateur},
+utilise un diviseur capacitif comme réseau de retour.
+
+\begin{formule}
+\[
+\boxed{f_0 = \frac{1}{2\pi\sqrt{L\,C_{eq}}}}
+\qquad\text{avec}\qquad
+C_{eq} = \frac{C_1 C_2}{C_1 + C_2}
+\]
+Le taux de retour vaut $\beta = C_1/C_2$, ce qui fixe le gain requis.
+\end{formule}
+
+\begin{pratique}
+\textbf{Application.} Avec $L = \SI{100}{\micro H}$ et
+$C_1 = C_2 = \SI{1}{nF}$~: $C_{eq} = \SI{500}{pF}$ et $f_0 = \SI{712}{kHz}$.
+Le taux de retour vaut 1, donc un gain d'amplificateur supérieur à 1 suffit à
+démarrer.
+\end{pratique}
+
+La variante \textbf{Hartley}\index{Hartley, oscillateur} remplace le diviseur
+capacitif par un diviseur inductif~; la variante
+\textbf{Clapp}\index{Clapp, oscillateur} ajoute un condensateur en série avec
+l'inductance, ce qui réduit l'influence des capacités parasites du transistor
+et améliore la stabilité.
+
+\subsection{Le quartz}\index{quartz!modèle électrique}
+
+Un circuit LC discret plafonne à un facteur de qualité de 100 à 200, limité par
+les pertes de la bobine. Un quartz atteint couramment $10^5$. Or la stabilité
+en fréquence d'un oscillateur est directement liée à la sélectivité de son
+résonateur~: plus $Q$ est élevé, moins la fréquence dérive quand l'électronique
+environnante varie.
+
+\begin{formule}
+Le quartz se modélise par une branche série $L_s$, $C_s$, $R_s$ (le mode
+mécanique de résonance) en parallèle avec $C_0$ (la capacité des électrodes).
+Il présente donc \emph{deux} fréquences remarquables~:
+\[
+f_s = \frac{1}{2\pi\sqrt{L_s C_s}}
+\qquad\text{(résonance série, }|Z|\text{ minimale)}
+\]
+\[
+f_p = \frac{1}{2\pi\sqrt{L_s \dfrac{C_s C_0}{C_s + C_0}}}
+\qquad\text{(antirésonance, }|Z|\text{ maximale)}
+\]
+\end{formule}
+
+\begin{pratique}
+\textbf{Ordres de grandeur d'un quartz \SI{1.6}{MHz}.} Valeurs typiques~:
+$L_s = \SI{0.5}{H}$, $C_s = \SI{0.02}{pF}$, $C_0 = \SI{5}{pF}$,
+$R_s = \SI{30}{\ohm}$.
+
+On obtient $f_s = \SI{1.5915}{MHz}$ et $f_p = \SI{1.5947}{MHz}$, soit un écart
+de \SI{3.2}{kHz} --- environ \SI{2000}{ppm}. Le facteur de qualité vaut
+$Q = L_s\omega_s/R_s \approx 1{,}7\times10^5$.
+
+L'inductance équivalente de \SI{0.5}{H} est spectaculaire~: aucune bobine de
+cette valeur ne tiendrait dans un boîtier de quelques millimètres. C'est le
+mécanique qui la simule, via l'effet
+piézoélectrique\index{effet piézoélectrique}.
+\end{pratique}
+
+\begin{attention}
+Un oscillateur à quartz fonctionne soit à $f_s$, soit entre $f_s$ et $f_p$
+selon le montage. Un quartz «~série~» monté dans un circuit «~parallèle~»
+oscillera à quelques centaines de ppm de la valeur marquée. La fiche technique
+précise toujours le mode et la capacité de charge à respecter.
+\end{attention}
+
+\subsection{Stabilité et dérive}\index{stabilité et dérive}
+
+Trois causes font dériver la fréquence d'un oscillateur.
+
+\begin{itemize}[nosep]
+\item La \textbf{température}~: les composants passifs dérivent, le quartz
+lui-même a une courbe caractéristique. Un quartz de montre est taillé pour
+présenter un extremum autour de \SI{25}{°C}~; un TCXO\index{TCXO} compense
+activement, un OCXO\index{OCXO} maintient le quartz dans une enceinte
+thermostatée.
+\item Le \textbf{vieillissement}~: quelques ppm par an, dus à la relaxation
+mécanique et à la contamination.
+\item La \textbf{charge}~: la capacité vue par le quartz déplace sa fréquence
+de fonctionnement, d'où l'importance des condensateurs de charge.
+\end{itemize}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lll}
+\toprule
+\textbf{Type} & \textbf{Stabilité} & \textbf{Emploi} \\
+\midrule
+RC & $10^{-2}$ & Clignotant, rythme non critique \\
+LC & $10^{-3}$ & Radio grand public, VCO \\
+Quartz simple & $10^{-5}$ & Microcontrôleurs, horloges \\
+TCXO & $10^{-6}$ & Radio, GPS grand public \\
+OCXO & $10^{-8}$ & Métrologie, télécommunications \\
+Rubidium & $10^{-11}$ & Références de laboratoire \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Bruit de phase}\index{bruit de phase}
+
+Un oscillateur réel ne produit pas une raie spectrale pure mais une raie
+élargie~: la phase du signal fluctue aléatoirement autour de sa valeur idéale.
+Vu dans le domaine temporel, cela se traduit par de la
+gigue\index{gigue (jitter)} (chapitre~\ref{ch:timing}) sur les fronts.
+
+\begin{attention}
+En transmission numérique, le bruit de phase de l'oscillateur local limite
+directement le taux d'erreur~: il étale les points de la constellation. En
+échantillonnage, la gigue d'horloge dégrade le rapport signal/bruit d'un
+convertisseur bien avant ses propres limites (chapitre~\ref{ch:conversion}). Le
+choix de l'oscillateur n'est donc jamais un détail périphérique.
+\end{attention}
+
+% ----------------------------------------------------------------------------
+% EXERCICES DU CHAPITRE 20
+% ----------------------------------------------------------------------------
+\section*{Exercices}
+\addcontentsline{toc}{section}{Exercices}
+
+\subsection*{Niveau débutant}
+
+\textbf{Exercice 20.1 ---} Un oscillateur à pont de Wien utilise
+$R = \SI{4.7}{k\ohm}$ et $C = \SI{22}{nF}$.
+\begin{enumerate}[nosep]
+\item Calculez la fréquence d'oscillation.
+\item Quel gain l'amplificateur doit-il présenter~?
+\item Si l'on choisit $R_1 = \SI{12}{k\ohm}$, que vaut $R_2$~?
+\end{enumerate}
+
+\begin{pratique}
+\textbf{Solution :}
+$f_0 = 1/(2\pi \times 4700 \times 22\times10^{-9}) = \SI{1539}{Hz}$.
+Le gain doit valoir 3, puisque le réseau atténue d'un facteur 3 à $f_0$.
+On en déduit $R_2 = 2R_1 = \SI{24}{k\ohm}$ (valeur normalisée E24~:
+\SI{24}{k\ohm} existe, sinon \SI{22}{k\ohm} avec un ajustement).
+\end{pratique}
+
+\vspace{2mm}
+\textbf{Exercice 20.2 ---} Un astable à 555 doit produire un signal de
+\SI{1}{kHz}. On dispose de $C = \SI{47}{nF}$.
+\begin{enumerate}[nosep]
+\item Quelle relation lie $R_1$, $R_2$ et $f$~?
+\item Proposez un couple de valeurs donnant environ \SI{1}{kHz}.
+\item Quel rapport cyclique obtenez-vous~?
+\end{enumerate}
+
+\begin{pratique}
+\textbf{Solution :}
+$f = 1{,}44/((R_1+2R_2)C)$, donc
+$R_1 + 2R_2 = 1{,}44/(1000 \times 47\times10^{-9}) = \SI{30.6}{k\ohm}$.
+En prenant $R_1 = \SI{10}{k\ohm}$ et $R_2 = \SI{10}{k\ohm}$, on obtient
+$R_1+2R_2 = \SI{30}{k\ohm}$ et $f = \SI{1021}{Hz}$.
+Le rapport cyclique vaut $(R_1+R_2)/(R_1+2R_2) = 20/30 = 67\%$.
+\end{pratique}
+
+\subsection*{Niveau intermédiaire}
+
+\textbf{Exercice 20.3 ---} On monte un pont de Wien avec
+$R_2 = 2{,}2\,R_1$ au lieu de $2\,R_1$.
+\begin{enumerate}[nosep]
+\item Que vaut le gain de boucle au démarrage~?
+\item Que se passe-t-il si aucun limiteur n'est présent~?
+\item Estimez le taux de distorsion harmonique attendu.
+\end{enumerate}
+
+\begin{pratique}
+\textbf{Solution :}
+Le gain vaut $1 + 2{,}2 = 3{,}2$, donc $|A\beta| = 3{,}2/3 = 1{,}07$.
+L'amplitude croît de $7\%$ par période jusqu'à ce que l'AOP sature contre ses
+alimentations. Le signal devient alors trapézoïdal, puis quasi carré. La
+distorsion dépasse largement $10\%$, contre moins de $1\%$ pour un montage
+correctement limité. L'oscillateur fonctionne, mais ne produit pas une
+sinusoïde.
+\end{pratique}
+
+\vspace{2mm}
+\textbf{Exercice 20.4 ---} Un oscillateur Colpitts utilise
+$L = \SI{47}{\micro H}$, $C_1 = \SI{470}{pF}$ et $C_2 = \SI{2.2}{nF}$.
+\begin{enumerate}[nosep]
+\item Calculez $C_{eq}$ puis $f_0$.
+\item Quel est le taux de retour $\beta$~?
+\item Quel gain minimal l'amplificateur doit-il fournir~?
+\end{enumerate}
+
+\begin{pratique}
+\textbf{Solution :}
+$C_{eq} = (470 \times 2200)/(470+2200) = \SI{387}{pF}$.
+$f_0 = 1/(2\pi\sqrt{47\times10^{-6} \times 387\times10^{-12}}) = \SI{1.18}{MHz}$.
+Le taux de retour vaut $\beta = C_1/C_2 = 470/2200 = 0{,}214$, d'où un gain
+minimal $A > 1/\beta = 4{,}7$.
+\end{pratique}
+
+\subsection*{Niveau ingénieur}
+
+\textbf{Exercice 20.5 ---} Un quartz de \SI{10}{MHz} présente
+$L_s = \SI{15}{mH}$, $C_s = \SI{0.0169}{pF}$, $C_0 = \SI{4.5}{pF}$ et
+$R_s = \SI{8}{\ohm}$.
+\begin{enumerate}[nosep]
+\item Vérifiez la fréquence de résonance série.
+\item Calculez l'antirésonance et l'écart en ppm.
+\item Calculez le facteur de qualité. Comparez à un LC discret de $Q = 150$.
+\item Que vaut l'inductance équivalente, et pourquoi est-ce remarquable~?
+\end{enumerate}
+
+\begin{pratique}
+\textbf{Solution :}
+$f_s = 1/(2\pi\sqrt{15\times10^{-3} \times 0{,}0169\times10^{-12}})
+= \SI{9.999}{MHz}$.
+$C_s C_0/(C_s+C_0) = \SI{0.01684}{pF}$, d'où $f_p = \SI{10.015}{MHz}$~:
+l'écart vaut environ \SI{19}{kHz}, soit près de \SI{1900}{ppm}.
+$Q = L_s\omega_s/R_s = 15\times10^{-3} \times 2\pi \times 10^7 / 8
+\approx 1{,}2\times10^{5}$, soit 800 fois mieux qu'un LC discret.
+L'inductance de \SI{15}{mH} est simulée par la résonance mécanique du cristal~:
+une bobine réelle de cette valeur ferait plusieurs centimètres et présenterait
+des pertes rédhibitoires.
+\end{pratique}
+
+\vspace{2mm}
+\textbf{Exercice 20.6 ---} Un convertisseur analogique-numérique 16 bits
+échantillonne à \SI{1}{MHz} un signal sinusoïdal de \SI{100}{kHz}. L'horloge
+présente une gigue efficace de \SI{50}{ps}.
+\begin{enumerate}[nosep]
+\item Exprimez l'erreur de tension induite par une erreur temporelle
+$\Delta t$ sur un signal $v(t) = \hat{V}\sin(2\pi f t)$.
+\item Calculez le rapport signal/bruit limité par la gigue.
+\item Combien de bits effectifs cela représente-t-il~?
+\item Conclure sur le choix de l'oscillateur.
+\end{enumerate}
+
+\begin{pratique}
+\textbf{Solution :}
+La pente maximale du signal vaut $2\pi f \hat{V}$, donc l'erreur relative
+efficace vaut $2\pi f \Delta t$.
+Le rapport signal/bruit s'écrit
+$\mathrm{SNR} = -20\log_{10}(2\pi f \Delta t)
+= -20\log_{10}(2\pi \times 10^5 \times 50\times10^{-12}) = \SI{90}{dB}$.
+Le nombre effectif de bits vaut $(90 - 1{,}76)/6{,}02 = 14{,}7$~bits.
+Le convertisseur 16 bits est donc dégradé à moins de 15 bits utiles par la
+seule gigue de son horloge~: il est inutile de payer un convertisseur plus
+précis sans améliorer d'abord l'oscillateur.
+\end{pratique}
+
+\subsection*{Questions de compréhension}
+
+\textbf{Q1.} Pourquoi un oscillateur parfaitement linéaire ne peut-il pas
+exister~?
+
+\textit{Réponse : parce que la condition $|A\beta| = 1$ exacte n'est tenable ni
+au démarrage ni en régime établi. Au démarrage, il faut $|A\beta| > 1$ pour que
+le bruit initial croisse. En régime établi, il faut $|A\beta| = 1$ pour que
+l'amplitude se fige. Passer de l'un à l'autre suppose un gain qui dépend de
+l'amplitude, donc un élément non linéaire. Sans lui, le circuit s'éteint ou
+sature.}
+
+\textbf{Q2.} Laquelle des deux conditions de Barkhausen fixe la fréquence~?
+
+\textit{Réponse : la condition de phase. Parmi toutes les fréquences, une seule
+en général annule $\arg(A\beta)$ : c'est celle-là qui s'établit. La condition de
+module ne fait qu'autoriser ou interdire l'oscillation à cette fréquence. C'est
+pourquoi un décalage de phase parasite --- dû par exemple au produit gain-bande
+limité de l'AOP --- déplace la fréquence obtenue.}
+
+\textbf{Q3.} Pourquoi le quartz domine-t-il dès qu'il faut de la stabilité~?
+
+\textit{Réponse : parce que sa sélectivité est de trois ordres de grandeur
+supérieure à celle d'un LC discret. Un facteur de qualité de $10^5$ signifie
+qu'une variation de l'électronique environnante ne déplace la fréquence que
+d'une fraction minime : le résonateur impose sa loi, pas le circuit qui
+l'entoure. C'est l'inverse d'un oscillateur RC, où ce sont les composants du
+circuit qui fixent tout.}
+
+\textbf{Q4.} Un oscillateur à relaxation a-t-il une fréquence propre~?
+
+\textit{Réponse : non, et c'est ce qui le distingue fondamentalement des
+oscillateurs sinusoïdaux. Aucun élément du circuit ne résonne : la période
+résulte uniquement du temps mis par un condensateur pour aller d'un seuil à
+l'autre. Changer les seuils change la fréquence sans toucher au RC. C'est aussi
+pourquoi sa stabilité est médiocre : tout ce qui affecte les seuils ou la
+constante de temps affecte directement la fréquence.}
+
+% ----------------------------------------------------------------------------
+% RÉSUMÉ DU CHAPITRE 20
+% ----------------------------------------------------------------------------
+\section*{Résumé du chapitre}
+\addcontentsline{toc}{section}{Résumé du chapitre}
+
+\begin{bases}[title={\color{white} Résumé --- Les Bases}]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{4cm}p{9cm}}
+\toprule
+Oscillateur & Circuit produisant un signal périodique sans signal d'entrée \\
+Deux familles & Sinusoïdaux (réseau sélectif) et à relaxation (charge/décharge) \\
+Structure & Amplificateur + réseau de retour, en boucle fermée \\
+Démarrage & Le bruit thermique fournit la graine ; le réseau sélectionne \\
+Condition & $A\beta = 1$ --- un tour de boucle doit reproduire le signal \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{bases}
+
+\begin{approfondissement}[title={\color{white} Résumé --- Approfondissement}]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{4cm}p{9cm}}
+\toprule
+Barkhausen & $|A\beta| = 1$ (amplitude) et $\arg(A\beta) = 0$ (fréquence) \\
+Paradoxe & $|A\beta| > 1$ pour démarrer, $= 1$ pour se stabiliser \\
+Non-linéarité & Indispensable --- c'est elle qui fixe l'amplitude \\
+Pont de Wien & $f_0 = 1/(2\pi RC)$, $\beta = 1/3$, donc $A = 3$ et $R_2 = 2R_1$ \\
+Stabilisation & Lampe, diodes tête-bêche, JFET ou AGC \\
+Relaxation & 555 astable : $f = 1{,}44/((R_1+2R_2)C)$, rapport cyclique $> 50\%$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{approfondissement}
+
+\begin{ingenieur}[title={\color{white} Résumé --- Niveau Ingénieur}]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{4cm}p{9cm}}
+\toprule
+Colpitts & $f_0 = 1/(2\pi\sqrt{LC_{eq}})$ avec $C_{eq} = C_1C_2/(C_1+C_2)$ \\
+Quartz & Deux fréquences $f_s$ et $f_p$ ; $Q \approx 10^5$ ; $L_s$ de l'ordre du henry \\
+Stabilité & RC $10^{-2}$, LC $10^{-3}$, quartz $10^{-5}$, OCXO $10^{-8}$ \\
+Dérives & Température, vieillissement, capacité de charge \\
+Bruit de phase & Élargit la raie ; se traduit en gigue temporelle \\
+Conséquence & Limite le taux d'erreur en transmission et le SNR en conversion \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{ingenieur}
+
+\vspace{0.4cm}
+
+\begin{retenir}
+\textbf{Ce qu'il faut emporter de ce chapitre :} un oscillateur n'amplifie pas
+un signal, il en fabrique un --- à partir du bruit, en le faisant tourner dans
+une boucle qui ne laisse passer qu'une fréquence. Toute la conception tient
+dans deux exigences contradictoires~: il faut un gain excédentaire pour
+démarrer, et un gain unitaire pour durer. La non-linéarité qui les réconcilie
+est le c\oe ur du montage, non son défaut.
+
+Nous avons désormais parcouru l'ensemble des fonctions analogiques~: amplifier,
+filtrer, redresser, osciller. La partie qui s'ouvre change de monde~: la
+tension cesse d'être une grandeur pour devenir un symbole, et l'on découvrira
+que ce renoncement apparent à la finesse est précisément ce qui rend possibles
+les systèmes complexes. Le chapitre~\ref{ch:combinatoire} pose la première
+brique de cet édifice --- la logique combinatoire.
 \end{retenir}
 
 % ############################################################################
@@ -13254,10 +13994,10 @@ Deux niveaux, 0 et 1, et tout un monde. De la porte logique au processeur~: comb
 % ############################################################################
 
 % ============================================================================
-% CHAPITRE 20 : LOGIQUE COMBINATOIRE — VERSION FINALISÉE
+% CHAPITRE 21 : LOGIQUE COMBINATOIRE — VERSION FINALISÉE
 % ============================================================================
 % ============================================================================
-% CHAPITRE 20 : LOGIQUE COMBINATOIRE
+% CHAPITRE 21 : LOGIQUE COMBINATOIRE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -13936,10 +14676,10 @@ Les aléas rappellent la limite de ce monde sans mémoire~: ces circuits vivent 
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 21 : LOGIQUE SÉQUENTIELLE — VERSION FINALISÉE
+% CHAPITRE 22 : LOGIQUE SÉQUENTIELLE — VERSION FINALISÉE
 % ============================================================================
 % ============================================================================
-% CHAPITRE 21 : LOGIQUE SÉQUENTIELLE
+% CHAPITRE 22 : LOGIQUE SÉQUENTIELLE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -14653,10 +15393,10 @@ Nous n'avons fait qu'entrouvrir cette porte~: le chapitre~\ref{ch:timing} fait d
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 22 : CONTRAINTES TEMPORELLES ET SYNCHRONISATION
+% CHAPITRE 23 : CONTRAINTES TEMPORELLES ET SYNCHRONISATION
 % ============================================================================
 % ============================================================================
-% CHAPITRE 22 : CONTRAINTES TEMPORELLES ET SYNCHRONISATION
+% CHAPITRE 23 : CONTRAINTES TEMPORELLES ET SYNCHRONISATION
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -15190,10 +15930,10 @@ Avec des bascules disciplinées et des frontières d'horloge maîtrisées, on pe
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 23 : MACHINES À ÉTATS (FSM)
+% CHAPITRE 24 : MACHINES À ÉTATS (FSM)
 % ============================================================================
 % ============================================================================
-% CHAPITRE 23 : MACHINES À ÉTATS (FSM)
+% CHAPITRE 24 : MACHINES À ÉTATS (FSM)
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -15795,10 +16535,10 @@ Nos machines savent maintenant décider et séquencer. Mais un état de quelques
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 24 : MÉMOIRE — DU BIT PHYSIQUE AU SYSTÈME
+% CHAPITRE 25 : MÉMOIRE — DU BIT PHYSIQUE AU SYSTÈME
 % ============================================================================
 % ============================================================================
-% CHAPITRE 24 : MÉMOIRE — DU BIT PHYSIQUE AU SYSTÈME
+% CHAPITRE 25 : MÉMOIRE — DU BIT PHYSIQUE AU SYSTÈME
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -16325,7 +17065,7 @@ Nos systèmes savent désormais séquencer et stocker. Reste à \textbf{calculer
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 25 : CIRCUITS ARITHMÉTIQUES
+% CHAPITRE 26 : CIRCUITS ARITHMÉTIQUES
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -16891,7 +17631,7 @@ Nous disposons maintenant de toutes les briques~: logique, séquentiel, timing, 
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 26 : ARCHITECTURE NUMÉRIQUE
+% CHAPITRE 27 : ARCHITECTURE NUMÉRIQUE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -17485,7 +18225,7 @@ Notre système numérique est complet --- mais il vit en vase clos. Le monde, lu
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 27 : CONVERSION ANALOGIQUE-NUMÉRIQUE ET NUMÉRIQUE-ANALOGIQUE
+% CHAPITRE 28 : CONVERSION ANALOGIQUE-NUMÉRIQUE ET NUMÉRIQUE-ANALOGIQUE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -17963,7 +18703,7 @@ Le monde analogique entre et sort désormais du système numérique. Reste à fa
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 28 : PROTOCOLES DE COMMUNICATION
+% CHAPITRE 29 : PROTOCOLES DE COMMUNICATION
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -18480,7 +19220,7 @@ Ce dernier point n'est pas un détail~: c'est un aperçu. Bruit, propagation, é
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 29 : LIMITES PHYSIQUES DU NUMÉRIQUE
+% CHAPITRE 30 : LIMITES PHYSIQUES DU NUMÉRIQUE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -18895,7 +19635,7 @@ Aucun montage ne vaut mieux que son alimentation. Réguler proprement une tensio
 % ============================================================================
 
 % ============================================================================
-% CHAPITRE 30 : RÉGULATION LINÉAIRE ET LDO
+% CHAPITRE 31 : RÉGULATION LINÉAIRE ET LDO
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % Ouvre la PARTIE VII : ALIMENTATIONS
@@ -19458,7 +20198,7 @@ Pour casser cette limite, il faut refuser le compromis lui-même~: un interrupte
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 31 : ALIMENTATIONS À DÉCOUPAGE
+% CHAPITRE 32 : ALIMENTATIONS À DÉCOUPAGE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -19945,7 +20685,7 @@ Deux boîtes noires restent fermées~: la bobine elle-même --- saturation, pert
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 32 : COMPOSANTS MAGNÉTIQUES ET STABILITÉ DES ALIMENTATIONS
+% CHAPITRE 33 : COMPOSANTS MAGNÉTIQUES ET STABILITÉ DES ALIMENTATIONS
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % Clôt la PARTIE VII : ALIMENTATIONS
@@ -20386,7 +21126,7 @@ Mesurer, comparer, corriger~: la boucle fermée est l'une des idées les plus pu
 % ============================================================================
 
 % ============================================================================
-% CHAPITRE 33 : ASSERVISSEMENT ET TRANSFORMÉE DE LAPLACE
+% CHAPITRE 34 : ASSERVISSEMENT ET TRANSFORMÉE DE LAPLACE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % Ouvre la PARTIE VIII : ASSERVISSEMENT
@@ -20867,7 +21607,7 @@ Il reste à passer de l'analyse à la \textbf{conception}~: régler $C(s)$ pour 
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 34 : CORRECTEUR PID, LIEU DES RACINES ET MARGES DE STABILITÉ
+% CHAPITRE 35 : CORRECTEUR PID, LIEU DES RACINES ET MARGES DE STABILITÉ
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % Clôt la PARTIE VIII : ASSERVISSEMENT
@@ -21337,7 +22077,7 @@ C'est ici que le schéma rencontre la matière. Perturbations, couplages, blinda
 % ============================================================================
 
 % ============================================================================
-% CHAPITRE 35 : COMPATIBILITÉ ÉLECTROMAGNÉTIQUE — SOURCES, COUPLAGES, REMÈDES
+% CHAPITRE 36 : COMPATIBILITÉ ÉLECTROMAGNÉTIQUE — SOURCES, COUPLAGES, REMÈDES
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % Ouvre la PARTIE IX : CEM ET CONCEPTION DE CARTES
@@ -22085,7 +22825,7 @@ Ce chapitre a donné les lois et les remèdes~; mais la CEM se gagne ou se perd 
 
 
 % ============================================================================
-% CHAPITRE 36 : CONCEPTION DE PCB — LE CIRCUIT IMPRIMÉ EST UN COMPOSANT
+% CHAPITRE 37 : CONCEPTION DE PCB — LE CIRCUIT IMPRIMÉ EST UN COMPOSANT
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -22718,7 +23458,7 @@ Ce chapitre a traité le routage tant que la piste reste «~petite~»~: ses para
 
 
 % ============================================================================
-% CHAPITRE 37 : INTÉGRITÉ DU SIGNAL — QUAND LA PISTE DEVIENT UNE LIGNE
+% CHAPITRE 38 : INTÉGRITÉ DU SIGNAL — QUAND LA PISTE DEVIENT UNE LIGNE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
