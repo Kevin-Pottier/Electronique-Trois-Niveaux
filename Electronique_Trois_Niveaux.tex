@@ -425,7 +425,7 @@ Le \textbf{sens conventionnel} du courant (du + vers le $-$) est celui utilisé 
 
 Un point capital, si évident qu'on l'oublie~: le courant circule en \textbf{boucle fermée\index{boucle fermée}}. Les charges ne sont ni créées ni consommées en route --- ce qui sort d'une borne du générateur revient intégralement à l'autre. Ouvrez la boucle n'importe où (interrupteur)~: le courant s'annule \emph{partout}. Cette évidence est le fondement de la loi des n\oe uds (chapitre~\ref{ch:kirchhoff}) et deviendra, aux chapitres~\ref{ch:cem}--\ref{ch:pcb}, la question centrale du concepteur~: \emph{par où revient le courant~?}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=1.0]
   % Pile : trait long = +, trait court = -
@@ -490,7 +490,7 @@ Foudre & $\sim \SI{30}{kA}$ & $10^{4}$ A \\
 \item \textbf{Courant alternatif (AC)}~: l'intensité varie périodiquement (typiquement de manière sinusoïdale). C'est le cas de la prise murale (\SI{230}{V}, \SI{50}{Hz} en Europe). Le courant change de sens 100 fois par seconde.
 \end{itemize}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.8]
   % DC
@@ -577,7 +577,7 @@ e = \SI{1.602e-19}{C}
 
 En l'absence de champ électrique, les électrons se déplacent de manière chaotique (agitation thermique) avec une vitesse moyenne nulle. Quand on applique un champ $\vec{E}$, il se superpose un mouvement de dérive à vitesse $\vec{v}_d$ (très lente~: de l'ordre du mm/s~!).
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.85]
   % (a) agitation seule
@@ -1019,7 +1019,7 @@ Une fois la masse choisie, on peut parler du ``potentiel d'un point'' ou de la `
 
 \textbf{Masse n'est pas terre.} La \emph{masse} est le zéro de référence \emph{choisi} du circuit --- un choix de calcul, qui peut se poser sur n'importe quel n\oe ud. La \emph{terre} (PE, \emph{protective earth}) est un conducteur physique relié au sol via l'installation électrique : son rôle est la \textbf{sécurité des personnes}, pas la référence des signaux. Un circuit sur batterie a une masse et aucune terre ; un châssis métallique peut être relié à l'une, à l'autre, aux deux --- ou à aucune. Confondre les deux est une source classique d'erreurs de conception ; le chapitre~\ref{ch:cem} consacre une section entière aux stratégies de masse.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=1.0]
   % masse (référence)
@@ -1099,7 +1099,7 @@ Sur un schéma, la tension est représentée par une \textbf{flèche} entre deux
 
 Mnémotechnique~: \textbf{la flèche de $U_{AB}$ pointe vers le ``$+$'', c'est-à-dire vers A.}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=1.1]
   \draw (0,0) node[circ]{} to[short, i=$i$] (1.3,0) to[R, l=$R$] (3.2,0) to[short] (4.5,0) node[circ]{};
@@ -1119,7 +1119,7 @@ Mnémotechnique~: \textbf{la flèche de $U_{AB}$ pointe vers le ``$+$'', c'est-�
 
 Le choix d'orientation de $i$ et $U$ sur un dipôle définit la convention utilisée~:
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.95, transform shape]
   % === Convention récepteur ===
@@ -1238,7 +1238,7 @@ Malgré son nom, la f.é.m.\ n'est \textit{pas} une force (elle s'exprime en vol
 \end{itemize}
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=1.0]
   % f.é.m. : pile, trait long = +
@@ -1624,7 +1624,7 @@ En convention récepteur~: la tension $U$ et le courant $I$ sont fléchés en se
 \textbf{Conditions de validité :} cette loi s'applique aux \textbf{conducteurs ohmiques} (ou ``linéaires''), c'est-à-dire les matériaux pour lesquels $R$ est constant quel que soit le courant. C'est le cas des résistances, des fils métalliques, des pistes de PCB\ldots{} \textit{à température constante}. Les diodes, transistors et ampoules à filament ne sont \textit{pas} ohmiques.
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=1.1]
   \draw (0,0) node[circ]{} to[short, i=$i$] (1.3,0) to[R, l=$R$] (3.2,0) to[short] (4.5,0) node[circ]{};
@@ -1731,7 +1731,7 @@ Valeurs typiques~: \SI{0.125}{W} (1/8 W, CMS 0805), \SI{0.25}{W} (1/4 W, travers
 En série, la résistance équivalente est toujours \textbf{plus grande} que chaque résistance individuelle.
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.9]
   \draw (0,0) to[short, i=$i$] (1.2,0) to[R, l=$R_1$] (3.2,0) to[R, l=$R_2$] (5.2,0) to[R, l=$R_3$] (7.2,0) to[short] (8,0);
@@ -1753,7 +1753,7 @@ R_{\text{éq}} = \frac{R_1 \cdot R_2}{R_1 + R_2} \qquad \text{(``produit sur som
 \]
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.9]
   \draw (0,0) to[short, i=$i$] (1,0) node[circ]{} -- (1,1) to[R, l=$R_1$, i=$i_1$] (4,1) -- (4,0) node[circ]{} to[short] (5,0);
@@ -1772,7 +1772,7 @@ R_{\text{éq}} = \frac{R_1 \cdot R_2}{R_1 + R_2} \qquad \text{(``produit sur som
 
 C'est le circuit le plus fondamental de l'électronique. Deux résistances en série, alimentées par une tension $E$~:
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=1.0]
   % Source : pile, trait long = +
@@ -2022,7 +2022,7 @@ Dans un matériau \textbf{anisotrope} (comme certains cristaux ou composites), l
 
 En basse fréquence, une résistance se comporte comme une simple résistance $R$. En haute fréquence, tout composant réel possède des \textbf{éléments parasites}~:
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.9]
   \draw (0,0) node[ocirc]{} to[short] (0.7,0) to[L, l=$L_s$] (2.5,0) to[R, l=$R$] (4.6,0) to[short] (5.4,0) node[ocirc]{};
@@ -2467,7 +2467,7 @@ Elle fluctue à chaque instant. La grandeur utile en pratique est la \textbf{pui
 $T$~: période du signal. $P$ est la puissance effectivement convertie en travail ou en chaleur.
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[xscale=0.62, yscale=0.85]
   \draw[-{Stealth}] (0,0) -- (10.7,0) node[right=2pt] {\footnotesize $t$};
@@ -2587,7 +2587,7 @@ C'est un \textbf{compromis}~:
 
 La puissance aux bornes de la charge $R_L$ en fonction de $R_L$~:
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.85]
   \draw[->] (0,0) -- (7,0) node[right]{$R_L$};
@@ -2648,7 +2648,7 @@ On définit également~:
 \item Relation~: $S^2 = P^2 + Q^2$.
 \end{itemize}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[xscale=0.62, yscale=0.95]
   \draw[-{Stealth}] (0,0) -- (10.7,0) node[right=2pt] {\footnotesize $t$};
@@ -2701,7 +2701,7 @@ R_{\text{th,total}} = R_{\text{th,jc}} + R_{\text{th,cs}} + R_{\text{th,sa}}
 \item $R_{\text{th,sa}}$~: radiateur $\to$ air (\textit{sink-to-ambient}), dépend du radiateur choisi
 \end{itemize}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.95]
   % Source de chaleur P (dessinée explicitement, flèche vers Tj)
@@ -2939,7 +2939,7 @@ Avant d'énoncer les lois, il faut maîtriser le vocabulaire~:
 \item \textbf{Maille~:} tout parcours fermé dans le circuit, en suivant des branches bout à bout, qui revient au point de départ sans passer deux fois par la même branche.
 \end{itemize}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=1.0]
   % Pile : trait long = +
@@ -2975,7 +2975,7 @@ Avant d'énoncer les lois, il faut maîtriser le vocabulaire~:
 Forme algébrique (entrants $+$, sortants $-$)~: $\displaystyle\sum_{k} i_k = 0$.
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=1.1]
   \filldraw[red!70!black] (0,0) circle (4pt);
@@ -3047,7 +3047,7 @@ Le signe dépend du \textit{sens de parcours choisi}, pas du sens réel du coura
 
 \textbf{Énoncé :} $E = \SI{12}{V}$ alimente $R_1 = \SI{4}{\ohm}$ et $R_2 = \SI{6}{\ohm}$ en parallèle. Trouver tous les courants.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.95]
   \draw[very thick] (0,0) -- (0,1.32);
@@ -3095,7 +3095,7 @@ Ce cas est le premier où Kirchhoff devient \textit{vraiment indispensable}~: de
 
 \textbf{Énoncé :} $E_1 = \SI{12}{V}$, $E_2 = \SI{8}{V}$, $R_1 = \SI{2}{\ohm}$, $R_2 = \SI{4}{\ohm}$, $R_3 = \SI{6}{\ohm}$.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.9]
   % E1 gauche, + en haut
@@ -3202,7 +3202,7 @@ On définit un \textbf{courant fictif} circulant dans chaque maille indépendant
 
 \textbf{Exemple :} $E = \SI{10}{V}$, $R_1 = \SI{2}{\ohm}$, $R_2 = \SI{3}{\ohm}$ (branche commune), $R_3 = \SI{5}{\ohm}$.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.9]
   \draw[very thick] (0,0) -- (0,1.32);
@@ -3553,7 +3553,7 @@ L'idée est simple~: dans un circuit linéaire, chaque source ``pousse'' indépe
 
 \textbf{Exemple :} circuit avec $E_1 = \SI{12}{V}$, $E_2 = \SI{6}{V}$, $R_1 = \SI{4}{\ohm}$, $R_2 = \SI{2}{\ohm}$. On cherche le courant dans $R_2$.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.9]
   % E1 gauche, + haut
@@ -3594,7 +3594,7 @@ C'est probablement le théorème \textbf{le plus utile} de toute l'électronique
 \end{itemize}
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.9]
   \draw[very thick] (0,0) -- (0,0.82); \draw[very thick] (-0.28,0.82) -- (0.28,0.82);
@@ -3623,7 +3623,7 @@ Imaginez un appareil électronique complexe (un amplificateur, une alimentation,
 
 \textbf{Exemple :} trouver l'équivalent de Thévenin vu de A-B.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.9]
   \draw[very thick] (0,0) -- (0,1.32); \draw[very thick] (-0.28,1.32) -- (0.28,1.32);
@@ -3665,7 +3665,7 @@ Norton est le \textbf{dual} de Thévenin.
 \end{itemize}
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.9]
   \draw (0.75,0) to[isource, l=$I_N$] (0.75,2);
@@ -4144,7 +4144,7 @@ Quand on applique une tension entre les deux armatures, des charges s'accumulent
 \textit{Limite :} les électrons ne traversent \textit{jamais} le diélectrique (en fonctionnement normal). Le courant circule dans le circuit extérieur pendant la charge et la décharge.
 \end{analogie}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=1.0]
   % --- Constitution ---
@@ -4261,7 +4261,7 @@ Le circuit le plus fondamental avec un condensateur est le \textbf{circuit RC} s
 \]
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.8]
   \begin{scope}[shift={(0,0)}]
@@ -4291,7 +4291,7 @@ Le circuit le plus fondamental avec un condensateur est le \textbf{circuit RC} s
 \caption{Charge et décharge du condensateur. La tangente à l'origine (en couleur) coupe l'asymptote exactement en $t = \tau$ : construction graphique directe de la constante de temps.}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.9]
   \draw[very thick] (0,0) -- (0,1.32); \draw[very thick] (-0.28,1.32) -- (0.28,1.32);
@@ -4435,7 +4435,7 @@ Le modèle réel (ESR\index{ESR}, ESL, fuite) et sa signature en impédance, la 
 
 \subsection{Modèle réel d'un condensateur}\index{modèle réel d'un condensateur}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.9]
   \draw (0,0) node[ocirc]{} to[R, l=ESR] (2,0) to[L, l=ESL] (4,0) to[C, l=$C$] (6,0) node[ocirc]{};
@@ -4459,7 +4459,7 @@ Le modèle réel (ESR\index{ESR}, ESL, fuite) et sa signature en impédance, la 
 Sous $f_{\text{SRF}}$~: capacitif. Au-dessus~: \textbf{inductif} (le condensateur ne filtre plus~!). C'est la résonance série d'un circuit RLC (chapitre~\ref{ch:resonance}), ESR fixant le minimum d'impédance.
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[xscale=1.5, yscale=0.8]
   \draw[-{Stealth}] (0,0) -- (5.2,0) node[right, font=\footnotesize] {$\log f$};
@@ -4673,7 +4673,7 @@ La bobine (ou inductance) est le second composant qui introduit la notion de tem
 
 Une bobine est un \textbf{enroulement de fil conducteur} autour d'un support (souvent un noyau magnétique). Quand un courant la traverse, elle crée un \textbf{champ magnétique} dans et autour d'elle. Ce champ magnétique stocke de l'énergie.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=1.0]
   % Enroulement physique
@@ -4782,7 +4782,7 @@ Le circuit RL est le dual du circuit RC.
 
 \textbf{Établissement du courant :} on applique $E$ à un circuit $R$-$L$ série (courant initial nul) :
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.9]
   \draw[very thick] (0,0) -- (0,1.32); \draw[very thick] (-0.28,1.32) -- (0.28,1.32);
@@ -4812,7 +4812,7 @@ Le courant monte exponentiellement vers sa valeur finale $E/R$ (loi d'Ohm\index{
 \]
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.8]
   \begin{scope}[shift={(0,0)}]
@@ -4971,7 +4971,7 @@ En régime sinusoïdal, la bobine a une \textbf{impédance}~:
 
 Le module \textbf{augmente} avec la fréquence~: la bobine laisse passer le DC mais bloque les signaux HF. C'est le comportement \textbf{inverse} du condensateur~; la notation complexe\index{notation complexe} complète vient au chapitre~\ref{ch:complexes}.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[xscale=1.5, yscale=0.8]
   \draw[-{Stealth}] (0,0) -- (5.2,0) node[right, font=\footnotesize] {$\log f$};
@@ -5003,7 +5003,7 @@ Modèle réel et résonance\index{résonance} parallèle, pertes noyau (hystér�
 
 \subsection{Modèle réel d'une inductance}\index{modèle réel d'une inductance}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.9]
   \draw (0,0) node[ocirc]{} to[R, l=$R_{\text{DC}}$] (2.3,0) to[L, l=$L$] (4.6,0) node[ocirc]{};
@@ -5043,7 +5043,7 @@ Les noyaux magnétiques dissipent de l'énergie par deux mécanismes~:
 
 \textbf{2. Pertes par courants de Foucault :} le champ magnétique variable induit des courants dans le noyau lui-même (qui est conducteur). Ces courants dissipent de la puissance par effet Joule. On les réduit en utilisant des noyaux \textit{laminés} (tôles isolées empilées) ou des matériaux à haute résistivité (ferrites).
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=1.0]
   \draw[->] (-3,0) -- (3,0) node[right, font=\footnotesize] {$H$};
@@ -5326,7 +5326,7 @@ Vu au chapitre~\ref{ch:bobine}. L'essentiel~:
 
 Quand on associe $R$, $L$ et $C$ en série, un phénomène nouveau apparaît~: l'énergie peut \textbf{osciller} entre $L$ et $C$.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.9]
   \draw[very thick] (0,0) -- (0,1.32); \draw[very thick] (-0.28,1.32) -- (0.28,1.32);
@@ -5362,7 +5362,7 @@ Sous-amorti & $\zeta < 1$ ($R < 2\sqrt{L/C}$) & Oscillations amorties \\
 \end{tabular}
 \end{center}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.75]
   \draw[->] (0,0) -- (10,0) node[right]{\small $t$};
@@ -5537,7 +5537,7 @@ Pôles dans le plan complexe, facteur de qualité en conception réelle, équiva
 
 L'équation caractéristique $s^2 + 2\zeta\omega_0 s + \omega_0^2 = 0$ donne deux \textbf{pôles} $s = -\zeta\omega_0 \pm \omega_0\sqrt{\zeta^2-1}$. Leur position dans le plan $s$ résume tout le transitoire~:
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=1.0]
   \draw[->] (-4,0) -- (0.8,0) node[right, font=\footnotesize] {$\Re(s)$};
@@ -5937,7 +5937,7 @@ On définit l'\textbf{amplitude complexe} (ou \textbf{phaseur})~:
 $\underline{U}$ contient \textit{toute} l'information sur le signal sinusoïdal~: son amplitude $\hat{U}$ (module) et sa phase $\varphi_u$ (argument). Le facteur $e^{j\omega t}$, commun à tous les signaux du circuit, est omis.
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.85]
   % Plan complexe tournant
@@ -6003,7 +6003,7 @@ Pour la bobine~: $u = L\,\mathrm{d}i/\mathrm{d}t \to \underline{U} = j\omega L\,
 La dérivée temporelle est devenue une simple multiplication par $j\omega$. C'est \textit{toute} la puissance de la méthode.
 \end{intuition}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=1.0]
   \draw[->] (-0.5,0) -- (2.8,0) node[right, font=\footnotesize] {$\Re$};
@@ -6162,7 +6162,7 @@ Or $\omega_0^2 LC = 1$, donc $\omega_0 L = 1/(\omega_0 C)$. Les deux termes se c
 \textbf{À la résonance}, l'inductance et le condensateur s'annulent mutuellement. Le circuit se comporte comme une \textbf{simple résistance}. C'est pour cela que le courant est maximal (en série) ou minimal (en parallèle) à la résonance --- traité en détail au chapitre~\ref{ch:resonance}.
 \end{intuition}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=1.0]
   \draw[->] (-0.3,0) -- (3.2,0) node[right, font=\footnotesize] {$\Re$};
@@ -6498,7 +6498,7 @@ La puissance instantanée oscille à la fréquence \textbf{double} autour d'une 
 La puissance oscille à $2f$ (à \SI{50}{Hz}, la puissance oscille à \SI{100}{Hz}). C'est ce qui fait ``vibrer'' les lampes fluorescentes et les transformateurs (bourdonnement à \SI{100}{Hz}). La valeur moyenne de cette oscillation est la puissance active $P$.
 \end{intuition}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[xscale=0.62, yscale=0.9]
   \draw[-{Stealth}] (0,0) -- (10.7,0) node[right=2pt] {\footnotesize $t$};
@@ -6571,7 +6571,7 @@ Condensateur pur & $-90^\circ$ & $0$ & Aucune puissance active \\
 
 \subsection{Pourquoi un mauvais $\cos\varphi$ coûte cher}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=1.1]
   % U horizontal (référence)
@@ -6620,7 +6620,7 @@ Le principe est simple~: on ajoute un composant réactif de \textbf{signe oppos�
 \item Charge \textbf{capacitive} (rare) $\Rightarrow$ ajouter des \textbf{inductances}.
 \end{itemize}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=1.0]
   % Triangle avant (Q vers le haut = inductif)
@@ -7043,7 +7043,7 @@ C'est la \textbf{fréquence de résonance}. Elle ne dépend que de $L$ et $C$, p
 
 Considérons un circuit RLC série alimenté par une source sinusoïdale $\underline{E}$ de fréquence variable~:
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.85]
   \draw (0,0) to[sinusoidal voltage source, l=$e(t)$] (0,3)
@@ -7079,7 +7079,7 @@ Si $Q = 50$ et $E = \SI{1}{V}$, alors $U_L = U_C = \SI{50}{V}$~! Ces deux tensio
 
 Dans un circuit RLC parallèle (les trois composants entre les mêmes deux n\oe uds)~:
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.85]
   \draw (0,0) to[sinusoidal voltage source, l=$e(t)$] (0,3) -- (1.5,3);
@@ -7184,7 +7184,7 @@ On peut écrire sous forme normalisée en posant $x = \omega/\omega_0 = f/f_0$~:
 |Z| = R\sqrt{1 + Q^2\left(x - \frac{1}{x}\right)^2}
 \]
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.9]
   % Axes
@@ -7255,7 +7255,7 @@ $f \gg f_0$ & $\to 0$ (atténuation HF) & $\to -90^\circ$ \\
 
 Le filtre laisse passer les fréquences autour de $f_0$ et atténue le reste. La largeur de la bande passante est $\Delta f = f_0/Q$.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.9]
   \draw[-{Stealth[length=2.5mm]}] (0,0) -- (9,0) node[right]{\small $f/f_0$};
@@ -7746,7 +7746,7 @@ $\omega \gg \omega_c$ (HF) & $\approx \omega_c/\omega$ & $-\SI{20}{\decibel\per\
 \end{tabular}
 \end{center}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.72]
   % === GAIN ===
@@ -7969,7 +7969,7 @@ $Q = 50$ & $\SI{+34}{dB}$ & Pic très pointu (filtre sélectif) \\
 
 Le gain au pic de résonance\index{résonance} vaut exactement $Q$ en linéaire, soit $20\log Q$ en dB.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.72]
   \draw[-{Stealth[length=2.5mm]}] (0,0) -- (9,0) node[right, font=\small]{$\log(f/f_0)$};
@@ -8093,7 +8093,7 @@ Stabilité des systèmes bouclés, critères de Routh-Hurwitz et de Nyquist, mar
 
 La plupart des systèmes électroniques réels utilisent une \textbf{rétroaction} (feedback)~: une partie du signal de sortie est renvoyée à l'entrée pour contrôler le comportement. C'est le cas des amplificateurs opérationnels bouclés, des régulateurs de tension, des PLL, des asservissements de moteur\ldots
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.95, >=Stealth, every node/.style={font=\small}]
   % Comparateur
@@ -8181,7 +8181,7 @@ Pour qu'un système bouclé soit stable avec une marge de sécurité, on défini
 \]
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.68, >=Stealth]
   % === GAIN === croise 0 dB exactement à x=4 ; f_-180 à x=5.5
@@ -8233,7 +8233,7 @@ Pour qu'un système bouclé soit stable avec une marge de sécurité, on défini
 
 Le même verdict de stabilité se lit dans le plan complexe (diagramme de Nyquist\index{Nyquist})~:
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.9, >=Stealth]
   \draw[->] (-2.6,0) -- (2.7,0) node[right, font=\footnotesize]{$\Re(T)$};
@@ -8644,7 +8644,7 @@ Les quatre types de filtres sur circuits concrets, les cellules passives du 1\te
 
 \subsection{Les quatre types de filtres (rappel)}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.65]
   % Passe-bas
@@ -8697,7 +8697,7 @@ Les filtres les plus simples n'utilisent qu'une résistance et un condensateur (
 
 \textbf{Passe-bas RC :}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.85]
   \draw (0,0) to[R, l=$R$] (3,0) to[short] (4,0);
@@ -8716,7 +8716,7 @@ Les filtres les plus simples n'utilisent qu'une résistance et un condensateur (
 
 \textbf{Passe-haut CR :} on échange $R$ et $C$.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.85]
   \draw (0,0) to[C, l=$C$] (3,0) to[short] (4,0);
@@ -8806,7 +8806,7 @@ C'est la topologie de filtre actif la plus utilisée pour le 2\textsuperscript{e
 
 \textbf{Passe-bas Sallen-Key (gain unitaire) :}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.92]
   % Entrée
@@ -8886,7 +8886,7 @@ Le choix de la \textbf{réponse normalisée} détermine la forme de la courbe de
 \end{itemize}
 \end{intuition}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.9]
   \draw[-{Stealth[length=2mm]}] (0,-0.5) -- (7.4,-0.5) node[right, font=\footnotesize]{$f/f_c$};
@@ -9305,7 +9305,7 @@ Une diode est un composant à \textbf{deux bornes} (un dipôle) qui conduit le c
 \item La \textbf{cathode} (K)~: borne ``$-$'', marquée par un trait ou une bande sur le boîtier.
 \end{itemize}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=1.2]
   \draw (0,0) -- (0.8,0) to[D, l=$D$, v=$V_D$] (3.2,0) -- (4,0);
@@ -9362,7 +9362,7 @@ LED blanche/bleue & $\sim\SI{3.0}{V}$ & Éclairage \\
 
 La courbe courant-tension d'une diode est \textbf{fortement non-linéaire}~:
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=1.0]
   % Axes
@@ -9467,7 +9467,7 @@ Pour les calculs pratiques, on n'utilise \textit{jamais} l'équation exponentiel
 
 Le circuit le plus basique~: une source $E$, une résistance $R$ et une diode en série.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.85]
   % Pile manuelle : trait long = +, en haut
@@ -9566,7 +9566,7 @@ Un semi-conducteur (comme le silicium) est un matériau dont la conductivité es
 
 Quand on met un matériau P en contact avec un matériau N, un phénomène spontané se produit~:
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.95]
   % Régions P et N
@@ -9618,7 +9618,7 @@ Quand on met un matériau P en contact avec un matériau N, un phénomène spont
 
 \subsubsection*{Polarisation directe et inverse}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.85]
   % DIRECTE
@@ -9729,7 +9729,7 @@ Cette résistance dynamique est utilisée dans le modèle petit signal (circuits
 
 La première application historique de la diode~: convertir l'AC en DC.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.85]
   \draw (0,0) to[sinusoidal voltage source, l=$v_{\text{AC}}$] (0,2.5)
@@ -9748,7 +9748,7 @@ La diode ne conduit que pendant les alternances positives. La tension aux bornes
 
 La tension moyenne en sortie est~: $V_{\text{moy}} = (\hat{V} - V_F)/\pi \approx \hat{V}/\pi$.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=1.0]
   % Axe temps
@@ -9775,7 +9775,7 @@ La tension moyenne en sortie est~: $V_{\text{moy}} = (\hat{V} - V_F)/\pi \approx
 
 Pour utiliser les \textit{deux} alternances, on utilise un pont de 4 diodes~:
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=1.0]
   % Pont en losange. Noeuds : H (haut, cathode commune = sortie +),
@@ -9813,7 +9813,7 @@ Pour utiliser les \textit{deux} alternances, on utilise un pont de 4 diodes~:
 
 Les deux alternances sont redressées. La tension moyenne est~: $V_{\text{moy}} = 2(\hat{V} - 2V_F)/\pi$.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=1.0]
   \draw[-{Stealth[length=2mm]}] (0,0) -- (7.2,0) node[right, font=\footnotesize]{$t$};
@@ -9897,7 +9897,7 @@ C_j(V) = \frac{C_{J0}}{(1 - V/V_J)^M}
 avec $V_J \approx \SI{0.7}{V}$ (potentiel de jonction) et $M \approx 0{,}33$ à $0{,}5$.
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.85]
   \draw[-{Stealth[length=2mm]}] (-5.5,0) -- (0.5,0) node[right, font=\footnotesize]{$V$ (V)};
@@ -9933,7 +9933,7 @@ avec $V_J \approx \SI{0.7}{V}$ (potentiel de jonction) et $M \approx 0{,}33$ à 
 
 Quand une diode passe de l'état passant à l'état bloqué, elle ne se bloque pas instantanément. Pendant un bref instant ($t_{rr}$), un \textbf{courant inverse} circule (évacuation des charges stockées dans la jonction).
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.85]
   \draw[-{Stealth[length=2mm]}] (0,-2.8) -- (0,2.5) node[above, font=\footnotesize]{$i_D$};
@@ -10013,7 +10013,7 @@ Les deux se compensent vers $V_Z \approx \SI{5.6}{V}$, d'où le choix de cette v
 
 \textbf{Circuit de régulation Zener :}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.95]
   % Circuit principal — source DC : pile manuelle (trait long = +, en haut)
@@ -10339,7 +10339,7 @@ Un transistor bipolaire\index{transistor!bipolaire} (BJT, \textit{Bipolar Juncti
 \item \textbf{Émetteur} (E)~: la borne par laquelle sort le courant total.
 \end{itemize}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=1.0, american]
   % NPN
@@ -10422,7 +10422,7 @@ La flèche sur l'émetteur indique le sens du courant \textit{conventionnel}. Ce
 
 En commutation, le transistor est soit \textbf{bloqué} (interrupteur ouvert), soit \textbf{saturé} (interrupteur fermé). On ne reste jamais en régime actif (transition aussi rapide que possible).
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=1.0, american]
   % Alimentation haute
@@ -10480,7 +10480,7 @@ Modèle ingénieur~: équation de Shockley, polarisation\index{polarisation}, mo
 
 \subsubsection*{Structure physique}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.95]
   \fill[blue!12] (0,0) rectangle (2.2,2.5);
@@ -10567,7 +10567,7 @@ Pour utiliser un BJT en amplification, il faut fixer un \textbf{point de repos} 
 
 Graphiquement, le point de repos est l'intersection de la \textbf{droite de charge\index{droite de charge}} --- imposée par $V_{CC}$ et $R_C$ --- avec la caractéristique $I_C(V_{CE})$ sélectionnée par la polarisation\index{polarisation} de base~:
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=1.0]
   % Échelle : 1 unité = 2 V (x) et 2 mA (y). Vérifié : sommet réseau y = 4,4 < 5,7 ;
@@ -10604,7 +10604,7 @@ Graphiquement, le point de repos est l'intersection de la \textbf{droite de char
 
 Le montage standard qui réalise cette polarisation~:
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.9, american]
   \draw (4,6) node[above]{$V_{CC}$} -- (4,5.5);
@@ -10692,7 +10692,7 @@ $r_o$ représente le fait que le collecteur n'est pas une source de courant parf
 
 \subsubsection*{Le schéma équivalent}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=1.0, american]
   \node[left, font=\small] at (0,0) {B};
@@ -10746,7 +10746,7 @@ Le gain ne dépend que de résistances~: indépendant de $g_m$, $I_C$, $T$ et $\
 
 L'émetteur commun\index{émetteur commun} amplifie la tension. Mais que faire quand le problème n'est pas le gain, mais l'\textbf{impédance} --- une source fragile (capteur, filtre du chapitre~\ref{ch:filtres}) qui doit piloter une charge gourmande~? Réponse~: le \textbf{collecteur commun}, dit \textbf{émetteur suiveur\index{suiveur}}.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.95, american]
   % Transistor
@@ -10866,7 +10866,7 @@ Dans le montage émetteur commun, $C_\mu$ est ``multipliée'' par le gain et app
 
 \subsection{Le miroir de courant~: la brique des circuits intégrés}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.95, american]
   % Q1 diode-connecté (gauche, miroir horizontal)
@@ -10911,7 +10911,7 @@ Le courant est ``recopié'' --- d'où le nom de miroir.
 
 \subsection{La paire différentielle~: amplifier une différence}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.95, american]
   \draw (2,3) node[npn, anchor=B](Q1){};
@@ -11230,7 +11230,7 @@ Niveau intuitif~: fonctionnement qualitatif, comparaison BJT, commutation. Prér
 \item \textbf{Source} (S)~: la borne par laquelle sort le courant.
 \end{itemize}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=1.0, american]
   \begin{scope}[shift={(0,0)}]
@@ -11310,7 +11310,7 @@ Le mode interrupteur fermé du MOSFET est le régime \textbf{ohmique} (ou \texti
 
 \subsection{Le MOSFET en commutation}\index{MOSFET en commutation}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=1.0, american]
   \draw (3,5) node[above]{$V_{DD}$};
@@ -11355,7 +11355,7 @@ Modèle ingénieur~: structure physique, équations du courant (hypothèse long 
 
 \subsection{Structure physique}\index{structure physique}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.85]
   \fill[red!8] (0,0) rectangle (8,2);
@@ -11446,7 +11446,7 @@ Conséquence directe~: le $g_m$ du MOSFET est plus faible que celui du BJT à m�
 
 \subsection{Caractéristique $I_D(V_{DS})$}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.85]
   \draw[-{Stealth[length=2.5mm]}] (0,0) -- (8,0) node[right, font=\small]{$V_{DS}$};
@@ -11516,7 +11516,7 @@ avec $V_A = 1/\lambda$~: ``tension d'Early'' du MOSFET. Typiquement $V_A \sim \S
 
 \subsubsection*{Le schéma équivalent}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=1.0, american]
   \node[left, font=\small] at (0,0) {G};
@@ -11579,7 +11579,7 @@ $R_{DS,\text{on}}$ dépend de trois facteurs indépendants~:
 
 Dans un MOSFET discret, le substrat P est relié en interne à la source. La jonction substrat--drain forme donc une \textbf{diode parasite antiparallèle}, dite \textit{body diode}, toujours présente~:
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=1.0, american]
   \draw (0,0) node[nmos](M){};
@@ -11621,7 +11621,7 @@ Notation datasheet~: $C_{iss} = C_{GS}+C_{GD}$, $C_{oss} = C_{DS}+C_{GD}$, $C_{r
 
 Lors de la commutation ON, la tension de grille $V_{GS}$ ne monte pas linéairement. Elle présente un \textbf{plateau} à $V_{GS} \approx V_{th} + I_D/g_m$ pendant lequel \textit{toute} l'énergie du driver charge $C_{GD}$ pour faire chuter $V_{DS}$. Pendant ce plateau, $V_{GS}$ est quasi constante~:
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.95]
   % Échelle qualitative. Vérifié : v_GS(7,5)=4,54 < 5,5 ; libellés hors trajectoires.
@@ -11705,7 +11705,7 @@ Trois paramètres varient avec la température~:
 
 \subsection{L'inverseur CMOS}\index{inverseur CMOS}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.9, american]
   \draw (2,5) node[above]{$V_{DD}$} -- (2,4.5);
@@ -11926,7 +11926,7 @@ Outils pratiques pour résoudre les circuits à AOP~: règles d'or, méthode de 
 
 Un AOP possède deux entrées et une sortie~:
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=1.0, american]
   \draw (0,0) node[op amp, thick](AOP){};
@@ -11998,7 +11998,7 @@ Le résultat $V_{\text{out}}$ est-il entre $-V_{EE}$ et $+V_{CC}$~? Si non~: la 
 
 Appliquons la méthode sur l'amplificateur non-inverseur, en trois niveaux de complexité croissante.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.85, american]
   \draw (0,0) node[op amp](AOP){};
@@ -12070,7 +12070,7 @@ Si $A_{OL}$ tombe à $100$ (par exemple à haute fréquence)~: $A_{CL,\text{rée
 
 \textbf{Amplificateur inverseur :}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.85, american]
   \draw (0,0) node[op amp](AOP){};
@@ -12155,7 +12155,7 @@ Architecture interne, origine physique du gain $A_{OL}$, théorie de la rétroac
 
 L'AOP n'est \textbf{pas un composant fondamental} comme le transistor. C'est une \textbf{architecture de circuit} composée de transistors. Un AOP typique comprend trois étages~:
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.8, >=Stealth, every node/.style={font=\small}]
   \draw[thick, fill=green!10] (0,0) rectangle (3,2.5);
@@ -12232,7 +12232,7 @@ Le \textbf{produit gain-bande} est constant~:
 Exemple (741)~: $GBW = \SI{1}{MHz}$. En suiveur\index{suiveur} ($A_{CL} = 1$)~: BP $= \SI{1}{MHz}$. En $\times 100$~: BP $= \SI{10}{kHz}$.
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.95]
   % Échelle : 1 unité = 1 décade (x), 20 dB (y). Droite A_OL : y = 6 - x, vérifiée :
@@ -12687,7 +12687,7 @@ Avant tout calcul, définir précisément~:
 
 Ces spécifications se résument graphiquement en un \textbf{gabarit} que la réponse du filtre devra respecter~:
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.95]
   % 1 unité = 20 dB. Zones grisées = interdites. Courbe : -3,1 u (-62 dB) à f_s, sous -A_min = -3 u.
@@ -12817,7 +12817,7 @@ C_1 = 2Q \cdot C_{\text{ref}} \qquad C_2 = \frac{C_{\text{ref}}}{2Q} \qquad \tex
 Vérification~: $C_1 \times C_2 = C_{\text{ref}}^2$ et $\sqrt{C_1/C_2} = 2Q$.
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.9, american]
   \draw (0,0) node[ocirc]{} node[left]{$V_{\text{in}}$} to[R, l=$R_1$] (2.4,0) coordinate(A) to[R, l=$R_2$] (4.8,0) coordinate(B);
@@ -12879,7 +12879,7 @@ Tchebychev $\SI{3}{dB}$ & $1{,}306$ & $3$ & $27{,}2$ \\
 \end{center}
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=0.5cm, y=2.3cm]
   % omega_n = 1 ; s(t) = 1 - e^{-zt}(cos wd t + (z/wd) sin wd t).
@@ -13399,7 +13399,7 @@ qu'une seule fréquence.
 Le réseau de retour joue deux rôles simultanés~: il sélectionne la fréquence,
 et il fixe la fraction du signal réinjectée. C'est lui qui décide de tout.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[line width=1pt, scale=1.0]
 % amplificateur
@@ -13529,7 +13529,7 @@ l'extinction ou la saturation.
 C'est le montage RC de référence en audio et en instrumentation. Le réseau de
 retour associe une cellule RC série et une cellule RC parallèle.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[line width=1pt, scale=1.0, transform shape]
 \draw (0,0) node[left]{$v_s$} to[R, l=$R$] (2.2,0) to[C, l=$C$] (4.4,0);
@@ -14134,7 +14134,7 @@ Toute opération logique peut être construite à partir de trois opérations é
 En pratique, on utilise surtout les portes \textbf{NAND} ($\overline{A \cdot B}$) et \textbf{NOR} ($\overline{A+B}$) car elles sont plus simples à réaliser en CMOS (un seul étage d'inversion).
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.85]
   \node[not port] (N1) at (0,3) {};
@@ -14242,7 +14242,7 @@ Réalisation CMOS des portes, circuits combinatoires standards (multiplexeurs, d
 
 Le chapitre~\ref{ch:mosfet} a présenté l'inverseur CMOS\index{CMOS}~: un PMOS en haut (relié à $V_{DD}$) et un NMOS en bas (relié à la masse). C'est la \textbf{porte NOT}~:
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.85, american]
   \draw (2,4.5) node[above]{$V_{DD}$} -- (2,4);
@@ -14282,7 +14282,7 @@ Le chapitre~\ref{ch:mosfet} a présenté l'inverseur CMOS\index{CMOS}~: un PMOS 
 
 \textbf{Porte NAND à 2 entrées :}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.75, american]
   \draw (3,6.2) node[above]{$V_{DD}$} -- (3,5.5);
@@ -14474,7 +14474,7 @@ NM_H = V_{OH} - V_{IH} = 3{,}2 - 2{,}0 = \SI{1.2}{V} \qquad NM_L = V_{IL} - V_{O
 Un parasite de moins de $\SI{0.7}{V}$ ne peut pas provoquer d'erreur logique. C'est la \textbf{robustesse} du numérique.
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[y=1.05cm, x=1cm]
   \draw[thick] (0,0) rectangle (1.4,3.3);
@@ -14533,7 +14533,7 @@ Le fan-out est donc limité par le \textbf{délai} ($t_p \propto C_L$) et non pa
 \end{itemize}
 \end{attention}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=0.85cm, y=0.85cm]
   \node[left, font=\small] at (-0.2,4.8) {$A$};
@@ -14777,7 +14777,7 @@ La différence fondamentale~: le circuit séquentiel contient une \textbf{boucle
 
 Deux portes NOR (ou NAND) croisées forment un \textbf{verrou\index{verrou (latch)} SR} (\textit{Set-Reset latch})~:
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.85, american]
   \draw (2,2) node[nor port](NOR1){};
@@ -14848,7 +14848,7 @@ La bascule D (\textit{D flip-flop}) est constituée de \textbf{deux verrous D en
 \]
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=0.95cm, y=0.72cm]
   \node[left, font=\small] at (-0.25,5.0) {CLK};
@@ -15067,7 +15067,7 @@ La bascule D ne capture pas l'entrée ``instantanément'' au front d'horloge. Ph
 Typiquement~: $t_{su} \sim \SI{0.1}{ns}$ à $\SI{1}{ns}$ et $t_h \sim \SI{0.05}{ns}$ à $\SI{0.5}{ns}$ selon la technologie.
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=1.05cm, y=0.8cm]
   \fill[red!12] (2.8,0.1) rectangle (4.7,4.7);
@@ -15122,7 +15122,7 @@ La fréquence maximale est~:
 \]
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=1cm, y=1cm]
   % Bascule source
@@ -15208,7 +15208,7 @@ P_{\text{meta}} = T_w \cdot f_{\text{data}} \cdot e^{-t_{\text{résolution}}/\ta
 où $T_w$ est la fenêtre de vulnérabilité ($\approx t_{su} + t_h$), $f_{\text{data}}$ la fréquence des transitions d'entrée, $t_{\text{résolution}}$ le temps disponible pour la résolution, et $\tau$ la constante de temps\index{constante de temps} de la boucle de rétroaction (liée au $g_m$ et $C_L$ des transistors internes).
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=1cm, y=0.8cm]
   \fill[red!12] (2.5,2.2) rectangle (3.4,5.9);
@@ -15550,7 +15550,7 @@ $t_j$ & \SI{15}{ps} & Jitter PLL (crête-à-crête) \\
 La marge de $\SI{15}{ps}$ ($3\%$) est typique des circuits modernes. Il suffit d'une variation de procédé de fabrication, d'une hausse de température de $\SI{30}{\degreeCelsius}$, ou d'une tension $V_{DD}$ $5\%$ trop basse pour la consommer entièrement.
 \end{pratique}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=1.32cm, y=1cm]
   % 1 unité = 50 ps ; barre = T_clk = 500 ps = 10 u. Largeurs : 1/5.6/1.6/0.6/0.6/0.3/0.3.
@@ -15701,7 +15701,7 @@ Le temps de résolution nécessaire diminue exponentiellement la probabilité de
 \textbf{MTBF typique :} $> 10^{10}$ heures à $\SI{200}{MHz}$ avec un synchroniseur 2 étages.
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=1cm, y=1cm]
   \fill[blue!6] (-2.3,-1.5) rectangle (0.1,2.6);
@@ -15751,7 +15751,7 @@ La \textbf{FIFO asynchrone} (\textit{First In, First Out}) est la structure stan
 \end{itemize}
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=1cm, y=1cm, font=\scriptsize]
   \fill[blue!6] (-2.6,-3.4) rectangle (3.5,3.1);
@@ -16085,7 +16085,7 @@ Un diagramme d'états représente graphiquement la FSM~:
 
 \textbf{Exemple : détecteur de séquence ``101'' (Moore).}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[>=Stealth, scale=0.9]
   % States as circles
@@ -16152,7 +16152,7 @@ Codage des états, implémentation physique, méthodologie complète de concepti
 \end{itemize}
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[>=Stealth, scale=0.85]
   % Registre
@@ -16278,7 +16278,7 @@ Implémenter en HDL (VHDL ou Verilog) ou en portes discrètes. Simuler fonctionn
 Chaque transition ne dépend que d'une bascule et d'un comparateur\index{comparateur} $\Rightarrow$ logique très simple, $t_{\text{comb}}$ minimal.
 \end{pratique}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[>=Stealth, scale=0.95]
   \node[draw, circle, thick, minimum size=1.35cm, fill=green!12]  (V)  at (0,0)     {$S_V$};
@@ -16656,7 +16656,7 @@ Aucune technologie ne satisfait tout~: c'est pourquoi les systèmes utilisent un
 
 La cellule SRAM est un \textbf{verrou\index{verrou (latch)} croisé}~: deux inverseurs CMOS\index{CMOS} connectés tête-bêche, formant une boucle de rétroaction positive\index{rétroaction positive} qui maintient un état binaire stable.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.9, american]
   % Anneau des deux inverseurs tête-bêche
@@ -16726,7 +16726,7 @@ Un \textbf{sense amplifier} (rétroaction positive, essentiellement un verrou SR
 \textbf{La lecture est destructive :} le partage de charge vide partiellement le condensateur. Après chaque lecture, il faut \textbf{réécrire} la donnée (``restore'').
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.95, american]
   \draw (2.0,0.9) node[nmos, rotate=-90, anchor=S](T){};
@@ -16785,7 +16785,7 @@ La cellule Flash est un MOSFET modifié avec \textbf{deux grilles}~:
 
 Ces trois technologies ne se concurrencent pas~: elles s'empilent en une \textbf{hiérarchie}, du plus rapide au plus vaste~:
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[y=0.92cm, x=1cm]
   \foreach \i/\w/\c/\n/\lat/\cap in {
@@ -17177,7 +17177,7 @@ Représentation des nombres en binaire, addition et soustraction multi-bits, com
 
 L'additionneur le plus simple est le \textbf{ripple carry adder} (RCA)~: on met en cascade $n$ additionneurs complets (chapitre~\ref{ch:combinatoire}), la retenue de chaque étage devenant la retenue d'entrée du suivant.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.9]
   \node[xor port] (X1) at (2.3,3.3) {};
@@ -17206,7 +17206,7 @@ L'additionneur le plus simple est le \textbf{ripple carry adder} (RCA)~: on met 
 \caption{Le full adder au niveau portes : $S = A \oplus B \oplus C_{\text{in}}$ et $C_{\text{out}} = A\cdot B + (A \oplus B)\cdot C_{\text{in}}$. Les signaux intermédiaires sont déjà le Generate ($A \cdot B$) et le Propagate ($A \oplus B$) du carry lookahead.}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.85, >=Stealth]
   % 4 full adders
@@ -17480,7 +17480,7 @@ bfloat16 & 16 & 1 & 8 & 7 & $\sim 2$ chiffres (large gamme) \\
 \end{enumerate}
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=0.31cm, y=1cm]
   \draw[thick, fill=red!15]    (0,0) rectangle (1,0.85);
@@ -17741,7 +17741,7 @@ Les quatre premiers éléments forment le \textbf{datapath}. Le cinquième est l
 \end{itemize}
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[>=Stealth, scale=0.9]
   % Contrôleur
@@ -17898,7 +17898,7 @@ Un processeur exécute des instructions stockées en mémoire. Chaque instructio
 \end{enumerate}
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[>=Stealth, scale=0.8, font=\scriptsize]
   % Contrôleur
@@ -18039,7 +18039,7 @@ T_{\text{clk}} \geq \max_k(t_{\text{étage},k}) + t_{cq} + t_{su}
 L'équilibrage des étages est crucial~: un étage 2$\times$ plus lent que les autres gaspille la moitié du potentiel.
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=0.95cm, y=0.72cm, font=\scriptsize]
   \foreach \c in {1,...,8} \node at (\c-0.5,0.4) {\c};
@@ -18349,7 +18349,7 @@ Une fois replié, le parasite est \textbf{indiscernable} d'un vrai signal à $\S
 \textbf{L'image de la roue de chariot :} dans les westerns, les roues semblent tourner à l'envers : la caméra (24 images/s) échantillonne une rotation trop rapide, et le mouvement se ``replie'' en rotation lente inverse. C'est exactement l'aliasing : un phénomène rapide échantillonné trop lentement devient un phénomène lent --- et faux.
 \end{intuition}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=3.1cm, y=1.05cm]
   % Signal réel à 7f0, échantillonné à 8f0 -> alias exact à f0, inversé (vérifié : sin(2π·7k/8) = -sin(2πk/8))
@@ -18379,7 +18379,7 @@ L'erreur d'arrondi est au pire $\pm q/2$. Si le signal est suffisamment ``actif'
 \]
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=0.98cm, y=0.5cm]
   \draw[-{Stealth[length=2mm]}] (-0.3,0) -- (8.6,0) node[right, font=\small]{$V_{\text{in}}$};
@@ -18467,7 +18467,7 @@ Un seul comparateur + un DAC interne + une FSM (chapitre~\ref{ch:fsm}) qui joue 
 Excellent compromis~: 8--18 bits, $\SI{100}{kS/s}$ à $\SI{10}{MS/s}$, très faible consommation. \textbf{C'est l'ADC des microcontrôleurs} (celui du nRF52 ou des STM32 est un SAR 12 bits) et de l'instrumentation générale.
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=1.5cm, y=4.1cm]
   % V_in = 0,6367·FS ; essais vérifiés : 0,5(1) 0,75(0) 0,625(1) 0,6875(0) 0,65625(0) -> code 10100
@@ -18816,7 +18816,7 @@ Quand le débit monte, $t_{\text{skew}}$ devient comparable à $T_{\text{bit}}$~
 \item 8 bits de données (LSB en premier), parité optionnelle, 1--2 bits de stop (retour à 1).
 \end{itemize}
 \end{formule}
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.78]
   % Ligne au repos (haut)
@@ -18913,7 +18913,7 @@ Open-drain et calcul de pull-up (RC, chapitre~\ref{ch:rc-rl-rlc}), modes SPI (CP
 \end{itemize}
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.85, american]
   \draw (4.2,3.7) node[above]{$V_{DD}$} to[R, l=$R_p$] (4.2,1.8);
@@ -18974,7 +18974,7 @@ Deux paramètres définissent \textit{quand} les bits sont posés et capturés~:
 Le mode est imposé par \textit{chaque périphérique} (datasheet). Les modes 0 et 3 dominent en pratique. \textbf{90\% des ``SPI qui ne marche pas'' sont un mauvais couple CPOL/CPHA}~: à l'oscilloscope, on voit les données décalées d'un demi-bit ou lues sur le mauvais front.
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=0.8cm, y=0.55cm]
   \node[left, font=\scriptsize] at (-0.25,9.80) {Mode 0 (CPOL$=$0, CPHA$=$0)};
@@ -19058,7 +19058,7 @@ UART, SPI et I\textsuperscript{2}C sont \textit{single-ended}~: le niveau est me
 \textbf{Robustesse :} CRC 15 bits, acquittement par \textit{tous} les récepteurs, \textit{bit stuffing} (un bit inverse inséré après 5 bits identiques pour maintenir la synchronisation), et confinement automatique des nœuds défaillants (compteurs d'erreurs TEC/REC). Débit : \SI{1}{Mbit/s} (classique), \SI{8}{Mbit/s} (CAN FD).
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=1.02cm, y=0.62cm]
   \fill[red!10] (5.10,-0.5) rectangle (5.95,6.7);
@@ -19331,7 +19331,7 @@ L' = kL, \quad V'_{DD} = kV_{DD}, \quad C' = kC
 $V_{DD}$ est bloquée autour de $0{,}7$--$\SI{1}{V}$ depuis 15 ans. Conséquence~: chaque génération ajoute des transistors \textbf{sans} réduire leur énergie d'autant $\Rightarrow$ la densité de puissance \textit{augmente}. C'est la cause directe du plafonnement des fréquences à $\sim\SI{4}{}$--$\SI{5}{GHz}$ (le Pentium 4 en a été la première victime, chapitre~\ref{ch:architecture}) et de la bascule vers le multicœur.
 \end{attention}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=1cm, y=1cm]
   % x : V_GS (0,125 V/u), y : log10(I_D) (2 décades/u). Vérifié : 7 décades sur 0,42 V à 60 mV/déc.
@@ -19413,7 +19413,7 @@ Plus le transistor est \textbf{petit}, plus il est \textbf{dispersé}. À surfac
 \textbf{Conséquences déjà rencontrées :} l'offset du sense amplifier (chapitre~\ref{ch:memoire}), les cellules SRAM faibles (chapitre~\ref{ch:memoire}, exercice 24.6), le mésappariement des DAC (chapitre~\ref{ch:conversion}, exercice 27.6). \textbf{La variabilité est le même phénomène partout.}
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=0.95cm, y=1cm]
   \draw[-{Stealth[length=2mm]}] (-4,0) -- (4.3,0) node[right, font=\small]{$V_{th}$};
@@ -19490,7 +19490,7 @@ Doubler la densité de courant $J$ divise la durée de vie par $\sim 4$~; $+\SI{
 Dès \SI{8}{nm}, des études (Esmaeilzadeh et al., 2011) prédisaient que \textbf{plus de 50\% de la puce doit rester éteinte} à tout instant à fréquence nominale~: c'est le \textbf{dark silicon}.
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=1.05cm, y=1.05cm]
   \foreach \i in {0,...,4}
@@ -19737,7 +19737,7 @@ Une \textbf{alimentation régulée} doit maintenir sa tension de sortie $V_{\tex
 
 Le réflexe naïf~: ``il me faut \SI{3.3}{V} depuis du \SI{5}{V}~; or $V_{\text{out}} = V_{\text{in}}\frac{R_2}{R_1+R_2}$ (chapitre~\ref{ch:resistance})~; donc un pont $R_1$-$R_2$ fait l'affaire''. \textbf{Non} --- et le théorème de Thévenin\index{Thévenin, théorème de} (chapitre~\ref{ch:theoremes}) dit immédiatement pourquoi.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.9, american]
   % Pont diviseur
@@ -19774,7 +19774,7 @@ Exemple~: $R_1 = \SI{1}{k\ohm}$, $R_2 = \SI{2}{k\ohm}$ ($V_{\text{th}} = \SI{3.3
 
 \subsection{Première vraie régulation~: la Zener (shunt)}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=1.0, american]
   % Rail haut : Vin -> Rs -> noeud sortie
@@ -19822,7 +19822,7 @@ Le suiveur fait ce qu'il sait faire~: recopier une tension de référence en div
 \textbf{Il manque encore la précision} : $V_{BE}$ dérive ($\SI{-2}{\milli\volt\per\degreeCelsius}$, chapitre~\ref{ch:bjt}) et rien ne compense. La solution : fermer une vraie boucle --- section suivante.
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=1.0, american]
   % Rail d'entrée haut
@@ -19892,7 +19892,7 @@ La boucle force $V_{\text{out}}\frac{R_b}{R_a+R_b} = V_{\text{ref}}$, d'où~:
 \textbf{C'est exactement l'amplificateur non-inverseur du chapitre~\ref{ch:aop}}, dont l'``entrée'' est la référence et dont l'étage de sortie est un transistor de puissance. La précision vient de la boucle (gain d'erreur élevé), pas du ballast --- le même principe que l'AOP contre-réactionné et le sigma-delta (chapitre~\ref{ch:conversion}).
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=1.0, american]
   % Rail d'entrée haut
@@ -19957,7 +19957,7 @@ Idéal sur batterie~: une Li-ion (4,2 $\to$ \SI{3.0}{V}) peut alimenter du \SI{2
 \textbf{Le revers de la médaille :} le PMOS source commune est un étage \textit{inverseur à gain} (chapitre~\ref{ch:mosfet}), pas un suiveur. La boucle contient donc \textbf{un étage de gain de plus} et son pôle de sortie dépend de la charge $\Rightarrow$ la stabilité devient un vrai sujet.
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=1.0, american]
   % Rail d'entrée haut
@@ -20013,7 +20013,7 @@ PSRR = 20\log_{10}\frac{\Delta V_{\text{in}}}{\Delta V_{\text{out}}}
 Typiquement \SI{60}{}--\SI{80}{dB} en DC\ldots mais le PSRR \textbf{s'effondre avec la fréquence} (il suit le gain de boucle)~: souvent $< \SI{20}{dB}$ à \SI{1}{MHz}. Conséquence pratique majeure~: un LDO placé \textit{après} un convertisseur à découpage (chapitre~\ref{ch:decoupage}) n'atténue l'ondulation de découpage (100 kHz--MHz) que de 10--20 dB --- le filtrage LC et le placement font le reste. Le LDO n'est pas un filtre magique.
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=1.05cm, y=1cm]
   % x : log f (1 u/décade, 10 Hz à x=0) ; y : 20 dB/1,2 u. Point exo 30.5 : (500 kHz ; 18 dB) = (4,7 ; 1,08).
@@ -20311,7 +20311,7 @@ Cette seule équation donne le rapport de conversion de \textit{tous} les conver
 
 \subsection{Le convertisseur abaisseur (buck)}\index{convertisseur abaisseur (buck)}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.95, american]
   % Entrée
@@ -20356,7 +20356,7 @@ Cette seule équation donne le rapport de conversion de \textit{tous} les conver
 Le buck \textbf{abaisse} la tension, avec un rendement réel de 85--95\,\%.
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=1.15cm, y=0.85cm]
   % D = 0,4 ; pentes iL : +ΔiL/DT = 1,0 et -ΔiL/(1-D)T = 0,67 (vérifiées)
@@ -20406,7 +20406,7 @@ Convertisseur élévateur, abaisseur-élévateur, conduction continue/discontinu
 
 \subsection{Le convertisseur élévateur (boost)}\index{convertisseur élévateur (boost)}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.95, american]
   \draw (0,0) node[ground]{} to[V, l=$V_{\text{in}}$] (0,3);
@@ -20450,7 +20450,7 @@ Le boost\index{convertisseur!boost} \textbf{élève} la tension~: $D = 0{,}5 \Ri
 
 \subsection{Le convertisseur abaisseur-élévateur (buck-boost)}\index{convertisseur abaisseur-élévateur (buck-boost)}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.95, american]
   \draw (0,0) node[ground]{} to[V, l=$V_{\text{in}}$] (0,3);
@@ -20510,7 +20510,7 @@ Selon la charge, le courant de la bobine peut ou non s'annuler à chaque cycle~:
 \textbf{La frontière} dépend de l'ondulation de courant $\Delta i_L = \frac{V_L \cdot t_{\text{on}}}{L}$ : on passe en DCM quand le courant moyen de charge tombe sous $\Delta i_L / 2$. Augmenter $L$ ou $f_{\text{sw}}$ réduit $\Delta i_L$ et repousse la frontière DCM.
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=1.15cm, y=0.9cm]
   \node[left, font=\small] at (-0.2,3.6) {$i_L$ (CCM)};
@@ -20802,7 +20802,7 @@ B_{\text{sat}} \text{ atteint pour } I_{\text{sat}} \quad\text{tel que}\quad L\,
 \textbf{L'entrefer : sacrifier de la perméabilité pour gagner en courant.} En insérant un petit \textbf{entrefer} (\textit{air gap}) dans le circuit magnétique, on réduit $\mu_r$ effectif (donc $L$) mais on \textbf{repousse} la saturation : le noyau encaisse plus de courant avant $B_{\text{sat}}$. C'est pourquoi les inductances de puissance ont presque toujours un entrefer, visible ou réparti (poudre de fer). On échange de l'inductance contre de la tenue en courant --- un compromis de conception fondamental.
 \end{intuition}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=1.05cm, y=1.0cm]
   \draw[-{Stealth[length=2mm]}] (-0.3,0) -- (6.6,0) node[right, font=\small]{$H \propto N I$};
@@ -20868,7 +20868,7 @@ Elles croissent en $f^2$ --- d'où l'usage de \textbf{ferrites} (isolantes, donc
 À faible charge, les pertes fer dominent (d'où le mauvais rendement en veille)~; à forte charge, les pertes cuivre prennent le dessus. Le rendement d'un SMPS en cloche --- maximal à charge moyenne --- vient directement de cette compétition.
 \end{attention}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=1.3cm, y=3.6cm]
   \draw[-{Stealth[length=2mm]}] (-0.1,0) -- (5.45,0) node[right, font=\small]{$I_{\text{out}}$};
@@ -20907,7 +20907,7 @@ Le \textbf{flyback\index{convertisseur!flyback}} est le convertisseur isolé le 
 La bobine couplée est donc une \textbf{inductance de stockage à deux enroulements}, pas un vrai transformateur (qui transfère en temps réel). Le rapport $N_2/N_1$ et le rapport cyclique\index{rapport cyclique} fixent ensemble la tension de sortie, qui peut être inférieure, supérieure, et \textbf{isolée} --- d'où son succès pour les alimentations secteur où l'isolation est obligatoire.
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{circuitikz}[scale=0.95, american]
   \draw (0,0) node[ground]{} to[V, l=$V_{\text{in}}$] (0,3.2);
@@ -20970,7 +20970,7 @@ f_{LC} = \frac{1}{2\pi\sqrt{LC}}
 \textbf{Le sauveur (parfois) : le zéro ESR.} La résistance série du condensateur de sortie crée un zéro $f_z = 1/(2\pi\,ESR\,C)$ qui \textbf{remonte} la phase de $+\SI{90}{\degree}$. C'est le même mécanisme qu'au chapitre~\ref{ch:ldo} pour le LDO. D'où un constat important : \textbf{l'ESR du condensateur de sortie influence la stabilité, pas seulement l'ondulation}. Les condensateurs céramiques à très faible ESR, excellents pour l'ondulation, peuvent \textit{déstabiliser} une boucle conçue pour un zéro ESR --- il faut alors compenser activement.
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=1.18cm, y=1cm]
   % x : 1,5 u/décade depuis 1 kHz. fLC=8,9 k -> 1,42 ; fz=113 k -> 3,08 ; croisement 50 kHz -> 2,55 (vérifiés)
@@ -21221,7 +21221,7 @@ Boucle ouverte contre boucle fermée\index{boucle fermée}, les éléments d'un 
 
 \subsection{Les éléments d'une boucle d'asservissement}\index{éléments d'une boucle d'asservissement}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[>=Stealth, scale=1.15, every node/.style={font=\small}, transform shape]
   % Sommateur
@@ -21350,7 +21350,7 @@ H(s) = K\,\frac{(s - z_1)(s - z_2)\cdots}{(s - p_1)(s - p_2)\cdots}
 Un pôle $p = \sigma + j\omega$ correspond à une réponse en $e^{\sigma t}\cos(\omega t)$. Si $\sigma < 0$~: l'oscillation s'amortit (stable). Si $\sigma > 0$~: elle diverge (instable). Si $\sigma = 0$~: oscillation entretenue (marginal). \textbf{La stabilité se lit directement dans la position des pôles dans le plan complexe} --- c'est tout l'enjeu du chapitre~\ref{ch:pid}.
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=1cm, y=1cm]
   \fill[green!9] (-4.2,-3.0) rectangle (0,3.0);
@@ -21435,7 +21435,7 @@ $\zeta = 0$ (non amorti) & 2 pôles imaginaires purs & Oscillation entretenue (i
 \textbf{Le compromis rapidité/dépassement en une image.} Un $\zeta$ faible donne un système rapide mais qui ``dépasse'' la cible et oscille avant de se stabiliser (pensez à une suspension de voiture trop souple qui rebondit). Un $\zeta$ élevé ne dépasse jamais mais est lent (suspension trop dure). L'amortissement critique $\zeta = 1$ est la frontière : le plus rapide \textit{sans} dépassement. En pratique on vise souvent $\zeta \approx 0{,}7$ --- un dépassement modéré ($\sim 5\,\%$) pour gagner en rapidité. C'est exactement le réglage d'un correcteur (chapitre~\ref{ch:pid}) et la signature de la résonance LC d'un découpage (chapitre~\ref{ch:magnetiques}).
 \end{intuition}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=1cm, y=1cm]
   \draw[-{Stealth[length=2mm]}] (-0.15,0) -- (5.35,0) node[right, font=\small]{$\omega_0 t$};
@@ -21782,7 +21782,7 @@ Le PID apporte un \textbf{pôle à l'origine} (l'intégrateur, en $s = 0$) et \t
 
 \subsection{L'effet de chaque action sur la réponse indicielle}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=1.0]
   % Axes
@@ -21854,7 +21854,7 @@ Le lieu des racines, les marges de stabilité sur Bode, et le PID réel (filtrag
 Le \textbf{lieu des racines} (\textit{root locus}) trace le déplacement des \textbf{pôles de la boucle fermée} dans le plan complexe quand on fait varier un paramètre --- typiquement le gain $K$ --- de 0 à l'infini.
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \resizebox{\textwidth}{!}{%
 \begin{tikzpicture}[x=1cm, y=1cm, >=Stealth]
@@ -21905,7 +21905,7 @@ Le \textbf{lieu des racines} (\textit{root locus}) trace le déplacement des \te
 La même information se lit sur le diagramme de Bode\index{Bode, diagramme de} du \textbf{gain de boucle} $T(s) = C(s)G(s)H(s)$ (chapitres~\ref{ch:bode}, \ref{ch:aop}), souvent plus pratique en conception fréquentielle~:
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[x=1.35cm, y=1cm]
   % Gain : -30 dB/déc puis -40 ; 0 dB à 1 kHz ; -8 dB là où phi = -180 (1,6 kHz)
@@ -22181,7 +22181,7 @@ Ce n'est pas optionnel~: en Europe, la directive CEM conditionne le \textbf{marq
 
 Tout problème de CEM, sans exception, se décompose en trois blocs~:
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[
   bloc/.style={draw, very thick, rounded corners=2pt, minimum width=3.2cm, minimum height=1.3cm, align=center, font=\bfseries},
@@ -22231,7 +22231,7 @@ Sur une liaison à deux fils (aller et retour), le courant peut circuler de deux
   \item \textbf{Mode commun (MC)}~: un courant \emph{parasite} qui circule dans le \textbf{même sens sur les deux fils} et revient par un chemin extérieur au circuit --- la terre, le châssis, les capacités parasites. Le circuit ne l'a jamais demandé~: il naît des imperfections.
 \end{itemize}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[
   fleche/.style={decoration={markings, mark=at position 0.55 with {\arrow{Stealth[length=2.6mm]}}}, postaction={decorate}},
@@ -22395,7 +22395,7 @@ Les valeurs chiffrées données dans ce chapitre (gabarits, niveaux d'essai) son
 
 \textbf{Émission rayonnée --- la chambre.} De $\SI{30}{MHz}$ à $\SI{1}{GHz}$ (et au-delà pour les produits à horloges rapides), on mesure le champ électrique à distance normalisée (3 ou $\SI{10}{m}$) en chambre semi-anéchoïque, antenne balayée en hauteur et en polarisation.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[xscale=1.0, yscale=0.85]
   % Axes
@@ -22453,7 +22453,7 @@ Le critère de réussite est gradué~: fonctionnement normal pendant l'essai (cr
 
 À l'interface entre le réseau et une alimentation à découpage, un filtre traite \emph{séparément} les deux modes~:
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.95, transform shape]
   % Rails phase et neutre
@@ -22566,7 +22566,7 @@ r_{\text{transition}} \approx \frac{\lambda}{2\pi}
   \item \textbf{Champ proche} ($r \ll \lambda/2\pi$)~: le champ garde la personnalité de sa source. Une source à \textbf{haute impédance} (dipôle, n\oe ud à fort $\mathrm{d}V/\mathrm{d}t$) impose un champ dominé par $E$~: $Z_w \gg \SI{377}{\ohm}$. Une source à \textbf{basse impédance} (boucle, maille à fort $\mathrm{d}I/\mathrm{d}t$) impose un champ dominé par $H$~: $Z_w \ll \SI{377}{\ohm}$. Les composantes réactives décroissent vite ($1/r^2$, $1/r^3$)~: c'est le régime des couplages capacitif et inductif des sections précédentes, qui apparaissent ainsi comme le \emph{cas limite proche} du rayonnement.
 \end{itemize}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[xscale=1.05, yscale=0.9]
   % axes
@@ -22679,7 +22679,7 @@ Quand une boucle de masse\index{boucle de masse} est inévitable (deux bâtiment
 
 La décharge électrostatique est l'agression de référence~: un corps humain chargé à plusieurs kilovolts se décharge dans le produit. La forme d'onde normalisée (CEI 61000-4-2, décharge contact) monte en \textbf{moins d'une nanoseconde} --- environ $3{,}75\,\si{A}$ de premier pic par kilovolt de charge, soit $\SI{30}{A}$ à $\SI{8}{kV}$ --- puis s'éteint en quelques dizaines de nanosecondes.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[xscale=0.105, yscale=0.115]
   % axes
@@ -22924,7 +22924,7 @@ Le vocabulaire essentiel~:
   \item \textbf{vernis épargne} et \textbf{sérigraphie}~: la couche isolante verte (ou autre) et le marquage blanc --- cosmétiques pour l'électricité, utiles pour la fabrication.
 \end{itemize}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[xscale=1.0, yscale=1.55]
   % Couches (coupe) — 4 couches
@@ -22989,7 +22989,7 @@ Tout courant circule en boucle fermée\index{boucle fermée} (chapitre~\ref{ch:c
 Le courant de retour emprunte le chemin de \textbf{moindre impédance}. En basse fréquence, l'impédance est résistive~: le retour prend le chemin le plus \emph{court} (ligne droite dans le plan). En haute fréquence (dès quelques centaines de kilohertz), elle est inductive~: le retour prend le chemin de \emph{moindre inductance}, c'est-à-dire celui qui minimise la surface de boucle --- \textbf{juste sous la piste aller}, qu'il suit fidèlement, même si ce chemin est plus long.
 \end{retenir}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.9,
   fleche/.style={decoration={markings, mark=at position 0.55 with {\arrow{Stealth[length=2.6mm]}}}, postaction={decorate}}
@@ -23062,7 +23062,7 @@ J(x) \approx \frac{I}{\pi h}\,\frac{1}{1 + \left(\dfrac{x}{h}\right)^{2}}
 Environ $80\,\%$ du courant de retour circule dans une bande de $\pm 3h$ autour de la piste.
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[xscale=0.62, yscale=1.0]
   % axes
@@ -23095,7 +23095,7 @@ Deux conséquences directes~:
 
 Que se passe-t-il quand une piste rapide enjambe une découpe du plan (fente de séparation, rangée de trous de connecteur, plan «~esthétiquement~» morcelé)~? Le retour ne peut plus suivre~: il \textbf{contourne} la fente. La boucle aller--retour, minuscule jusque-là, s'ouvre brutalement.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.9,
   fleche/.style={decoration={markings, mark=at position 0.55 with {\arrow{Stealth[length=2.6mm]}}}, postaction={decorate}}
@@ -23145,7 +23145,7 @@ En pratique, en HF~: $Z \approx 2\pi f L_{\text{tot}}$ --- \textbf{c'est le mont
 
 Ordre de grandeur~: $\SI{100}{nF}$ avec $L_{\text{tot}} = \SI{3}{nH}$ (boîtier 0603 + $\SI{5}{mm}$ d'accès) résonne vers $\SI{9}{MHz}$ et présente $\approx \SI{1.9}{\ohm}$ à $\SI{100}{MHz}$~; le même avec $L_{\text{tot}} = \SI{1.5}{nH}$ (0402, vias collés aux pastilles)~: $\approx \SI{0.9}{\ohm}$. Diviser l'inductance de montage vaut mieux que multiplier la capacité.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.92]
   % ---- Mauvais montage (gauche) ----
@@ -23247,7 +23247,7 @@ Capacité embarquée (die, boîtier) & au-delà & hors de portée du routeur \\
 \end{tabular}
 \end{center}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[xscale=1.05, yscale=0.9]
   % axes log-log
@@ -23293,7 +23293,7 @@ Capacité embarquée (die, boîtier) & au-delà & hors de portée du routeur \\
 
 Le chapitre~\ref{ch:magnetiques} a identifié les formes d'ondes~; le routage décide de ce qu'elles émettent. Dans un abaisseur (buck\index{convertisseur!buck}), le courant \textbf{discontinu} --- celui qui change en quelques dizaines de nanosecondes --- circule dans la maille $C_{\mathrm{in}} \to$ transistor haut $\to$ diode/transistor bas $\to$ retour à $C_{\mathrm{in}}$~: la \textbf{boucle chaude}. Son $\mathrm{d}I/\mathrm{d}t$ énorme fait d'elle, via sa surface, la source magnétique dominante de la carte (chapitre~\ref{ch:cem}~: rayonnement $\propto f^2 A I$).
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.95, transform shape]
   % Entrée
@@ -23636,7 +23636,7 @@ Le modèle de la ligne, le coefficient de réflexion, le diagramme des rebonds s
 
 Découpons la ligne en tronçons de longueur $\mathrm{d}x$~: chacun apporte une inductance série $L'\,\mathrm{d}x$ et une capacité vers le plan $C'\,\mathrm{d}x$. La ligne sans pertes est la mise en cascade de ces cellules~:
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.9, transform shape]
   \draw (0,2.4) node[left] {entrée} to[short] (0.8,2.4);
@@ -23683,7 +23683,7 @@ Cas réaliste et volontairement vicieux~: un driver CMOS\index{CMOS} $\SI{3.3}{V
   \item Et ainsi de suite~: chaque aller-retour multiplie l'écart à $\SI{3.3}{V}$ par $\Gamma_S\Gamma_L = -2/3$~: $5{,}50 \to 1{,}83 \to 4{,}28 \to 2{,}65 \to 3{,}74 \to \cdots$ Convergence oscillante vers $\SI{3.3}{V}$ en plusieurs dizaines de nanosecondes.
 \end{enumerate}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[xscale=0.78, yscale=0.88]
   % Deux verticales : source (x=0) et charge (x=8)
@@ -23709,7 +23709,7 @@ Cas réaliste et volontairement vicieux~: un driver CMOS\index{CMOS} $\SI{3.3}{V
 \caption{Diagramme des rebonds du cas non terminé ($R_S = \SI{10}{\ohm}$, $Z_0 = \SI{50}{\ohm}$, bout ouvert). Chaque diagonale est une onde ; à chaque extrémité, elle est multipliée par le $\Gamma$ local. La tension en un point est la \emph{somme} de toutes les ondes déjà passées.}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[xscale=1.05, yscale=0.62]
   % axes
@@ -23737,7 +23737,7 @@ Cas réaliste et volontairement vicieux~: un driver CMOS\index{CMOS} $\SI{3.3}{V
 
 Le remède est d'absorber l'écho --- à l'une ou l'autre extrémité~:
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.82, transform shape]
   % --- (a) série ---
@@ -23813,7 +23813,7 @@ Z_0 \approx \frac{87}{\sqrt{\varepsilon_r + 1{,}41}}\,
 Pour une \textbf{stripline} (piste enterrée entre deux plans), même logique avec $\varepsilon_{r,\text{eff}} = \varepsilon_r$~: à géométrie comparable, $Z_0$ est plus faible et la propagation plus lente.
 \end{formule}
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[xscale=1.0, yscale=1.0]
   % ---- microruban ----
