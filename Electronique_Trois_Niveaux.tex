@@ -127,6 +127,13 @@
 \usepackage{hyperref}
 \setcounter{tocdepth}{1}
 \renewcommand{\listfigurename}{Table des figures}
+
+%% === DATE EN FRANCAIS ===
+%% babel n'etant pas charge, \today produit une date anglaise ("September 9, 2026")
+%% au colophon d'un ouvrage francais. \datefr rend le format attendu.
+\newcommand{\moisfr}{\ifcase\month\or janvier\or février\or mars\or avril\or mai\or
+juin\or juillet\or août\or septembre\or octobre\or novembre\or décembre\fi}
+\newcommand{\datefr}{\ifnum\day=1 1\textsuperscript{er}\else\the\day\fi\ \moisfr{} \the\year}
 \makeatletter
 \renewcommand\@endpart{}
 \makeatother
@@ -220,7 +227,7 @@ Cet ouvrage est mis à disposition selon les termes de la licence \textbf{Creati
 Vous êtes libres de \textbf{partager} (copier, redistribuer) et d'\textbf{adapter} (modifier, transformer, améliorer) ce document, sous trois conditions : \textbf{créditer l'auteur}, \textbf{ne pas en faire un usage commercial}, et \textbf{rediffuser toute version modifiée sous cette même licence}. Texte intégral : \url{https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr}\\[4mm]
 Composé en \LaTeX{} (pdflatex)~; schémas et figures en CircuiTikZ et TikZ.\\
 Rédigé avec l'assistance de l'intelligence artificielle Claude (Anthropic), sous la direction et la vérification de l'auteur.\\
-Version 1.1.1 --- compilé le \today.\\
+Version 1.1.1 --- compilé le \datefr.\\
 Corrections, suggestions et contributions : \texttt{kevin.pottier@eseo.fr}
 \end{minipage}
 \end{center}

@@ -18,6 +18,14 @@ du chapitre CEM. Débordements de ligne ramenés de 47 à 24 par
 
 659 pages, 232 exercices corrigés, 995 entrées d'index.
 
+## v1.01 — 28 août 2026
+Publication du dépôt : licence CC BY-NC-SA, README public, guide de
+contribution, fichier de citation, présent changelog. Renommage du projet
+en « L'Électronique en trois niveaux » et ajout de l'affiliation ESEO.
+Aucune modification du manuscrit — c'est pourquoi cette version ne figure
+pas au tableau « Historique des versions » de l'ouvrage, qui ne suit que
+le texte.
+
 ## v1.0 — 21 juillet 2026
 Index complet (956 entrées, 629 clés), typographie française (3 199 espaces
 insécables), orthographe vérifiée. Version de référence.
