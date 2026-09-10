@@ -1,5 +1,25 @@
 # Historique des versions
 
+## v1.4 — 10 septembre 2026
+Ajout du chapitre 16, **La Simulation avec LTspice**, en fin de partie IV :
+ce qu'un simulateur calcule réellement et ce qu'il ne calcule pas, la netlist
+comme forme véritable du circuit, les quatre analyses, un filtre RC de bout en
+bout, les pièges de la première soirée dont le préfixe `M` qui vaut milli ;
+les sources et ce que chaque analyse y lit, le pas de calcul et le défaut
+qu'il efface, balayages et Monte-Carlo, l'échec de convergence comme signal de
+sur-idéalisation ; le modèle comme véritable objet de la simulation, ce que la
+simulation ne montrera jamais, la vérification d'une marge de stabilité, et la
+discipline de contrôle. 12 pages, 6 exercices corrigés, 4 questions, 2 figures.
+Les chapitres 16 à 40 deviennent 17 à 41.
+
+Le chapitre est placé après les filtres et non en partie I : la simulation ne
+prend son sens qu'avec l'analyse fréquentielle. Il est construit autour des
+notions — directives, modèles, convergence, lecture critique — et non autour
+des menus, pour survivre aux changements de version. PSpice partage le moteur
+et la syntaxe : seule l'interface diffère.
+
+691 pages, 41 chapitres, 250 exercices corrigés, 690 entrées d'index.
+
 ## v1.3 — 10 septembre 2026
 Ajout du chapitre 22, **L'Amplification de Puissance**, en fin de partie V :
 le bilan énergétique des classes A, B, AB et D ; le pire cas thermique, qui

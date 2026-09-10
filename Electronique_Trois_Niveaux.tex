@@ -251,7 +251,7 @@ un ingénieur doit pouvoir s'y référer comme source de qualité.~»}
 
 \vfill
 {\small Distribué librement sous licence CC BY-NC-SA 4.0}\\[1mm]
-{\small Version 1.3 --- Septembre 2026}
+{\small Version 1.4 --- Septembre 2026}
 \end{titlepage}
 
 % === COLOPHON / LICENCE ===
@@ -266,7 +266,7 @@ Cet ouvrage est mis à disposition selon les termes de la licence \textbf{Creati
 Vous êtes libres de \textbf{partager} (copier, redistribuer) et d'\textbf{adapter} (modifier, transformer, améliorer) ce document, sous trois conditions : \textbf{créditer l'auteur}, \textbf{ne pas en faire un usage commercial}, et \textbf{rediffuser toute version modifiée sous cette même licence}. Texte intégral : \url{https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr}\\[4mm]
 Composé en \LaTeX{} (pdflatex)~; schémas et figures en CircuiTikZ et TikZ.\\
 Rédigé avec l'assistance de l'intelligence artificielle Claude (Anthropic), sous la direction et la vérification de l'auteur.\\
-Version 1.3 --- compilé le \datefr.\\
+Version 1.4 --- compilé le \datefr.\\
 Corrections, suggestions et contributions : \texttt{kevin.pottier@eseo.fr}
 \end{minipage}
 \end{center}
@@ -340,6 +340,7 @@ Le texte s'appuie sur des encadrés récurrents, toujours les mêmes~: \textbf{f
 1.1.1 & septembre 2026 & Renvois croisés convertis en références symboliques (951 renvois, 49 \texttt{\textbackslash label}). Ajout du chapitre~\ref{ch:oscillateurs}, \emph{Les Oscillateurs}, en fin de partie~\ref{part:semiconducteurs}~: les chapitres suivants sont décalés d'un rang. \\
 1.2 & septembre 2026 & Ajout du chapitre~\ref{ch:instrumentation}, \emph{Instrumentation et Mesures}, en fin de partie~\ref{part:fondamentaux}. Césure française, index resserré aux termes, 424 caractères retrouvés à l'impression, débordements de ligne supprimés. \\
 1.3 & septembre 2026 & Ajout du chapitre~\ref{ch:ampli-puissance}, \emph{L'Amplification de Puissance}, en fin de partie~\ref{part:semiconducteurs}. Correction des 35 symboles de masse qui ne s'imprimaient pas. \\
+1.4 & septembre 2026 & Ajout du chapitre~\ref{ch:simulation}, \emph{La Simulation avec LTspice}, en fin de partie~\ref{part:filtres}. \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -10022,9 +10023,689 @@ Numérique & FIR/IIR dans DSP/FPGA pour les besoins exigeants \\
 \vspace{0.4cm}
 
 \begin{retenir}
-Les filtres actifs reposent entièrement sur l'amplificateur opérationnel --- lui-même construit à partir de transistors, eux-mêmes bâtis sur une brique plus élémentaire~: la jonction PN. Avant de comprendre l'AOP (chapitre~\ref{ch:aop}), il faut comprendre le premier composant non-linéaire, celui qui ne laisse passer le courant que dans un sens~: la diode. Elle ouvre la Partie~\ref{part:semiconducteurs} et le chapitre~\ref{ch:diode}.
+Nous avons désormais de quoi calculer un filtre, et de quoi le juger. Reste à le \emph{vérifier} avant de souder --- ce qu'aucun calcul à la main ne fait économiquement au-delà du second ordre. Le chapitre~\ref{ch:simulation} referme cette partie sur l'outil qui accompagnera tout le reste de l'ouvrage, et sur ce qu'il faut en attendre~: beaucoup, mais pas une preuve.
 \end{retenir}
 
+
+% ############################################################################
+% CHAPITRE 16 : LA SIMULATION AVEC LTSPICE
+% ############################################################################
+\chapter{La Simulation avec LTspice}\index{simulation}\label{ch:simulation}
+
+\begin{center}
+\textit{Un simulateur ne connaît pas l'électronique. Il résout les équations\\
+qu'on lui a données, avec les modèles qu'on lui a fournis --- et il le fait\\
+sans jamais douter, y compris quand la question était mal posée.}
+\end{center}
+
+\vspace{0.5cm}
+
+% ----------------------------------------------------------------------------
+% SECTION 1 : LES BASES
+% ----------------------------------------------------------------------------
+\section{Les Bases}\index{bases}
+
+\begin{bases}
+Ce qu'un simulateur calcule réellement, la netlist\index{netlist} qui se cache
+sous le schéma, les quatre analyses fondamentales, un premier filtre RC de bout
+en bout, et les pièges qui font perdre la première soirée. Prérequis~: les lois
+de Kirchhoff (chapitre~\ref{ch:kirchhoff}) et les diagrammes de Bode
+(chapitre~\ref{ch:bode}).
+\end{bases}
+
+\subsection{Ce qu'un simulateur calcule}\index{ce qu'un simulateur calcule}
+
+Le chapitre~\ref{ch:kirchhoff} a montré comment un circuit se met en équations
+par la méthode des potentiels de n\oe uds. Un simulateur SPICE ne fait rien
+d'autre~: il construit cette matrice, puis il la résout. Là où l'humain
+s'arrête à trois n\oe uds, la machine en traite dix mille sans se plaindre.
+
+Cette continuité est importante, parce qu'elle fixe les limites. Le simulateur
+ne \emph{sait} rien~: il calcule ce que les équations disent, et les équations
+ne contiennent que ce que les modèles y ont mis. Une capacité parasite absente
+du modèle est absente du résultat --- non pas approximée, absente.
+
+\begin{intuition}
+Un simulateur est un calculateur très rapide et parfaitement docile, pas un
+banc de mesure virtuel. Il répond exactement à la question posée, et c'est
+précisément ce qui le rend dangereux~: il ne proteste jamais quand la question
+n'avait pas de sens.
+\end{intuition}
+
+\begin{attention}
+Nous emploierons \textbf{LTspice}, gratuit et sans limite de taille de
+circuit. \textbf{PSpice} et les autres dérivés partagent le même moteur et la
+même syntaxe de netlist~: les directives et les principes présentés ici s'y
+transposent, seules changent l'interface et la bibliothèque de modèles. Ce
+chapitre parle de simulation, pas de menus.
+\end{attention}
+
+\subsection{La netlist, forme véritable du circuit}\index{netlist}
+
+Dessiner un schéma est confortable, mais ce n'est pas ce que le simulateur
+lit. Le schéma est traduit en une \textbf{netlist}~: une liste de lignes, une
+par composant, qui dit ce qui est relié à quoi.
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[line width=1pt]
+\begin{scope}[xshift=0cm]
+\draw (0,0) to[R, l=$R_1$, o-o] (2.6,0);
+\node[above, font=\small] at (0,0.25) {\texttt{in}};
+\node[above, font=\small] at (2.6,0.25) {\texttt{out}};
+\draw (2.6,0) -- (2.6,-0.4);
+\draw (2.6,-0.4) to[C, l=$C_1$] (2.6,-2.0);
+\draw (0,0) -- (-0.9,0);
+\draw (-0.9,0) to[V, l=$V_1$] (-0.9,-2.0);
+\draw (-0.9,-2.0) -- (2.6,-2.0);
+\node[ground] at (0.85,-2.0) {};
+\node[below, font=\small] at (0.85,-2.45) {\texttt{0}};
+\end{scope}
+\node[right, font=\ttfamily\small, align=left] at (4.4,-0.85)
+  {V1 in 0 AC 1\\R1 in out 1k\\C1 out 0 100n\\.ac dec 100 10 1Meg\\.end};
+\draw[->, gray!55] (3.6,-0.85) -- (4.25,-0.85);
+\end{tikzpicture}
+\caption{Le même circuit sous ses deux formes. Chaque ligne de la netlist
+nomme un composant, les deux n\oe uds auxquels il est relié, puis sa valeur.
+Le n\oe ud \texttt{0} est la masse, et il est obligatoire.}
+\end{figure}
+
+\begin{formule}
+La syntaxe d'une ligne de composant est invariable~:
+\begin{center}
+\texttt{<nom> <n\oe ud +> <n\oe ud $-$> <valeur>}
+\end{center}
+La première lettre du nom désigne le type~: \texttt{R} résistance,
+\texttt{C} condensateur, \texttt{L} inductance, \texttt{V} source de tension,
+\texttt{I} source de courant, \texttt{D} diode, \texttt{Q} transistor
+bipolaire, \texttt{M} MOSFET. Les lignes commençant par un point sont des
+\textbf{directives} adressées au simulateur, non des composants.
+\end{formule}
+
+\begin{pratique}
+\textbf{Pourquoi s'intéresser à la netlist quand on a un schéma~?} Parce
+qu'elle est ce que le simulateur exécute réellement. Quand un résultat surprend,
+la lire prend dix secondes et révèle immédiatement le fil oublié, le n\oe ud
+dédoublé ou la valeur mal saisie. C'est aussi le seul format qui se transmet,
+se compare et se met sous gestion de version.
+\end{pratique}
+
+\subsection{Les quatre analyses}\index{analyses SPICE}
+
+Presque tout se fait avec quatre directives.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{P{2.1cm}P{4.6cm}P{6.4cm}}
+\toprule
+\textbf{Directive} & \textbf{Ce qu'elle calcule} & \textbf{Quand l'employer} \\
+\midrule
+\texttt{.op} & Le point de repos, en continu & Vérifier une polarisation avant tout le reste \\
+\texttt{.dc} & Une grandeur balayée en continu & Caractéristiques, courbes de transfert \\
+\texttt{.ac} & Gain et phase en fonction de la fréquence & Filtres, bande passante, marges de stabilité \\
+\texttt{.tran} & L'évolution temporelle & Commutation, démarrage, formes d'onde, distorsion \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{attention}
+L'analyse \texttt{.ac} est un calcul \emph{linéarisé} autour du point de
+repos~: le simulateur remplace chaque composant non linéaire par son modèle
+petit signal, exactement comme on le fait à la main. Elle ne verra donc jamais
+une saturation ni un écrêtage, quelle que soit l'amplitude déclarée. Pour cela,
+il faut \texttt{.tran}.
+\end{attention}
+
+\subsection{Un premier passage~: le filtre RC}\index{premier passage : le filtre RC}
+
+Reprenons le passe-bas du chapitre~\ref{ch:bode}, avec
+$R = \SI{1}{k\ohm}$ et $C = \SI{100}{nF}$. La théorie annonce
+\[
+f_c = \frac{1}{2\pi RC} = \SI{1592}{Hz}
+\]
+avec \SI{-3}{dB} et \SI{-45}{\degree} à cette fréquence, puis une pente de
+\SI{-20}{dB\per\dec}.
+
+\begin{pratique}
+\textbf{La netlist complète et sa lecture.}
+\begin{verbatim}
+V1 in 0 AC 1
+R1 in out 1k
+C1 out 0 100n
+.ac dec 100 10 1Meg
+.end
+\end{verbatim}
+La directive balaye de \SI{10}{Hz} à \SI{1}{MHz} avec 100 points par décade.
+En traçant \texttt{V(out)}, on doit lire \SI{-3.01}{dB} et \SI{-45}{\degree} à
+\SI{1592}{Hz}, puis \SI{-20.04}{dB} et \SI{-84.3}{\degree} à \SI{15.92}{kHz}.
+
+Si ces trois nombres tombent, le circuit est bon \emph{et} la simulation est
+bien posée. S'ils ne tombent pas, il est inutile d'aller plus loin~: c'est le
+montage ou la netlist qu'il faut corriger, pas le simulateur qu'il faut
+persuader.
+\end{pratique}
+
+\begin{intuition}
+La discipline qui distingue l'ingénieur du pianoteur tient en une phrase~:
+\emph{prédire avant de lancer}. Écrire le résultat attendu sur un coin de
+feuille, puis simuler. Si les deux concordent, on a gagné une confiance~; s'ils
+diffèrent, on a appris quelque chose. Lancer d'abord et interpréter ensuite
+n'apprend rien, et valide n'importe quoi.
+\end{intuition}
+
+\subsection{Les pièges de la première soirée}\index{pièges de la simulation}
+
+Quatre erreurs représentent l'essentiel des échecs initiaux.
+
+\begin{itemize}[nosep]
+\item \textbf{Pas de masse.} Le n\oe ud \texttt{0} est la référence des
+potentiels~; sans lui, le système est indéterminé et le simulateur refuse.
+\item \textbf{Un n\oe ud flottant.} Un point relié à un seul composant n'a pas
+de courant de retour~: même symptôme.
+\item \textbf{Le préfixe \texttt{M}.} En SPICE, \texttt{M} signifie
+\emph{milli}, pas méga. \texttt{1M} vaut \SI{1}{m\ohm} et non
+\SI{1}{M\ohm}~; le méga s'écrit \texttt{Meg}. L'erreur ne provoque aucun
+message, seulement un résultat absurde.
+\item \textbf{Un modèle absent.} Un composant actif exige une directive
+\texttt{.model} ou une bibliothèque \texttt{.lib}~; sans elle, le simulateur
+ne sait pas ce qu'est ce transistor.
+\end{itemize}
+
+\begin{attention}
+Le piège du préfixe mérite qu'on s'y arrête, car il est silencieux et
+spectaculaire~: une résistance de polarisation saisie \texttt{1M} au lieu de
+\texttt{1Meg} vaut un milliardième de la valeur voulue. Le montage simulé
+fonctionne parfois quand même --- et donne des courants mille fois trop
+grands, que rien ne signale.
+\end{attention}
+
+% ----------------------------------------------------------------------------
+% SECTION 2 : APPROFONDISSEMENT
+% ----------------------------------------------------------------------------
+\section{Approfondissement}
+
+\begin{approfondissement}
+Les sources et ce qu'elles injectent selon l'analyse, le pas de calcul en
+transitoire et le défaut qu'il peut effacer, les balayages paramétriques et
+l'analyse de tolérances, et ce qui se passe quand la
+convergence\index{convergence} échoue. Prérequis~: les circuits RLC
+(chapitre~\ref{ch:rc-rl-rlc}) et les filtres (chapitre~\ref{ch:filtres}).
+\end{approfondissement}
+
+\subsection{Les sources~: ce qu'on injecte}\index{sources SPICE}
+
+Une même source porte plusieurs jeux de paramètres, et chaque analyse ne lit
+que le sien. C'est une source de confusion durable.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{P{3.9cm}P{3.4cm}P{5.8cm}}
+\toprule
+\textbf{Déclaration} & \textbf{Lue par} & \textbf{Signification} \\
+\midrule
+\texttt{V1 a 0 5} & \texttt{.op}, \texttt{.dc}, \texttt{.tran} & Tension continue de \SI{5}{V} \\
+\texttt{V1 a 0 AC 1} & \texttt{.ac} seulement & Amplitude unité pour le calcul du gain \\
+\texttt{V1 a 0 SINE(0 1 1k)} & \texttt{.tran} seulement & Sinusoïde \SI{1}{V}, \SI{1}{kHz} \\
+\texttt{V1 a 0 PULSE(0 5 0 1n 1n 1u 2u)} & \texttt{.tran} seulement & Créneau, fronts de \SI{1}{ns} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{attention}
+\texttt{AC 1} ne veut pas dire «~un volt~»~: c'est une amplitude de référence
+pour un calcul linéaire, dont le résultat s'interprète en \emph{rapport}. Une
+source déclarée \texttt{AC 1} sans valeur continue vaut zéro volt en
+transitoire --- d'où les analyses \texttt{.tran} qui ne montrent rien, alors
+que le \texttt{.ac} fonctionnait parfaitement.
+\end{attention}
+
+\subsection{Le pas de calcul, et le défaut qu'il efface}\index{pas de calcul}
+
+En transitoire, le simulateur avance par pas successifs qu'il choisit
+lui-même. Le paramètre \texttt{maxstep} de la directive \texttt{.tran} lui
+impose une borne supérieure. Le laisser vide est confortable, et c'est
+l'erreur la plus coûteuse du chapitre.
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[line width=1pt, x=1.1cm, y=1.25cm]
+\draw[->] (-0.25,0) -- (7.6,0) node[right, font=\small] {$t$};
+\draw[->] (0,-1.15) -- (0,1.45) node[above, font=\small] {$v$};
+\draw[domain=0:7.3, samples=320, smooth, blue!70!black]
+  plot (\x, {exp(-\x/4)*cos(deg(\x*3.2))});
+\draw[red!75!black, densely dashed]
+  (0,1.000) -- (2.10,0.536) -- (4.20,0.225) -- (6.30,0.053);
+\foreach \p in {(0,1.000),(2.10,0.536),(4.20,0.225),(6.30,0.053)}
+  { \filldraw[red!75!black] \p circle (2pt); }
+\draw[blue!70!black] (3.55,1.30) -- (4.05,1.30);
+\node[right, font=\small, blue!70!black] at (4.1,1.30) {réalité};
+\draw[red!75!black, densely dashed] (3.55,1.05) -- (4.05,1.05);
+\node[right, font=\small, red!75!black] at (4.1,1.05) {pas trop grand};
+\end{tikzpicture}
+\caption{Une sonnerie amortie, simulée avec un pas de calcul légèrement
+supérieur à sa période. Le simulateur ne ment pas~: il affiche fidèlement les
+points qu'il a calculés. Mais l'oscillation a disparu, et il ne reste qu'une
+décroissance rassurante.}
+\end{figure}
+
+\begin{formule}
+La règle est celle de tout échantillonnage
+(chapitre~\ref{ch:instrumentation})~: il faut au moins une dizaine de points
+par période du phénomène le plus rapide que l'on veut voir.
+\[
+\boxed{\texttt{maxstep} \leq \frac{1}{10\,f_{\max}}}
+\]
+\end{formule}
+
+\begin{pratique}
+\textbf{Une sonnerie de maille.} Une inductance parasite de
+\SI{10}{\micro H} résonnant avec \SI{1}{nF} sonne à
+\[
+f_0 = \frac{1}{2\pi\sqrt{LC}} = \SI{1.59}{MHz}
+\]
+Pour la résoudre à vingt points par période, il faut
+$\texttt{maxstep} \leq \SI{31}{ns}$. Avec le pas automatique d'une simulation
+de \SI{10}{ms}, le simulateur en prendrait mille fois plus~: la sonnerie
+n'apparaîtrait tout simplement pas, et l'on conclurait à tort que le montage
+est propre.
+\end{pratique}
+
+\subsection{Balayages et tolérances}\index{balayage paramétrique}
+
+Une simulation qui ne donne qu'un point de fonctionnement nominal ne dit pas
+grand-chose d'un circuit qui sera fabriqué en série.
+
+\begin{itemize}[nosep]
+\item La directive \texttt{.step} balaye un paramètre~: on voit d'un coup
+d'\oe il la sensibilité du montage à une valeur.
+\item L'analyse de \textbf{Monte-Carlo}\index{Monte-Carlo, analyse de} tire
+les composants au hasard dans leur tolérance, sur des centaines
+d'exécutions~: elle donne la dispersion réelle en production.
+\item L'analyse de \textbf{pire cas} pousse tous les composants
+simultanément dans le sens défavorable. Elle est pessimiste --- une telle
+conjonction est improbable --- mais elle borne.
+\end{itemize}
+
+\begin{pratique}
+\textbf{Ce que coûtent des condensateurs à \SI{5}{\percent}.} Dans une cellule
+de Sallen-Key à gain unité et résistances égales, le facteur de qualité vaut
+$Q = \tfrac{1}{2}\sqrt{C_1/C_2}$. Avec $C_1$ au maximum et $C_2$ au minimum de
+leur tolérance de \SI{5}{\percent}, $Q$ dérive de \SI{5.1}{\percent}.
+
+Sur un filtre d'ordre 4 où deux cellules se composent, cette dérive se
+cumule~: c'est exactement ce que le chapitre~\ref{ch:filtres-actifs} appelait
+la tolérance qui décide de la topologie. Le Monte-Carlo ne remplace pas ce
+raisonnement, il le chiffre.
+\end{pratique}
+
+\subsection{Quand la convergence échoue}\index{échec de convergence}
+
+Un simulateur résout un système non linéaire par approximations successives,
+selon la méthode de Newton-Raphson~: il part d'une estimation, linéarise,
+corrige, recommence, et s'arrête quand deux itérations diffèrent de moins que
+la tolérance --- \SI{0.1}{\percent} par défaut. Quand la suite ne converge
+pas, il abandonne et le signale.
+
+\begin{attention}
+Un échec de convergence n'est presque jamais un défaut du simulateur. Les
+causes usuelles, par ordre de fréquence~: un n\oe ud sans chemin résistif vers
+la masse, une boucle de composants idéaux sans aucune perte, des fronts
+déclarés à \SI{0}{s} de durée, un modèle avec une discontinuité. Les remèdes
+consistent presque toujours à \emph{rendre le circuit plus réaliste}~: ajouter
+la résistance série que le vrai condensateur possède, donner aux fronts la
+durée qu'ils ont réellement. Un circuit qui ne converge pas est souvent un
+circuit qu'on a idéalisé au-delà du raisonnable.
+\end{attention}
+
+% ----------------------------------------------------------------------------
+% SECTION 3 : NIVEAU INGÉNIEUR
+% ----------------------------------------------------------------------------
+\section{Niveau Ingénieur}
+
+\begin{ingenieur}
+Le modèle comme véritable objet de la simulation, ce que la simulation ne
+montrera jamais, la vérification d'une marge de stabilité par injection, et la
+discipline de contrôle qui rend un résultat utilisable.
+\end{ingenieur}
+
+\subsection{Le modèle est le simulateur}\index{modèle SPICE}
+
+On dit «~j'ai simulé un 2N2222~». En réalité on a simulé un système
+d'équations dont les coefficients ont été ajustés pour ressembler à un
+2N2222, dans un domaine donné, par quelqu'un dont on ignore les hypothèses.
+
+\begin{formule}
+Un modèle de diode SPICE tient en quelques paramètres~:
+\begin{center}
+\texttt{.model D1N4148 D(Is=2.52n N=1.752 Rs=0.568 Cjo=4p)}
+\end{center}
+$I_s$ et $N$ fixent la loi de Shockley (chapitre~\ref{ch:diode}), $R_s$ la
+résistance série qui redresse la courbe à fort courant, $C_{j0}$ la capacité de
+jonction. Tout ce qui n'est pas déclaré n'existe pas.
+\end{formule}
+
+\begin{attention}
+Trois questions à poser à tout modèle avant de lui faire confiance~: d'où
+vient-il (fabricant, générique, forum)~? quel domaine couvre-t-il (un modèle
+ajusté en continu ne vaut rien en commutation)~? que ne contient-il pas
+(effets thermiques, tolérances, vieillissement, capacités parasites de
+boîtier)~? Un modèle de MOSFET sans $C_{GD}$ donnera des temps de commutation
+irréprochables et faux.
+\end{attention}
+
+\subsection{Ce que la simulation ne montrera jamais}\index{limites de la simulation}
+
+C'est la section la plus importante du chapitre, et elle ne contient aucune
+directive.
+
+\begin{itemize}[nosep]
+\item \textbf{Le tracé du circuit imprimé.} Inductance des pistes, boucles de
+masse, couplages capacitifs~: rien de tout cela n'est dans la netlist, sauf à
+l'y ajouter à la main (chapitre~\ref{ch:pcb}).
+\item \textbf{Le rayonnement.} Un montage peut être parfait en simulation et
+inutilisable en CEM (chapitre~\ref{ch:cem}).
+\item \textbf{La thermique.} Sauf modèle électrothermique explicite, les
+composants simulés restent à \SI{27}{\degreeCelsius} quelle que soit la
+puissance qu'ils dissipent (chapitre~\ref{ch:ampli-puissance}).
+\item \textbf{La dispersion et le temps.} Les composants sont exactement à
+leur valeur nominale, et ils y restent pour l'éternité.
+\end{itemize}
+
+\begin{intuition}
+La simulation prouve qu'un circuit \emph{ne peut pas} fonctionner quand elle
+échoue~; elle ne prouve jamais qu'il fonctionnera. C'est un filtre efficace
+contre les erreurs de conception, et un très mauvais certificat de bon
+fonctionnement.
+\end{intuition}
+
+\subsection{Vérifier une marge de stabilité}\index{marge de stabilité, simulation}
+
+Mesurer un gain de boucle sur un montage contre-réactionné demande une
+précaution~: on ne peut pas ouvrir la boucle sans détruire le point de repos.
+La méthode standard consiste à laisser la boucle fermée en continu et à
+l'ouvrir seulement en alternatif.
+
+\begin{pratique}
+\textbf{L'injection par transformateur idéal.} On insère dans la boucle une
+inductance très grande --- \SI{1}{kH} --- qui court-circuite le continu et
+bloque l'alternatif, puis on injecte le signal de test à travers un
+condensateur très grand. Le rapport des tensions de part et d'autre donne le
+gain de boucle, dont on lit la marge de phase et la marge de gain
+(chapitre~\ref{ch:pid}).
+
+Cette astuce illustre bien la nature de l'outil~: elle serait absurde sur une
+carte réelle, mais elle est exacte dans le monde des équations.
+\end{pratique}
+
+\subsection{La discipline de contrôle}\index{discipline de vérification}
+
+Quatre réflexes suffisent à rendre un résultat de simulation défendable.
+
+\begin{enumerate}[nosep]
+\item \textbf{Prédire avant de lancer.} Un ordre de grandeur écrit à
+l'avance transforme la simulation en vérification.
+\item \textbf{Vérifier le point de repos d'abord.} Un \texttt{.op} dont les
+tensions sont plausibles élimine la moitié des erreurs de saisie.
+\item \textbf{Faire varier ce qu'on croit négligeable.} Si le résultat dépend
+fortement d'un paramètre supposé sans importance, l'hypothèse est fausse.
+\item \textbf{Confronter à une mesure.} Le chapitre~\ref{ch:instrumentation}
+donne les moyens~; la simulation donne l'attente. C'est leur écart qui
+enseigne.
+\end{enumerate}
+
+% ----------------------------------------------------------------------------
+% EXERCICES DU CHAPITRE 16
+% ----------------------------------------------------------------------------
+\section*{Exercices}
+\addcontentsline{toc}{section}{Exercices}
+
+\subsection*{Niveau débutant}
+
+\textbf{Exercice 16.1 ---} Écrivez la netlist d'un pont diviseur alimenté en
+\SI{12}{V} continu, formé de $R_1 = \SI{4.7}{k\ohm}$ en haut et
+$R_2 = \SI{2.2}{k\ohm}$ en bas.
+\begin{enumerate}[nosep]
+\item Donnez les quatre lignes nécessaires.
+\item Quelle directive permet de vérifier la tension au point milieu~?
+\item Quelle valeur doit-on lire~?
+\end{enumerate}
+
+\begin{pratique}
+\textbf{Solution :}
+\begin{verbatim}
+V1 in 0 12
+R1 in mid 4.7k
+R2 mid 0 2.2k
+.op
+.end
+\end{verbatim}
+La directive \texttt{.op} donne le point de repos. On doit lire
+$12 \times 2{,}2/(4{,}7+2{,}2) = \SI{3.83}{V}$ sur le n\oe ud \texttt{mid}.
+Si ce n'est pas le cas, l'erreur est dans la netlist, pas dans le simulateur.
+\end{pratique}
+
+\vspace{2mm}
+\textbf{Exercice 16.2 ---} Une netlist déclare \texttt{R1 in out 2M}.
+\begin{enumerate}[nosep]
+\item Quelle valeur le simulateur retient-il~?
+\item Quelle valeur l'auteur voulait-il probablement~?
+\item Comment fallait-il l'écrire~?
+\end{enumerate}
+
+\begin{pratique}
+\textbf{Solution :}
+Le simulateur retient \SI{2}{m\ohm} --- deux milliohms --- car \texttt{M}
+signifie \emph{milli}. L'auteur voulait certainement \SI{2}{M\ohm}, qui
+s'écrit \texttt{2Meg}. Entre les deux, un facteur $10^9$. Aucun avertissement
+ne sera émis~: la seule défense est de relire les ordres de grandeur des
+courants dans le point de repos.
+\end{pratique}
+
+\subsection*{Niveau intermédiaire}
+
+\textbf{Exercice 16.3 ---} On simule le filtre RC de \SI{1}{k\ohm} et
+\SI{100}{nF} avec \texttt{.ac dec 100 10 1Meg}.
+\begin{enumerate}[nosep]
+\item Quelle atténuation et quelle phase à \SI{1592}{Hz}~?
+\item Et à \SI{15.92}{kHz}~?
+\item Le résultat simulé annonce \SI{-3.01}{dB} à \SI{159}{Hz}. Où est
+l'erreur~?
+\end{enumerate}
+
+\begin{pratique}
+\textbf{Solution :}
+À $f_c = \SI{1592}{Hz}$~: \SI{-3.01}{dB} et \SI{-45}{\degree}.
+Une décade plus haut~: $-20\log_{10}\sqrt{1+100} = \SI{-20.04}{dB}$ et
+\SI{-84.3}{\degree}.
+Une coupure dix fois trop basse signifie un produit $RC$ dix fois trop grand.
+Le suspect immédiat est la capacité saisie \texttt{1u} au lieu de
+\texttt{100n}, ou la résistance passée à \texttt{10k}. La netlist tranchera en
+une seconde~; deviner en tâtonnant sur le schéma prendrait bien plus.
+\end{pratique}
+
+\vspace{2mm}
+\textbf{Exercice 16.4 ---} Une maille de commutation présente
+\SI{22}{\micro H} de fuite et \SI{470}{pF} de capacité parasite. On simule un
+transitoire de \SI{5}{ms}.
+\begin{enumerate}[nosep]
+\item À quelle fréquence la maille sonne-t-elle~?
+\item Quel \texttt{maxstep} faut-il pour la voir à dix points par période~?
+\item Combien de pas la simulation comportera-t-elle alors~?
+\item Commentez.
+\end{enumerate}
+
+\begin{pratique}
+\textbf{Solution :}
+$f_0 = 1/(2\pi\sqrt{22\times10^{-6}\times470\times10^{-12}}) = \SI{1.57}{MHz}$.
+Dix points par période imposent
+$\texttt{maxstep} \leq \SI{64}{ns}$.
+Sur \SI{5}{ms}, cela fait $5\times10^{-3}/64\times10^{-9} \approx 78\,000$
+pas --- parfaitement supportable.
+La leçon est que le coût de voir la vérité est ici négligeable, alors que le
+coût de ne pas la voir est une carte qui rayonne. Le pas automatique n'est
+prudent que si l'on sait ce qu'on cherche.
+\end{pratique}
+
+\subsection*{Niveau ingénieur}
+
+\textbf{Exercice 16.5 ---} Un modèle de MOSFET fourni par un forum ne déclare
+ni $C_{GD}$ ni $R_{G}$.
+\begin{enumerate}[nosep]
+\item Quelles grandeurs seront fausses en commutation~?
+\item Dans quel sens~?
+\item La simulation en continu est-elle affectée~?
+\item Que faut-il en conclure sur l'usage de ce modèle~?
+\end{enumerate}
+
+\begin{pratique}
+\textbf{Solution :}
+Sans $C_{GD}$, l'effet Miller disparaît~: le plateau de la tension de grille
+n'existe plus et les temps de commutation s'effondrent. Sans $R_G$, la charge
+de grille n'est plus limitée~: ils s'effondrent davantage encore. Les pertes
+de commutation calculées seront donc \emph{optimistes}, c'est-à-dire trop
+faibles --- le pire sens pour un dimensionnement thermique.
+En continu, le point de repos ne dépend d'aucune de ces deux grandeurs~: la
+simulation \texttt{.op} reste juste. Le modèle est donc utilisable pour
+vérifier une polarisation et inutilisable pour dimensionner un radiateur, ce
+qui est précisément l'usage qu'on aurait voulu en faire.
+\end{pratique}
+
+\vspace{2mm}
+\textbf{Exercice 16.6 ---} Une simulation transitoire refuse de converger sur
+un montage comportant une source de tension idéale débitant dans un
+condensateur idéal, et un interrupteur dont les fronts sont déclarés à
+\SI{0}{s}.
+\begin{enumerate}[nosep]
+\item Pourquoi la source et le condensateur posent-ils problème~?
+\item Pourquoi les fronts nuls~?
+\item Proposez deux corrections physiquement fondées.
+\item Que révèle cet échec sur le montage~?
+\end{enumerate}
+
+\begin{pratique}
+\textbf{Solution :}
+Une source idéale sur un condensateur idéal impose un courant infini à
+l'instant de la fermeture~: $i = C\,\mathrm{d}v/\mathrm{d}t$ avec
+$\mathrm{d}t \to 0$. Le système n'a pas de solution finie. Des fronts de durée
+nulle posent le même problème, sur toutes les grandeurs à la fois.
+Corrections~: donner à la source sa résistance interne et au condensateur son
+ESR (chapitre~\ref{ch:condensateur}), et aux fronts leur durée réelle,
+quelques nanosecondes.
+Ce que révèle l'échec~: le circuit n'a pas été idéalisé, il a été
+\emph{sur}-idéalisé. Le simulateur refuse une situation que la physique refuse
+aussi --- c'est un service, pas une panne.
+\end{pratique}
+
+\subsection*{Questions de compréhension}
+
+\textbf{Q1.} Pourquoi une analyse \texttt{.ac} ne montre-t-elle jamais
+d'écrêtage, même avec une amplitude énorme~?
+
+\textit{Réponse : parce qu'elle est linéarisée. Le simulateur calcule d'abord
+le point de repos, puis remplace chaque composant non linéaire par son modèle
+petit signal autour de ce point, et résout un système linéaire. L'amplitude
+déclarée n'est qu'un facteur d'échelle : doubler \texttt{AC} double toutes les
+tensions, sans rien saturer. L'écrêtage est un phénomène grand signal, il
+n'appartient qu'à \texttt{.tran}.}
+
+\textbf{Q2.} Une simulation donne exactement le résultat attendu. Que peut-on
+en conclure~?
+
+\textit{Réponse : que le circuit et les modèles employés sont cohérents avec
+le calcul théorique — c'est-à-dire assez peu. Les deux reposent sur les mêmes
+hypothèses simplificatrices, et une concordance parfaite confirme surtout
+qu'on n'a pas fait d'erreur d'arithmétique. Une simulation n'acquiert de
+valeur probante que lorsqu'elle intègre ce que le calcul à la main ne sait pas
+traiter : non-linéarités, parasites explicitement ajoutés, dispersion.}
+
+\textbf{Q3.} Pourquoi ajouter des imperfections aide-t-il souvent à faire
+converger une simulation~?
+
+\textit{Réponse : parce que l'échec vient presque toujours d'une idéalisation
+excessive, qui rend le système d'équations singulier — courant infini, boucle
+sans perte, discontinuité. Les imperfections réelles, résistance série,
+inductance de fil, durée de front, bornent ces grandeurs et rendent le système
+soluble. Le simulateur ne refuse pas un circuit difficile : il refuse un
+circuit impossible.}
+
+\textbf{Q4.} Quelle est la différence de nature entre une netlist et un
+schéma~?
+
+\textit{Réponse : aucune sur le fond, toute sur l'usage. La netlist est ce que
+le simulateur exécute ; le schéma en est une représentation destinée à
+l'humain. La netlist se lit ligne à ligne, se compare, se met sous gestion de
+version et révèle immédiatement une faute de saisie que l'\oe il ne voit pas
+sur un dessin. C'est pourquoi un ingénieur la consulte quand un résultat le
+surprend, au lieu de rejouer le schéma.}
+
+% ----------------------------------------------------------------------------
+% RÉSUMÉ DU CHAPITRE 16
+% ----------------------------------------------------------------------------
+\section*{Résumé du chapitre}
+\addcontentsline{toc}{section}{Résumé du chapitre}
+
+\begin{bases}[title={\color{white} Résumé --- Les Bases}]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{P{4cm}P{9cm}}
+\toprule
+Ce que fait SPICE & Il met en équations par les potentiels de n\oe uds et résout \\
+Netlist & Forme véritable du circuit : nom, deux n\oe uds, valeur \\
+Quatre analyses & \texttt{.op}, \texttt{.dc}, \texttt{.ac}, \texttt{.tran} \\
+Premier réflexe & Prédire le résultat avant de lancer la simulation \\
+Pièges & Masse absente, n\oe ud flottant, \texttt{M} qui vaut milli, modèle manquant \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{bases}
+
+\begin{approfondissement}[title={\color{white} Résumé --- Approfondissement}]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{P{4cm}P{9cm}}
+\toprule
+Sources & Chaque analyse ne lit que ses paramètres ; \texttt{AC 1} vaut zéro en transitoire \\
+\texttt{.ac} & Linéarisée : ne montrera jamais une saturation \\
+Pas de calcul & $\texttt{maxstep} \leq 1/(10 f_{\max})$, sinon le défaut disparaît \\
+Tolérances & \texttt{.step}, Monte-Carlo, pire cas : trois questions différentes \\
+Convergence & Son échec signale presque toujours une sur-idéalisation \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{approfondissement}
+
+\begin{ingenieur}[title={\color{white} Résumé --- Niveau Ingénieur}]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{P{4cm}P{9cm}}
+\toprule
+Le modèle & C'est lui qu'on simule ; d'où vient-il, que couvre-t-il, que tait-il \\
+Jamais visible & Tracé du PCB, rayonnement, thermique, dispersion, vieillissement \\
+Stabilité & Boucle ouverte en alternatif seulement, fermée en continu \\
+Valeur probante & La simulation réfute ; elle ne certifie pas \\
+Contrôle & Prédire, vérifier le point de repos, faire varier, confronter à la mesure \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{ingenieur}
+
+\vspace{0.4cm}
+
+\begin{retenir}
+\textbf{Ce qu'il faut emporter de ce chapitre :} un simulateur résout, il ne
+comprend pas. Il calcule exactement les équations qu'on lui donne, avec les
+modèles qu'on lui fournit, et il ne proteste jamais quand la question était
+mal posée. Trois habitudes en font un outil sûr~: prédire avant de lancer,
+lire la netlist quand un résultat surprend, et se demander devant chaque
+résultat ce que le modèle employé ne contenait pas. La simulation réfute
+efficacement~; elle ne certifie rien.
+
+Nous avons désormais l'outil qui accompagnera tout le reste de l'ouvrage. La
+partie qui s'ouvre quitte les composants passifs pour ceux qui décident~: la
+jonction PN, où le courant ne passe que dans un sens, et qui ouvre la voie au
+transistor, à l'amplificateur et au commutateur. Le chapitre~\ref{ch:diode} y
+conduit.
+\end{retenir}
 
 % ============================================================================
 % PARTIE V : SEMI-CONDUCTEURS
@@ -10039,7 +10720,7 @@ Le silicium change tout~: avec la jonction PN, le courant ne circule plus que si
 \end{center}
 
 % ============================================================================
-% CHAPITRE 16 : LA DIODE
+% CHAPITRE 17 : LA DIODE
 % ============================================================================
 \chapter{La Diode}\index{diode}\label{ch:diode}
 
@@ -10859,7 +11540,7 @@ La méthode rigoureuse est identique à celle des circuits à diode~:
 En pratique, la régulation Zener n'est utilisée que pour les \textbf{faibles courants} ($< \SI{50}{mA}$), comme référence de tension\index{référence de tension}, ou comme protection (écrêtage). Pour les courants plus élevés, on utilise un \textbf{régulateur intégré} (LDO\index{LDO} ou DC-DC, chapitres~\ref{ch:ldo}--\ref{ch:decoupage}).
 \end{attention}
 
-% === EXERCICES DU CHAPITRE 16 ===
+% === EXERCICES DU CHAPITRE 17 ===
 \section*{Exercices}
 \addcontentsline{toc}{section}{Exercices}
 
@@ -11005,7 +11686,7 @@ La tension de sortie n'est que \SI{1.875}{V} --- bien en dessous de $V_Z$. La Ze
 
 \textit{Réponse : oui, c'est une jonction PN en direct. En conduction, électrons et trous se recombinent et libèrent l'énergie du gap. La différence est la nature du gap : le silicium est à gap \emph{indirect} --- la recombinaison exige l'assistance d'un phonon et l'énergie part majoritairement en chaleur. Les LED utilisent des semi-conducteurs à gap \emph{direct} (GaAs, GaN, InGaN\ldots) où la recombinaison émet directement un photon, avec un rendement radiatif élevé. La couleur est fixée par la largeur du gap ($E = h\nu$), d'où $V_F$ croissant du rouge au bleu.}
 
-% === RÉSUMÉ DU CHAPITRE 16 ===
+% === RÉSUMÉ DU CHAPITRE 17 ===
 \section*{Résumé du chapitre}
 \addcontentsline{toc}{section}{Résumé du chapitre}
 
@@ -11059,14 +11740,14 @@ La diode, c'est \emph{une} jonction PN~: elle conduit dans un sens, bloque dans 
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 17 : LE TRANSISTOR BIPOLAIRE (BJT)
+% CHAPITRE 18 : LE TRANSISTOR BIPOLAIRE (BJT)
 % ============================================================================
 
 % ============================================================================
-% CHAPITRE 17 : LE TRANSISTOR BIPOLAIRE (BJT) — VERSION PEER-REVIEW
+% CHAPITRE 18 : LE TRANSISTOR BIPOLAIRE (BJT) — VERSION PEER-REVIEW
 % ============================================================================
 % ============================================================================
-% CHAPITRE 17 : LE TRANSISTOR BIPOLAIRE (BJT)
+% CHAPITRE 18 : LE TRANSISTOR BIPOLAIRE (BJT)
 % VERSION RÉVISÉE — niveau peer-review
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -11951,10 +12632,10 @@ Ses limites sont doubles~: le courant de base charge la source de commande, et l
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 18 : LE MOSFET — VERSION PEER-REVIEW
+% CHAPITRE 19 : LE MOSFET — VERSION PEER-REVIEW
 % ============================================================================
 % ============================================================================
-% CHAPITRE 18 : LE MOSFET
+% CHAPITRE 19 : LE MOSFET
 % VERSION RÉVISÉE — niveau peer-review
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -12644,10 +13325,10 @@ Avec le BJT du chapitre~\ref{ch:bjt}, nous disposons maintenant de toutes les br
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 19 : L'AMPLIFICATEUR OPÉRATIONNEL — VERSION PEER-REVIEW
+% CHAPITRE 20 : L'AMPLIFICATEUR OPÉRATIONNEL — VERSION PEER-REVIEW
 % ============================================================================
 % ============================================================================
-% CHAPITRE 19 : L'AMPLIFICATEUR OPÉRATIONNEL (AOP)
+% CHAPITRE 20 : L'AMPLIFICATEUR OPÉRATIONNEL (AOP)
 % VERSION AUGMENTÉE — peer-review + pédagogie
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -13340,10 +14021,10 @@ Ce sont exactement ces limites qui décident si un filtre actif tient ses promes
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 20 : FILTRES ACTIFS — LIMITES, CONCEPTION ET RÉALITÉ
+% CHAPITRE 21 : FILTRES ACTIFS — LIMITES, CONCEPTION ET RÉALITÉ
 % ============================================================================
 % ============================================================================
-% CHAPITRE 20 : FILTRES ACTIFS — LIMITES, CONCEPTION ET RÉALITÉ
+% CHAPITRE 21 : FILTRES ACTIFS — LIMITES, CONCEPTION ET RÉALITÉ
 % Complément au chapitre 14 (topologies et calculs de base)
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -14062,7 +14743,7 @@ Le filtre anti-aliasing de notre cas d'étude est la dernière ligne analogique 
 \end{retenir}
 
 % ############################################################################
-% CHAPITRE 21 : LES OSCILLATEURS
+% CHAPITRE 22 : LES OSCILLATEURS
 % ############################################################################
 \chapter{Les Oscillateurs}\index{oscillateur}\label{ch:oscillateurs}
 
@@ -14563,7 +15244,7 @@ choix de l'oscillateur n'est donc jamais un détail périphérique.
 \end{attention}
 
 % ----------------------------------------------------------------------------
-% EXERCICES DU CHAPITRE 21
+% EXERCICES DU CHAPITRE 22
 % ----------------------------------------------------------------------------
 \section*{Exercices}
 \addcontentsline{toc}{section}{Exercices}
@@ -14730,7 +15411,7 @@ pourquoi sa stabilité est médiocre : tout ce qui affecte les seuils ou la
 constante de temps affecte directement la fréquence.}
 
 % ----------------------------------------------------------------------------
-% RÉSUMÉ DU CHAPITRE 21
+% RÉSUMÉ DU CHAPITRE 22
 % ----------------------------------------------------------------------------
 \section*{Résumé du chapitre}
 \addcontentsline{toc}{section}{Résumé du chapitre}
@@ -14799,7 +15480,7 @@ on n'y dimensionne plus un gain, on y dimensionne un chemin pour la chaleur.
 \end{retenir}
 
 % ############################################################################
-% CHAPITRE 22 : L'AMPLIFICATION DE PUISSANCE
+% CHAPITRE 23 : L'AMPLIFICATION DE PUISSANCE
 % ############################################################################
 \chapter{L'Amplification de Puissance}\index{amplification de puissance}\label{ch:ampli-puissance}
 
@@ -15246,7 +15927,7 @@ amplifiée. La règle est de séparer physiquement le retour de puissance du
 retour de signal et de ne les réunir qu'en un point (chapitre~\ref{ch:pcb}).
 
 % ----------------------------------------------------------------------------
-% EXERCICES DU CHAPITRE 22
+% EXERCICES DU CHAPITRE 23
 % ----------------------------------------------------------------------------
 \section*{Exercices}
 \addcontentsline{toc}{section}{Exercices}
@@ -15448,7 +16129,7 @@ contraint de l'aire de sécurité. Le module de l'impédance ne dit donc rien à
 lui seul : c'est l'argument qui compte.}
 
 % ----------------------------------------------------------------------------
-% RÉSUMÉ DU CHAPITRE 22
+% RÉSUMÉ DU CHAPITRE 23
 % ----------------------------------------------------------------------------
 \section*{Résumé du chapitre}
 \addcontentsline{toc}{section}{Résumé du chapitre}
@@ -15531,10 +16212,10 @@ Deux niveaux, 0 et 1, et tout un monde. De la porte logique au processeur~: comb
 % ############################################################################
 
 % ============================================================================
-% CHAPITRE 23 : LOGIQUE COMBINATOIRE — VERSION FINALISÉE
+% CHAPITRE 24 : LOGIQUE COMBINATOIRE — VERSION FINALISÉE
 % ============================================================================
 % ============================================================================
-% CHAPITRE 23 : LOGIQUE COMBINATOIRE
+% CHAPITRE 24 : LOGIQUE COMBINATOIRE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -16215,10 +16896,10 @@ Les aléas rappellent la limite de ce monde sans mémoire~: ces circuits vivent 
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 24 : LOGIQUE SÉQUENTIELLE — VERSION FINALISÉE
+% CHAPITRE 25 : LOGIQUE SÉQUENTIELLE — VERSION FINALISÉE
 % ============================================================================
 % ============================================================================
-% CHAPITRE 24 : LOGIQUE SÉQUENTIELLE
+% CHAPITRE 25 : LOGIQUE SÉQUENTIELLE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -16932,10 +17613,10 @@ Nous n'avons fait qu'entrouvrir cette porte~: le chapitre~\ref{ch:timing} fait d
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 25 : CONTRAINTES TEMPORELLES ET SYNCHRONISATION
+% CHAPITRE 26 : CONTRAINTES TEMPORELLES ET SYNCHRONISATION
 % ============================================================================
 % ============================================================================
-% CHAPITRE 25 : CONTRAINTES TEMPORELLES ET SYNCHRONISATION
+% CHAPITRE 26 : CONTRAINTES TEMPORELLES ET SYNCHRONISATION
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -17469,10 +18150,10 @@ Avec des bascules disciplinées et des frontières d'horloge maîtrisées, on pe
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 26 : MACHINES À ÉTATS (FSM)
+% CHAPITRE 27 : MACHINES À ÉTATS (FSM)
 % ============================================================================
 % ============================================================================
-% CHAPITRE 26 : MACHINES À ÉTATS (FSM)
+% CHAPITRE 27 : MACHINES À ÉTATS (FSM)
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -18074,10 +18755,10 @@ Nos machines savent maintenant décider et séquencer. Mais un état de quelques
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 27 : MÉMOIRE — DU BIT PHYSIQUE AU SYSTÈME
+% CHAPITRE 28 : MÉMOIRE — DU BIT PHYSIQUE AU SYSTÈME
 % ============================================================================
 % ============================================================================
-% CHAPITRE 27 : MÉMOIRE — DU BIT PHYSIQUE AU SYSTÈME
+% CHAPITRE 28 : MÉMOIRE — DU BIT PHYSIQUE AU SYSTÈME
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -18604,7 +19285,7 @@ Nos systèmes savent désormais séquencer et stocker. Reste à \textbf{calculer
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 28 : CIRCUITS ARITHMÉTIQUES
+% CHAPITRE 29 : CIRCUITS ARITHMÉTIQUES
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -19174,7 +19855,7 @@ Nous disposons maintenant de toutes les briques~: logique, séquentiel, timing, 
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 29 : ARCHITECTURE NUMÉRIQUE
+% CHAPITRE 30 : ARCHITECTURE NUMÉRIQUE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -19768,7 +20449,7 @@ Notre système numérique est complet --- mais il vit en vase clos. Le monde, lu
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 30 : CONVERSION ANALOGIQUE-NUMÉRIQUE ET NUMÉRIQUE-ANALOGIQUE
+% CHAPITRE 31 : CONVERSION ANALOGIQUE-NUMÉRIQUE ET NUMÉRIQUE-ANALOGIQUE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -20246,7 +20927,7 @@ Le monde analogique entre et sort désormais du système numérique. Reste à fa
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 31 : PROTOCOLES DE COMMUNICATION
+% CHAPITRE 32 : PROTOCOLES DE COMMUNICATION
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -20763,7 +21444,7 @@ Ce dernier point n'est pas un détail~: c'est un aperçu. Bruit, propagation, é
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 32 : LIMITES PHYSIQUES DU NUMÉRIQUE
+% CHAPITRE 33 : LIMITES PHYSIQUES DU NUMÉRIQUE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -21176,7 +21857,7 @@ Aucun montage ne vaut mieux que son alimentation. Réguler proprement une tensio
 % ============================================================================
 
 % ============================================================================
-% CHAPITRE 33 : RÉGULATION LINÉAIRE ET LDO
+% CHAPITRE 34 : RÉGULATION LINÉAIRE ET LDO
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % Ouvre la PARTIE VII : ALIMENTATIONS
@@ -21739,7 +22420,7 @@ Pour casser cette limite, il faut refuser le compromis lui-même~: un interrupte
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 34 : ALIMENTATIONS À DÉCOUPAGE
+% CHAPITRE 35 : ALIMENTATIONS À DÉCOUPAGE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -22226,7 +22907,7 @@ Deux boîtes noires restent fermées~: la bobine elle-même --- saturation, pert
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 35 : COMPOSANTS MAGNÉTIQUES ET STABILITÉ DES ALIMENTATIONS
+% CHAPITRE 36 : COMPOSANTS MAGNÉTIQUES ET STABILITÉ DES ALIMENTATIONS
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % Clôt la PARTIE VII : ALIMENTATIONS
@@ -22667,7 +23348,7 @@ Mesurer, comparer, corriger~: la boucle fermée est l'une des idées les plus pu
 % ============================================================================
 
 % ============================================================================
-% CHAPITRE 36 : ASSERVISSEMENT ET TRANSFORMÉE DE LAPLACE
+% CHAPITRE 37 : ASSERVISSEMENT ET TRANSFORMÉE DE LAPLACE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % Ouvre la PARTIE VIII : ASSERVISSEMENT
@@ -23148,7 +23829,7 @@ Il reste à passer de l'analyse à la \textbf{conception}~: régler $C(s)$ pour 
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 37 : CORRECTEUR PID, LIEU DES RACINES ET MARGES DE STABILITÉ
+% CHAPITRE 38 : CORRECTEUR PID, LIEU DES RACINES ET MARGES DE STABILITÉ
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % Clôt la PARTIE VIII : ASSERVISSEMENT
@@ -23620,7 +24301,7 @@ C'est ici que le schéma rencontre la matière. Perturbations, couplages, blinda
 % ============================================================================
 
 % ============================================================================
-% CHAPITRE 38 : COMPATIBILITÉ ÉLECTROMAGNÉTIQUE — SOURCES, COUPLAGES, REMÈDES
+% CHAPITRE 39 : COMPATIBILITÉ ÉLECTROMAGNÉTIQUE — SOURCES, COUPLAGES, REMÈDES
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % Ouvre la PARTIE IX : CEM ET CONCEPTION DE CARTES
@@ -24370,7 +25051,7 @@ Ce chapitre a donné les lois et les remèdes~; mais la CEM se gagne ou se perd 
 
 
 % ============================================================================
-% CHAPITRE 39 : CONCEPTION DE PCB — LE CIRCUIT IMPRIMÉ EST UN COMPOSANT
+% CHAPITRE 40 : CONCEPTION DE PCB — LE CIRCUIT IMPRIMÉ EST UN COMPOSANT
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -25003,7 +25684,7 @@ Ce chapitre a traité le routage tant que la piste reste «~petite~»~: ses para
 
 
 % ============================================================================
-% CHAPITRE 40 : INTÉGRITÉ DU SIGNAL — QUAND LA PISTE DEVIENT UNE LIGNE
+% CHAPITRE 41 : INTÉGRITÉ DU SIGNAL — QUAND LA PISTE DEVIENT UNE LIGNE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
