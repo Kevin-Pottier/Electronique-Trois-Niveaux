@@ -2664,8 +2664,8 @@ On définit également~:
   \draw[dashed] (0,0.707) -- (10.3,0.707);
   \node[left, font=\footnotesize] at (-0.1,0.707) {$P$};
   \node[right, red!70!black, font=\footnotesize] at (10.35,1.4) {$p(t)$};
-  \node[font=\footnotesize, align=center] at (7.7,-1.45) {$p < 0$ : l'énergie repart\\ vers la source (réactif)};
-  \draw[-{Stealth}, thin] (6.5,-1.15) -- (5.45,-0.3);
+  \node[font=\footnotesize, align=center] at (7.7,-1.5) {$p < 0$ : l'énergie repart\\ vers la source (réactif)};
+  \draw[-{Stealth}, thin] (6.2,-1.02) -- (5.45,-0.3);
 \end{tikzpicture}
 \caption{Charge déphasée ($\varphi = 50^\circ$) : $p(t)$ passe périodiquement sous zéro --- la charge \emph{rend} de l'énergie pendant ces intervalles. La moyenne $P = U_{\text{eff}}I_{\text{eff}}\cos\varphi$ est d'autant plus faible que ces allers-retours (puissance réactive $Q$) sont importants : le réseau, lui, transporte tout le courant.}
 \end{figure}
@@ -2966,8 +2966,8 @@ Avant d'énoncer les lois, il faut maîtriser le vocabulaire~:
   \draw[-{Stealth[length=2.5mm]}, green!55!black, thick] (4.5,1.25) arc[start angle=180, end angle=-90, radius=0.45];
   \node[green!55!black, font=\small] at (4.05,1.95) {$\mathcal{M}_2$};
   % Une branche identifiée
-  \node[font=\footnotesize, align=center] at (8.35,2.2) {une \textbf{branche} :\\ A $\to$ B via $R_3$, $R_4$};
-  \draw[-{Stealth}, thin] (7.25,2.05) -- (6.15,1.7);
+  \node[font=\footnotesize, align=center] at (8.6,2.2) {une \textbf{branche} :\\ A $\to$ B via $R_3$, $R_4$};
+  \draw[-{Stealth}, thin] (7.05,2.0) -- (6.15,1.7);
 \end{tikzpicture}
 \caption{Le vocabulaire sur un circuit à deux mailles. A et B sont les \emph{seuls} n\oe uds (trois branches s'y rejoignent) --- les coins n'en sont pas. Trois branches relient A à B : par $R_2$, par $R_3$--$R_4$, et par $R_1$--$E$.}
 \end{figure}
@@ -5236,9 +5236,9 @@ Sous $f_{\text{SRF}}$~: capacitif. Au-dessus~: \textbf{inductif} (le condensateu
   \draw[very thick, gray] (2.3,0.55) -- (2.9,0.55);
   % branche inductive +1
   \draw[very thick, red!70!black] (2.9,0.55) -- (4.8,3.0);
-  \node[blue!70!black, font=\footnotesize] at (0.95,2.4) {$1/\omega C$};
-  \node[red!70!black, font=\footnotesize] at (4.25,2.4) {$\omega\,$ESL};
-  \node[gray, font=\footnotesize, below] at (2.6,0.5) {ESR};
+  \path (0.4,3.0) -- (2.3,0.55) node[midway, above, sloped, blue!70!black, font=\footnotesize] {$1/\omega C$};
+  \path (2.9,0.55) -- (4.8,3.0) node[midway, above, sloped, red!70!black, font=\footnotesize] {$\omega\,$ESL};
+  \node[gray, font=\footnotesize, above, inner sep=2pt] at (2.6,0.55) {ESR};
   \draw[dashed, gray] (2.6,0) -- (2.6,0.55); \node[below, font=\footnotesize] at (2.6,0) {$f_{\text{SRF}}$};
 \end{tikzpicture}
 \caption{Impédance d'un condensateur réel (log-log) : capacitif en $1/\omega C$, minimum $=$ ESR à la SRF, puis inductif en $\omega\,$ESL. Au-delà de la SRF, ce n'est plus un condensateur.}
@@ -5744,8 +5744,8 @@ Le module \textbf{augmente} avec la fréquence~: la bobine laisse passer le DC m
   \draw[-{Stealth}] (0,0) -- (0,3.4) node[above, font=\footnotesize] {$\log|Z|$};
   \draw[very thick, blue!70!black] (0.4,0.55) -- (2.9,3.0);
   \node[blue!70!black, font=\footnotesize] at (1.6,2.4) {$\omega L$};
-  \node[gray, font=\footnotesize] at (0.9,0.3) {$R_{\text{DC}}$};
-  \draw[gray] (0.4,0.35) -- (1.0,0.35);
+  \draw[gray, dashed] (0.4,0.55) -- (1.7,0.55);
+  \node[gray, font=\footnotesize, right, inner sep=2pt] at (1.72,0.5) {$R_{\text{DC}}$};
 \end{tikzpicture}
 \caption{Impédance d'une bobine (sous sa SRF) : $|Z| = \omega L$ croît avec $f$ --- exactement l'inverse du condensateur.}
 \end{figure}
@@ -5814,21 +5814,25 @@ Les noyaux magnétiques dissipent de l'énergie par deux mécanismes~:
 \begin{tikzpicture}[scale=1.0]
   \draw[->] (-3,0) -- (3,0) node[right, font=\footnotesize] {$H$};
   \draw[->] (0,-2.2) -- (0,2.2) node[above, font=\footnotesize] {$B$};
-  % Boucle d'hystérésis
+  % Boucle d'hystérésis : construite pour passer exactement par B_r (0;0,55) et H_c (-0,5;0)
   \draw[very thick, blue!70!black]
-    (-2.6,-1.85) .. controls (-1.2,-1.8) and (-0.3,-1.4) .. (0.4,0)
-    .. controls (0.9,1.15) and (1.6,1.72) .. (2.6,1.85)
-    .. controls (1.2,1.8) and (0.3,1.4) .. (-0.4,0)
-    .. controls (-0.9,-1.15) and (-1.6,-1.72) .. (-2.6,-1.85);
+    (2.8,1.8) .. controls (1.6,1.72) and (0.7,1.35) .. (0,0.55)
+    .. controls (-0.2,0.33) and (-0.35,0.16) .. (-0.5,0)
+    .. controls (-1.0,-0.55) and (-1.7,-1.62) .. (-2.8,-1.8)
+    .. controls (-1.6,-1.72) and (-0.7,-1.35) .. (0,-0.55)
+    .. controls (0.2,-0.33) and (0.35,-0.16) .. (0.5,0)
+    .. controls (1.0,0.55) and (1.7,1.62) .. (2.8,1.8);
   % Saturation
-  \draw[dashed, gray] (-3,1.85) -- (2.6,1.85); \node[left, font=\footnotesize] at (-2.6,1.85) {$B_{\text{sat}}$};
-  \draw[dashed, gray] (2.6,0) -- (2.6,1.85);
-  \node[font=\footnotesize, align=left] at (1.9,0.75) {coude de\\ saturation};
+  \draw[dashed, gray] (-3.1,1.8) -- (2.8,1.8);
+  \node[above, font=\footnotesize, inner sep=1pt] at (-2.1,1.8) {$B_{\text{sat}}$};
+  \node[font=\footnotesize, align=center] at (2.15,0.72) {coude de\\ saturation};
   % Rémanence / coercitif
-  \node[below left, font=\footnotesize] at (0,0.55) {$B_r$}; \draw[fill=black] (0,0.42) circle (1pt);
-  \node[above, font=\footnotesize] at (-0.5,0.02) {$H_c$}; \draw[fill=black] (-0.42,0) circle (1pt);
+  \draw[fill=black] (0,0.55) circle (1pt);
+  \node[left, font=\footnotesize, inner sep=2pt] at (-0.08,0.62) {$B_r$};
+  \draw[fill=black] (-0.5,0) circle (1pt);
+  \node[above left, font=\footnotesize, inner sep=1pt] at (-0.60,0.02) {$H_c$};
   % Aire = pertes
-  \node[blue!70!black, font=\footnotesize, align=center] at (-1.55,0.95) {aire $=$ énergie\\ perdue / cycle};
+  \node[blue!70!black, font=\footnotesize, align=center] at (-2.15,0.85) {aire $=$ énergie\\ perdue / cycle};
 \end{tikzpicture}
 \caption{Cycle d'hystérésis B-H. L'aire de la boucle est l'énergie dissipée par cycle (pertes par hystérésis) ; au-delà du coude, $B$ sature et $L \propto \mathrm{d}B/\mathrm{d}H$ s'effondre.}
 \end{figure}
@@ -6310,12 +6314,12 @@ L'équation caractéristique $s^2 + 2\zeta\omega_0 s + \omega_0^2 = 0$ donne deu
   \draw[->] (0,-2.4) -- (0,2.4) node[above, font=\footnotesize] {$\Im(s)$};
   % Cercle rayon omega_0
   \draw[dashed, gray] (0,0) circle (2);
-  \node[gray, font=\footnotesize] at (-1.55,-1.62) {$\omega_0$};
+  \node[gray, font=\footnotesize] at (-1.78,-1.5) {$\omega_0$};
   % Pôles complexes conjugués (sous-amorti)
   \fill[red!70!black] (-1,1.732) circle (2.2pt);
   \fill[red!70!black] (-1,-1.732) circle (2.2pt);
   \draw[red!70!black] (0,0) -- (-1,1.732);
-  \node[red!70!black, font=\footnotesize, right] at (-0.95,1.5) {sous-amorti};
+  \node[red!70!black, font=\footnotesize, above left, inner sep=2pt] at (-1.05,1.78) {sous-amorti};
   % angle
   \draw[red!70!black] (-0.4,0.69) arc[start angle=120, end angle=180, radius=0.8];
   \node[red!70!black, font=\footnotesize] at (-0.95,0.35) {$\theta$};
@@ -6327,7 +6331,7 @@ L'équation caractéristique $s^2 + 2\zeta\omega_0 s + \omega_0^2 = 0$ donne deu
   % Pôle imaginaire pur
   \fill[blue!60!black] (0,2) circle (2.2pt);
   \fill[blue!60!black] (0,-2) circle (2.2pt);
-  \node[blue!60!black, font=\footnotesize, right] at (0.1,2.05) {$R=0$};
+  \node[blue!60!black, font=\footnotesize, above right, inner sep=2pt] at (0.12,2.06) {$R=0$};
   % demi-plan
   \node[font=\footnotesize, align=center] at (-3.2,-1.9) {stable\\ ($\Re<0$)};
 \end{tikzpicture}
@@ -7268,7 +7272,7 @@ La puissance oscille à $2f$ (à \SI{50}{Hz}, la puissance oscille à \SI{100}{H
 \centering
 \begin{tikzpicture}[xscale=0.62, yscale=0.9]
   \draw[-{Stealth}] (0,0) -- (10.7,0) node[right=2pt] {\footnotesize $t$};
-  \draw[-{Stealth}] (0,-1.6) -- (0,2.6);
+  \draw[-{Stealth}] (0,-2.15) -- (0,2.6);
   % u et i déphasés
   \draw[thick, blue!60!black, domain=0:10, samples=160] plot(\x,{1.1*sin(72*\x+90)});
   \draw[thick, green!45!black, densely dashed, domain=0:10, samples=160] plot(\x,{0.8*sin(72*\x+50)});
@@ -7278,8 +7282,8 @@ La puissance oscille à $2f$ (à \SI{50}{Hz}, la puissance oscille à \SI{100}{H
   \node[right, red!70!black, font=\footnotesize] at (10.35,1.5) {$p(t)$};
   \node[right, blue!60!black, font=\footnotesize] at (10.35,0.95) {$u$};
   \node[right, green!45!black, font=\footnotesize] at (10.35,0.3) {$i$};
-  \node[font=\footnotesize, align=center] at (7.9,-1.25) {$p<0$ : énergie rendue\\ à la source (réactif)};
-  \draw[-{Stealth}, thin] (6.4,-0.95) -- (5.5,-0.25);
+  \node[font=\footnotesize, align=center] at (7.9,-1.85) {$p<0$ : énergie rendue\\ à la source (réactif)};
+  \draw[-{Stealth}, thin] (6.45,-1.48) -- (5.55,-0.3);
 \end{tikzpicture}
 \caption{Charge déphasée : $p(t) = u\,i$ oscille à $2\omega$ autour de $P = U_{\text{eff}}I_{\text{eff}}\cos\varphi$. Les passages sous zéro sont les instants où la charge \emph{restitue} de l'énergie à la source : c'est la puissance réactive $Q$, qui ne fait que transiter mais impose du courant dans les câbles.}
 \end{figure}
@@ -7406,8 +7410,8 @@ Le principe est simple~: on ajoute un composant réactif de \textbf{signe oppos�
     \draw[dashed, gray] (3,0.8) -- (3,2.5);
     \draw[very thick, orange!80!black, -{Stealth[length=2.5mm]}] (3,2.5) -- (3,0.8);
     \node[orange!80!black, right] at (3.1,1.65) {$Q_C$};
-    \draw[thick] (0.6,0) arc[start angle=0, end angle=15, radius=0.6];
-    \node at (1.0,0.18) {$\varphi'$};
+    \draw[thick] (1.2,0) arc[start angle=0, end angle=15, radius=1.2];
+    \node[font=\footnotesize] at (1.85,0.08) {$\varphi'$};
     \node[below] at (1.5,-0.5) {\textbf{Après compensation}};
   \end{scope}
 \end{tikzpicture}
@@ -7977,11 +7981,10 @@ On peut écrire sous forme normalisée en posant $x = \omega/\omega_0 = f/f_0$~:
   \draw[dashed, gray] (2,0) -- (2,1);
   \draw[dashed, gray] (0,1) -- (2,1);
   \filldraw[red!70!black] (2,1) circle (2.5pt);
-  \node[red!70!black, above right, font=\small] at (2.1,1.15) {$|Z|_{\min} = R$};
-  \draw[<-, thick, gray!60!black] (0.6,4.5) -- (1.2,4.5);
-  \node[font=\footnotesize, right] at (1.25,4.5) {\textbf{capacitif}};
-  \draw[->, thick, gray!60!black] (5.8,4.5) -- (6.4,4.5);
-  \node[font=\footnotesize, left] at (5.75,4.5) {\textbf{inductif}};
+  \node[red!70!black, right, font=\small] at (2.5,0.62) {$|Z|_{\min} = R$};
+  \draw[red!70!black, thin] (2.12,0.92) -- (2.45,0.68);
+  \node[font=\footnotesize] at (1.15,-0.85) {$\leftarrow$ \textbf{capacitif}};
+  \node[font=\footnotesize] at (5.4,-0.85) {\textbf{inductif} $\rightarrow$};
 \end{tikzpicture}
 \caption{Module d'impédance du RLC série (normalisé). Le minimum $|Z| = R$ est à $f_0$ ; plus $Q$ est grand, plus la cuvette est étroite et profonde. En dessous de $f_0$ le circuit est capacitif, au-dessus inductif.}
 \end{figure}
@@ -8547,12 +8550,12 @@ $\omega \gg \omega_c$ (HF) & $\approx \omega_c/\omega$ & $-\SI{20}{\decibel\per\
     
     % Point -3 dB
     \filldraw[red!70!black] (4,-0.3) circle (2.5pt);
-    \node[red!70!black, right, font=\footnotesize] at (4.2,-0.5) {$-3$ dB};
+    \node[red!70!black, above right, font=\footnotesize, inner sep=1pt] at (4.1,-0.1) {$-3$~dB};
     
-    % Pente
-    \draw[<->, thick, orange!70!black] (6,-2) -- (8,-2) -- (8,-4);
-    \node[orange!70!black, font=\footnotesize, right] at (8.1,-3) {$-20$ dB};
-    \node[orange!70!black, font=\footnotesize, above] at (7,-1.9) {1 déc.};
+    % Pente : une décade prise sur l'asymptote (5,5;-1,5) -> (7,5;-3,5)
+    \draw[<->, thick, orange!70!black] (5.5,-1.5) -- (7.5,-1.5) -- (7.5,-3.5);
+    \node[orange!70!black, font=\footnotesize, right, inner sep=2pt] at (7.55,-2.5) {$-20$~dB};
+    \node[orange!70!black, font=\footnotesize, above] at (6.5,-1.42) {1 déc.};
     
     \node[below, font=\bfseries] at (4,-5) {Diagramme de gain};
   \end{scope}
@@ -8747,13 +8750,13 @@ Le gain au pic de résonance\index{résonance} vaut exactement $Q$ en linéaire,
   \node[left, font=\footnotesize] at (0,-2) {$-20$};
   \draw (-0.08,-2)--(0.08,-2);
   % asymptotes
-  \draw[dashed, gray] (0,0) -- (3,0) -- (5.5,-3.33);
-  \node[gray, font=\footnotesize, rotate=-38] at (4.7,-2.3) {$-40$ dB/déc};
+  \draw[dashed, gray] (0,0) -- (3,0) -- (5.5,-3.33)
+    node[right, font=\footnotesize, gray, inner sep=2pt] {$-40$ dB/déc};
   % Courbes en u=f/f0, mappé x=3+3*log10(u). y = 0.1*G = -log10((1-u^2)^2+u^2/Q^2)
   % (axe calibré 0.1 unité/dB : +14 dB -> y=1.4). Cap [+1.55 ; -4.3], sans smooth (spline overshoot).
   \draw[very thick, green!60!black, domain=0.14:7, samples=260, variable=\u]
     plot({3+3*ln(\u)/ln(10)}, {min(1.55, max(-4.3, -ln( (1-\u*\u)*(1-\u*\u) + 2*\u*\u )/ln(10)))});
-  \node[green!60!black, font=\footnotesize] at (1.25,-0.5) {$Q=0{,}707$};
+  \node[green!60!black, font=\footnotesize] at (1.55,-0.95) {$Q=0{,}707$};
   \draw[very thick, blue!70!black, domain=0.14:7, samples=320, variable=\u]
     plot({3+3*ln(\u)/ln(10)}, {min(1.55, max(-4.3, -ln( (1-\u*\u)*(1-\u*\u) + \u*\u )/ln(10)))});
   \node[blue!70!black, font=\footnotesize] at (4.0,0.35) {$Q=1$};
@@ -8962,13 +8965,13 @@ Pour qu'un système bouclé soit stable avec une marge de sécurité, on défini
     \draw[dashed, red!70!black] (4,0) -- (4,-3.5);
     \node[below, red!70!black, font=\footnotesize] at (4,-3.5) {$f_{0\text{dB}}$};
     % f_-180 à x=5.5 (gain=-1.5)
-    \draw[dashed, orange!80!black] (5.5,0) -- (5.5,-1.5);
-    \node[below, orange!80!black, font=\footnotesize] at (5.5,-3.5) {$f_{-180^\circ}$};
+    \draw[dashed, orange!80!black] (5.5,2.2) -- (5.5,-1.5);
+    \node[above, orange!80!black, font=\footnotesize] at (5.5,2.2) {$f_{-180^\circ}$};
     \filldraw[orange!80!black] (5.5,-1.5) circle (2pt);
     % Marge de gain : du point (5.5,-1.5) jusqu'à 0 dB
     \draw[<->, very thick, orange!80!black] (5.5,-1.5) -- (5.5,0);
     \node[orange!80!black, font=\footnotesize, right] at (5.6,-0.75) {$M_G$};
-    \node[font=\bfseries\small] at (4,-4.4) {Gain};
+    \node[font=\bfseries\small] at (4,-4.75) {Gain};
   \end{scope}
   % === PHASE === atteint -180 exactement à x=5.5 ; à f0dB (x=4) vaut -126°
   \begin{scope}[shift={(9,0)}]
@@ -8986,10 +8989,10 @@ Pour qu'un système bouclé soit stable avec une marge de sécurité, on défini
     \filldraw[red!70!black] (4,-1.6) circle (2pt);
     % Marge de phase : de la courbe (4,-1.6) jusqu'à -180 (y=-2.5)
     \draw[<->, very thick, red!70!black] (4,-1.6) -- (4,-2.5);
-    \node[red!70!black, font=\footnotesize, right] at (4.1,-2.05) {$M_\varphi$};
+    \node[red!70!black, font=\footnotesize, left] at (3.9,-2.05) {$M_\varphi$};
     % f_-180 à x=5.5
-    \draw[dashed, orange!80!black] (5.5,0.5) -- (5.5,-2.5);
-    \node[above, orange!80!black, font=\footnotesize] at (5.5,0.6) {$f_{-180^\circ}$};
+    \draw[dashed, orange!80!black] (5.5,1.3) -- (5.5,-2.5);
+    \node[above, orange!80!black, font=\footnotesize] at (5.5,1.3) {$f_{-180^\circ}$};
     \filldraw[orange!80!black] (5.5,-2.5) circle (2pt);
     \node[font=\bfseries\small] at (4,-4.4) {Phase};
   \end{scope}
@@ -9011,20 +9014,23 @@ Le même verdict de stabilité se lit dans le plan complexe (diagramme de Nyquis
   % croise l'axe réel négatif à -0.6 (à droite de -1), rejoint l'origine à omega->inf.
   % moitié inférieure (omega : 0 -> +inf)
   \draw[very thick, blue!70!black]
-    (2,0) .. controls (1.95,-0.9) and (1.2,-1.55) .. (0.3,-1.45)
-    .. controls (-0.45,-1.35) and (-0.75,-0.55) .. (-0.6,0)
+    (2,0) .. controls (1.95,-0.9) and (1.2,-1.55) .. (0.3,-1.48)
+    .. controls (-0.5,-1.38) and (-1.0,-0.55) .. (-0.6,0)
+    .. controls (-0.44,0.27) and (-0.18,0.19) .. (0,0)
     % moitié supérieure (omega : -inf -> 0), miroir
-    .. controls (-0.75,0.55) and (-0.45,1.35) .. (0.3,1.45)
+    .. controls (-0.18,-0.19) and (-0.44,-0.27) .. (-0.6,0)
+    .. controls (-1.0,0.55) and (-0.5,1.38) .. (0.3,1.48)
     .. controls (1.2,1.55) and (1.95,0.9) .. (2,0);
   % marqueur départ omega=0
   \filldraw[blue!70!black] (2,0) circle (1.6pt);
   \node[blue!70!black, below right, font=\footnotesize] at (2,-0.05) {$\omega=0$};
   % marqueur origine omega->inf
-  \node[below left, font=\footnotesize] at (0.05,-0.05) {$\omega\to\infty$};
+  \filldraw[blue!70!black] (0,0) circle (1.6pt);
+  \node[right, font=\footnotesize] at (0.14,0.26) {$\omega\to\infty$};
   % sens de parcours (horaire) : fleche sur la moitié basse
-  \draw[->, blue!70!black, very thick] (1.28,-1.5) -- (1.1,-1.53);
-  \node[blue!70!black, font=\footnotesize] at (1.75,-1.15) {$T(j\omega)$};
-  \node[font=\footnotesize, align=left] at (-1.55,1.35) {$-1$ hors de la\\ courbe $\Rightarrow$ stable};
+  \draw[->, blue!70!black, very thick] (1.28,-1.53) -- (1.1,-1.56);
+  \node[blue!70!black, font=\footnotesize] at (0.95,-0.62) {$T(j\omega)$};
+  \node[font=\footnotesize, align=left] at (-2.25,1.42) {$-1$ hors de la\\ courbe $\Rightarrow$ stable};
 \end{tikzpicture}
 \caption{Diagramme de Nyquist (système stable en boucle ouverte). Le tracé de $T(j\omega)$ part du gain statique sur l'axe réel positif ($\omega=0$), tourne dans le sens horaire et rejoint l'origine ($\omega\to\infty$). Il croise l'axe réel négatif à droite de $-1$ : le point critique n'est pas encerclé, la boucle fermée est stable. S'il l'entourait, elle serait instable --- lecture géométrique du critère de Barkhausen $T = -1$.}
 \end{figure}
@@ -9669,16 +9675,22 @@ Le choix de la \textbf{réponse normalisée} détermine la forme de la courbe de
   % Bessel Q=0.577
   \draw[very thick, green!55!black, domain=0.05:2.75, samples=160, variable=\u]
     plot({2.6*\u}, {min(3.1, max(-0.65, 2.5 - 1.5*ln( (1-\u*\u)^2 + \u*\u/(0.577*0.577) )/ln(10)))});
-  \node[green!55!black, font=\footnotesize] at (5.75,1.15) {Bessel};
   % Butterworth Q=0.707 (croise -3dB pile à f/fc=1)
   \draw[very thick, blue!70!black, domain=0.05:2.75, samples=180, variable=\u]
     plot({2.6*\u}, {min(3.1, max(-0.65, 2.5 - 1.5*ln( (1-\u*\u)^2 + \u*\u/(0.707*0.707) )/ln(10)))});
-  \node[blue!70!black, font=\footnotesize] at (4.7,1.75) {Butterworth};
   % Tchebychev Q=1.306 (bosse ~+2.3dB puis chute plus raide)
   \draw[very thick, red!70!black, domain=0.05:2.75, samples=240, variable=\u]
     plot({2.6*\u}, {min(3.1, max(-0.65, 2.5 - 1.5*ln( (1-\u*\u)^2 + \u*\u/(1.306*1.306) )/ln(10)))});
-  \node[red!70!black, font=\footnotesize] at (2.35,3.05) {Tchebychev};
   \filldraw[blue!70!black] (2.6,2.05) circle (1.6pt);
+  % Légende (zone libre au-dessus de la coupure)
+  \begin{scope}[shift={(4.55,3.05)}]
+    \draw[very thick, red!70!black] (0,0) -- (0.5,0);
+    \node[right, font=\footnotesize, inner sep=2pt] at (0.5,0) {Tchebychev};
+    \draw[very thick, blue!70!black] (0,-0.42) -- (0.5,-0.42);
+    \node[right, font=\footnotesize, inner sep=2pt] at (0.5,-0.42) {Butterworth};
+    \draw[very thick, green!55!black] (0,-0.84) -- (0.5,-0.84);
+    \node[right, font=\footnotesize, inner sep=2pt] at (0.5,-0.84) {Bessel};
+  \end{scope}
 \end{tikzpicture}
 \caption{Trois réponses du 2\textsuperscript{e} ordre, même $f_c$. Butterworth (bleu) reste plat puis croise exactement $-3$~dB à $f_c$ ; Bessel (vert) descend plus tôt en douceur (phase linéaire) ; Tchebychev (rouge) fait une bosse (\emph{ripple}) dans la bande, en échange d'une coupure plus raide au-delà. Arbitrage platitude / raideur / phase --- jamais les trois à la fois.}
 \end{figure}
@@ -11053,9 +11065,10 @@ Quand on met un matériau P en contact avec un matériau N, un phénomène spont
   \node[orange!70!black, font=\footnotesize] at (3.75,2.9) {$\vec{E}_{\text{int}}$};
   
   % Légendes en dessous, bien espacées
-  \node[font=\footnotesize, red!60!black] at (1.5,-0.4) {trous (majoritaires)};
-  \node[font=\footnotesize, blue!60!black] at (6,-0.4) {électrons (majoritaires)};
-  \node[font=\footnotesize, gray!60!black] at (3.75,-0.4) {ions fixes};
+  \node[font=\footnotesize, red!60!black] at (1.4,-0.42) {trous (majoritaires)};
+  \node[font=\footnotesize, blue!60!black] at (6.1,-0.42) {électrons (majoritaires)};
+  \draw[gray!60!black, thin] (3.75,-0.05) -- (3.75,-0.78);
+  \node[font=\footnotesize, gray!60!black, below] at (3.75,-0.78) {ions fixes};
 \end{tikzpicture}
 \caption{Jonction PN à l'équilibre. À l'interface, diffusion puis recombinaison créent une zone de charge d'espace (ZCE) vidée de porteurs mobiles, peuplée d'ions fixes. Le champ interne $\vec{E}_{\text{int}}$ qui en résulte s'oppose à la diffusion : c'est la barrière de potentiel.}
 \end{figure}
@@ -11212,7 +11225,8 @@ La tension moyenne en sortie est~: $V_{\text{moy}} = (\hat{V} - V_F)/\pi \approx
   \draw[very thick, blue!70!black, domain=4:5, samples=40] plot(\x, {max(0,1.2*sin(180*\x)-0.15)});
   \draw[very thick, blue!70!black] (5,0) -- (6,0);
   \draw[very thick, blue!70!black, domain=6:6.6, samples=25] plot(\x, {max(0,1.2*sin(180*\x)-0.15)});
-  \node[blue!70!black, font=\footnotesize] at (6.3,1.15) {$v_{\text{out}}$};
+  \node[blue!70!black, font=\footnotesize] at (6.0,1.48) {$v_{\text{out}}$};
+  \draw[blue!70!black, thin] (6.3,1.38) -- (6.47,1.12);
 \end{tikzpicture}
 \caption{Formes d'onde du redressement simple alternance. Les alternances négatives sont supprimées (diode bloquée) ; il ne reste que les bosses positives, amputées de $V_F$. La sortie est unidirectionnelle mais très ondulée --- d'où la nécessité d'un condensateur de filtrage.}
 \end{figure}
@@ -11275,7 +11289,8 @@ Les deux alternances sont redressées. La tension moyenne est~: $V_{\text{moy}} 
   }
   \draw[very thick, blue!70!black, domain=0:0.6, samples=30]
     plot({\x+6}, {max(0, 1.2*abs(sin(180*(\x+6))) - 0.15)});
-  \node[blue!70!black, font=\footnotesize] at (6.3,1.1) {$v_{\text{out}}$};
+  \node[blue!70!black, font=\footnotesize] at (6.0,1.48) {$v_{\text{out}}$};
+  \draw[blue!70!black, thin] (6.3,1.38) -- (6.47,1.08);
   % Valeur moyenne (pointillé horizontal)
   \draw[dashed, orange!70!black] (0,0.72) -- (6.9,0.72);
   \node[orange!70!black, font=\footnotesize, left] at (0,0.72) {$V_{\text{moy}}$};
@@ -11401,7 +11416,8 @@ Quand une diode passe de l'état passant à l'état bloqué, elle ne se bloque p
   % trr annotation
   \draw[<->, thick, orange!70!black] (2,-2.3) -- (6.5,-2.3);
   \node[orange!70!black, font=\footnotesize, below] at (4.25,-2.3) {$t_{rr}$};
-  \node[font=\footnotesize, align=left] at (5.8,-0.9) {charges\\ stockées};
+  \node[font=\footnotesize, align=center] at (4.95,-1.2) {charges\\ stockées};
+  \draw[thin, gray!60!black] (4.95,-0.98) -- (4.6,-0.42);
   % Fin du recouvrement
   \draw[dashed, gray] (6.5,-0.1)--(6.5,-2.3);
   \node[below, font=\footnotesize] at (6.5,-0.05) {$t_0+t_{rr}$};
@@ -11944,9 +11960,8 @@ Modèle ingénieur~: équation de Shockley, polarisation\index{polarisation}, mo
   \node[font=\footnotesize, gray!70!black, above] at (3.2,2.6) {BC};
   \draw[<->, thick] (2.2,3.2) -- (3.2,3.2);
   \node[font=\footnotesize, above] at (2.7,3.2) {très mince, faiblement dopée};
-  \node[font=\footnotesize, below] at (1.1,-0.25) {$N^+$ (fort dopage)};
-  \node[font=\footnotesize, below] at (2.7,-0.25) {$P$};
-  \node[font=\footnotesize, below] at (4.6,-0.25) {$N$ (dopage modéré)};
+  \node[font=\footnotesize, below] at (1.1,-0.25) {$N^+$ fort dopage};
+  \node[font=\footnotesize, below] at (4.6,-0.25) {$N$ dopage modéré};
 \end{tikzpicture}
 \caption{Structure du NPN : émetteur $N^+$ très dopé, base P mince et peu dopée, collecteur N. La finesse de la base est la clé du gain : presque tous les électrons injectés la traversent sans se recombiner.}
 \end{figure}
@@ -12805,7 +12820,7 @@ Modèle ingénieur~: structure physique, équations du courant (hypothèse long 
 \centering
 \begin{tikzpicture}[scale=0.85]
   \fill[red!8] (0,0) rectangle (8,2);
-  \node[font=\small, red!60!black] at (4,0.5) {Substrat P};
+  \node[font=\small, red!60!black] at (1.15,0.28) {Substrat P};
   \fill[blue!20] (0.5,2) rectangle (2.5,3);
   \fill[blue!20] (5.5,2) rectangle (7.5,3);
   \node[font=\footnotesize, blue!70!black] at (1.5,2.5) {$N^+$};
@@ -12823,8 +12838,8 @@ Modèle ingénieur~: structure physique, équations du courant (hypothèse long 
   \draw[<->, thin] (5.7,2) -- (5.7,2.4);
   \node[font=\tiny, right] at (5.8,2.2) {$t_{ox}$};
   % Longueur du canal
-  \draw[<->] (2.5,1.4) -- (5.5,1.4);
-  \node[font=\footnotesize, below] at (4,1.3) {$L$ (longueur du canal)};
+  \draw[<->] (2.5,1.15) -- (5.5,1.15);
+  \node[font=\footnotesize, below] at (4,1.08) {$L$ (longueur du canal)};
 \end{tikzpicture}
 \caption{Structure du NMOS : deux îlots $N^+$ (source, drain) dans un substrat P. La grille, isolée par l'oxyde SiO$_2$ d'épaisseur $t_{ox}$, crée sous elle le canal d'inversion quand $V_{GS} > V_{th}$.}
 \end{figure}
@@ -12917,8 +12932,8 @@ Conséquence directe~: le $g_m$ du MOSFET est plus faible que celui du BJT à m�
     plot(\x, {0.8*(2*2.2*\x - \x*\x)});
   \draw[thick, blue!80!black] (2.2,3.87) -- (7.5,4.3);
   \node[right, font=\footnotesize, blue!80!black] at (7.5,4.3) {$V_{GS3}$};
-  \node[font=\footnotesize] at (0.8,5) {Ohmique};
-  \node[font=\footnotesize] at (5,5) {Saturation};
+  \node[font=\footnotesize] at (1.15,4.6) {Ohmique};
+  \node[font=\footnotesize] at (5.5,4.85) {Saturation};
   % Pente en saturation annotée
   \draw[<->, thin, gray] (5,2.15) -- (7.3,2.32);
   \node[font=\tiny, gray, above] at (6.2,2.35) {pente $= 1/r_o$ (CLM)};
@@ -13036,7 +13051,7 @@ Dans un MOSFET discret, le substrat P est relié en interne à la source. La jon
   \draw (bd) to[D] (bd |- M.D) -- ++(0,0.25) -| ([yshift=9.5pt]M.D);
   \filldraw ([yshift=-0.35cm]M.S) circle (1.5pt);
   \filldraw ([yshift=9.5pt]M.D) circle (1.5pt);
-  \node[right, font=\footnotesize] at (1.35,0.1) {body diode};
+  \node[right, font=\footnotesize] at (1.5,0.1) {body diode};
 \end{circuitikz}
 \caption{La diode intrinsèque du NMOS : la jonction substrat(P)--drain(N) est une diode antiparallèle entre source et drain, passante dès que $V_{DS} < 0$. Elle est structurelle : impossible de la supprimer.}
 \end{figure}
@@ -13082,15 +13097,15 @@ Lors de la commutation ON, la tension de grille $V_{GS}$ ne monte pas linéairem
   \foreach \x/\n in {0.75/1, 1.85/2, 3.35/3, 6.0/4} \node[font=\footnotesize, gray!60!black] at (\x,5.05) {\n};
   % v_DS (rouge) : haut, chute pendant le plateau, puis R_DSon*I_D
   \draw[very thick, red!70!black] (0,4.4) -- (2.2,4.4) -- (4.5,0.15) -- (7.5,0.15);
-  \node[red!70!black, font=\footnotesize, above] at (0.7,4.42) {$v_{DS}$};
+  \node[red!70!black, font=\footnotesize, below] at (0.95,4.32) {$v_{DS}$};
   % v_GS (bleu) : montée, plateau, montée finale
   \draw[very thick, blue!70!black, domain=0.02:1.5, samples=80] plot(\x, {1.5*exp(0.7*ln(\x/1.5))});
   \draw[very thick, blue!70!black] (1.5,1.5) -- (2.2,2.2) -- (4.5,2.2);
   \draw[very thick, blue!70!black, domain=4.5:7.5, samples=100] plot(\x, {2.2+2.6*(1-exp(-(\x-4.5)/1.3))});
-  \node[blue!70!black, font=\footnotesize, above] at (7.0,4.55) {$v_{GS}$};
+  \node[blue!70!black, font=\footnotesize, below right] at (6.45,4.06) {$v_{GS}$};
   % Annotation plateau
   \node[gray!30!black, font=\footnotesize] at (6.3,2.9) {plateau de Miller};
-  \draw[->, thick, gray!60!black] (5.25,2.85) -- (3.9,2.32);
+  \draw[->, thick, gray!60!black] (4.95,2.78) -- (3.9,2.32);
 \end{tikzpicture}
 \caption{Commutation ON : $v_{GS}(t)$ marque un plateau --- le plateau de Miller --- pendant lequel tout le courant du driver charge $C_{GD}$ pour faire chuter $v_{DS}$ (phase 3). C'est la phase la plus dissipative : $v_{DS}$ et $i_D$ sont simultanément élevés. D'où les drivers de grille capables de plusieurs ampères.}
 \end{figure}
@@ -13452,8 +13467,9 @@ Appliquons la méthode sur l'amplificateur non-inverseur, en trois niveaux de co
   \draw (AOP.out) -- ++(0.5,0) coordinate(T) -- ++(0.4,0) node[ocirc]{} node[right]{$V_{\text{out}}$};
   \draw (T) -- ++(0,-1.8) coordinate(FB);
   \filldraw (T) circle (1.5pt);
-  \draw (FB) to[R, l=$R_2$] ++(-2.5,0) coordinate(J);
-  \draw (J) to[R, l=$R_1$] ++(0,-1.5) node[ground]{};
+  \coordinate (J) at ($(FB)+(-2.5,0)$);
+  \draw (J) to[R, l=$R_2$] (FB);
+  \draw (J) to[R, l_=$R_1$] ++(0,-1.5) node[ground]{};
   \draw (J) -- (J |- AOP.-) -- (AOP.-);
   \filldraw (J) circle (1.5pt);
 \end{circuitikz}
@@ -13697,7 +13713,7 @@ Exemple (741)~: $GBW = \SI{1}{MHz}$. En suiveur\index{suiveur} ($A_{CL} = 1$)~: 
   \node[blue!70!black, font=\footnotesize, above] at (0.45,5.05) {$A_{OL}$};
   \draw[dashed, gray!50] (1,0) -- (1,5);
   \node[below, font=\tiny, gray!60!black] at (1,-0.45) {$f_{p1}$};
-  \node[rotate=-45, font=\footnotesize, gray!30!black] at (3.45,2.85) {$-\SI{20}{\decibel\per\dec}$};
+  \node[rotate=-45, font=\footnotesize, gray!30!black] at (2.55,3.75) {$-\SI{20}{\decibel\per\dec}$};
   \draw[very thick, red!70!black] (0,2) -- (4,2);
   \node[red!70!black, font=\footnotesize, above] at (1.9,2.03) {$A_{CL} = \SI{40}{dB}$};
   \draw[dashed, gray!50] (4,0) -- (4,2);
@@ -14139,18 +14155,18 @@ Ces spécifications se résument graphiquement en un \textbf{gabarit} que la ré
   % 1 unité = 20 dB. Zones grisées = interdites. Courbe : -3,1 u (-62 dB) à f_s, sous -A_min = -3 u.
   \fill[gray!15] (0,-1.55) rectangle (2.5,-0.15);
   \fill[gray!15] (4.5,-3) rectangle (7,0);
-  \draw[-{Stealth[length=2.5mm]}] (0,-3.5) -- (0,0.65) node[above, font=\small]{$|H|$ (dB)};
+  \draw[-{Stealth[length=2.5mm]}] (0,-3.5) -- (0,1.0) node[above, font=\small]{$|H|$ (dB)};
   \draw[-{Stealth[length=2.5mm]}] (-0.2,0) -- (7.4,0) node[right, font=\small]{$f$};
   \node[left, font=\tiny] at (-0.08,0) {0};
   \draw[dashed, gray!70] (0,-0.15) -- (2.5,-0.15);
   \node[left, font=\tiny] at (-0.08,-0.35) {$-A_{\max}$};
   \draw[dashed, gray!70] (4.5,-3) -- (7,-3);
   \node[left, font=\tiny] at (-0.08,-3) {$-A_{\min}$};
-  \draw (2.5,0.06) -- (2.5,-0.06); \node[below, font=\footnotesize] at (2.5,-0.1) {$f_c$};
-  \draw (4.5,0.06) -- (4.5,-0.06); \node[below, font=\footnotesize] at (4.5,-0.1) {$f_s$};
-  \node[font=\footnotesize, gray!30!black] at (1.25,0.35) {bande passante};
-  \node[font=\footnotesize, gray!30!black] at (3.5,0.35) {transition};
-  \node[font=\footnotesize, gray!30!black] at (5.9,0.35) {bande coupée};
+  \draw (2.5,0.06) -- (2.5,-0.06); \node[above, font=\footnotesize] at (2.5,0.06) {$f_c$};
+  \draw (4.5,0.06) -- (4.5,-0.06); \node[above, font=\footnotesize] at (4.5,0.06) {$f_s$};
+  \node[font=\scriptsize, gray!30!black] at (1.3,0.6) {bande passante};
+  \node[font=\scriptsize, gray!30!black] at (3.5,0.6) {transition};
+  \node[font=\scriptsize, gray!30!black] at (5.9,0.6) {bande coupée};
   \draw[very thick, blue!70!black] (0,-0.05) -- (1.9,-0.09) .. controls (2.5,-0.2) and (2.7,-0.45) .. (3.0,-0.9) -- (4.5,-3.1) -- (5.9,-3.4);
 \end{tikzpicture}
 \caption{Le gabarit d'un filtre passe-bas : la réponse doit rester dans le couloir $[-A_{\max}, 0]$ jusqu'à $f_c$, et sous $-A_{\min}$ au-delà de $f_s$ (zones grisées interdites). Le couple $(f_s/f_c, A_{\min})$ détermine l'ordre ; $A_{\max}$ autorise ou non l'ondulation (Tchebychev).}
@@ -14331,7 +14347,7 @@ Tchebychev $\SI{3}{dB}$ & $1{,}306$ & $3$ & $27{,}2$ \\
   % omega_n = 1 ; s(t) = 1 - e^{-zt}(cos wd t + (z/wd) sin wd t).
   % Pics vérifiés : Q=1,306 -> 1,272 (t=3,40) ; Q=0,707 -> 1,043 (t=4,44) ; Q=0,577 -> 1,004.
   \draw[-{Stealth[length=2.5mm]}] (0,0) -- (13,0) node[right, font=\small]{$t$ (en $1/\omega_0$)};
-  \draw[-{Stealth[length=2.5mm]}] (0,0) -- (0,1.5) node[above, font=\small]{$s(t)$};
+  \draw[-{Stealth[length=2.5mm]}] (0,0) -- (0,1.8) node[above, font=\small]{$s(t)$};
   \draw[dashed, gray!60] (0,1) -- (12.4,1);
   \draw (0.1,1) -- (-0.1,1); \node[left, font=\tiny] at (-0.15,1) {1};
   \draw (0.1,0.5) -- (-0.1,0.5); \node[left, font=\tiny] at (-0.15,0.5) {0,5};
@@ -14341,9 +14357,9 @@ Tchebychev $\SI{3}{dB}$ & $1{,}306$ & $3$ & $27{,}2$ \\
     plot(\x, {1 - exp(-0.7071*\x)*(cos(deg(0.7071*\x)) + 1.0*sin(deg(0.7071*\x)))});
   \draw[very thick, red!70!black, domain=0:12.4, samples=300]
     plot(\x, {1 - exp(-0.3828*\x)*(cos(deg(0.9238*\x)) + 0.4143*sin(deg(0.9238*\x)))});
-  \node[red!70!black, font=\footnotesize] at (3.6,1.4) {Tchebychev \SI{3}{dB} ($Q{=}1{,}31$) : $+27\,\%$};
-  \node[blue!70!black, font=\footnotesize] at (8.3,1.14) {Butterworth ($Q{=}0{,}71$) : $+4{,}3\,\%$};
-  \node[green!45!black, font=\footnotesize] at (9.4,0.85) {Bessel ($Q{=}0{,}58$) : $+0{,}4\,\%$};
+  \node[red!70!black, font=\footnotesize, right] at (6.4,1.62) {Tchebychev \SI{3}{dB} ($Q{=}1{,}31$) : $+27\,\%$};
+  \node[blue!70!black, font=\footnotesize, right] at (6.4,1.42) {Butterworth ($Q{=}0{,}71$) : $+4{,}3\,\%$};
+  \node[green!45!black, font=\footnotesize, right] at (6.4,1.22) {Bessel ($Q{=}0{,}58$) : $+0{,}4\,\%$};
 \end{tikzpicture}
 \caption{Réponse à un échelon d'une cellule du 2\textsuperscript{e} ordre pour les trois $Q$ du tableau : le dépassement suit exactement $D\% = 100\,e^{-\pi/\sqrt{4Q^2-1}}$. Plus la transition fréquentielle est raide ($Q$ élevé), plus le signal ``sonne'' dans le temps --- on ne peut pas gagner sur les deux tableaux.}
 \end{figure}
@@ -17384,13 +17400,14 @@ où $T_w$ est la fenêtre de vulnérabilité ($\approx t_{su} + t_h$), $f_{\text
   \node[font=\scriptsize, red!60!black, above] at (2.95,5.95) {transition dans la fenêtre !};
   \node[left, font=\small] at (-0.2,0.9) {$Q$};
   \draw[dashed, gray!50] (0,0.9) -- (8.6,0.9);
-  \node[right, font=\tiny, gray!60!black] at (8.6,0.9) {$V_{DD}/2$};
+  \node[above, font=\tiny, gray!60!black] at (0.85,0.93) {$V_{DD}/2$};
   \draw[very thick, red!70!black] (0,0.3) -- (3.15,0.3) -- (3.35,0.9);
   \draw[very thick, red!70!black, domain=3.35:6.2, samples=120] plot(\x, {0.9 + 0.07*sin(deg(9*(\x-3.35)))});
   \draw[very thick, red!70!black, dashed] (6.2,0.93) .. controls (6.7,1.2) .. (7.2,1.5) -- (8.6,1.5);
   \draw[very thick, red!70!black, dashed] (6.2,0.87) .. controls (6.7,0.6) .. (7.2,0.3) -- (8.6,0.3);
   \node[font=\scriptsize, red!70!black] at (4.8,1.55) {état métastable};
-  \node[font=\scriptsize, red!70!black, right] at (7.3,0.95) {résolution aléatoire};
+  \node[font=\scriptsize, red!70!black, left] at (8.6,1.98) {résolution aléatoire};
+  \draw[red!70!black, thin] (7.7,1.85) -- (7.95,1.56);
 \end{tikzpicture}
 \caption{Métastabilité : $D$ bascule à l'intérieur de la fenêtre setup/hold (zone rosée). La boucle interne du verrou se retrouve au point d'équilibre instable de la VTC : $Q$ stationne près de $V_{DD}/2$ pendant un temps imprévisible, puis se résout aléatoirement vers ``0'' ou ``1''. Le temps de résolution suit une loi exponentielle en $e^{-t/\tau}$.}
 \end{figure}
@@ -17729,7 +17746,7 @@ La marge de $\SI{15}{ps}$ ($3\%$) est typique des circuits modernes. Il suffit d
   \draw (0,0) rectangle (10,0.8);
   \foreach \x in {1,6.6,8.2,8.8,9.4,9.7} \draw (\x,0) -- (\x,0.8);
   \foreach \x/\t in {0.5/{$t_{cq}$ (50)}, 3.8/{$t_{\text{comb}}$ (280)}, 7.4/{$t_{\text{wire}}$ (80)}, 8.5/{$t_{su}$ (30)}, 9.1/{skew (30)}, 9.55/{$t_j$ (15)}, 9.95/{marge (15)}}
-    \node[font=\tiny, rotate=-50, anchor=north east] at (\x,-0.08) {\t};
+    \node[font=\tiny, rotate=90, anchor=east] at (\x,-0.08) {\t};
   \draw[{Stealth[length=2mm]}-{Stealth[length=2mm]}] (0,1.15) -- (10,1.15);
   \node[above, font=\footnotesize] at (5,1.18) {$T_{\text{clk}} = \SI{500}{ps}$ (\SI{2}{GHz})};
 \end{tikzpicture}
@@ -17880,7 +17897,7 @@ Le temps de résolution nécessaire diminue exponentiellement la probabilité de
   \draw (5.45,0.25) -- (5.6,0.05) -- (5.75,0.25);
   \draw (-2,1.1) node[left, font=\small]{signal async} -- (1.2,1.1);
   \draw (2.8,1.1) -- (4.8,1.1);
-  \node[font=\scriptsize, red!60!black, above] at (3.8,1.15) {peut être métastable};
+  \node[font=\scriptsize, red!60!black, align=center, below] at (3.8,1.0) {peut être\\ métastable};
   \draw (6.4,1.1) -- (8.6,1.1) node[right, font=\small]{synchronisé};
   \draw (0.9,-0.9) node[left, font=\small]{CLK$_B$} -- (7.4,-0.9);
   \draw (2,-0.9) -- (2,0);  \filldraw (2,-0.9) circle (1.5pt);
@@ -18450,10 +18467,10 @@ Chaque transition ne dépend que d'une bascule et d'un comparateur\index{compara
   \node[draw, circle, thick, minimum size=1.35cm, fill=orange!18] (O)  at (4.6,0)   {$S_O$};
   \node[draw, circle, thick, minimum size=1.35cm, fill=red!14]    (R)  at (4.6,-3.4){$S_R$};
   \node[draw, circle, thick, minimum size=1.35cm, fill=red!28]    (RO) at (0,-3.4)  {$S_{RO}$};
-  \node[font=\tiny, below=0.1cm] at (V.south)  {V=1};
-  \node[font=\tiny, below=0.1cm] at (O.south)  {O=1};
-  \node[font=\tiny, above=0.1cm] at (R.north)  {R=1};
-  \node[font=\tiny, above=0.1cm] at (RO.north) {R=O=1};
+  \node[font=\tiny] at (-0.80,-0.72)  {V=1};
+  \node[font=\tiny] at (5.40,-0.72)  {O=1};
+  \node[font=\tiny] at (5.40,-2.68)  {R=1};
+  \node[font=\tiny] at (-0.88,-2.68) {R=O=1};
   \draw[->, thick] (-1.7,0.9) -- (V);
   \node[font=\scriptsize, above] at (-1.4,0.85) {reset};
   \draw[->, thick] (V)  -- (O)  node[midway, above, font=\footnotesize]{cnt $=$ 30};
@@ -18966,8 +18983,10 @@ Ces trois technologies ne se concurrencent pas~: elles s'empilent en une \textbf
   }
   \node[font=\scriptsize, gray!30!black, above] at (-4.55,4.95) {latence};
   \node[font=\scriptsize, gray!30!black, above] at (4.75,4.95) {capacité};
-  \draw[->, thick, gray!60] (-5.6,0.3) -- (-5.6,4.6) node[midway, left, font=\scriptsize, rotate=90, yshift=6pt]{vitesse, coût/bit};
-  \draw[->, thick, gray!60] (5.75,4.6) -- (5.75,0.3) node[midway, right, font=\scriptsize, rotate=-90, yshift=6pt]{densité};
+  \draw[->, thick, gray!60] (-6.6,0.3) -- (-6.6,4.6);
+  \node[font=\scriptsize, gray!40!black, rotate=90] at (-6.85,2.45) {vitesse, coût/bit};
+  \draw[->, thick, gray!60] (6.4,4.6) -- (6.4,0.3);
+  \node[font=\scriptsize, gray!40!black, rotate=-90] at (6.65,2.45) {densité};
 \end{tikzpicture}
 \caption{La hiérarchie mémoire : chaque étage échange de la latence contre de la capacité. Le cache SRAM masque les $\sim\SI{50}{ns}$ de la DRAM, la DRAM masque les $\SI{50}{\micro s}$ du SSD --- tout l'art des architectures est de garder les données chaudes en haut de la pyramide.}
 \end{figure}
@@ -20067,8 +20086,8 @@ Un processeur exécute des instructions stockées en mémoire. Chaque instructio
 \centering
 \begin{tikzpicture}[>=Stealth, scale=0.8, font=\scriptsize]
   % Contrôleur
-  \draw[thick, fill=orange!12, rounded corners=3pt] (2.2,3.0) rectangle (11.2,4.1);
-  \node at (6.7,3.55) {\textbf{Contrôleur} (FSM : FETCH / DECODE / EXEC / MEM / WB)};
+  \draw[thick, fill=orange!12, rounded corners=3pt] (0.6,3.0) rectangle (13.7,4.1);
+  \node at (7.15,3.55) {\textbf{Contrôleur} (FSM : FETCH / DECODE / EXEC / MEM / WB)};
   % Blocs du datapath
   \draw[thick, fill=blue!10]  (0,0.6)  rectangle (1.3,1.8);  \node at (0.65,1.2) {PC};
   \draw[thick, fill=gray!12]  (2.2,0.4) rectangle (4.0,2.0); \node[align=center] at (3.1,1.2) {Mém.\\instr.};
@@ -21508,7 +21527,7 @@ $V_{DD}$ est bloquée autour de $0{,}7$--$\SI{1}{V}$ depuis 15 ans. Conséquence
   \draw[very thick, blue!70!black] (3.36,3.5) .. controls (4.3,4.25) and (5.1,4.35) .. (6.2,4.42);
   \draw[dashed, gray!60] (3.36,0) -- (3.36,3.5);
   \node[below, font=\footnotesize] at (3.36,-0.05) {$V_{th}$};
-  \node[rotate=46, font=\footnotesize, blue!70!black] at (1.35,1.95) {\SI{60}{\milli\volt\per\dec}};
+  \node[rotate=46, font=\footnotesize, blue!70!black] at (1.10,2.15) {\SI{60}{\milli\volt\per\dec}};
   \draw[dashed, gray!60] (0,0) -- (-0.8,0);
   \node[left, font=\footnotesize, red!60!black] at (-0.85,0) {$I_{\text{off}}$};
   \node[right, font=\footnotesize] at (6.25,4.42) {$I_{\text{on}}$};
@@ -21667,8 +21686,8 @@ Dès \SI{8}{nm}, des études (Esmaeilzadeh et al., 2011) prédisaient que \textb
         \draw[fill=black!70] (\i,\j) rectangle ++(0.92,0.92);
       \fi
     }
-  \node[font=\scriptsize, white] at (1.46,3.46) {éteint};
-  \node[font=\scriptsize] at (0.46,3.46) {actif};
+  \node[font=\scriptsize, white] at (0.46,3.46) {éteint};
+  \node[font=\scriptsize] at (1.46,3.46) {actif};
   \node[font=\footnotesize, align=center] at (2.45,-0.75) {20 blocs $\times$ \SI{2.5}{W} --- budget \SI{25}{W} $\Rightarrow$ 50\,\% de la puce noire en permanence};
 \end{tikzpicture}
 \caption{Le dark silicon de l'exercice 29.6, vu du dessus : à tout instant, la moitié des blocs doit rester éteinte pour tenir le budget thermique. La surface est devenue abondante, les watts sont devenus rares --- et l'architecture s'est réorganisée autour de cette inversion.}
@@ -22976,7 +22995,7 @@ B_{\text{sat}} \text{ atteint pour } I_{\text{sat}} \quad\text{tel que}\quad L\,
   \node[left, font=\footnotesize] at (-0.08,3) {$B_{\text{sat}}$};
   \draw[very thick, blue!70!black, domain=0:6.1, samples=120] plot(\x, {3*tanh(\x/1.1)});
   \draw[very thick, red!70!black, domain=0:6.1, samples=120] plot(\x, {3*tanh(\x/3.2)});
-  \node[blue!70!black, font=\footnotesize, align=left] at (1.15,3.45) {sans entrefer\\($\mu$ élevé, $L$ élevée)};
+  \node[blue!70!black, font=\footnotesize, align=left] at (2.05,3.48) {sans entrefer\\($\mu$ élevé, $L$ élevée)};
   \node[red!70!black, font=\footnotesize, align=left] at (5.1,2.05) {avec entrefer\\($L$ réduite)};
   \draw[dashed, gray!50] (1.62,0) -- (1.62,2.7);
   \draw[dashed, gray!50] (4.71,0) -- (4.71,2.7);
@@ -23077,12 +23096,14 @@ La bobine couplée est donc une \textbf{inductance de stockage à deux enrouleme
 \begin{circuitikz}[scale=0.95, american]
   \draw (0,0) node[ground]{} to[V, l=$V_{\text{in}}$] (0,3.2);
   \draw (0,3.2) -- (2.2,3.2);
-  \draw (2.2,3.2) to[L, l_=$N_1$] (2.2,1.2);
+  \draw (2.2,3.2) to[L] (2.2,1.2);
+  \node[left, font=\footnotesize] at (2.02,2.2) {$N_1$};
   \draw (2.2,1.2) to[switch, l_=$S$] (2.2,0);
   \draw (0,0) -- (2.2,0);
   \draw[very thick] (2.55,0.9) -- (2.55,3.5);
   \draw[very thick] (2.7,0.9) -- (2.7,3.5);
-  \draw (3.05,3.2) to[L, l_=$N_2$] (3.05,1.2);
+  \draw (3.05,3.2) to[L] (3.05,1.2);
+  \node[right, font=\footnotesize] at (3.24,2.2) {$N_2$};
   \filldraw (1.9,3.0) circle (1.4pt);
   \filldraw (3.35,1.4) circle (1.4pt);
   \draw (3.05,3.2) to[D, l=$D$] (5.3,3.2);
@@ -23155,7 +23176,7 @@ f_{LC} = \frac{1}{2\pi\sqrt{LC}}
   \foreach \y/\l in {-5.6/{0°}, -6.59/{-90°}, -7.58/{-180°}}{\node[left, font=\tiny] at (-0.08,\y) {\l};}
   \draw[very thick, orange!80!black] (0,-5.6) -- (0.71,-5.6) -- (2.14,-7.58) -- (2.37,-7.58) -- (3.80,-6.59) -- (4.5,-6.59);
   \draw[dashed, gray!45] (1.42,-7.7) -- (1.42,1.8); \node[above, font=\tiny, gray!30!black] at (1.42,1.82) {$f_{LC}$ = \SI{8.9}{kHz}};
-  \draw[dashed, gray!45] (3.08,-7.7) -- (3.08,1.8); \node[above, font=\tiny, gray!30!black] at (3.08,1.82) {$f_z$ (ESR) = \SI{113}{kHz}};
+  \draw[dashed, gray!45] (3.08,-7.7) -- (3.08,2.28); \node[above, font=\tiny, gray!30!black] at (3.08,2.30) {$f_z$ (ESR) = \SI{113}{kHz}};
   \draw[dashed, red!60] (2.55,-7.7) -- (2.55,-0.15);
   \node[font=\scriptsize, red!70!black, below] at (2.9,-7.75) {marge $\approx$ 0° sans compensation !};
 \end{tikzpicture}
@@ -23522,14 +23543,14 @@ Un pôle $p = \sigma + j\omega$ correspond à une réponse en $e^{\sigma t}\cos(
   \fill[red!8] (0,-3.0) rectangle (4.0,3.0);
   \draw[-{Stealth[length=2mm]}] (-4.2,0) -- (4.2,0) node[right, font=\small]{$\sigma$};
   \draw[-{Stealth[length=2mm]}] (0,-3.05) -- (0,3.25) node[above, font=\small]{$j\omega$};
-  \node[green!40!black, font=\small, align=center] at (-2.9,2.62) {\textbf{stable} --- $\sigma<0$\\[-2pt]\scriptsize tous les modes s'éteignent};
-  \node[red!60!black, font=\small, align=center] at (2.35,2.62) {\textbf{instable} --- $\sigma>0$\\[-2pt]\scriptsize un seul pôle suffit};
+  \node[green!40!black, font=\small, align=center] at (-2.9,2.80) {\textbf{stable} --- $\sigma<0$\\[-2pt]\scriptsize tous les modes s'éteignent};
+  \node[red!60!black, font=\small, align=center] at (2.35,2.80) {\textbf{instable} --- $\sigma>0$\\[-2pt]\scriptsize un seul pôle suffit};
   % (1) pôle réel rapide
   \node[blue!70!black, font=\large] at (-2.6,0) {$\times$};
   \draw[rounded corners=2pt, gray!55, fill=white] (-4.05,0.5) rectangle (-2.5,1.62);
   \draw[thin, gray!60] (-3.95,0.78) -- (-2.62,0.78);
   \draw[thick, blue!70!black, domain=0:1.25, samples=40] plot({-3.95+\x}, {0.78+0.6*exp(-3.5*\x)});
-  \node[font=\tiny, gray!25!black] at (-3.27,1.44) {retour exponentiel, sans oscillation};
+  \node[font=\tiny, gray!25!black, align=center, above] at (-3.27,1.66) {retour exponentiel,\\sans oscillation};
   \draw[dashed, gray!55, -{Stealth[length=1.6mm]}] (-3.0,0.48) -- (-2.66,0.12);
   % (2) paire complexe amortie
   \node[blue!70!black, font=\large] at (-1.0,1.7) {$\times$};
@@ -23537,7 +23558,7 @@ Un pôle $p = \sigma + j\omega$ correspond à une réponse en $e^{\sigma t}\cos(
   \draw[rounded corners=2pt, gray!55, fill=white] (-2.75,-2.1) rectangle (-1.25,-0.95);
   \draw[thin, gray!60] (-2.65,-1.52) -- (-1.35,-1.52);
   \draw[thick, blue!70!black, domain=0:1.24, samples=90] plot({-2.65+\x}, {-1.52+0.5*exp(-1.8*\x)*cos(\x*800)});
-  \node[font=\tiny, gray!25!black] at (-2.0,-1.13) {oscille à $\omega$, s'amortit en $e^{\sigma t}$};
+  \node[font=\tiny, gray!25!black, align=center, above] at (-2.0,-0.90) {oscille à $\omega$,\\s'amortit en $e^{\sigma t}$};
   \draw[dashed, gray!55, -{Stealth[length=1.6mm]}] (-1.27,-1.62) -- (-1.06,-1.68);
   % (3) paire complexe instable
   \node[red!70!black, font=\large] at (1.6,1.3) {$\times$};
@@ -23545,7 +23566,7 @@ Un pôle $p = \sigma + j\omega$ correspond à une réponse en $e^{\sigma t}\cos(
   \draw[rounded corners=2pt, gray!55, fill=white] (0.5,-2.8) rectangle (2.15,-1.65);
   \draw[thin, gray!60] (0.6,-2.25) -- (2.05,-2.25);
   \draw[thick, red!70!black, domain=0:1.38, samples=100] plot({0.6+\x}, {-2.25+0.032*exp(1.85*\x)*cos(\x*800)});
-  \node[font=\tiny, red!60!black] at (1.32,-1.8) {la même oscillation\ldots{} qui diverge};
+  \node[font=\tiny, red!60!black, align=left, right] at (2.25,-2.22) {la même\\oscillation\ldots{}\\qui diverge};
   \draw[dashed, gray!55, -{Stealth[length=1.6mm]}] (1.58,-1.63) -- (1.6,-1.42);
   \node[font=\scriptsize, gray!30!black] at (0,-3.3) {$\times$ = pôle $\sigma + j\omega$ \quad;\quad encadrés = le mode $e^{\sigma t}\cos(\omega t)$ que chaque pôle impose \quad;\quad axe $j\omega$ = la frontière};
 \end{tikzpicture}
@@ -23612,11 +23633,18 @@ $\zeta = 0$ (non amorti) & 2 pôles imaginaires purs & Oscillation entretenue (i
   \draw[very thick, blue!70!black] plot coordinates {(0.000,0.000) (0.050,0.015) (0.101,0.056) (0.151,0.120) (0.202,0.201) (0.252,0.296) (0.302,0.401) (0.353,0.514) (0.403,0.631) (0.454,0.751) (0.504,0.871) (0.554,0.990) (0.605,1.107) (0.655,1.219) (0.706,1.327) (0.756,1.430) (0.806,1.527) (0.857,1.618) (0.907,1.702) (0.958,1.780) (1.008,1.851) (1.058,1.916) (1.109,1.974) (1.159,2.026) (1.210,2.073) (1.260,2.113) (1.310,2.149) (1.361,2.180) (1.411,2.206) (1.462,2.228) (1.512,2.246) (1.562,2.261) (1.613,2.272) (1.663,2.281) (1.714,2.288) (1.764,2.292) (1.814,2.294) (1.865,2.295) (1.915,2.295) (1.966,2.293) (2.016,2.290) (2.066,2.287) (2.117,2.282) (2.167,2.278) (2.218,2.273) (2.268,2.268) (2.318,2.263) (2.369,2.258) (2.419,2.252) (2.470,2.247) (2.520,2.243) (2.570,2.238) (2.621,2.233) (2.671,2.229) (2.722,2.225) (2.772,2.222) (2.822,2.218) (2.873,2.215) (2.923,2.212) (2.974,2.210) (3.024,2.208) (3.074,2.206) (3.125,2.204) (3.175,2.202) (3.226,2.201) (3.276,2.200) (3.326,2.199) (3.377,2.198) (3.427,2.197) (3.478,2.197) (3.528,2.196) (3.578,2.196) (3.629,2.196) (3.679,2.196) (3.730,2.196) (3.780,2.196) (3.830,2.196) (3.881,2.196) (3.931,2.196) (3.982,2.196) (4.032,2.197) (4.082,2.197) (4.133,2.197) (4.183,2.197) (4.234,2.198) (4.284,2.198) (4.334,2.198) (4.385,2.198) (4.435,2.198) (4.486,2.199) (4.536,2.199) (4.586,2.199) (4.637,2.199) (4.687,2.199) (4.738,2.199) (4.788,2.199) (4.838,2.200) (4.889,2.200) (4.939,2.200) (4.990,2.200) (5.040,2.200)};
   \draw[very thick, green!45!black] plot coordinates {(0.000,0.000) (0.050,0.015) (0.101,0.054) (0.151,0.113) (0.202,0.185) (0.252,0.268) (0.302,0.358) (0.353,0.452) (0.403,0.549) (0.454,0.646) (0.504,0.742) (0.554,0.837) (0.605,0.928) (0.655,1.017) (0.706,1.101) (0.756,1.182) (0.806,1.258) (0.857,1.330) (0.907,1.398) (0.958,1.462) (1.008,1.521) (1.058,1.577) (1.109,1.629) (1.159,1.676) (1.210,1.721) (1.260,1.762) (1.310,1.800) (1.361,1.835) (1.411,1.867) (1.462,1.896) (1.512,1.923) (1.562,1.948) (1.613,1.971) (1.663,1.992) (1.714,2.011) (1.764,2.028) (1.814,2.044) (1.865,2.059) (1.915,2.072) (1.966,2.084) (2.016,2.095) (2.066,2.105) (2.117,2.114) (2.167,2.122) (2.218,2.130) (2.268,2.136) (2.318,2.143) (2.369,2.148) (2.419,2.153) (2.470,2.158) (2.520,2.162) (2.570,2.166) (2.621,2.169) (2.671,2.172) (2.722,2.175) (2.772,2.177) (2.822,2.180) (2.873,2.182) (2.923,2.183) (2.974,2.185) (3.024,2.187) (3.074,2.188) (3.125,2.189) (3.175,2.190) (3.226,2.191) (3.276,2.192) (3.326,2.193) (3.377,2.194) (3.427,2.194) (3.478,2.195) (3.528,2.195) (3.578,2.196) (3.629,2.196) (3.679,2.197) (3.730,2.197) (3.780,2.197) (3.830,2.198) (3.881,2.198) (3.931,2.198) (3.982,2.198) (4.032,2.198) (4.082,2.199) (4.133,2.199) (4.183,2.199) (4.234,2.199) (4.284,2.199) (4.334,2.199) (4.385,2.199) (4.435,2.199) (4.486,2.199) (4.536,2.199) (4.586,2.200) (4.637,2.200) (4.687,2.200) (4.738,2.200) (4.788,2.200) (4.838,2.200) (4.889,2.200) (4.939,2.200) (4.990,2.200) (5.040,2.200)};
   \filldraw[red!70!black] (1.336,3.531) circle (1.5pt);
-  \node[font=\scriptsize, red!70!black, above] at (1.336,3.571) {dépassement 60\,\%};
-  \node[font=\scriptsize, red!70!black] at (4.6,3.0) {$\zeta = 0{,}16$};
-  \node[font=\scriptsize, orange!85!black] at (4.6,2.62) {$\zeta = 0{,}5$};
-  \node[font=\scriptsize, blue!70!black] at (4.6,1.9) {$\zeta = 0{,}7$};
-  \node[font=\scriptsize, green!45!black] at (4.6,1.52) {$\zeta = 1$};
+  \node[font=\scriptsize, red!70!black, above] at (1.62,3.571) {dépassement 60\,\%};
+  % Légende dans la zone libre sous les courbes
+  \begin{scope}[shift={(3.05,1.15)}]
+    \draw[very thick, red!70!black]    (0,0)     -- (0.42,0);
+    \node[right, font=\scriptsize, red!70!black]    at (0.45,0)     {$\zeta = 0{,}16$};
+    \draw[very thick, orange!85!black] (0,-0.32) -- (0.42,-0.32);
+    \node[right, font=\scriptsize, orange!85!black] at (0.45,-0.32) {$\zeta = 0{,}5$};
+    \draw[very thick, blue!70!black]   (0,-0.64) -- (0.42,-0.64);
+    \node[right, font=\scriptsize, blue!70!black]   at (0.45,-0.64) {$\zeta = 0{,}7$};
+    \draw[very thick, green!45!black]  (0,-0.96) -- (0.42,-0.96);
+    \node[right, font=\scriptsize, green!45!black]  at (0.45,-0.96) {$\zeta = 1$};
+  \end{scope}
 \end{tikzpicture}
 \caption{Réponses à l'échelon du second ordre selon l'amortissement (courbes calculées, $\omega_0 = 1$) : $\zeta = 0{,}16$ --- le RLC de l'exercice 33.4 --- dépasse de 60\,\% et sonne longuement ; $\zeta = 0{,}7$ offre le compromis classique ($\sim 5\,\%$ de dépassement, établissement rapide) ; $\zeta = 1$ est le plus rapide sans dépasser. Régler un asservissement, c'est choisir sa place sur cette famille.}
 \end{figure}
@@ -24040,8 +24068,8 @@ Le \textbf{lieu des racines} (\textit{root locus}) trace le déplacement des \te
   \filldraw[black] (-0.446,0.943) circle (1.8pt);
   \filldraw[black] (-0.446,-0.943) circle (1.8pt);
   \filldraw[black] (-3.428,0) circle (1.8pt);
-  \draw[->, gray!55, thin] (-0.72,-0.62) -- (-0.72,-0.09);
-  \node[font=\tiny, gray!25!black, align=center] at (-0.72,-0.88) {1. les deux pôles\\se rapprochent};
+  \draw[->, gray!55, thin] (-1.28,-0.72) -- (-0.78,-0.12);
+  \node[font=\tiny, gray!25!black, align=center] at (-1.80,-0.88) {1. les deux pôles\\se rapprochent};
   \draw[->, gray!55, thin] (-1.75,1.05) -- (-0.72,0.78);
   \node[font=\tiny, gray!25!black, align=center] at (-2.35,1.25) {2. ils fusionnent puis deviennent\\complexes : la réponse oscille};
   \filldraw[red!75!black] (0,2.036) circle (1.7pt);
@@ -24576,13 +24604,13 @@ Les valeurs chiffrées données dans ce chapitre (gabarits, niveaux d'essai) son
   \draw[very thick, red!75!black] (1,2) -- (5.4,2);
   \draw[very thick, red!75!black, dashed] (5.4,2) -- (5.4,2.9);
   \draw[very thick, red!75!black] (5.4,2.9) -- (9.5,2.9);
-  \node[red!75!black, above, font=\footnotesize\bfseries] at (1.8,2) {limite classe B};
+  \node[red!75!black, above, font=\footnotesize\bfseries] at (1.8,2.14) {limite classe B};
   % A typical spectrum below
   \draw[thick, blue!60!black]
     (1,1.1) -- (1.5,1.5) -- (1.8,0.9) -- (2.3,1.7) -- (2.6,1.2) -- (3.1,2.25) -- (3.4,1.3)
     -- (4.0,1.0) -- (4.6,1.55) -- (5.2,0.9) -- (6.0,1.6) -- (6.6,1.1) -- (7.4,1.9) -- (8.2,1.2) -- (9.5,0.8);
-  \node[blue!60!black, font=\footnotesize, align=left] at (7.9,3.6) {spectre mesuré\\ (harmoniques d'horloges,\\ raies de découpage\ldots)};
-  \draw[blue!60!black, -{Stealth}] (7.0,3.3) -- (6.3,1.75);
+  \node[blue!60!black, font=\footnotesize, align=left] at (8.25,3.62) {spectre mesuré\\ (harmoniques d'horloges,\\ raies de découpage\ldots)};
+  \draw[blue!60!black, -{Stealth}] (6.75,3.15) -- (6.25,1.8);
   % Violation marker
   \draw[red!75!black, -{Stealth}, thick] (3.1,3.3) node[above, font=\footnotesize\bfseries, align=center] {dépassement\\ = échec} -- (3.1,2.35);
 \end{tikzpicture}
@@ -25162,17 +25190,23 @@ Le courant de retour emprunte le chemin de \textbf{moindre impédance}. En basse
   % Plan (vue de dessus)
   \fill[orange!12] (0,0) rectangle (11,4.6);
   \draw[thick] (0,0) rectangle (11,4.6);
-  \node[font=\footnotesize] at (9.9,0.35) {plan de masse (vue de dessus)};
+  \node[font=\footnotesize, below] at (5.5,-0.15) {plan de masse (vue de dessus)};
   % Source et charge
   \node[draw, fill=gray!15, thick, minimum width=1.1cm, minimum height=0.8cm, font=\footnotesize] (S) at (1.3,3.7) {source};
   \node[draw, fill=gray!15, thick, minimum width=1.1cm, minimum height=0.8cm, font=\footnotesize] (C) at (9.7,3.7) {charge};
   % Piste aller en U inversé (descend, longe, remonte)
   \draw[very thick, blue!65!black, fleche] (S.east) -- node[above, pos=0.5, font=\footnotesize] {piste aller (couche L1)} (C.west);
   % Retour BF : ligne droite en pointillé long
-  \draw[very thick, red!70!black, dashed, fleche] (C.south) .. controls (8.6,1.4) and (2.6,1.4) .. node[below, pos=0.5, font=\footnotesize, align=center] {retour BF : le plus court\\ (moindre résistance)} (S.south);
+  \draw[very thick, red!70!black, dashed, fleche] (C.south) .. controls (8.6,1.4) and (2.6,1.4) .. (S.south);
   % Retour HF : suit la piste
   \draw[very thick, green!45!black, densely dotted, fleche] (C.south west) .. controls (8.5,2.95) and (2.7,2.95) .. (S.south east);
-  \node[green!45!black, font=\footnotesize] at (5.5,2.6) {retour HF : sous la piste (moindre inductance)};
+  % Légende (hors des trajets)
+  \begin{scope}[shift={(0.6,0.95)}]
+    \draw[very thick, green!45!black, densely dotted] (0,0) -- (0.9,0);
+    \node[right, font=\footnotesize, green!45!black] at (0.95,0) {retour HF : sous la piste (moindre inductance)};
+    \draw[very thick, red!70!black, dashed] (0,-0.55) -- (0.9,-0.55);
+    \node[right, font=\footnotesize, red!70!black] at (0.95,-0.55) {retour BF : le plus court (moindre résistance)};
+  \end{scope}
 \end{tikzpicture}
 \caption{Dans le plan de masse, le courant de retour ne prend pas le même chemin selon la fréquence. En HF, il « colle » sous la piste aller : la boucle aller--retour devient minuscule --- c'est le grand service que rend un plan continu.}
 \end{figure}
@@ -25485,7 +25519,7 @@ Le chapitre~\ref{ch:magnetiques} a identifié les formes d'ondes~; le routage d�
   \draw[red!70!black, very thick, dashed, rounded corners=3pt,
         decoration={markings, mark=at position 0.25 with {\arrow{Stealth[length=3mm]}}}, postaction={decorate}]
     (1.35,2.62) -- (4.75,2.62) -- (4.75,0.38) -- (1.35,0.38) -- cycle;
-  \node[red!70!black, font=\footnotesize\bfseries, align=center] at (2.9,1.5) {boucle chaude\\ surface à minimiser};
+  \node[red!70!black, font=\scriptsize\bfseries, align=center] at (3.05,1.42) {boucle chaude\\ surface à minimiser};
 \end{tikzpicture}
 \caption{Abaisseur : la boucle chaude $C_{\mathrm{in}}$--$Q_1$--$D$--masse porte le courant haché. Sa surface, fixée par le placement, gouverne l'émission magnétique du convertisseur ; $C_{\mathrm{in}}$ (céramique) doit être collé à $Q_1$ et à $D$.}
 \end{figure}
@@ -25806,16 +25840,19 @@ Découpons la ligne en tronçons de longueur $\mathrm{d}x$~: chacun apporte une 
 \begin{tikzpicture}[scale=0.9, transform shape]
   \draw (0,2.4) node[left] {entrée} to[short] (0.8,2.4);
   \draw (0.8,2.4) to[L, l=$L'\,\mathrm{d}x$] (2.6,2.4) node[circ]{};
-  \draw (2.6,2.4) to[C, l=$C'\,\mathrm{d}x$] (2.6,0) node[circ]{};
+  \draw (2.6,2.4) to[C] (2.6,0) node[circ]{};
+  \node[right, font=\footnotesize] at (2.78,1.2) {$C'\,\mathrm{d}x$};
   \draw (2.6,2.4) to[L, l=$L'\,\mathrm{d}x$] (4.4,2.4) node[circ]{};
-  \draw (4.4,2.4) to[C, l=$C'\,\mathrm{d}x$] (4.4,0) node[circ]{};
+  \draw (4.4,2.4) to[C] (4.4,0) node[circ]{};
+  \node[right, font=\footnotesize] at (4.58,1.2) {$C'\,\mathrm{d}x$};
   \draw (4.4,2.4) to[L, l=$L'\,\mathrm{d}x$] (6.2,2.4) node[circ]{};
-  \draw (6.2,2.4) to[C, l=$C'\,\mathrm{d}x$] (6.2,0) node[circ]{};
+  \draw (6.2,2.4) to[C] (6.2,0) node[circ]{};
+  \node[right, font=\footnotesize] at (6.38,1.2) {$C'\,\mathrm{d}x$};
   \draw (6.2,2.4) to[short] (7.0,2.4);
   \node at (7.6,2.4) {$\cdots$};
   \node at (7.6,0) {$\cdots$};
   \draw (0,0) to[short] (7.0,0);
-  \draw[{Stealth}-{Stealth}] (0.8,3.15) -- node[above, font=\footnotesize] {$\mathrm{d}x$} (2.6,3.15);
+  \draw[{Stealth}-{Stealth}] (0.8,3.35) -- node[above, font=\footnotesize] {$\mathrm{d}x$} (2.6,3.35);
 \end{tikzpicture}
 \caption{Modèle de la ligne sans pertes : une échelle L'--C' répétée. Chaque cellule retarde le front de $\sqrt{L'C'}\,\mathrm{d}x$ et lui présente localement $Z_0 = \sqrt{L'/C'}$ --- indépendant de $\mathrm{d}x$ : c'est bien une propriété de la géométrie, pas du découpage.}
 \end{figure}
