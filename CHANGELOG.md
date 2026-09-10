@@ -1,5 +1,27 @@
 # Historique des versions
 
+## v1.3 — 10 septembre 2026
+Ajout du chapitre 22, **L'Amplification de Puissance**, en fin de partie V :
+le bilan énergétique des classes A, B, AB et D ; le pire cas thermique, qui
+survient aux deux tiers de l'amplitude et non à pleine puissance ; la
+distorsion de croisement et le multiplicateur de V_BE ; le dimensionnement du
+radiateur par la chaîne des résistances thermiques ; l'aire de sécurité et le
+second claquage ; la classe D et ses compromis ; ce qu'une charge réelle fait
+subir à l'étage. 12 pages, 6 exercices corrigés, 4 questions, 3 figures,
+toutes les valeurs vérifiées par le calcul. Les chapitres 22 à 39 deviennent
+23 à 40.
+
+Le chapitre 17 traitait déjà les classes A, B et AB comme façons de polariser
+un transistor. Celui-ci part de là pour traiter ce qui manquait : la
+dissipation, sa valeur maximale, et le chemin de la chaleur.
+
+**Les 35 symboles de masse de l'ouvrage ne s'imprimaient pas**, et ce depuis
+l'origine. Le préambule chargeait `circuits.ee.IEC` avant circuitikz ; cette
+bibliothèque redéfinit le nœud `ground` et ne trace rien. Elle n'était
+utilisée nulle part : elle est retirée, et les 35 figures sont réparées.
+
+679 pages, 40 chapitres, 244 exercices corrigés, 672 entrées d'index.
+
 ## v1.2 — 9 septembre 2026
 Ajout du chapitre 7, **Instrumentation et Mesures**, en fin de partie I :
 l'oscilloscope et son déclenchement, l'effet de charge chiffré par Thévenin,

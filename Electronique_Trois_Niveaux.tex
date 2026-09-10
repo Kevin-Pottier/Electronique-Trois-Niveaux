@@ -251,7 +251,7 @@ un ingénieur doit pouvoir s'y référer comme source de qualité.~»}
 
 \vfill
 {\small Distribué librement sous licence CC BY-NC-SA 4.0}\\[1mm]
-{\small Version 1.2 --- Septembre 2026}
+{\small Version 1.3 --- Septembre 2026}
 \end{titlepage}
 
 % === COLOPHON / LICENCE ===
@@ -266,7 +266,7 @@ Cet ouvrage est mis à disposition selon les termes de la licence \textbf{Creati
 Vous êtes libres de \textbf{partager} (copier, redistribuer) et d'\textbf{adapter} (modifier, transformer, améliorer) ce document, sous trois conditions : \textbf{créditer l'auteur}, \textbf{ne pas en faire un usage commercial}, et \textbf{rediffuser toute version modifiée sous cette même licence}. Texte intégral : \url{https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr}\\[4mm]
 Composé en \LaTeX{} (pdflatex)~; schémas et figures en CircuiTikZ et TikZ.\\
 Rédigé avec l'assistance de l'intelligence artificielle Claude (Anthropic), sous la direction et la vérification de l'auteur.\\
-Version 1.2 --- compilé le \datefr.\\
+Version 1.3 --- compilé le \datefr.\\
 Corrections, suggestions et contributions : \texttt{kevin.pottier@eseo.fr}
 \end{minipage}
 \end{center}
@@ -339,6 +339,7 @@ Le texte s'appuie sur des encadrés récurrents, toujours les mêmes~: \textbf{f
 1.0 & juillet 2026 & Index complet (956 entrées), typographie française (espaces insécables), version de référence. \\
 1.1.1 & septembre 2026 & Renvois croisés convertis en références symboliques (951 renvois, 49 \texttt{\textbackslash label}). Ajout du chapitre~\ref{ch:oscillateurs}, \emph{Les Oscillateurs}, en fin de partie~\ref{part:semiconducteurs}~: les chapitres suivants sont décalés d'un rang. \\
 1.2 & septembre 2026 & Ajout du chapitre~\ref{ch:instrumentation}, \emph{Instrumentation et Mesures}, en fin de partie~\ref{part:fondamentaux}. Césure française, index resserré aux termes, 424 caractères retrouvés à l'impression, débordements de ligne supprimés. \\
+1.3 & septembre 2026 & Ajout du chapitre~\ref{ch:ampli-puissance}, \emph{L'Amplification de Puissance}, en fin de partie~\ref{part:semiconducteurs}. Correction des 35 symboles de masse qui ne s'imprimaient pas. \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -14791,12 +14792,731 @@ dans deux exigences contradictoires~: il faut un gain excédentaire pour
 démarrer, et un gain unitaire pour durer. La non-linéarité qui les réconcilie
 est le c\oe ur du montage, non son défaut.
 
-Nous avons désormais parcouru l'ensemble des fonctions analogiques~: amplifier,
-filtrer, redresser, osciller. La partie qui s'ouvre change de monde~: la
-tension cesse d'être une grandeur pour devenir un symbole, et l'on découvrira
-que ce renoncement apparent à la finesse est précisément ce qui rend possibles
-les systèmes complexes. Le chapitre~\ref{ch:combinatoire} pose la première
-brique de cet édifice --- la logique combinatoire.
+Reste une fonction que nous avons toujours traitée en petit signal, comme si
+l'énergie ne coûtait rien~: porter la puissance jusqu'à une charge réelle. Le
+chapitre~\ref{ch:ampli-puissance} s'y consacre, et il change de discipline ---
+on n'y dimensionne plus un gain, on y dimensionne un chemin pour la chaleur.
+\end{retenir}
+
+% ############################################################################
+% CHAPITRE 22 : L'AMPLIFICATION DE PUISSANCE
+% ############################################################################
+\chapter{L'Amplification de Puissance}\index{amplification de puissance}\label{ch:ampli-puissance}
+
+\begin{center}
+\textit{Tant que le signal reste petit, un transistor est un objet mathématique.\\
+Dès qu'il délivre des watts, il devient un objet qui chauffe, qui vieillit\\
+et qui meurt --- et la conception change de nature.}
+\end{center}
+
+\vspace{0.5cm}
+
+% ----------------------------------------------------------------------------
+% SECTION 1 : LES BASES
+% ----------------------------------------------------------------------------
+\section{Les Bases}\index{bases}
+
+\begin{bases}
+Pourquoi la puissance change la nature du problème, ce que valent les classes
+A, B, AB et D en rendement, où part l'énergie qui n'arrive pas à la charge, et
+pourquoi le pire cas thermique n'est pas la pleine puissance. Prérequis~: la
+puissance (chapitre~\ref{ch:puissance}) et les étages de sortie du transistor
+bipolaire (chapitre~\ref{ch:bjt}).
+\end{bases}
+
+\subsection{Pourquoi la puissance change tout}\index{puissance, ce qu'elle change}
+
+Le chapitre~\ref{ch:bjt} a présenté les étages de sortie en classes A, B et AB
+comme des façons de polariser un transistor. Vu du petit signal, le choix
+paraît une affaire de linéarité. Il n'en est rien~: c'est d'abord une affaire
+de \emph{chaleur}.
+
+Un amplificateur de puissance ne se conçoit pas en partant du gain. Il se
+conçoit en partant de trois questions~: combien de watts la charge exige,
+combien de watts le montage devra dissiper pour les lui donner, et par où
+cette chaleur va sortir. Le schéma vient après.
+
+\begin{intuition}
+En petit signal, un transistor est un objet mathématique~: un gain, une
+impédance, une bande passante. En puissance, il devient un objet physique qui
+a une masse, une température et une durée de vie. La différence n'est pas
+d'échelle, elle est de nature --- et c'est pourquoi ce chapitre parle autant
+de thermique que d'électronique.
+\end{intuition}
+
+\subsection{Les classes, vues du rendement}\index{classes d'amplification}
+
+Le mécanisme de chaque classe a été établi au chapitre~\ref{ch:bjt}. Ce qui
+nous intéresse ici est leur facture énergétique.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{P{1.6cm}P{2.4cm}P{4.3cm}P{4.6cm}}
+\toprule
+\textbf{Classe} & \textbf{Rendement max} & \textbf{Conduction} & \textbf{Emploi typique} \\
+\midrule
+A & \SI{25}{\percent} (charge directe) & Permanente, \SI{360}{\degree} & Petits signaux, audio haut de gamme, étages pilotes \\
+B & \SI{78.5}{\percent} & Une alternance chacun, \SI{180}{\degree} & Rare seule~: distorsion de croisement \\
+AB & \SI{70}{\percent} en pratique & Un peu plus d'une demi-alternance & Le standard de l'audio linéaire \\
+D & \SI{90}{\percent} à \SI{95}{\percent} & Commutation, jamais en zone linéaire & Audio embarqué, forte puissance, alimentation \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{attention}
+Ces rendements sont des \emph{maxima}, atteints à pleine puissance et sur
+charge résistive. Un amplificateur audio passe l'essentiel de sa vie à
+quelques pour cent de sa puissance nominale, où le rendement réel d'une
+classe AB tombe couramment sous \SI{20}{\percent}. C'est la raison pour
+laquelle la classe D domine dès que l'énergie est comptée.
+\end{attention}
+
+\subsection{Où part l'énergie qui n'arrive pas à la charge}\index{bilan énergétique d'un amplificateur}
+
+Le bilan est sans échappatoire~: ce que l'alimentation fournit et qui ne
+ressort pas dans la charge est dissipé en chaleur dans les transistors.
+
+\begin{formule}
+\[
+\boxed{P_{\text{alim}} = P_{\text{charge}} + P_{\text{dissipée}}}
+\]
+Le rendement se lit directement~:
+\[
+\eta = \frac{P_{\text{charge}}}{P_{\text{alim}}}
+\qquad\text{et}\qquad
+P_{\text{dissipée}} = P_{\text{charge}}\left(\frac{1}{\eta} - 1\right)
+\]
+\end{formule}
+
+\begin{pratique}
+\textbf{Ce que coûte la classe A.} Pour \SI{10}{W} dans \SI{8}{\ohm}, il faut
+une amplitude crête $\hat{V} = \sqrt{2 \times 10 \times 8} = \SI{12.6}{V}$ et
+un courant crête de \SI{1.58}{A}. La classe A impose un courant de repos au
+moins égal à ce courant crête, en permanence~: le montage dissipe
+\SI{40}{W} \emph{au repos}, musique éteinte.
+
+Un radiateur capable d'évacuer \SI{40}{W} en continu n'est pas un détail de
+finition~: c'est la moitié du volume et une bonne part du prix de l'appareil.
+\end{pratique}
+
+\subsection{Le pire cas n'est pas la pleine puissance}\index{pire cas thermique}
+
+Voici le point que l'intuition rate systématiquement, et il gouverne tout le
+dimensionnement.
+
+À faible signal, un étage classe B dissipe peu parce qu'il ne débite presque
+rien. À pleine puissance, il dissipe peu \emph{aussi}~: les transistors sont
+alors proches de la saturation, la tension à leurs bornes est faible. Entre
+les deux, il existe un maximum.
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[line width=1pt, x=7.6cm, y=3.8cm]
+\draw[->] (0,0) -- (1.12,0) node[right, font=\small] {$\hat{V}/V_{CC}$};
+\draw[->] (0,0) -- (0,1.18) node[above, font=\small] {$P/P_{\text{out,max}}$};
+\foreach \v in {0.5,1} { \draw (\v,0) -- (\v,-0.025) node[below, font=\scriptsize] {\v}; }
+\foreach \v in {0.5,1} { \draw (0,\v) -- (-0.012,\v) node[left, font=\scriptsize] {\v}; }
+\draw[domain=0:1, samples=140, smooth, blue!70!black]
+  plot (\x, {\x*\x});
+\draw[domain=0:1, samples=140, smooth, red!75!black]
+  plot (\x, {4*\x/3.14159265 - \x*\x});
+\draw[dashed, gray!70] (0.6366,0) -- (0.6366,0.4053) -- (0,0.4053);
+\filldraw[red!75!black] (0.6366,0.4053) circle (1.7pt);
+%% legende placee dans la zone laissee libre par les deux courbes
+\draw[blue!70!black] (0.05,1.05) -- (0.15,1.05);
+\node[right, font=\small, blue!70!black] at (0.16,1.05) {puissance utile};
+\draw[red!75!black] (0.05,0.90) -- (0.15,0.90);
+\node[right, font=\small, red!75!black] at (0.16,0.90)
+  {dissipation dans les transistors};
+\node[below, font=\scriptsize, gray!20!black] at (0.6366,-0.13) {$2/\pi$};
+\end{tikzpicture}
+\caption{Étage classe B~: la dissipation passe par un maximum aux deux tiers
+environ de l'amplitude maximale, et non à pleine puissance. En ce point, le
+montage chauffe exactement autant qu'il délivre.}
+\end{figure}
+
+\begin{formule}
+En notant $\hat{V}$ l'amplitude de sortie et $V_{CC}$ la tension
+d'alimentation, la dissipation totale des deux transistors vaut
+\[
+P_{\text{diss}} = \frac{2\,V_{CC}\hat{V}}{\pi R_L} - \frac{\hat{V}^2}{2R_L}
+\]
+Elle est maximale pour
+\[
+\boxed{\hat{V} = \frac{2V_{CC}}{\pi} \approx 0{,}64\,V_{CC}}
+\qquad\text{où}\qquad
+\boxed{P_{\text{diss,max}} = \frac{2\,V_{CC}^2}{\pi^2 R_L}}
+\]
+\end{formule}
+
+\begin{pratique}
+\textbf{Un étage \SI{\pm 25}{V} sur \SI{8}{\ohm}.} La puissance maximale vaut
+$V_{CC}^2/2R_L = \SI{39}{W}$. La dissipation, elle, culmine à
+$2 \times 25^2/(\pi^2 \times 8) = \SI{15.8}{W}$ --- soit \SI{7.9}{W} par
+transistor --- pour une amplitude de \SI{15.9}{V}, c'est-à-dire seulement
+\SI{15.8}{W} délivrés à la charge.
+
+À pleine puissance, la dissipation retombe à \SI{10.7}{W}. Dimensionner le
+radiateur sur la pleine puissance conduirait donc à le sous-évaluer de moitié,
+et l'amplificateur mourrait non pas fort, mais à mi-volume.
+\end{pratique}
+
+\subsection{Ordres de grandeur}\index{ordres de grandeur en puissance}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{P{3.4cm}P{3.4cm}P{6.2cm}}
+\toprule
+\textbf{Application} & \textbf{Puissance} & \textbf{Solution usuelle} \\
+\midrule
+Écouteurs & \SI{10}{mW} à \SI{100}{mW} & Classe AB intégrée, sans radiateur \\
+Enceinte portable & \SI{2}{W} à \SI{20}{W} & Classe D, boîtier à ailettes \\
+Amplificateur hi-fi & \SI{20}{W} à \SI{200}{W} & Classe AB, radiateur massif \\
+Sonorisation & \SI{500}{W} à \SI{5}{kW} & Classe D, ventilation forcée \\
+Commande de moteur & \SI{100}{W} à \SI{100}{kW} & Pont en commutation, refroidissement liquide \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ----------------------------------------------------------------------------
+% SECTION 2 : APPROFONDISSEMENT
+% ----------------------------------------------------------------------------
+\section{Approfondissement}
+
+\begin{approfondissement}
+La distorsion de croisement\index{distorsion!de croisement} et son remède, le
+réglage du courant de repos et sa dérive thermique, le dimensionnement du
+radiateur par la chaîne des résistances thermiques, et la protection de
+l'étage par limitation d'aire de sécurité. Prérequis~: le chapitre~\ref{ch:bjt}
+pour l'emballement thermique, et le chapitre~\ref{ch:aop} pour la
+contre-réaction.
+\end{approfondissement}
+
+\subsection{La distorsion de croisement}\index{distorsion de croisement}
+
+En classe B pure, aucun des deux transistors ne conduit tant que la tension
+d'entrée reste inférieure à $V_{BE} \approx \SI{0.6}{V}$. Autour du passage
+par zéro, la sortie reste donc plate~: le signal est amputé d'une bande morte
+de \SI{1.2}{V} de large, à chaque alternance.
+
+\begin{attention}
+Cette distorsion a une propriété perverse~: elle est \emph{relativement} plus
+grave à faible niveau. Sur un signal de \SI{20}{V} crête, une bande morte de
+\SI{1.2}{V} représente \SI{6}{\percent}~; sur un signal de \SI{1}{V} crête,
+elle représente la totalité du signal. Un amplificateur qui mesure bien à
+pleine puissance peut être inécoutable en musique de chambre.
+\end{attention}
+
+\begin{formule}
+Le remède est la classe AB~: on impose entre les deux bases une tension de
+polarisation d'environ $2V_{BE}$, de sorte qu'un courant de repos $I_Q$
+circule en permanence dans les deux transistors. La bande morte disparaît.
+
+Le générateur de cette tension est le \textbf{multiplicateur de
+$V_{BE}$}\index{multiplicateur de VBE}~: un transistor dont la base est
+alimentée par un pont diviseur $R_1$, $R_2$ délivre
+\[
+\boxed{V_{\text{polar}} = V_{BE}\left(1 + \frac{R_1}{R_2}\right)}
+\]
+ce qui permet de régler finement la polarisation, donc $I_Q$.
+\end{formule}
+
+\begin{attention}
+La contre-réaction globale réduit la distorsion de croisement mais ne la
+supprime pas, et la transforme~: la discontinuité, corrigée tardivement par
+une boucle de bande passante finie, se répartit en harmoniques d'ordre élevé.
+Or l'oreille tolère mal les harmoniques de rang supérieur à cinq. Un taux de
+distorsion global plus faible peut donc s'entendre plus mal --- c'est le cas
+d'école où le chiffre unique trompe.
+\end{attention}
+
+\subsection{Le courant de repos et sa dérive}\index{courant de repos}
+
+Régler $I_Q$ est un compromis. Trop faible, la distorsion de croisement
+subsiste. Trop élevé, on glisse vers la classe A et sa dissipation. Les
+valeurs usuelles vont de quelques milliampères à quelques dizaines, selon la
+taille de l'étage.
+
+Le problème est que ce réglage ne tient pas tout seul. Quand les transistors
+de sortie chauffent, leur $V_{BE}$ diminue d'environ \SI{-2}{mV\per\degreeCelsius}
+à courant constant~: à tension de polarisation fixe, le courant de repos
+augmente, donc la dissipation, donc la température. C'est l'emballement
+thermique du chapitre~\ref{ch:bjt}, appliqué à l'étage de sortie.
+
+\begin{pratique}
+\textbf{Les deux parades, et elles se cumulent.}
+
+\textbf{Suivi thermique}~: le transistor du multiplicateur de $V_{BE}$ est
+monté \emph{sur le radiateur}, au contact des transistors de sortie. Quand
+ceux-ci chauffent, lui aussi~: sa tension de polarisation diminue en même
+temps que les $V_{BE}$ qu'elle doit compenser. La boucle se referme.
+
+\textbf{Résistances d'émetteur}~: quelques dixièmes d'ohm en série avec chaque
+émetteur créent une contre-réaction locale en courant. Une augmentation de
+$I_Q$ y produit une chute qui s'oppose à la polarisation. Le prix est une
+perte de rendement et un peu de puissance~: avec \SI{0.22}{\ohm} et
+\SI{2}{A} crête, on perd \SI{0.44}{V} sur l'amplitude disponible.
+\end{pratique}
+
+\subsection{Dimensionner le radiateur}\index{radiateur, dimensionnement}
+
+La chaleur produite dans la jonction doit atteindre l'air ambiant. Elle
+traverse pour cela une succession de résistances thermiques, exactement comme
+un courant traverse des résistances en série --- l'analogie est rigoureuse, la
+température jouant le rôle de la tension et le flux de chaleur celui du
+courant.
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[line width=1pt]
+\node[draw, rounded corners, minimum width=1.9cm, minimum height=0.85cm] (a) at (0,0) {jonction};
+\node[draw, rounded corners, minimum width=1.9cm, minimum height=0.85cm] (b) at (3.5,0) {boîtier};
+\node[draw, rounded corners, minimum width=1.9cm, minimum height=0.85cm] (c) at (7.0,0) {radiateur};
+\node[draw, rounded corners, minimum width=1.9cm, minimum height=0.85cm] (d) at (10.5,0) {ambiante};
+\draw[->] (a) -- node[above, font=\small] {$R_{\theta JC}$} (b);
+\draw[->] (b) -- node[above, font=\small] {$R_{\theta CS}$} (c);
+\draw[->] (c) -- node[above, font=\small] {$R_{\theta SA}$} (d);
+\node[below, font=\small] at (0,-0.75) {$T_J$};
+\node[below, font=\small] at (10.5,-0.75) {$T_A$};
+\end{tikzpicture}
+\caption{La chaîne thermique. Chaque résistance s'exprime en \si{\degreeCelsius\per\watt}
+et s'additionne~; l'élévation de température vaut le produit de leur somme par
+la puissance dissipée.}
+\end{figure}
+
+\begin{formule}
+\[
+\boxed{T_J = T_A + P\,(R_{\theta JC} + R_{\theta CS} + R_{\theta SA})}
+\]
+Le dimensionnement s'écrit à l'envers~: on part de la température de jonction
+admissible et l'on en déduit le radiateur nécessaire.
+\[
+\boxed{R_{\theta SA} \leq \frac{T_{J,\max} - T_A}{P} - R_{\theta JC} - R_{\theta CS}}
+\]
+\end{formule}
+
+\begin{pratique}
+\textbf{Le radiateur de notre étage \SI{\pm 25}{V}.} Chaque transistor dissipe
+\SI{7.9}{W} au pire cas. Le boîtier admet
+$T_{J,\max} = \SI{150}{\degreeCelsius}$, dont on retranche
+\SI{25}{\degreeCelsius} de marge~; l'ambiante dans le coffret atteint
+\SI{45}{\degreeCelsius}.
+\[
+R_{\theta,\text{total}} \leq \frac{150 - 25 - 45}{7{,}9} = \SI{10.1}{\degreeCelsius\per\watt}
+\]
+Avec $R_{\theta JC} = \SI{1.5}{\degreeCelsius\per\watt}$ et
+$R_{\theta CS} = \SI{0.5}{\degreeCelsius\per\watt}$ pour l'isolant, il reste
+\SI{8.1}{\degreeCelsius\per\watt} pour le radiateur --- une valeur modeste,
+que tient un profilé de quelques centimètres.
+
+Attention toutefois~: cette marge de \SI{25}{\degreeCelsius} n'est pas une
+coquetterie. Elle absorbe la dispersion de production, le vieillissement de la
+graisse thermique et l'encrassement des ailettes.
+\end{pratique}
+
+\subsection{Protéger l'étage~: l'aire de sécurité}\index{aire de sécurité (SOA)}
+
+Un transistor de puissance n'est pas caractérisé par un courant maximal et une
+tension maximale indépendants, mais par une \textbf{aire de sécurité} (SOA,
+\textit{safe operating area}) dans le plan $(V_{CE}, I_C)$. Quatre frontières
+la délimitent~: le courant maximal, la tension maximale, l'hyperbole de
+dissipation $V_{CE}I_C = P_{\max}$, et --- pour le bipolaire seulement --- le
+\textbf{second claquage}\index{second claquage}.
+
+\begin{attention}
+Le second claquage est un phénomène de concentration~: une inhomogénéité fait
+conduire une zone de la puce un peu plus que les autres, cette zone chauffe,
+son $V_{BE}$ baisse, elle conduit davantage encore. La destruction est locale,
+quasi instantanée, et survient à des puissances bien inférieures à l'hyperbole
+de dissipation. Un MOSFET y échappe, son $R_{DS,\text{on}}$ augmentant avec la
+température~: c'est un argument décisif en sa faveur pour les étages de
+puissance modernes.
+\end{attention}
+
+La protection classique est le \textbf{limiteur en V-I}~: un transistor
+supplémentaire mesure la chute aux bornes de la résistance d'émetteur et
+détourne le courant de base dès qu'un seuil est franchi. Simple, mais il faut
+que sa loi de limitation épouse la SOA~: trop lâche, il ne protège pas~; trop
+serrée, il écrête sur les charges réactives.
+
+% ----------------------------------------------------------------------------
+% SECTION 3 : NIVEAU INGÉNIEUR
+% ----------------------------------------------------------------------------
+\section{Niveau Ingénieur}
+
+\begin{ingenieur}
+La classe D\index{classe D} et ses compromis, ce qu'une charge réelle fait
+subir à l'étage, ce que le taux de distorsion ne dit pas, et le rôle de
+l'alimentation. Prérequis~: les alimentations à découpage
+(chapitre~\ref{ch:decoupage}) pour les mécanismes de commutation.
+\end{ingenieur}
+
+\subsection{La classe D}\index{classe D!principe}
+
+En classe D, les transistors ne travaillent jamais en zone linéaire~: ils sont
+soit bloqués, soit saturés. Or un interrupteur idéal ne dissipe rien --- il
+n'a de tension à ses bornes que lorsqu'aucun courant ne le traverse, et
+réciproquement. Toute la conception consiste à s'approcher de cet idéal.
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[line width=1pt]
+\node[draw, rounded corners, minimum width=2.2cm, minimum height=0.9cm] (a) at (0,0) {comparateur};
+\node[draw, rounded corners, minimum width=2.2cm, minimum height=0.9cm] (b) at (3.9,0) {pont de sortie};
+\node[draw, rounded corners, minimum width=2.2cm, minimum height=0.9cm] (c) at (7.8,0) {filtre LC};
+\node[draw, rounded corners, minimum width=1.5cm, minimum height=0.9cm] (d) at (11.1,0) {$R_L$};
+\draw[->] (-2.4,0) -- (a) node[midway, above, font=\small] {$v_e$};
+\draw[->] (a) -- node[above, font=\small] {MLI} (b);
+\draw[->] (b) -- node[above, font=\small] {carré} (c);
+\draw[->] (c) -- (d);
+\draw[->] (0,-1.55) -- (0,-0.5);
+\node[below, font=\small, align=center] at (0,-1.55) {porteuse\\triangulaire};
+\end{tikzpicture}
+\caption{Chaîne d'un amplificateur en classe D~: la modulation de largeur
+d'impulsion transforme le signal en créneaux, que le filtre de sortie
+restitue. Les transistors ne connaissent que deux états.}
+\end{figure}
+
+\begin{pratique}
+\textbf{Le bilan des pertes.} Avec deux MOSFET de \SI{50}{m\ohm} débitant
+\SI{2.2}{A} efficaces, les pertes par conduction valent
+$2 \times 0{,}05 \times 2{,}2^2 = \SI{0.48}{W}$. En ajoutant les pertes de
+commutation, la commande de grille et le filtre, on atteint typiquement
+\SI{2.5}{W} pour \SI{39}{W} utiles, soit un rendement de \SI{94}{\percent}.
+
+La classe AB équivalente dissipait \SI{15.8}{W} au pire cas. Le radiateur
+n'est pas réduit de moitié~: il devient souvent inutile.
+\end{pratique}
+
+\begin{attention}
+Trois difficultés paient ce rendement. Le \textbf{temps mort} entre les
+commutations des deux transistors évite le court-circuit de bras, mais
+introduit une non-linéarité qui est à la classe D ce que la distorsion de
+croisement est à la classe B. Le \textbf{filtre de sortie} dépend de la
+charge~: son amortissement change avec l'impédance du haut-parleur. Enfin, les
+fronts raides rayonnent~: un amplificateur classe D est une source de
+perturbations conduites et rayonnées, à traiter comme telle
+(chapitre~\ref{ch:cem}).
+\end{attention}
+
+\subsection{Ce qu'une charge réelle fait subir à l'étage}\index{charge réelle}
+
+Les calculs qui précèdent supposent une charge résistive. Un haut-parleur n'en
+est pas une~: son impédance varie de plus d'un facteur trois sur la bande
+audio, avec un pic à la résonance mécanique et une remontée inductive en haut
+du spectre. La valeur «~\SI{8}{\ohm}~» est une commodité commerciale.
+
+\begin{attention}
+Une charge réactive déphase le courant par rapport à la tension. Le transistor
+peut alors devoir supporter un courant élevé \emph{alors même} que la tension à
+ses bornes est élevée --- situation impossible sur charge résistive, et qui
+pousse le point de fonctionnement vers le coin le plus hostile de l'aire de
+sécurité. C'est pourquoi les fiches techniques d'amplificateurs spécifient une
+charge minimale, et pourquoi brancher deux enceintes en parallèle n'est pas
+anodin.
+\end{attention}
+
+\subsection{Ce que le taux de distorsion ne dit pas}\index{taux de distorsion harmonique}
+
+Le THD est le rapport de la valeur efficace des harmoniques au fondamental. Un
+seul nombre, donc, pour décrire un spectre entier --- et c'est là sa limite.
+
+\begin{itemize}[nosep]
+\item Il ne dit pas le \textbf{rang} des harmoniques. Un montage à
+\SI{0.1}{\percent} de rang 2 s'entend moins qu'un montage à
+\SI{0.01}{\percent} de rang 9.
+\item Il ne dit pas la \textbf{dépendance au niveau}. La distorsion de
+croisement, précisément, se dégrade quand le signal diminue, à l'inverse de
+l'écrêtage.
+\item Il est mesuré à une seule fréquence, souvent \SI{1}{kHz}, alors que le
+gain de boucle qui le corrige s'effondre en haut du spectre
+(chapitre~\ref{ch:aop}).
+\end{itemize}
+
+\subsection{L'alimentation fait partie de l'amplificateur}\index{alimentation d'un amplificateur}
+
+Sur un signal musical, le courant appelé est fortement variable. Une
+alimentation d'impédance interne non nulle voit sa tension s'affaisser sur les
+crêtes~: l'amplificateur écrête plus tôt qu'il ne le devrait, et le défaut est
+attribué à tort à l'étage de sortie.
+
+Le courant de sortie retourne par la masse~; s'il emprunte le même conducteur
+que la référence de l'étage d'entrée, il y crée une chute qui se retrouve
+amplifiée. La règle est de séparer physiquement le retour de puissance du
+retour de signal et de ne les réunir qu'en un point (chapitre~\ref{ch:pcb}).
+
+% ----------------------------------------------------------------------------
+% EXERCICES DU CHAPITRE 22
+% ----------------------------------------------------------------------------
+\section*{Exercices}
+\addcontentsline{toc}{section}{Exercices}
+
+\subsection*{Niveau débutant}
+
+\textbf{Exercice 22.1 ---} Un amplificateur classe AB délivre \SI{50}{W} dans
+\SI{8}{\ohm} avec un rendement de \SI{65}{\percent}.
+\begin{enumerate}[nosep]
+\item Quelle puissance l'alimentation fournit-elle~?
+\item Quelle puissance le montage dissipe-t-il~?
+\item Que deviendraient ces valeurs en classe D à \SI{92}{\percent}~?
+\end{enumerate}
+
+\begin{pratique}
+\textbf{Solution :}
+$P_{\text{alim}} = 50/0{,}65 = \SI{76.9}{W}$, donc
+$P_{\text{diss}} = 76{,}9 - 50 = \SI{26.9}{W}$.
+En classe D~: $P_{\text{alim}} = 50/0{,}92 = \SI{54.3}{W}$ et
+$P_{\text{diss}} = \SI{4.3}{W}$. La dissipation est divisée par six~: c'est
+la différence entre un radiateur massif et un simple plan de cuivre.
+\end{pratique}
+
+\vspace{2mm}
+\textbf{Exercice 22.2 ---} Un transistor dissipe \SI{12}{W}. Sa résistance
+thermique jonction-boîtier vaut \SI{1.2}{\degreeCelsius\per\watt}, l'isolant
+\SI{0.6}{\degreeCelsius\per\watt}, le radiateur
+\SI{2.5}{\degreeCelsius\per\watt}. L'ambiante est à
+\SI{40}{\degreeCelsius}.
+\begin{enumerate}[nosep]
+\item Quelle est la température de jonction~?
+\item Le boîtier admet \SI{150}{\degreeCelsius}~: la marge est-elle
+suffisante~?
+\end{enumerate}
+
+\begin{pratique}
+\textbf{Solution :}
+$R_{\theta,\text{total}} = 1{,}2+0{,}6+2{,}5 = \SI{4.3}{\degreeCelsius\per\watt}$,
+d'où $T_J = 40 + 12\times4{,}3 = \SI{91.6}{\degreeCelsius}$.
+La marge atteint \SI{58}{\degreeCelsius}, ce qui est confortable. On
+retiendra toutefois que \SI{30}{\degreeCelsius} des \SI{51.6}{\degreeCelsius}
+d'élévation viennent du radiateur seul~: c'est sur lui qu'il faut agir si la
+marge devenait insuffisante, les deux autres termes étant imposés par le
+composant et son isolant.
+\end{pratique}
+
+\subsection*{Niveau intermédiaire}
+
+\textbf{Exercice 22.3 ---} Un étage classe B est alimenté en
+\SI{\pm 35}{V} et charge \SI{4}{\ohm}.
+\begin{enumerate}[nosep]
+\item Quelle est la puissance maximale délivrable~?
+\item À quelle amplitude la dissipation est-elle maximale, et combien vaut-elle~?
+\item Comparez à la dissipation à pleine puissance.
+\item Quelle conclusion pour le dimensionnement~?
+\end{enumerate}
+
+\begin{pratique}
+\textbf{Solution :}
+$P_{\max} = 35^2/(2\times4) = \SI{153}{W}$.
+La dissipation culmine pour $\hat{V} = 2\times35/\pi = \SI{22.3}{V}$ et vaut
+$2\times35^2/(\pi^2\times4) = \SI{62.1}{W}$, soit \SI{31}{W} par transistor.
+À pleine puissance elle retombe à
+$2\times35\times35/(\pi\times4) - 35^2/(2\times4) = \SI{41.9}{W}$.
+Le radiateur doit donc évacuer \SI{62}{W} et non \SI{42}{W}~: le
+dimensionner sur la pleine puissance conduirait à une sous-évaluation de
+\SI{48}{\percent}.
+\end{pratique}
+
+\vspace{2mm}
+\textbf{Exercice 22.4 ---} Un multiplicateur de $V_{BE}$ utilise
+$R_1 = \SI{4.7}{k\ohm}$ et $R_2 = \SI{2.2}{k\ohm}$, avec
+$V_{BE} = \SI{0.65}{V}$.
+\begin{enumerate}[nosep]
+\item Quelle tension de polarisation délivre-t-il~?
+\item Est-ce suffisant pour deux jonctions en série~?
+\item Que se passe-t-il si les transistors de sortie s'échauffent de
+\SI{40}{\degreeCelsius} sans que le multiplicateur suive~?
+\end{enumerate}
+
+\begin{pratique}
+\textbf{Solution :}
+$V_{\text{polar}} = 0{,}65\,(1 + 4700/2200) = \SI{2.04}{V}$, ce qui dépasse
+les $2V_{BE} = \SI{1.3}{V}$ des deux jonctions~: l'excédent de \SI{0.74}{V}
+se répartit dans les résistances d'émetteur et fixe le courant de repos.
+
+Si les transistors de sortie s'échauffent seuls, leurs $V_{BE}$ chutent de
+$40 \times 2 = \SI{80}{mV}$ chacun, soit \SI{160}{mV} pour les deux, tandis
+que la polarisation reste à \SI{2.04}{V}. La tension excédentaire passe de
+\SI{0.74}{V} à \SI{0.90}{V}~: le courant de repos augmente d'environ
+\SI{22}{\percent}, et l'échauffement avec lui. C'est précisément pourquoi le
+multiplicateur se monte sur le radiateur.
+\end{pratique}
+
+\subsection*{Niveau ingénieur}
+
+\textbf{Exercice 22.5 ---} Un amplificateur classe D de \SI{100}{W} sur
+\SI{4}{\ohm} utilise des MOSFET de \SI{35}{m\ohm}. La fréquence de découpage
+est \SI{400}{kHz}, la charge de grille \SI{20}{nC} sous \SI{12}{V}, le temps
+mort \SI{40}{ns}.
+\begin{enumerate}[nosep]
+\item Calculez le courant efficace dans la charge et les pertes par conduction.
+\item Estimez les pertes de commande de grille pour les deux transistors.
+\item Quelle fraction de la période le temps mort représente-t-il~?
+\item Commentez le compromis sur la fréquence de découpage.
+\end{enumerate}
+
+\begin{pratique}
+\textbf{Solution :}
+$I_{\text{eff}} = \sqrt{100/4} = \SI{5}{A}$. En pont complet, le courant
+traverse à chaque instant deux transistors en série~: les pertes par conduction
+valent $2 \times 0{,}035 \times 5^2 = \SI{1.75}{W}$.
+
+Commande de grille~: $P = Q_g V_g f = 20\times10^{-9} \times 12 \times
+4\times10^5 = \SI{0.096}{W}$ par transistor, soit \SI{0.38}{W} pour les
+quatre du pont.
+
+Le temps mort représente $40\times10^{-9} \times 4\times10^5 =
+\SI{1.6}{\percent}$ de la période, et il intervient deux fois par période.
+
+Le compromis~: monter en fréquence allège le filtre de sortie et éloigne le
+résidu de découpage de la bande audio, mais augmente proportionnellement les
+pertes de commutation et de grille, et durcit la contrainte CEM. Les
+\SI{400}{kHz} sont un point d'équilibre courant en audio.
+\end{pratique}
+
+\vspace{2mm}
+\textbf{Exercice 22.6 ---} Un étage de sortie \SI{\pm 40}{V} attaque une
+charge dont l'impédance vaut \SI{8}{\ohm} mais avec un déphasage de
+\SI{60}{\degree} à la fréquence considérée.
+\begin{enumerate}[nosep]
+\item Sur charge résistive, quel courant crête pour une sortie de
+\SI{30}{V} crête~?
+\item Quelle tension le transistor supporte-t-il alors au moment du courant
+crête~?
+\item Avec le déphasage, que devient la tension au moment du courant crête~?
+\item Que faut-il en conclure sur la lecture de la SOA~?
+\end{enumerate}
+
+\begin{pratique}
+\textbf{Solution :}
+$\hat{I} = 30/8 = \SI{3.75}{A}$. Sur charge résistive, le courant est maximal
+quand la tension de sortie l'est aussi~: le transistor ne supporte alors que
+$40 - 30 = \SI{10}{V}$, et dissipe $\SI{37.5}{W}$ à cet instant.
+
+Avec \SI{60}{\degree} de déphasage, le courant crête survient lorsque la
+tension de sortie ne vaut plus que $30\cos(\SI{60}{\degree}) = \SI{15}{V}$~:
+le transistor supporte $40 - 15 = \SI{25}{V}$ sous \SI{3.75}{A}, soit
+\SI{93.8}{W} instantanés --- deux fois et demie plus.
+
+Conclusion~: une SOA vérifiée sur charge résistive ne prouve rien. C'est sur
+la charge réelle, et à la fréquence où son déphasage est maximal, qu'il faut
+placer le point de fonctionnement.
+\end{pratique}
+
+\subsection*{Questions de compréhension}
+
+\textbf{Q1.} Pourquoi un amplificateur classe B chauffe-t-il moins à pleine
+puissance qu'à mi-puissance~?
+
+\textit{Réponse : parce que la dissipation est le produit du courant par la
+tension restant aux bornes du transistor. À pleine puissance, la sortie
+s'approche des rails d'alimentation : le courant est maximal, mais la tension
+résiduelle est faible. À faible puissance, la tension résiduelle est grande
+mais le courant est faible. Le produit passe donc par un maximum entre les
+deux, aux deux tiers environ de l'amplitude maximale.}
+
+\textbf{Q2.} La contre-réaction supprime-t-elle la distorsion de croisement~?
+
+\textit{Réponse : elle la réduit fortement mais ne la supprime pas, et elle en
+change la nature. La discontinuité au passage par zéro est corrigée avec le
+retard d'une boucle de bande passante finie ; ce qui subsiste se répartit en
+harmoniques de rang élevé, que l'oreille tolère beaucoup moins bien que les
+rangs bas. Un taux de distorsion global plus faible peut ainsi correspondre à
+un résultat subjectivement moins bon : le remède véritable est la
+polarisation, pas la boucle.}
+
+\textbf{Q3.} Pourquoi le MOSFET est-il plus sûr que le bipolaire en étage de
+puissance~?
+
+\textit{Réponse : parce qu'il ne connaît pas le second claquage. Dans un
+bipolaire, une zone qui conduit un peu plus chauffe, voit son $V_{BE}$ baisser
+et conduit davantage encore : la concentration de courant est une boucle
+positive, et la destruction est locale et rapide. Dans un MOSFET, la
+résistance à l'état passant augmente avec la température : une zone plus
+chaude conduit moins, et le courant se répartit de lui-même. La contrepartie
+est une capacité de grille à commander et une transconductance plus faible à
+faible courant.}
+
+\textbf{Q4.} Pourquoi une charge réactive est-elle plus dangereuse qu'une
+charge résistive de même module~?
+
+\textit{Réponse : parce qu'elle décale le courant par rapport à la tension. Sur
+charge résistive, le courant maximal coïncide avec la tension de sortie
+maximale, donc avec la tension minimale aux bornes du transistor : les deux
+facteurs de la dissipation ne sont jamais grands ensemble. Avec un déphasage,
+ils peuvent l'être, et le point de fonctionnement migre vers le coin le plus
+contraint de l'aire de sécurité. Le module de l'impédance ne dit donc rien à
+lui seul : c'est l'argument qui compte.}
+
+% ----------------------------------------------------------------------------
+% RÉSUMÉ DU CHAPITRE 22
+% ----------------------------------------------------------------------------
+\section*{Résumé du chapitre}
+\addcontentsline{toc}{section}{Résumé du chapitre}
+
+\begin{bases}[title={\color{white} Résumé --- Les Bases}]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{P{4cm}P{9cm}}
+\toprule
+Changement de nature & Concevoir en puissance, c'est concevoir un chemin pour la chaleur \\
+Rendements & A : \SI{25}{\percent} ; B : \SI{78.5}{\percent} ; AB : \SI{70}{\percent} ; D : \SI{90}{\percent} à \SI{95}{\percent} \\
+Bilan & $P_{\text{alim}} = P_{\text{charge}} + P_{\text{dissipée}}$ \\
+Classe A & Dissipe à plein régime même sans signal \\
+Pire cas & Dissipation maximale à $\hat{V} = 2V_{CC}/\pi$, pas à pleine puissance \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{bases}
+
+\begin{approfondissement}[title={\color{white} Résumé --- Approfondissement}]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{P{4cm}P{9cm}}
+\toprule
+Croisement & Bande morte de $2V_{BE}$ ; d'autant plus grave que le signal est faible \\
+Remède & Classe AB par multiplicateur de $V_{BE}$ : $V_{BE}(1+R_1/R_2)$ \\
+Dérive & $V_{BE}$ chute de \SI{2}{mV\per\degreeCelsius} : suivi thermique et $R_E$ \\
+Radiateur & $R_{\theta SA} \leq (T_{J,\max}-T_A)/P - R_{\theta JC} - R_{\theta CS}$ \\
+Aire de sécurité & Quatre frontières, dont le second claquage propre au bipolaire \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{approfondissement}
+
+\begin{ingenieur}[title={\color{white} Résumé --- Niveau Ingénieur}]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{P{4cm}P{9cm}}
+\toprule
+Classe D & Commutation pure ; \SI{94}{\percent} atteignables, radiateur souvent inutile \\
+Ses limites & Temps mort, filtre dépendant de la charge, rayonnement \\
+Charge réelle & Impédance variant d'un facteur trois ; le déphasage aggrave la SOA \\
+Distorsion & Le THD ignore le rang des harmoniques et la dépendance au niveau \\
+Alimentation & Affaissement sur les crêtes, retour de puissance séparé du signal \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{ingenieur}
+
+\vspace{0.4cm}
+
+\begin{retenir}
+\textbf{Ce qu'il faut emporter de ce chapitre :} un amplificateur de puissance
+se dimensionne sur la chaleur avant de se dessiner sur le papier. Trois
+résultats y suffisent presque --- la dissipation est maximale aux deux tiers
+de l'amplitude et non à pleine puissance, la chaîne des résistances thermiques
+se calcule à l'envers depuis la jonction, et une charge réelle n'est jamais la
+résistance des calculs. Le reste est du soin~: polariser assez pour supprimer
+la bande morte, suivre la dérive thermique, et ne jamais lire une aire de
+sécurité sur une charge qui n'est pas celle de l'application.
+
+Cette partie se referme ici. Nous avons parcouru l'ensemble des fonctions
+analogiques~: amplifier, filtrer, redresser, osciller, et maintenant porter la
+puissance. La partie qui s'ouvre change de monde~: la tension cesse d'être une
+grandeur pour devenir un symbole, et l'on découvrira que ce renoncement
+apparent à la finesse est précisément ce qui rend possibles les systèmes
+complexes. Le chapitre~\ref{ch:combinatoire} pose la première brique de cet
+édifice --- la logique combinatoire.
 \end{retenir}
 
 % ############################################################################
@@ -14811,10 +15531,10 @@ Deux niveaux, 0 et 1, et tout un monde. De la porte logique au processeur~: comb
 % ############################################################################
 
 % ============================================================================
-% CHAPITRE 22 : LOGIQUE COMBINATOIRE — VERSION FINALISÉE
+% CHAPITRE 23 : LOGIQUE COMBINATOIRE — VERSION FINALISÉE
 % ============================================================================
 % ============================================================================
-% CHAPITRE 22 : LOGIQUE COMBINATOIRE
+% CHAPITRE 23 : LOGIQUE COMBINATOIRE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -15495,10 +16215,10 @@ Les aléas rappellent la limite de ce monde sans mémoire~: ces circuits vivent 
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 23 : LOGIQUE SÉQUENTIELLE — VERSION FINALISÉE
+% CHAPITRE 24 : LOGIQUE SÉQUENTIELLE — VERSION FINALISÉE
 % ============================================================================
 % ============================================================================
-% CHAPITRE 23 : LOGIQUE SÉQUENTIELLE
+% CHAPITRE 24 : LOGIQUE SÉQUENTIELLE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -16212,10 +16932,10 @@ Nous n'avons fait qu'entrouvrir cette porte~: le chapitre~\ref{ch:timing} fait d
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 24 : CONTRAINTES TEMPORELLES ET SYNCHRONISATION
+% CHAPITRE 25 : CONTRAINTES TEMPORELLES ET SYNCHRONISATION
 % ============================================================================
 % ============================================================================
-% CHAPITRE 24 : CONTRAINTES TEMPORELLES ET SYNCHRONISATION
+% CHAPITRE 25 : CONTRAINTES TEMPORELLES ET SYNCHRONISATION
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -16749,10 +17469,10 @@ Avec des bascules disciplinées et des frontières d'horloge maîtrisées, on pe
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 25 : MACHINES À ÉTATS (FSM)
+% CHAPITRE 26 : MACHINES À ÉTATS (FSM)
 % ============================================================================
 % ============================================================================
-% CHAPITRE 25 : MACHINES À ÉTATS (FSM)
+% CHAPITRE 26 : MACHINES À ÉTATS (FSM)
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -17354,10 +18074,10 @@ Nos machines savent maintenant décider et séquencer. Mais un état de quelques
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 26 : MÉMOIRE — DU BIT PHYSIQUE AU SYSTÈME
+% CHAPITRE 27 : MÉMOIRE — DU BIT PHYSIQUE AU SYSTÈME
 % ============================================================================
 % ============================================================================
-% CHAPITRE 26 : MÉMOIRE — DU BIT PHYSIQUE AU SYSTÈME
+% CHAPITRE 27 : MÉMOIRE — DU BIT PHYSIQUE AU SYSTÈME
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -17884,7 +18604,7 @@ Nos systèmes savent désormais séquencer et stocker. Reste à \textbf{calculer
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 27 : CIRCUITS ARITHMÉTIQUES
+% CHAPITRE 28 : CIRCUITS ARITHMÉTIQUES
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -18454,7 +19174,7 @@ Nous disposons maintenant de toutes les briques~: logique, séquentiel, timing, 
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 28 : ARCHITECTURE NUMÉRIQUE
+% CHAPITRE 29 : ARCHITECTURE NUMÉRIQUE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -19048,7 +19768,7 @@ Notre système numérique est complet --- mais il vit en vase clos. Le monde, lu
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 29 : CONVERSION ANALOGIQUE-NUMÉRIQUE ET NUMÉRIQUE-ANALOGIQUE
+% CHAPITRE 30 : CONVERSION ANALOGIQUE-NUMÉRIQUE ET NUMÉRIQUE-ANALOGIQUE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -19526,7 +20246,7 @@ Le monde analogique entre et sort désormais du système numérique. Reste à fa
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 30 : PROTOCOLES DE COMMUNICATION
+% CHAPITRE 31 : PROTOCOLES DE COMMUNICATION
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -20043,7 +20763,7 @@ Ce dernier point n'est pas un détail~: c'est un aperçu. Bruit, propagation, é
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 31 : LIMITES PHYSIQUES DU NUMÉRIQUE
+% CHAPITRE 32 : LIMITES PHYSIQUES DU NUMÉRIQUE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -20456,7 +21176,7 @@ Aucun montage ne vaut mieux que son alimentation. Réguler proprement une tensio
 % ============================================================================
 
 % ============================================================================
-% CHAPITRE 32 : RÉGULATION LINÉAIRE ET LDO
+% CHAPITRE 33 : RÉGULATION LINÉAIRE ET LDO
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % Ouvre la PARTIE VII : ALIMENTATIONS
@@ -21019,7 +21739,7 @@ Pour casser cette limite, il faut refuser le compromis lui-même~: un interrupte
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 33 : ALIMENTATIONS À DÉCOUPAGE
+% CHAPITRE 34 : ALIMENTATIONS À DÉCOUPAGE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -21506,7 +22226,7 @@ Deux boîtes noires restent fermées~: la bobine elle-même --- saturation, pert
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 34 : COMPOSANTS MAGNÉTIQUES ET STABILITÉ DES ALIMENTATIONS
+% CHAPITRE 35 : COMPOSANTS MAGNÉTIQUES ET STABILITÉ DES ALIMENTATIONS
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % Clôt la PARTIE VII : ALIMENTATIONS
@@ -21947,7 +22667,7 @@ Mesurer, comparer, corriger~: la boucle fermée est l'une des idées les plus pu
 % ============================================================================
 
 % ============================================================================
-% CHAPITRE 35 : ASSERVISSEMENT ET TRANSFORMÉE DE LAPLACE
+% CHAPITRE 36 : ASSERVISSEMENT ET TRANSFORMÉE DE LAPLACE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % Ouvre la PARTIE VIII : ASSERVISSEMENT
@@ -22428,7 +23148,7 @@ Il reste à passer de l'analyse à la \textbf{conception}~: régler $C(s)$ pour 
 \end{retenir}
 
 % ============================================================================
-% CHAPITRE 36 : CORRECTEUR PID, LIEU DES RACINES ET MARGES DE STABILITÉ
+% CHAPITRE 37 : CORRECTEUR PID, LIEU DES RACINES ET MARGES DE STABILITÉ
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % Clôt la PARTIE VIII : ASSERVISSEMENT
@@ -22900,7 +23620,7 @@ C'est ici que le schéma rencontre la matière. Perturbations, couplages, blinda
 % ============================================================================
 
 % ============================================================================
-% CHAPITRE 37 : COMPATIBILITÉ ÉLECTROMAGNÉTIQUE — SOURCES, COUPLAGES, REMÈDES
+% CHAPITRE 38 : COMPATIBILITÉ ÉLECTROMAGNÉTIQUE — SOURCES, COUPLAGES, REMÈDES
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % Ouvre la PARTIE IX : CEM ET CONCEPTION DE CARTES
@@ -23650,7 +24370,7 @@ Ce chapitre a donné les lois et les remèdes~; mais la CEM se gagne ou se perd 
 
 
 % ============================================================================
-% CHAPITRE 38 : CONCEPTION DE PCB — LE CIRCUIT IMPRIMÉ EST UN COMPOSANT
+% CHAPITRE 39 : CONCEPTION DE PCB — LE CIRCUIT IMPRIMÉ EST UN COMPOSANT
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
@@ -24283,7 +25003,7 @@ Ce chapitre a traité le routage tant que la piste reste «~petite~»~: ses para
 
 
 % ============================================================================
-% CHAPITRE 39 : INTÉGRITÉ DU SIGNAL — QUAND LA PISTE DEVIENT UNE LIGNE
+% CHAPITRE 40 : INTÉGRITÉ DU SIGNAL — QUAND LA PISTE DEVIENT UNE LIGNE
 % VERSION PEER-REVIEW
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
