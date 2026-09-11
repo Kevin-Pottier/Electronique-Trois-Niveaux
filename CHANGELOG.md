@@ -1,5 +1,52 @@
 # Historique des versions
 
+## v1.4.1 — 11 septembre 2026
+Passe de correction, sans ajout de contenu.
+
+**Figures.** Revue des 180 figures, rendues en image et contrôlées une à une :
+49 défauts de lisibilité corrigés. L'essentiel relève du placement — repère
+traversé par une courbe ou un fil, libellés superposés, texte débordant de son
+cadre, flèche de renvoi partant à l'intérieur du texte qu'elle commente. Là où
+un repère ne pouvait pas tenir près de sa courbe sans la toucher, il a été
+remplacé par une légende dans une zone libre du tracé (15.5, 37.3, 40.2)
+plutôt que déplacé à un endroit ambigu.
+
+Trois corrections portent sur le fond et non sur la forme :
+- **14.5** — le diagramme de Nyquist ne passait pas par l'origine : le repère
+  « ω→∞ » ne désignait rien et contredisait la légende. La boucle intérieure
+  est rétablie, le tracé rejoint l'origine, et le point −1 reste visiblement
+  à l'extérieur.
+- **33.3** — les deux légendes du dark silicon étaient interverties : « éteint »
+  en blanc sur case claire, « actif » en noir sur case noire. Les deux étaient
+  illisibles.
+- **9.6** — le cycle d'hystérésis ne passait pas par les points $B_r$ et $H_c$
+  qu'il prétendait repérer ; la boucle est reconstruite pour y passer.
+
+**Index.** 388 → 359 entrées, sans perte d'information : ce sont des doublons
+et des redondances qui disparaissent.
+
+Le défaut principal était structurel. Pour plusieurs notions, une famille
+hiérarchique et des entrées à plat coexistaient : « convertisseur ▸ buck »
+voisinait avec « convertisseur abaisseur (buck) », « transistor ▸ bipolaire »
+avec « transistor bipolaire (BJT) ». Le lecteur trouvait la même chose à deux
+endroits, avec des renvois de pages différents. Les entrées à plat ont été
+rattachées à leur famille — convertisseurs, filtres, puissance, bruit,
+résonance, redressement, et les sous-entrées des composants.
+
+Quinze autres doublons venaient de la forme : le même concept sous deux
+tournures (« loi d'Ohm » et « Ohm, loi d' » ; idem Thévenin, Millman,
+Barkhausen), ou au singulier et au pluriel. Les termes portant un nom propre
+sont désormais indexés sous ce nom, là où le lecteur le cherche.
+
+Enfin, quinze entrées étaient des titres de section recopiés — « ce que l'on
+mesure, et avec quoi », « déclenchement, ou pourquoi la trace danse »,
+« fan-out et charge capacitive ». Elles ont été supprimées, ou remplacées par
+le terme que le lecteur chercherait réellement (« déclenchement (trigger) »,
+« pince ampèremétrique », « profondeur mémoire »).
+
+Pagination inchangée à 691 pages. Le texte, les 1623 références croisées et
+les 250 exercices sont identiques à la v1.4.
+
 ## v1.4 — 10 septembre 2026
 Ajout du chapitre 16, **La Simulation avec LTspice**, en fin de partie IV :
 ce qu'un simulateur calcule réellement et ce qu'il ne calcule pas, la netlist

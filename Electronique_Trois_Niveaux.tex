@@ -251,7 +251,7 @@ un ingénieur doit pouvoir s'y référer comme source de qualité.~»}
 
 \vfill
 {\small Distribué librement sous licence CC BY-NC-SA 4.0}\\[1mm]
-{\small Version 1.4 --- Septembre 2026}
+{\small Version 1.4.1 --- Septembre 2026}
 \end{titlepage}
 
 % === COLOPHON / LICENCE ===
@@ -266,7 +266,7 @@ Cet ouvrage est mis à disposition selon les termes de la licence \textbf{Creati
 Vous êtes libres de \textbf{partager} (copier, redistribuer) et d'\textbf{adapter} (modifier, transformer, améliorer) ce document, sous trois conditions : \textbf{créditer l'auteur}, \textbf{ne pas en faire un usage commercial}, et \textbf{rediffuser toute version modifiée sous cette même licence}. Texte intégral : \url{https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr}\\[4mm]
 Composé en \LaTeX{} (pdflatex)~; schémas et figures en CircuiTikZ et TikZ.\\
 Rédigé avec l'assistance de l'intelligence artificielle Claude (Anthropic), sous la direction et la vérification de l'auteur.\\
-Version 1.4 --- compilé le \datefr.\\
+Version 1.4.1 --- compilé le \datefr.\\
 Corrections, suggestions et contributions : \texttt{kevin.pottier@eseo.fr}
 \end{minipage}
 \end{center}
@@ -1611,7 +1611,7 @@ Le mot ``résistance'' désigne à la fois~:
 \item Le \textbf{composant électronique} (le ``dipôle résistif'') que l'on place dans un circuit.
 \end{itemize}
 
-\subsection{La loi d'Ohm}\index{loi d'Ohm}
+\subsection{La loi d'Ohm}\index{Ohm, loi d'}
 
 La relation fondamentale entre tension, courant et résistance est la \textbf{loi d'Ohm}~:
 
@@ -2051,7 +2051,7 @@ Ordres de grandeur de $f_r$~: CMS 0402 $\rightarrow \SI{1}{GHz}$+, traversante $
 Règle de conception~: choisir des résistances CMS aussi petites que possible pour les circuits HF/RF.
 \end{pratique}
 
-\subsection{Bruit dans les résistances}\index{bruit dans les résistances}
+\subsection{Bruit dans les résistances}\index{bruit!dans les résistances}
 
 Une résistance génère deux types de bruit~:
 
@@ -2289,7 +2289,7 @@ $U = RI$ ferme le triangle courant--tension--matière. La grandeur qui en décou
 % ============================================================================
 % CHAPITRE 4 : LA PUISSANCE ET L'ÉNERGIE ÉLECTRIQUE
 % ============================================================================
-\chapter{La Puissance et l'Énergie Électrique}\index{puissance électrique}\label{ch:puissance}
+\chapter{La Puissance et l'Énergie Électrique}\index{puissance}\label{ch:puissance}
 
 \begin{center}
 \textit{La puissance mesure le rythme auquel l'énergie est convertie.\\
@@ -2320,7 +2320,7 @@ La \textbf{puissance} mesure la \textit{vitesse} à laquelle l'énergie est tran
 \end{itemize}
 \end{analogie}
 
-\subsection{Puissance électrique}\index{puissance électrique}
+\subsection{Puissance électrique}\index{puissance}
 
 Dans un circuit électrique, la puissance échangée par un dipôle est le produit de la tension à ses bornes par le courant qui le traverse~:
 
@@ -3589,7 +3589,7 @@ L'idée est simple~: dans un circuit linéaire, chaque source ``pousse'' indépe
 \textbf{Sources dépendantes :} seules les sources \textit{indépendantes} sont éteintes une à une. Les sources \textit{dépendantes} (commandées par une grandeur du circuit) restent \textbf{toujours actives} --- elles font partie intégrante du circuit, pas des excitations. Ce point est détaillé dans la section Approfondissement.
 \end{attention}
 
-\subsection{Théorème de Thévenin}\index{théorème de Thévenin}
+\subsection{Théorème de Thévenin}\index{Thévenin, théorème de}
 
 C'est probablement le théorème \textbf{le plus utile} de toute l'électronique.
 
@@ -3718,7 +3718,7 @@ En RF, les antennes et les étages d'entrée sont souvent modélisés en Norton 
 Thévenin et Norton sont mathématiquement équivalents. Le choix est une question de \textbf{modélisation physique}~: quel est le mécanisme naturel de la source~?
 \end{intuition}
 
-\subsection{Théorème de Millman}\index{théorème de Millman}
+\subsection{Théorème de Millman}\index{Millman, théorème de}
 
 Millman\index{Millman, théorème de} est un cas particulier très pratique~: il donne directement la tension d'un n\oe ud auquel sont connectées plusieurs branches en parallèle, chacune contenant une source de tension en série avec une résistance.
 
@@ -4126,7 +4126,7 @@ Prérequis~: la loi d'Ohm (chapitre~\ref{ch:resistance}), la puissance
 (chapitre~\ref{ch:theoremes}).
 \end{bases}
 
-\subsection{Ce que l'on mesure, et avec quoi}\index{ce que l'on mesure, et avec quoi}
+\subsection{Ce que l'on mesure, et avec quoi}
 
 Les chapitres précédents ont introduit le multimètre\index{multimètre} au fil
 des grandeurs~: l'ampèremètre en série (chapitre~\ref{ch:courant}), le
@@ -4172,7 +4172,7 @@ choisit pour voir deux à cinq périodes du signal.
 balayage. C'est lui qui fige l'image.
 \end{itemize}
 
-\subsection{Le déclenchement, ou pourquoi la trace danse}\index{déclenchement, ou pourquoi la trace danse}
+\subsection{Le déclenchement, ou pourquoi la trace danse}\index{déclenchement (trigger)}
 
 C'est le réglage que l'on comprend en dernier et qui fait perdre le plus de
 temps. Sans déclenchement, chaque balayage commencerait à un instant
@@ -4212,7 +4212,7 @@ niveau tombe bien \emph{entre} le minimum et le maximum du signal. Un niveau
 placé au-dessus du sommet ne sera jamais franchi, et rien ne se déclenchera.
 \end{attention}
 
-\subsection{L'effet de charge, quantifié}\index{effet de charge, quantifié}
+\subsection{L'effet de charge, quantifié}\index{effet de charge}
 
 Le chapitre~\ref{ch:tension} l'annonçait~: un voltmètre prélève un peu de
 courant et fausse la mesure. Thévenin (chapitre~\ref{ch:theoremes}) permet
@@ -4260,7 +4260,7 @@ Avec un voltmètre de \SI{1}{M\ohm} --- ce qu'est l'entrée d'un oscilloscope
 doit présenter au moins vingt fois la résistance de Thévenin du point mesuré.
 \end{pratique}
 
-\subsection{Lire un chiffre~: résolution, justesse, précision}\index{résolution, justesse, précision}
+\subsection{Lire un chiffre~: résolution, justesse, précision}\index{résolution}
 
 Trois mots que l'usage confond et qu'un ingénieur distingue.
 
@@ -4369,7 +4369,7 @@ l'appareil, à chaque changement de voie. Un sommet bombé signale une
 surcompensation, un sommet creusé une sous-compensation~; on cherche le plat.
 \end{attention}
 
-\subsection{Bande passante et temps de montée}\index{bande passante et temps de montée}
+\subsection{Bande passante et temps de montée}\index{temps de montée}
 
 La bande passante d'un oscilloscope est la fréquence à laquelle son gain a
 chuté de \SI{3}{dB}. Comme sa réponse est, en première approximation, celle
@@ -4401,7 +4401,7 @@ par un oscilloscope de \SI{20}{MHz} ($t_r = \SI{17.5}{ns}$) donnerait
 bande passante au moins trois à cinq fois supérieure à celle du signal.
 \end{pratique}
 
-\subsection{Échantillonnage, repliement et profondeur mémoire}\index{échantillonnage, repliement et profondeur mémoire}
+\subsection{Échantillonnage, repliement et profondeur mémoire}\index{profondeur mémoire}
 
 Un oscilloscope numérique ne voit pas un signal continu~: il en prélève des
 échantillons. Deux nombres, souvent confondus, gouvernent ce qu'il en reste.
@@ -4522,7 +4522,7 @@ disparaît. En dessous de quelques ohms, la mesure deux fils n'a tout
 simplement pas de sens.
 \end{pratique}
 
-\subsection{Mesurer un courant sans ouvrir le circuit}\index{mesure de courant sans ouverture}
+\subsection{Mesurer un courant sans ouvrir le circuit}\index{pince ampèremétrique}
 
 Le shunt (chapitre~\ref{ch:courant}) impose d'interrompre le circuit et
 introduit une tension parasite. Trois familles s'en affranchissent.
@@ -4961,7 +4961,7 @@ La \textbf{capacité} $C$ mesure la quantité de charge stockée pour une tensio
 $\SI{1}{F} = \SI{1}{C/V}$. En pratique, le farad est énorme. On utilise~: $\si{\micro F}$, $\si{nF}$, $\si{pF}$.
 \end{formule}
 
-\subsection{Relation courant-tension}\index{relation courant-tension}
+\subsection{Relation courant-tension}\index{condensateur!relation courant-tension}
 
 Le courant dans un condensateur est proportionnel à la \textbf{vitesse de variation} de la tension~:
 
@@ -5124,7 +5124,7 @@ C'est \textbf{l'inverse} des résistances. Parallèle = on agrandit les plaques 
 Capacité du condensateur plan, les technologies réelles et leurs compromis, la démonstration du RC, et l'impédance en régime sinusoïdal. Prérequis~: exponentielles, équations différentielles du 1\textsuperscript{er} ordre.
 \end{approfondissement}
 
-\subsection{Capacité d'un condensateur plan}\index{capacité d'un condensateur plan}
+\subsection{Capacité d'un condensateur plan}\index{capacité!d'un condensateur plan}
 
 \begin{formule}
 \[
@@ -5487,7 +5487,7 @@ L'\textbf{inductance} $L$ mesure la capacité de la bobine à stocker de l'éner
 En pratique, on utilise des sous-multiples~: $\si{mH}$, $\si{\micro H}$, $\si{nH}$.
 \end{formule}
 
-\subsection{Relation tension-courant}\index{relation tension-courant}
+\subsection{Relation tension-courant}\index{bobine (inductance)!relation tension-courant}
 
 La tension aux bornes d'une bobine est proportionnelle à la \textbf{vitesse de variation} du courant~:
 
@@ -5667,7 +5667,7 @@ Les inductances s'associent \textbf{comme les résistances} (et à l'inverse des
 Inductance du solénoïde, technologies et noyaux, saturation magnétique, résolution du RL et impédance sinusoïdale. Prérequis~: exponentielles, équations différentielles du 1\textsuperscript{er} ordre.
 \end{approfondissement}
 
-\subsection{Inductance d'un solénoïde}\index{inductance d'un solénoïde}
+\subsection{Inductance d'un solénoïde}\index{inductance!d'un solénoïde}
 
 Un solénoïde (bobine longue) de $N$ spires, section $S$, longueur $\ell$, avec un noyau de perméabilité relative $\mu_r$~:
 
@@ -6022,7 +6022,7 @@ Condensateur et bobine sont posés~: deux composants réactifs, duaux, régis pa
 % ============================================================================
 % CHAPITRE 10 : CIRCUITS RC, RL, RLC
 % ============================================================================
-\chapter{Circuits RC, RL et RLC}\index{circuits RC, RL et RLC}\label{ch:rc-rl-rlc}
+\chapter{Circuits RC, RL et RLC}\label{ch:rc-rl-rlc}
 
 \begin{center}
 \textit{Les combinaisons de R, L et C sont la base de tous les filtres,\\
@@ -7021,7 +7021,7 @@ L'impédance de sortie d'un circuit n'est pas constante --- elle \textbf{varie a
 \begin{pratique}
 \textbf{Exemple critique --- alimentation avec câble inductif :}
 
-Une alimentation parfaite ($Z_{\text{out}} \approx 0$ en DC) est connectée à un circuit via un câble de \SI{10}{cm} ($L \approx \SI{50}{nH}$). Le condensateur de découplage\index{condensateur de découplage}\index{découplage} en bout de câble est un \SI{10}{\micro F} (ESR\index{ESR} $= \SI{5}{m\ohm}$).
+Une alimentation parfaite ($Z_{\text{out}} \approx 0$ en DC) est connectée à un circuit via un câble de \SI{10}{cm} ($L \approx \SI{50}{nH}$). Le condensateur de découplage\index{condensateur!de découplage}\index{découplage} en bout de câble est un \SI{10}{\micro F} (ESR\index{ESR} $= \SI{5}{m\ohm}$).
 
 \begin{itemize}[nosep]
 \item En DC~: $Z_{\text{out}} \approx 0$. Parfait.
@@ -7210,7 +7210,7 @@ L'impédance donne le rapport $\underline{U}/\underline{I}$~: module (gain) et a
 % ============================================================================
 % CHAPITRE 12 : PUISSANCE EN RÉGIME SINUSOÏDAL
 % ============================================================================
-\chapter{Puissance en Régime Sinusoïdal}\index{puissance en régime sinusoïdal}\label{ch:puissance-sinus}
+\chapter{Puissance en Régime Sinusoïdal}\index{puissance!en régime sinusoïdal}\label{ch:puissance-sinus}
 
 \begin{center}
 \textit{En alternatif, la puissance n'est plus simplement $P = UI$.\\
@@ -7247,7 +7247,7 @@ En AC, la tension et le courant sont des sinusoïdes. Si la charge contient des 
 Si $\varphi = 90^\circ$, vous poussez exactement quand la balançoire est immobile au sommet~: aucune énergie n'est transférée, malgré un effort réel.
 \end{analogie}
 
-\subsection{La puissance instantanée}\index{puissance instantanée}
+\subsection{La puissance instantanée}\index{puissance!instantanée}
 
 Soit $u(t) = \hat{U}\cos(\omega t)$ et $i(t) = \hat{I}\cos(\omega t - \varphi)$~:
 
@@ -7447,7 +7447,7 @@ La capacité nécessaire~:
 Puissance complexe, triangle des puissances, et bilan de puissance complet. Prérequis~: chapitre~\ref{ch:complexes} (complexes).
 \end{approfondissement}
 
-\subsection{Puissance complexe}\index{puissance complexe}
+\subsection{Puissance complexe}\index{puissance!complexe}
 
 En notation complexe, la puissance s'écrit très élégamment~:
 
@@ -7562,7 +7562,7 @@ Un étage PFC est un convertisseur boost\index{convertisseur!boost} commandé en
 Topologies courantes~: boost PFC (le plus répandu), bridgeless PFC (haut rendement), totem-pole PFC (GaN, dernière génération).
 \end{pratique}
 
-\subsection{Puissance en triphasé}\index{puissance en triphasé}
+\subsection{Puissance en triphasé}\index{puissance!en triphasé}
 
 En système triphasé \textbf{équilibré} (3 phases de même amplitude, déphasées de $120^\circ$)~:
 
@@ -7809,7 +7809,7 @@ En électronique~: la ``balançoire'' est le circuit LC. La ``poussée'' est la 
 C'est la \textbf{fréquence de résonance}. Elle ne dépend que de $L$ et $C$, pas de $R$.
 \end{formule}
 
-\subsection{Résonance série}\index{résonance série}
+\subsection{Résonance série}\index{résonance!série}
 
 Considérons un circuit RLC série alimenté par une source sinusoïdale $\underline{E}$ de fréquence variable~:
 
@@ -7845,7 +7845,7 @@ Si $Q = 50$ et $E = \SI{1}{V}$, alors $U_L = U_C = \SI{50}{V}$~! Ces deux tensio
 \textbf{C'est dangereux :} un condensateur ou un fil de bobine peut claquer sous cette surtension. Toujours vérifier la tenue en tension des composants dans un circuit résonant.
 \end{attention}
 
-\subsection{Résonance parallèle}\index{résonance parallèle}
+\subsection{Résonance parallèle}\index{résonance!parallèle}
 
 Dans un circuit RLC parallèle (les trois composants entre les mêmes deux n\oe uds)~:
 
@@ -8382,7 +8382,7 @@ Que fait un circuit à un signal~? La fonction de transfert répond en une expre
 % ============================================================================
 % CHAPITRE 14 : FONCTIONS DE TRANSFERT ET DIAGRAMMES DE BODE
 % ============================================================================
-\chapter{Fonctions de Transfert et Diagrammes de Bode}\index{fonctions de transfert}\label{ch:bode}
+\chapter{Fonctions de Transfert et Diagrammes de Bode}\index{fonction de transfert}\label{ch:bode}
 
 \begin{center}
 \textit{La fonction de transfert décrit complètement le comportement\\
@@ -9395,7 +9395,7 @@ La fonction de transfert et le diagramme de Bode sont désormais l'outil univers
 % ============================================================================
 % CHAPITRE 15 : FILTRES PASSIFS ET ACTIFS
 % ============================================================================
-\chapter{Filtres Passifs et Actifs}\index{filtres passifs et actifs}\label{ch:filtres}
+\chapter{Filtres Passifs et Actifs}\index{filtre!passif}\label{ch:filtres}
 
 \begin{center}
 \textit{Un filtre sélectionne les fréquences utiles et rejette le reste.\\
@@ -10168,7 +10168,7 @@ une saturation ni un écrêtage, quelle que soit l'amplitude déclarée. Pour ce
 il faut \texttt{.tran}.
 \end{attention}
 
-\subsection{Un premier passage~: le filtre RC}\index{premier passage : le filtre RC}
+\subsection{Un premier passage~: le filtre RC}
 
 Reprenons le passe-bas du chapitre~\ref{ch:bode}, avec
 $R = \SI{1}{k\ohm}$ et $C = \SI{100}{nF}$. La théorie annonce
@@ -11184,7 +11184,7 @@ Cette résistance dynamique est utilisée dans le modèle petit signal (circuits
 \textbf{Ne pas confondre $r_d$ et $R_S$.} La résistance dynamique $r_d = nV_T/I_D$ est une pente \emph{locale} de la caractéristique : elle n'existe qu'autour d'un point de repos et \emph{diminue} quand le courant augmente. La résistance série $R_S$ (modèle SPICE, $\sim\SI{0.5}{\ohm}$) est au contraire une vraie résistance ohmique \emph{fixe}, celle du silicium massif et des contacts. À fort courant, c'est $R_S$ qui domine la chute additionnelle ; à faible courant, c'est $r_d$. Le modèle « seuil + résistance » du niveau Bases mélange les deux en une seule résistance équivalente.
 \end{attention}
 
-\subsection{Redressement simple alternance}\index{redressement simple alternance}
+\subsection{Redressement simple alternance}\index{redressement!simple alternance}
 
 La première application historique de la diode~: convertir l'AC en DC.
 
@@ -11768,7 +11768,7 @@ La diode, c'est \emph{une} jonction PN~: elle conduit dans un sens, bloque dans 
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
 
-\chapter{Le Transistor Bipolaire (BJT)}\index{transistor bipolaire (BJT)}\label{ch:bjt}
+\chapter{Le Transistor Bipolaire (BJT)}\index{transistor!bipolaire}\label{ch:bjt}
 
 \begin{center}
 \textit{Le transistor bipolaire est le premier composant actif\\
@@ -12483,7 +12483,7 @@ avec $\tau_s$ le temps de vie des porteurs dans la base en saturation.
 \textbf{Conséquence :} le BJT a un temps de commutation ON $\to$ OFF plus long que le MOSFET (qui n'a pas de charges stockées dans le canal).
 \end{formule}
 
-\subsection{Bruit dans le BJT}\index{bruit dans le BJT}
+\subsection{Bruit dans le BJT}\index{bruit!dans le BJT}
 
 Le BJT est un composant \textbf{remarquablement peu bruyant}, ce qui explique sa prédominance en amplification RF basse bruit et en audio de précision.
 
@@ -12769,7 +12769,7 @@ $g_m$ à même $I$ & $I_C/V_T$ (élevé) & $\sqrt{2k_nI_D}$ (plus faible) \\
 Le mode interrupteur fermé du MOSFET est le régime \textbf{ohmique} (ou \textit{triode}).
 \end{attention}
 
-\subsection{Le MOSFET en commutation}\index{MOSFET en commutation}
+\subsection{Le MOSFET en commutation}\index{MOSFET!en commutation}
 
 \begin{figure}[!ht]
 \centering
@@ -13036,7 +13036,7 @@ $R_{DS,\text{on}}$ dépend de trois facteurs indépendants~:
 \end{center}
 \end{pratique}
 
-\subsection{La diode intrinsèque (body diode)}\index{diode intrinsèque (body diode)}
+\subsection{La diode intrinsèque (body diode)}\index{diode!intrinsèque (body diode)}
 
 Dans un MOSFET discret, le substrat P est relié en interne à la source. La jonction substrat--drain forme donc une \textbf{diode parasite antiparallèle}, dite \textit{body diode}, toujours présente~:
 
@@ -13141,7 +13141,7 @@ E_{\text{on}} \approx \frac{1}{2}V_{DS}\,I_D\,t_{\text{on}} \qquad E_{\text{off}
 Le terme capacitif ($C_{oss}$) devient significatif à haute fréquence et haute tension.
 \end{formule}
 
-\subsection{Bruit dans le MOSFET}\index{bruit dans le MOSFET}
+\subsection{Bruit dans le MOSFET}\index{bruit!dans le MOSFET}
 
 \begin{formule}
 \begin{itemize}[nosep]
@@ -13804,7 +13804,7 @@ Avec compensation~: $f_{p1} \ll f_{p2}$. Le $\SI{0}{dB}$ est atteint à $f_T = G
 \textbf{Bode typique (741) :} DC : \SI{100}{dB}. $f_{p1} \approx \SI{10}{Hz}$. $GBW \approx \SI{1}{MHz}$. $f_{p2} \approx \SI{3}{MHz}$. Phase à $f_T$ : $\approx -110^\circ$ $\Rightarrow$ marge $\approx 70^\circ$.
 \end{pratique}
 
-\subsection{Bruit de l'AOP}\index{bruit de l'AOP}
+\subsection{Bruit de l'AOP}\index{bruit!de l'AOP}
 
 \begin{formule}
 Bruit total ramené à l'entrée~:
@@ -14045,7 +14045,7 @@ Ce sont exactement ces limites qui décident si un filtre actif tient ses promes
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
 
-\chapter{Filtres actifs~: limites, conception et réalité}\index{filtres actifs}\label{ch:filtres-actifs}
+\chapter{Filtres actifs~: limites, conception et réalité}\index{filtre!actif}\label{ch:filtres-actifs}
 
 \begin{center}
 \textit{Le chapitre~\ref{ch:filtres} a posé les fondations : topologies Sallen-Key et MFB,\\
@@ -14932,7 +14932,7 @@ d'amplitude. Prérequis~: chapitres~\ref{ch:complexes} (impédances complexes),
 \ref{ch:bode} (fonctions de transfert) et~\ref{ch:aop} (AOP).
 \end{approfondissement}
 
-\subsection{La condition de Barkhausen}\index{condition de Barkhausen}
+\subsection{La condition de Barkhausen}\index{Barkhausen, condition de}
 
 L'égalité $A\beta = 1$ portant sur un complexe, elle se décompose en deux
 conditions.
@@ -15088,7 +15088,7 @@ signal fortement écrêté~: il oscille, mais il ne produit pas une sinusoïde.
 C'est l'erreur la plus fréquente sur les premiers montages.
 \end{attention}
 
-\subsection{Les oscillateurs à relaxation}\index{oscillateurs à relaxation}
+\subsection{Les oscillateurs à relaxation}\index{oscillateur!à relaxation}
 
 Ici, aucune sélectivité fréquentielle~: le circuit charge un condensateur
 jusqu'à un seuil haut, bascule, le décharge jusqu'à un seuil bas, rebascule. La
@@ -15135,7 +15135,7 @@ phase\index{bruit!de phase}. Prérequis~: chapitre~\ref{ch:resonance}
 (résonance, facteur de qualité).
 \end{ingenieur}
 
-\subsection{Les oscillateurs LC}\index{oscillateurs LC}
+\subsection{Les oscillateurs LC}\index{oscillateur!LC}
 
 Au-delà de quelques centaines de kilohertz, les réseaux RC deviennent
 inutilisables~: les valeurs de résistance et de capacité nécessaires descendent
@@ -15244,7 +15244,7 @@ Rubidium & $10^{-11}$ & Références de laboratoire \\
 \end{tabular}
 \end{center}
 
-\subsection{Bruit de phase}\index{bruit de phase}
+\subsection{Bruit de phase}\index{bruit!de phase}
 
 Un oscillateur réel ne produit pas une raie spectrale pure mais une raie
 élargie~: la phase du signal fluctue aléatoirement autour de sa valeur idéale.
@@ -15521,7 +15521,7 @@ puissance (chapitre~\ref{ch:puissance}) et les étages de sortie du transistor
 bipolaire (chapitre~\ref{ch:bjt}).
 \end{bases}
 
-\subsection{Pourquoi la puissance change tout}\index{puissance, ce qu'elle change}
+\subsection{Pourquoi la puissance change tout}\index{puissance}
 
 Le chapitre~\ref{ch:bjt} a présenté les étages de sortie en classes A, B et AB
 comme des façons de polariser un transistor. Vu du petit signal, le choix
@@ -15658,7 +15658,7 @@ radiateur sur la pleine puissance conduirait donc à le sous-évaluer de moitié
 et l'amplificateur mourrait non pas fort, mais à mi-volume.
 \end{pratique}
 
-\subsection{Ordres de grandeur}\index{ordres de grandeur en puissance}
+\subsection{Ordres de grandeur}
 
 \begin{center}
 \renewcommand{\arraystretch}{1.3}
@@ -15689,7 +15689,7 @@ pour l'emballement thermique, et le chapitre~\ref{ch:aop} pour la
 contre-réaction.
 \end{approfondissement}
 
-\subsection{La distorsion de croisement}\index{distorsion de croisement}
+\subsection{La distorsion de croisement}\index{distorsion!de croisement}
 
 En classe B pure, aucun des deux transistors ne conduit tant que la tension
 d'entrée reste inférieure à $V_{BE} \approx \SI{0.6}{V}$. Autour du passage
@@ -16686,7 +16686,7 @@ Un parasite de moins de $\SI{0.7}{V}$ ne peut pas provoquer d'erreur logique. C'
 \caption{Niveaux logiques du CMOS \SI{3.3}{V} : ce qu'une sortie \textit{garantit} ($V_{OH}$, $V_{OL}$) est plus strict que ce qu'une entrée \textit{exige} ($V_{IH}$, $V_{IL}$). L'écart est la marge de bruit : $NM_H = \SI{1.2}{V}$, $NM_L = \SI{0.7}{V}$ --- un parasite plus petit ne peut pas créer d'erreur logique.}
 \end{figure}
 
-\subsection{Fan-out et charge capacitive}\index{fan-out et charge capacitive}
+\subsection{Fan-out et charge capacitive}\index{fan-out}
 
 \begin{formule}
 Le \textbf{fan-out} est le nombre de portes qu'une sortie peut piloter~:
@@ -17145,7 +17145,7 @@ Un \textbf{registre} est un ensemble de $n$ bascules D partageant la même horlo
 \end{itemize}
 \end{formule}
 
-\subsection{Compteurs}\index{compteurs}
+\subsection{Compteurs}\index{compteur}
 
 \subsubsection*{Compteur asynchrone (ripple counter)}
 
@@ -17169,7 +17169,7 @@ T_k = Q_0 \cdot Q_1 \cdots Q_{k-1}
 \textbf{Avantage :} tous les bits changent simultanément au front d'horloge $\Rightarrow$ pas de glitch. Fréquence maximale limitée uniquement par le délai de la logique combinatoire du bit de poids fort.
 \end{formule}
 
-\subsection{Machines d'état (FSM)}\index{machines d'état (FSM)}
+\subsection{Machines d'état (FSM)}\index{machine à états (FSM)}
 
 Une \textbf{machine d'état finie} (\textit{Finite State Machine}, FSM) est le modèle universel de tout système séquentiel. Elle se compose de~:
 
@@ -18175,7 +18175,7 @@ Avec des bascules disciplinées et des frontières d'horloge maîtrisées, on pe
 % Fichier autonome à intégrer dans Electronique_Trois_Niveaux.tex
 % ============================================================================
 
-\chapter{Machines à états (FSM)}\index{machines à états (FSM)}\label{ch:fsm}
+\chapter{Machines à états (FSM)}\index{machine à états (FSM)}\label{ch:fsm}
 
 \begin{center}
 \textit{Un feu de signalisation, un protocole de communication,\\
@@ -18200,7 +18200,7 @@ Qu'est-ce qu'une FSM, les deux types (Moore/Mealy), et comment lire un diagramme
 \subsection{Qu'est-ce qu'une machine à états ?}
 
 \begin{formule}
-Une \textbf{machine à états\index{machine à états} finie} (\textit{Finite State Machine}, FSM) est un système séquentiel défini par~:
+Une \textbf{machine à états\index{machine à états (FSM)} finie} (\textit{Finite State Machine}, FSM) est un système séquentiel défini par~:
 \begin{itemize}[nosep]
 \item Un ensemble fini d'\textbf{états}~: $S_0, S_1, \ldots, S_{N-1}$.
 \item Un \textbf{état initial}~: l'état après le reset.
@@ -19145,7 +19145,7 @@ Le \textbf{sense amplifier} est le circuit critique qui fait le lien entre la ph
 \textbf{La mémoire, c'est de l'analogique déguisé :} le sense amplifier est un amplificateur différentiel (comme la paire d'entrée d'un AOP, chapitre~\ref{ch:aop}). La cellule DRAM est un condensateur qui fuit (comme un intégrateur RC, chapitre~\ref{ch:rc-rl-rlc}). La cellule Flash est un MOSFET dont le $V_{th}$ est modifiable (chapitre~\ref{ch:mosfet}). Toute la ``magie'' du numérique repose sur une couche de physique analogique invisible mais fondamentale.
 \end{intuition}
 
-\subsection{Effets thermiques et fiabilité}\index{effets thermiques et fiabilité}
+\subsection{Effets thermiques et fiabilité}\index{effets thermiques}
 
 \begin{formule}
 \begin{itemize}[nosep]
@@ -19584,7 +19584,7 @@ La division est intrinsèquement \textbf{séquentielle}~: on ne peut pas calcule
 \textbf{En pratique :} une division 64 bits prend typiquement 20 à 80 cycles d'horloge, soit $10$--$50\times$ plus qu'une multiplication. Les compilateurs cherchent activement à éviter les divisions (remplacement par multiplication par l'inverse précalculé, décalages, etc.).
 \end{formule}
 
-\subsection{Comparateurs}\index{comparateurs}
+\subsection{Comparateurs}\index{comparateur}
 
 \begin{formule}
 \textbf{Comparateur $A = B$ :}
@@ -22493,7 +22493,7 @@ La bobine (chapitre~\ref{ch:bobine}) s'oppose aux variations de courant~: $V_L =
 Cette seule équation donne le rapport de conversion de \textit{tous} les convertisseurs. C'est l'outil le plus puissant du chapitre.
 \end{formule}
 
-\subsection{Le convertisseur abaisseur (buck)}\index{convertisseur abaisseur (buck)}
+\subsection{Le convertisseur abaisseur (buck)}\index{convertisseur!buck}
 
 \begin{figure}[!ht]
 \centering
@@ -22588,7 +22588,7 @@ Le buck \textbf{abaisse} la tension, avec un rendement réel de 85--95\,\%.
 Convertisseur élévateur, abaisseur-élévateur, conduction continue/discontinue, et ondulation. Prérequis~: section précédente, chapitre~\ref{ch:bobine}.
 \end{approfondissement}
 
-\subsection{Le convertisseur élévateur (boost)}\index{convertisseur élévateur (boost)}
+\subsection{Le convertisseur élévateur (boost)}\index{convertisseur!boost}
 
 \begin{figure}[!ht]
 \centering
@@ -22632,7 +22632,7 @@ Le boost\index{convertisseur!boost} \textbf{élève} la tension~: $D = 0{,}5 \Ri
 \textbf{Le boost ne peut pas être court-circuité, ni démarrer à vide en douceur.} Même interrupteur ouvert, la diode relie directement $V_{\text{in}}$ à la sortie via la bobine : il n'y a pas d'isolation. Et $D \to 1$ ne donne pas $V_{\text{out}} \to \infty$ en pratique : les résistances parasites ($R_L$ de la bobine, $R_{DS,\text{on}}$) plafonnent le gain vers $D \approx 0{,}8$--$0{,}9$, au-delà duquel le rendement s'effondre et le courant bobine devient incontrôlable. \textbf{Un boost qui vise $\times 10$ est un mauvais choix d'architecture} --- on lui préfère un transformateur (flyback).
 \end{attention}
 
-\subsection{Le convertisseur abaisseur-élévateur (buck-boost)}\index{convertisseur abaisseur-élévateur (buck-boost)}
+\subsection{Le convertisseur abaisseur-élévateur (buck-boost)}\index{convertisseur!buck-boost}
 
 \begin{figure}[!ht]
 \centering
@@ -22744,7 +22744,7 @@ Le rendement réel (85--98\,\%) est limité par cinq familles de pertes~:
 L'optimum se situe typiquement entre \SI{100}{kHz} et quelques MHz, repoussé vers le haut par les transistors rapides (GaN, SiC) qui réduisent $t_r, t_f$ et $Q_g$.
 \end{attention}
 
-\subsection{L'ondulation de sortie}\index{ondulation de sortie}
+\subsection{L'ondulation de sortie}\index{ondulation!de sortie}
 
 \begin{formule}
 La sortie n'est jamais parfaitement continue~: elle porte une \textbf{ondulation} résiduelle à $f_{\text{sw}}$. Pour un buck~:
@@ -23397,7 +23397,7 @@ Depuis le chapitre~\ref{ch:aop} (la rétroaction de l'AOP) jusqu'au chapitre~\re
 Boucle ouverte contre boucle fermée\index{boucle fermée}, les éléments d'un asservissement, et pourquoi la contre-réaction est si puissante. Prérequis~: chapitres~\ref{ch:bode} (réponse en fréquence), \ref{ch:aop} (rétroaction de l'AOP).
 \end{bases}
 
-\subsection{Boucle ouverte, boucle fermée}\index{boucle ouverte, boucle fermée}
+\subsection{Boucle ouverte, boucle fermée}\index{boucle ouverte}
 
 \begin{formule}
 \textbf{Commande en boucle ouverte :} on applique une commande \textit{calculée} sans vérifier le résultat. Un radiateur réglé sur ``puissance 1500 W'' chauffe sans savoir la température de la pièce. Simple, mais aveugle : toute perturbation (fenêtre ouverte) ou erreur de modèle fausse le résultat, sans correction.
@@ -23863,7 +23863,7 @@ Il reste à passer de l'analyse à la \textbf{conception}~: régler $C(s)$ pour 
 % Clôt la PARTIE VIII : ASSERVISSEMENT
 % ============================================================================
 
-\chapter{Correcteur PID, lieu des racines et marges de stabilité}\index{correcteur PID}\label{ch:pid}
+\chapter{Correcteur PID, lieu des racines et marges de stabilité}\index{correcteur!PID}\label{ch:pid}
 
 \begin{center}
 \textit{Le chapitre précédent a posé le cadre : une boucle, un procédé, un correcteur.\\
@@ -25331,7 +25331,7 @@ Les corollaires pratiques~: ne jamais router de signal rapide au-dessus d'une co
 
 \subsection{Le découplage réel~: des nanohenrys avant des nanofarads}
 
-Le chapitre~\ref{ch:limites-numerique} a montré \emph{pourquoi} découpler (appels de courant impulsionnels des circuits numériques)~; voyons \emph{comment}. Un condensateur de découplage\index{condensateur de découplage} réel est un circuit R--L--C série (chapitre~\ref{ch:rc-rl-rlc})~: sa capacité $C$, sa résistance série ESR\index{ESR}, et surtout son inductance série totale --- boîtier (ESL, $\sim\SI{0.5}{}$ à $\SI{1}{nH}$ pour un CMS courant) \textbf{plus le montage}~: pistes d'accès et vias vers les plans. Au-dessus de la fréquence de résonance\index{résonance} série $f_0 = 1/(2\pi\sqrt{LC})$, le «~condensateur~» est une inductance.
+Le chapitre~\ref{ch:limites-numerique} a montré \emph{pourquoi} découpler (appels de courant impulsionnels des circuits numériques)~; voyons \emph{comment}. Un condensateur de découplage\index{condensateur!de découplage} réel est un circuit R--L--C série (chapitre~\ref{ch:rc-rl-rlc})~: sa capacité $C$, sa résistance série ESR\index{ESR}, et surtout son inductance série totale --- boîtier (ESL, $\sim\SI{0.5}{}$ à $\SI{1}{nH}$ pour un CMS courant) \textbf{plus le montage}~: pistes d'accès et vias vers les plans. Au-dessus de la fréquence de résonance\index{résonance} série $f_0 = 1/(2\pi\sqrt{LC})$, le «~condensateur~» est une inductance.
 
 \begin{formule}
 \[
@@ -26043,7 +26043,7 @@ Pour une \textbf{stripline} (piste enterrée entre deux plans), même logique av
 
 \textbf{Honnêteté d'ingénieur :} ces formules fermées valent $\pm 5\,\%$ dans leur domaine, et $\varepsilon_r$ du FR-4 varie avec la fréquence et le lot ($4{,}0$ à $4{,}6$). Un solveur de champ (intégré aux outils de routage) fait mieux ; le fabricant, qui connaît \emph{ses} matériaux, fait mieux encore --- c'est lui qui ajuste $w$ pour tenir le « $Z_0$ contrôlé » commandé, typiquement à $\pm 10\,\%$. La formule sert à \textbf{pré-dimensionner et à comprendre les sensibilités} : $Z_0$ monte si $h$ monte, descend si $w$ ou $\varepsilon_r$ montent.
 
-\subsection{Paires différentielles}\index{paires différentielles}
+\subsection{Paires différentielles}\index{paire différentielle}
 
 Les liaisons rapides modernes (USB\index{USB}, Ethernet, LVDS, PCIe --- chapitre~\ref{ch:protocoles}) sont \textbf{différentielles}~: l'information est portée par $v_+ - v_-$, sur deux pistes routées ensemble. Les bénéfices se lisent avec les outils du chapitre~\ref{ch:cem}~:
 
