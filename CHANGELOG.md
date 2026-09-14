@@ -1,5 +1,36 @@
 # Historique des versions
 
+## v1.4.2 — 14 septembre 2026
+Passe de justesse sur les figures, chapitres 17 à 19 (diode, BJT, MOSFET) :
+29 figures relues non plus pour leur lisibilité mais pour ce qu'elles
+affirment. Valeurs numériques, sens des flèches, polarités, cohérence entre
+ce que la figure montre et ce que le texte en dit.
+
+Vingt-six sont justes, y compris les plus exposées : le pont de Graetz
+(cathode commune en haut, anode commune en bas, les deux diagonales
+conduisent), le régulateur Zener (cathode vers le +, KCL au nœud A), le
+miroir de courant, l'inverseur CMOS, les deux modèles petit signal. Le réseau
+$I_C(V_{CE})$ de la figure 18.4 est cohérent au calcul près : $\beta = 100$ sur
+les quatre courbes, droite de charge à $V_{CC} = \SI{10}{V}$ et
+$R_C = \SI{1}{k\ohm}$, point de repos exactement à l'intersection.
+
+Trois corrections :
+- **17.2** — l'échelle de l'axe plaçait $V_F$ à \SI{1}{V} : la graduation
+  « 0,5 » tombait à mi-chemin de $V_F$. Le tableau de la page précédente donne
+  \SI{0.7}{V} pour le silicium. Un lecteur qui mesure sur le graphe lisait le
+  contraire de ce que dit le texte. La graduation est remise à sa place.
+- **17.5** — la flèche du courant était portée par le fil de retour et pointait
+  dans le sens inverse de ce retour ; la boucle, de surcroît, ne contenait
+  aucune source : le dessin était un court-circuit avec des étiquettes $+$ et
+  $-$ posées dessus. La pile est maintenant dessinée, et le courant porté là
+  où son sens est univoque : à travers la jonction, de P vers N.
+- **17.9** — la valeur moyenne était tracée à 0,69 fois la crête, au-dessus
+  du $2/\pi = 0{,}637$ d'un redressement double alternance *idéal* : une
+  valeur inatteignable, a fortiori avec la chute des diodes. Elle est ramenée
+  à sa valeur exacte, 0,59 fois la crête.
+
+Pagination inchangée à 691 pages.
+
 ## v1.4.1 — 11 septembre 2026
 Passe de correction, sans ajout de contenu.
 

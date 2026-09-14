@@ -251,7 +251,7 @@ un ingénieur doit pouvoir s'y référer comme source de qualité.~»}
 
 \vfill
 {\small Distribué librement sous licence CC BY-NC-SA 4.0}\\[1mm]
-{\small Version 1.4.1 --- Septembre 2026}
+{\small Version 1.4.2 --- Septembre 2026}
 \end{titlepage}
 
 % === COLOPHON / LICENCE ===
@@ -266,7 +266,7 @@ Cet ouvrage est mis à disposition selon les termes de la licence \textbf{Creati
 Vous êtes libres de \textbf{partager} (copier, redistribuer) et d'\textbf{adapter} (modifier, transformer, améliorer) ce document, sous trois conditions : \textbf{créditer l'auteur}, \textbf{ne pas en faire un usage commercial}, et \textbf{rediffuser toute version modifiée sous cette même licence}. Texte intégral : \url{https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr}\\[4mm]
 Composé en \LaTeX{} (pdflatex)~; schémas et figures en CircuiTikZ et TikZ.\\
 Rédigé avec l'assistance de l'intelligence artificielle Claude (Anthropic), sous la direction et la vérification de l'auteur.\\
-Version 1.4.1 --- compilé le \datefr.\\
+Version 1.4.2 --- compilé le \datefr.\\
 Corrections, suggestions et contributions : \texttt{kevin.pottier@eseo.fr}
 \end{minipage}
 \end{center}
@@ -10828,10 +10828,10 @@ La courbe courant-tension d'une diode est \textbf{fortement non-linéaire}~:
   \draw[-{Stealth[length=2.5mm]}] (0,-2.5) -- (0,4.5) node[above, font=\small]{$I_D$ (mA)};
   
   % Graduations axe V
-  \draw (1,0.06) -- (1,-0.06);
+  \draw (1.43,0.06) -- (1.43,-0.06);
   \draw (2,0.06) -- (2,-0.06);
-  \node[below, font=\footnotesize] at (1,-0.12) {$0{,}5$};
-  \node[below, font=\footnotesize] at (2,-0.12) {$V_F$};
+  \node[below left, font=\footnotesize, inner sep=1pt] at (1.48,-0.1) {$0{,}5$};
+  \node[below right, font=\footnotesize, inner sep=1pt] at (1.97,-0.1) {$V_F$};
   
   % Graduations axe I
   \node[left, font=\footnotesize] at (-0.1,2) {$10$};
@@ -10854,13 +10854,13 @@ La courbe courant-tension d'une diode est \textbf{fortement non-linéaire}~:
   \draw[very thick, blue!70!black] (-2.8,-0.04) -- (-3.3,-0.04);
   
   % Claquage inverse : courbe lisse
-  \draw[very thick, red!70!black, domain=-3.3:-3.9, samples=80, smooth]
-    plot(\x, {-0.04 - 3.5*(1 - exp(5*(\x+3.3)))});
+  \draw[very thick, red!70!black, domain=-3.3:-3.85, samples=80, smooth]
+    plot(\x, {-0.04 - 2.2*(1 - exp(5*(\x+3.3)))});
   
   % Annotation claquage
   \draw[dashed, gray!50] (-3.3,0) -- (-3.3,-2);
   \node[above, font=\footnotesize] at (-3.3,0.15) {$-V_{BR}$};
-  \node[red!70!black, font=\small\bfseries] at (-3.7,-2.3) {Claquage};
+  \node[red!70!black, font=\small\bfseries] at (-3.55,-2.32) {Claquage};
   
   % Annotation directe
   \draw[dashed, gray!40] (2,0) -- (2,4);
@@ -10872,7 +10872,7 @@ La courbe courant-tension d'une diode est \textbf{fortement non-linéaire}~:
   \node[gray!60!black, font=\footnotesize, right] at (3.2,1.2) {coude $\approx V_F$};
   
   % Courant de fuite
-  \draw[->, thin, gray!50] (-1.5,-0.04) -- (-1.5,-0.6);
+  \draw[->, thin, gray!50] (-1.5,-0.68) -- (-1.5,-0.12);
   \node[gray!50!black, font=\footnotesize] at (-1.5,-0.85) {$I_S$ (nA)};
 \end{tikzpicture}
 \caption{Caractéristique $I(V)$ d'une diode. En direct : courant négligeable jusqu'à $V_F$, puis croissance exponentielle (la tension reste « bloquée » près de $V_F$). En inverse : courant de fuite $I_S$ infime, jusqu'au claquage à $-V_{BR}$.}
@@ -11093,13 +11093,16 @@ Quand on met un matériau P en contact avec un matériau N, un phénomène spont
     \node[font=\tiny, above] at (3,2.5) {ZCE réduite};
     
     % Fils de connexion + batterie
-    \draw[thick] (0,1.1) -- (-0.8,1.1) -- (-0.8,-0.5) -- (6.8,-0.5) -- (6.8,1.1) -- (6,1.1);
+    \draw[thick] (0,1.1) -- (-0.8,1.1) -- (-0.8,-0.5) -- (2.75,-0.5);
+    \draw[very thick] (2.75,-0.88) -- (2.75,-0.12);
+    \draw[very thick] (3.05,-0.70) -- (3.05,-0.30);
+    \draw[thick] (3.05,-0.5) -- (6.8,-0.5) -- (6.8,1.1) -- (6,1.1);
     \node[font=\small] at (-0.8,1.5) {$+$};
     \node[font=\small] at (6.8,1.5) {$-$};
     
-    % Courant SUR le fil du bas
-    \draw[-{Stealth[length=2.5mm]}, very thick, green!60!black] (1.5,-0.5) -- (3.5,-0.5);
-    \node[green!60!black, font=\footnotesize, below] at (2.5,-0.55) {$I_D$};
+    % Courant à travers la jonction (P -> N)
+    \draw[-{Stealth[length=2.5mm]}, very thick, green!60!black] (1.0,0.75) -- (5.0,0.75);
+    \node[green!60!black, font=\footnotesize, above] at (3.0,0.8) {$I_D$};
     
     \node[font=\small\bfseries] at (3,-1.2) {Polarisation directe};
   \end{scope}
@@ -11117,12 +11120,15 @@ Quand on met un matériau P en contact avec un matériau N, un phénomène spont
     \node[font=\tiny, above] at (3,2.5) {ZCE élargie};
     
     % Fils de connexion + batterie inversée
-    \draw[thick] (0,1.1) -- (-0.8,1.1) -- (-0.8,-0.5) -- (6.8,-0.5) -- (6.8,1.1) -- (6,1.1);
+    \draw[thick] (0,1.1) -- (-0.8,1.1) -- (-0.8,-0.5) -- (2.75,-0.5);
+    \draw[very thick] (2.75,-0.70) -- (2.75,-0.30);
+    \draw[very thick] (3.05,-0.88) -- (3.05,-0.12);
+    \draw[thick] (3.05,-0.5) -- (6.8,-0.5) -- (6.8,1.1) -- (6,1.1);
     \node[font=\small] at (-0.8,1.5) {$-$};
     \node[font=\small] at (6.8,1.5) {$+$};
     
     % Pas de courant
-    \node[red!70!black, font=\footnotesize] at (3,-0.5) {$I \approx 0$};
+    \node[red!70!black, font=\footnotesize] at (3,0.75) {$I \approx 0$};
     
     \node[font=\small\bfseries] at (3,-1.2) {Polarisation inverse};
   \end{scope}
@@ -11292,8 +11298,8 @@ Les deux alternances sont redressées. La tension moyenne est~: $V_{\text{moy}} 
   \node[blue!70!black, font=\footnotesize] at (6.0,1.48) {$v_{\text{out}}$};
   \draw[blue!70!black, thin] (6.3,1.38) -- (6.47,1.08);
   % Valeur moyenne (pointillé horizontal)
-  \draw[dashed, orange!70!black] (0,0.72) -- (6.9,0.72);
-  \node[orange!70!black, font=\footnotesize, left] at (0,0.72) {$V_{\text{moy}}$};
+  \draw[dashed, orange!70!black] (0,0.62) -- (6.9,0.62);
+  \node[orange!70!black, font=\footnotesize, left] at (0,0.62) {$V_{\text{moy}}$};
 \end{tikzpicture}
 \caption{Formes d'onde du redressement double alternance. Les deux demi-périodes sont exploitées (fréquence des bosses $= 2f_{\text{AC}} = \SI{100}{Hz}$). L'ondulation est plus faible et plus facile à filtrer qu'en simple alternance.}
 \end{figure}
