@@ -251,7 +251,7 @@ un ingénieur doit pouvoir s'y référer comme source de qualité.~»}
 
 \vfill
 {\small Distribué librement sous licence CC BY-NC-SA 4.0}\\[1mm]
-{\small Version 1.4.2 --- Septembre 2026}
+{\small Version 1.4.3 --- Septembre 2026}
 \end{titlepage}
 
 % === COLOPHON / LICENCE ===
@@ -266,7 +266,7 @@ Cet ouvrage est mis à disposition selon les termes de la licence \textbf{Creati
 Vous êtes libres de \textbf{partager} (copier, redistribuer) et d'\textbf{adapter} (modifier, transformer, améliorer) ce document, sous trois conditions : \textbf{créditer l'auteur}, \textbf{ne pas en faire un usage commercial}, et \textbf{rediffuser toute version modifiée sous cette même licence}. Texte intégral : \url{https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr}\\[4mm]
 Composé en \LaTeX{} (pdflatex)~; schémas et figures en CircuiTikZ et TikZ.\\
 Rédigé avec l'assistance de l'intelligence artificielle Claude (Anthropic), sous la direction et la vérification de l'auteur.\\
-Version 1.4.2 --- compilé le \datefr.\\
+Version 1.4.3 --- compilé le \datefr.\\
 Corrections, suggestions et contributions : \texttt{kevin.pottier@eseo.fr}
 \end{minipage}
 \end{center}
@@ -13403,7 +13403,7 @@ Un AOP possède deux entrées et une sortie~:
   \draw (AOP.up) -- ++(0,0.4) node[above, font=\footnotesize]{$+V_{CC}$};
   \draw (AOP.down) -- ++(0,-0.4) node[below, font=\footnotesize]{$-V_{EE}$};
 \end{circuitikz}
-\caption{Symbole de l'AOP : deux entrées ($V^+$ non-inverseuse, $V^-$ inverseuse), une sortie, et les alimentations $\pm V_{CC}$ --- souvent omises sur les schémas, jamais sur la carte.}
+\caption{Symbole de l'AOP : deux entrées ($V^+$ non-inverseuse, $V^-$ inverseuse), une sortie, et les alimentations ($+V_{CC}$, $-V_{EE}$) --- souvent omises sur les schémas, jamais sur la carte.}
 \end{figure}
 
 \begin{formule}
@@ -13469,15 +13469,18 @@ Appliquons la méthode sur l'amplificateur non-inverseur, en trois niveaux de co
 \centering
 \begin{circuitikz}[scale=0.85, american]
   \draw (0,0) node[op amp](AOP){};
-  \draw (AOP.+) -- ++(-1,0) node[ocirc]{} node[left]{$V_{\text{in}}$};
-  \draw (AOP.out) -- ++(0.5,0) coordinate(T) -- ++(0.4,0) node[ocirc]{} node[right]{$V_{\text{out}}$};
-  \draw (T) -- ++(0,-1.8) coordinate(FB);
+  \draw (AOP.+) -- ++(-0.7,0) node[ocirc]{} node[left]{$V_{\text{in}}$};
+  \draw (AOP.out) -- ++(0.5,0) coordinate(T) -- ++(0.45,0) node[ocirc]{} node[right]{$V_{\text{out}}$};
   \filldraw (T) circle (1.5pt);
-  \coordinate (J) at ($(FB)+(-2.5,0)$);
-  \draw (J) to[R, l=$R_2$] (FB);
-  \draw (J) to[R, l_=$R_1$] ++(0,-1.5) node[ground]{};
-  \draw (J) -- (J |- AOP.-) -- (AOP.-);
+  % Noeud de contre-réaction, à gauche de l'AOP : le retour arrive sur l'entrée
+  % inverseuse sans croiser le fil de l'entrée non-inverseuse.
+  \coordinate (J) at ($(AOP.-)+(-1.8,0)$);
+  \draw (AOP.-) -- (J);
   \filldraw (J) circle (1.5pt);
+  \draw (J) to[R, l_=$R_1$] ($(J)+(0,-2.0)$) node[ground]{};
+  \draw (J) -- ++(0,1.5) coordinate(TOP);
+  \draw (TOP) to[R, l=$R_2$] (TOP -| T);
+  \draw (TOP -| T) -- (T);
 \end{circuitikz}
 \caption{L'amplificateur non-inverseur : la sortie renvoie la fraction $\beta = R_1/(R_1+R_2)$ de $V_{\text{out}}$ sur l'entrée inverseuse. Gain $= 1 + R_2/R_1$.}
 \end{figure}
@@ -14165,7 +14168,7 @@ Ces spécifications se résument graphiquement en un \textbf{gabarit} que la ré
   \draw[-{Stealth[length=2.5mm]}] (-0.2,0) -- (7.4,0) node[right, font=\small]{$f$};
   \node[left, font=\tiny] at (-0.08,0) {0};
   \draw[dashed, gray!70] (0,-0.15) -- (2.5,-0.15);
-  \node[left, font=\tiny] at (-0.08,-0.35) {$-A_{\max}$};
+  \node[left, font=\tiny] at (-0.08,-0.15) {$-A_{\max}$};
   \draw[dashed, gray!70] (4.5,-3) -- (7,-3);
   \node[left, font=\tiny] at (-0.08,-3) {$-A_{\min}$};
   \draw (2.5,0.06) -- (2.5,-0.06); \node[above, font=\footnotesize] at (2.5,0.06) {$f_c$};
@@ -23171,9 +23174,9 @@ f_{LC} = \frac{1}{2\pi\sqrt{LC}}
     \draw (\xx,0.06) -- (\xx,-0.06); \node[below, font=\tiny] at (\xx,-0.08) {\l};}
   \node[left, font=\scriptsize] at (-1.0,1.5) {$|T|$ (dB)};
   \foreach \y/\l in {1.5/30, 0/0, -1.5/{-30}}{\node[left, font=\tiny] at (-0.08,\y) {\l};}
-  \draw[very thick, blue!70!black] (0,1.5) -- (1.42,1.5) -- (3.08,-1.81) -- (4.5,-3.23);
-  \node[font=\scriptsize, blue!70!black, rotate=-55] at (1.95,0.85) {$-40$ dB/déc};
-  \node[font=\scriptsize, blue!70!black, rotate=-34] at (3.95,-2.25) {$-20$ dB/déc};
+  \draw[very thick, blue!70!black] (0,1.5) -- (1.42,1.5) -- (3.08,-0.71) -- (4.5,-1.66);
+  \node[font=\scriptsize, blue!70!black, rotate=-53] at (2.02,1.08) {$-40$ dB/déc};
+  \node[font=\scriptsize, blue!70!black, rotate=-34] at (3.95,-1.62) {$-20$ dB/déc};
   \filldraw[red!70!black] (2.55,0) circle (1.7pt);
   \node[font=\scriptsize, red!70!black, above right] at (2.58,0.04) {croisement $\sim$\SI{50}{kHz}};
   % Phase

@@ -1,5 +1,38 @@
 # Historique des versions
 
+## v1.4.3 — 14 septembre 2026
+Suite de la passe de justesse : chapitres 20--21 (AOP, filtres actifs),
+35--38 (découpage, magnétiques, asservissement, PID) et 39--41 (CEM, PCB,
+intégrité du signal). Quarante et une figures relues pour ce qu'elles
+affirment.
+
+Trente-sept sont justes, et plusieurs le sont au calcul près : le maximum de
+la cloche de rendement (36.2) tombe exactement là où les pertes fer égalent
+les pertes cuivre ; le lieu des racines (38.2) a son point de fusion en
+$-0{,}845$, sa traversée de l'axe en $\omega = \sqrt{8}$ et son
+$K_{\text{crit}} = 48$, et les trois pôles marqués pour $K = 10$ sont les
+racines exactes ; le diagramme des rebonds (41.2) enchaîne ses cinq tensions
+sans une erreur ; le Bode de l'AOP (20.5) vérifie $GBW = A_{OL}\,f_{p1}$ et
+$f_{-3\text{dB}} = GBW/A_{CL}$ ; la self de mode commun (39.4) a ses points de
+polarité du bon côté.
+
+Deux erreurs de fond :
+- **20.2** — le fil de contre-réaction traversait le corps de l'AOP et croisait
+  le fil de l'entrée non-inverseuse. À la lecture, le retour semblait aboutir
+  sur le « + » : un comparateur, pas un amplificateur. Le montage est
+  redessiné, $R_2$ passant par le dessus.
+- **36.4** — les deux asymptotes de gain étaient tracées une fois et demie trop
+  raides ($-60$ et $-30$ au lieu de $-40$ et $-\SI{20}{\decibel\per\dec}$), et
+  le point de croisement annoncé à \SI{50}{kHz} était posé \SI{15}{dB} au-dessus
+  de la courbe. Les pentes exactes ramènent le croisement précisément sur
+  \SI{50}{kHz} : l'intention était juste, seul le tracé était faux.
+
+Deux retouches mineures : la légende de la figure 20.1 annonçait
+« $\pm V_{CC}$ » quand le schéma porte $-V_{EE}$ ; l'étiquette $-A_{\max}$ de
+la figure 21.1 ne s'alignait pas sur la ligne qu'elle nomme.
+
+Pagination inchangée à 691 pages.
+
 ## v1.4.2 — 14 septembre 2026
 Passe de justesse sur les figures, chapitres 17 à 19 (diode, BJT, MOSFET) :
 29 figures relues non plus pour leur lisibilité mais pour ce qu'elles
