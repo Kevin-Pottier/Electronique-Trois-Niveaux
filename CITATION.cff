@@ -1,12 +1,47 @@
 cff-version: 1.2.0
 message: "Pour citer ce livre, merci d'utiliser les métadonnées ci-dessous."
-type: book
 title: "L'Électronique en trois niveaux — Du débutant absolu à l'ingénieur confirmé"
+abstract: >-
+  Manuel d'électronique en français couvrant le courant continu, le régime
+  sinusoïdal, les filtres, les semi-conducteurs, l'électronique numérique, les
+  alimentations, l'asservissement, la CEM et la conception de circuits imprimés.
+  Chaque chapitre est écrit à trois niveaux de lecture — Les Bases,
+  Approfondissement et Niveau Ingénieur — afin de servir aussi bien au débutant
+  absolu qu'à l'ingénieur qui cherche une référence.
+type: software
 authors:
   - family-names: "Pottier"
     given-names: "Kévin"
     affiliation: "ESEO, Angers"
-version: "1.0"
-date-released: "2026-07-21"
-license: "CC-BY-NC-SA-4.0"
+    email: "kevin.pottier@eseo.fr"
+version: "1.5.2"
+date-released: "2026-09-15"
+license: CC-BY-NC-SA-4.0
+repository-code: "https://github.com/Kevin-Pottier/Electronique-Trois-Niveaux"
 url: "https://github.com/Kevin-Pottier/Electronique-Trois-Niveaux"
+languages:
+  - fra
+keywords:
+  - électronique
+  - électronique analogique
+  - électronique numérique
+  - alimentations à découpage
+  - asservissement
+  - compatibilité électromagnétique
+  - circuit imprimé
+  - manuel
+  - enseignement
+preferred-citation:
+  type: book
+  title: "L'Électronique en trois niveaux — Du débutant absolu à l'ingénieur confirmé"
+  authors:
+    - family-names: "Pottier"
+      given-names: "Kévin"
+      affiliation: "ESEO, Angers"
+  year: 2026
+  month: 9
+  edition: "Version 1.5.2"
+  publisher:
+    name: "Kévin Pottier (auto-édition)"
+  url: "https://github.com/Kevin-Pottier/Electronique-Trois-Niveaux"
+  license: CC-BY-NC-SA-4.0

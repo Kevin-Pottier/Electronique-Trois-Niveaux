@@ -259,7 +259,7 @@ un ingénieur doit pouvoir s'y référer comme source de qualité.~»}
 
 \vfill
 {\small Distribué librement sous licence CC BY-NC-SA 4.0}\\[1mm]
-{\small Version 1.5.1 --- Septembre 2026}
+{\small Version 1.5.2 --- Septembre 2026}
 \end{titlepage}
 
 % === COLOPHON / LICENCE ===
@@ -274,7 +274,7 @@ Cet ouvrage est mis à disposition selon les termes de la licence \textbf{Creati
 Vous êtes libres de \textbf{partager} (copier, redistribuer) et d'\textbf{adapter} (modifier, transformer, améliorer) ce document, sous trois conditions : \textbf{créditer l'auteur}, \textbf{ne pas en faire un usage commercial}, et \textbf{rediffuser toute version modifiée sous cette même licence}. Texte intégral : \url{https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr}\\[4mm]
 Composé en \LaTeX{} (pdflatex)~; schémas et figures en CircuiTikZ et TikZ.\\
 Rédigé avec l'assistance de l'intelligence artificielle Claude (Anthropic), sous la direction et la vérification de l'auteur.\\
-Version 1.5.1 --- compilé le \datefr.\\
+Version 1.5.2 --- compilé le \datefr.\\
 Corrections, suggestions et contributions : \texttt{kevin.pottier@eseo.fr}
 \end{minipage}
 \end{center}
@@ -4295,6 +4295,18 @@ La mesure vaut donc $\SI{12.34}{V} \pm \SI{0.09}{V}$, soit
 significatives~: écrire «~\SI{12.34}{V}~» sans incertitude est une faute de
 rigueur, pas une précision.
 \end{pratique}
+
+\begin{retenir}
+\textbf{Ce qu'il faut retenir sur la mesure :}
+\begin{enumerate}[nosep]
+\item Chaque instrument répond à une question et à une seule~: le multimètre dit «~combien~?~», l'oscilloscope dit «~quand, et sous quelle forme~?~».
+\item Un oscilloscope se règle toujours dans le même ordre~: sensibilité verticale, base de temps, puis déclenchement.
+\item Une trace qui défile n'est presque jamais un circuit malade, c'est un déclenchement mal réglé~: le niveau doit tomber \emph{entre} le minimum et le maximum du signal.
+\item Tout instrument perturbe ce qu'il mesure. Pour un voltmètre, $\Delta V/V = R_{th}/(R_{th}+R_V)$~: il faut au moins vingt fois la résistance de Thévenin du point mesuré.
+\item Résolution, justesse et fidélité sont trois choses distinctes~: un instrument peut être parfaitement fidèle et complètement faux.
+\item Un chiffre sans incertitude n'est pas une mesure. Toutes les décimales affichées ne sont pas significatives.
+\end{enumerate}
+\end{retenir}
 
 % ----------------------------------------------------------------------------
 % SECTION 2 : APPROFONDISSEMENT
@@ -10255,6 +10267,18 @@ fonctionne parfois quand même --- et donne des courants mille fois trop
 grands, que rien ne signale.
 \end{attention}
 
+\begin{retenir}
+\textbf{Ce qu'il faut retenir sur la simulation :}
+\begin{enumerate}[nosep]
+\item Un simulateur ne fait que mettre le circuit en équations et les résoudre~: ce qui n'est pas dans le modèle n'est pas dans le résultat --- non pas approximé, \emph{absent}.
+\item La netlist est la forme véritable du circuit~: une ligne par composant, \texttt{<nom> <n\oe ud $+$> <n\oe ud $-$> <valeur>}. Les lignes commençant par un point sont des directives, pas des composants.
+\item Quatre analyses couvrent presque tout~: \texttt{.op} le point de repos, \texttt{.dc} un balayage continu, \texttt{.ac} le gain et la phase, \texttt{.tran} l'évolution temporelle.
+\item \texttt{.ac} est un calcul \emph{linéarisé}~: il ne verra jamais un écrêtage, quelle que soit l'amplitude déclarée. Pour cela, il faut \texttt{.tran}.
+\item Quatre pièges font l'essentiel des échecs~: pas de masse, n\oe ud flottant, modèle absent, et le préfixe \texttt{M} qui vaut \emph{milli} et non méga.
+\item Prédire avant de lancer. Une simulation que l'on n'a pas su anticiper ne valide rien.
+\end{enumerate}
+\end{retenir}
+
 % ----------------------------------------------------------------------------
 % SECTION 2 : APPROFONDISSEMENT
 % ----------------------------------------------------------------------------
@@ -14952,6 +14976,18 @@ $\ln(10^5)/\ln(1{,}05) \approx 236$ périodes. À \SI{1}{kHz}, cela représente
 \SI{0.24}{s}~: le démarrage est perceptible à l'oscilloscope.
 \end{pratique}
 
+\begin{retenir}
+\textbf{Ce qu'il faut retenir sur les oscillateurs :}
+\begin{enumerate}[nosep]
+\item Un oscillateur n'a pas d'entrée~: il fabrique un signal périodique à partir du bruit thermique qui traîne dans le circuit.
+\item Deux familles~: les \textbf{sinusoïdaux}, bâtis sur un circuit sélectif (RC, LC ou quartz), et ceux \textbf{à relaxation}, bâtis sur la charge et la décharge d'un condensateur entre deux seuils.
+\item La structure est universelle~: un amplificateur de gain $A$ et un réseau de retour sélectif $\beta$, montés en boucle fermée.
+\item La condition d'entretien s'écrit $A\beta = 1$. Elle porte sur un complexe, donc elle impose \emph{deux} conditions~: une sur le module (pousser avec l'énergie perdue) et une sur la phase (pousser au bon moment).
+\item Un signal carré n'est pas une sinusoïde déformée, c'est une somme de sinusoïdes~: les deux familles ne visent pas le même spectre.
+\item Le démarrage n'est pas instantané~: à gain de boucle $1{,}05$, il faut quelques centaines de périodes pour passer du microvolt au volt.
+\end{enumerate}
+\end{retenir}
+
 % ----------------------------------------------------------------------------
 % SECTION 2 : APPROFONDISSEMENT
 % ----------------------------------------------------------------------------
@@ -15707,6 +15743,18 @@ Commande de moteur & \SI{100}{W} à \SI{100}{kW} & Pont en commutation, refroidi
 \bottomrule
 \end{tabular}
 \end{center}
+
+\begin{retenir}
+\textbf{Ce qu'il faut retenir sur l'amplification de puissance :}
+\begin{enumerate}[nosep]
+\item Un amplificateur de puissance se conçoit à partir de la \textbf{chaleur}, pas du gain~: combien de watts dans la charge, combien dissipés, et par où ils sortent.
+\item Le bilan est sans échappatoire~: $P_{\text{alim}} = P_{\text{charge}} + P_{\text{dissipée}}$, donc $P_{\text{dissipée}} = P_{\text{charge}}(1/\eta - 1)$.
+\item Rendements maximaux~: \SI{25}{\percent} en classe A, \SI{78.5}{\percent} en B, environ \SI{70}{\percent} en AB, \SI{90}{\percent} à \SI{95}{\percent} en D --- et seulement à pleine puissance.
+\item La classe A dissipe autant au repos qu'en marche~: \SI{40}{W} en permanence pour \SI{10}{W} délivrés dans \SI{8}{\ohm}.
+\item Le pire cas thermique n'est \emph{pas} la pleine puissance. En classe B, la dissipation culmine pour $\hat{V} = 2V_{CC}/\pi \approx 0{,}64\,V_{CC}$, où $P_{\text{diss,max}} = 2V_{CC}^2/(\pi^2 R_L)$.
+\item Dimensionner le radiateur sur la pleine puissance revient à le sous-évaluer de moitié.
+\end{enumerate}
+\end{retenir}
 
 % ----------------------------------------------------------------------------
 % SECTION 2 : APPROFONDISSEMENT

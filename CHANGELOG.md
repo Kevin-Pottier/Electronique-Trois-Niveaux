@@ -1,5 +1,46 @@
 # Historique des versions
 
+## v1.5.2 — 15 septembre 2026
+Comblement d'une dette de structure, et métadonnées de citation remises à jour.
+
+**Les quatre chapitres insérés en v1.2--v1.4 n'avaient pas leur encadré
+« À retenir » de fin de section « Les Bases ».** Trente-sept chapitres sur
+quarante et un referment cette première section par un récapitulatif numéroté
+avant de passer à l'Approfondissement. Les chapitres **7 (Instrumentation et
+Mesures)**, **16 (La Simulation avec LTspice)**, **22 (Les Oscillateurs)** et
+**23 (L'Amplification de Puissance)** en étaient dépourvus : l'encadré avait
+été oublié au moment de leur insertion. Ils ont bien reçu, chacun, six points
+tirés exclusivement du contenu de leur propre section « Les Bases » :
+
+- ch. 7 — l'instrument répond à une question et une seule, l'ordre de réglage
+  de l'oscilloscope, la trace qui défile, l'erreur de charge
+  $\Delta V/V = R_{th}/(R_{th}+R_V)$, résolution / justesse / fidélité, et le
+  chiffre sans incertitude ;
+- ch. 16 — ce que résout un simulateur, la netlist comme forme véritable du
+  circuit, les quatre analyses, la linéarisation de `.ac`, les quatre pièges
+  (dont le préfixe `M` qui vaut *milli*), et « prédire avant de lancer » ;
+- ch. 22 — l'oscillateur sans entrée, les deux familles, la boucle $A$–$\beta$,
+  la double condition $A\beta = 1$ sur le module et la phase, le spectre du
+  carré, et la durée de démarrage ;
+- ch. 23 — concevoir à partir de la chaleur, le bilan
+  $P_{\text{alim}} = P_{\text{charge}} + P_{\text{dissipée}}$, les rendements
+  par classe, le coût du repos en classe A, le pire cas thermique à
+  $\hat{V} = 2V_{CC}/\pi$, et le radiateur sous-évalué de moitié.
+
+Les quarante et un chapitres ont désormais la même architecture interne.
+
+**`CITATION.cff` était resté en version 1.0 du 21 juillet**, cinq versions en
+arrière : toute citation produite depuis GitHub désignait la v1.0. Le fichier
+est remis à jour et complété (résumé, mots-clés, langue, dépôt, licence). Sa
+structure est également corrigée : le champ `type` de premier niveau
+n'accepte que `software` ou `dataset` en CFF 1.2.0, si bien que l'ancien
+`type: book` était invalide. Le livre est maintenant déclaré dans un bloc
+`preferred-citation` de type `book`, qui est la forme prévue pour cela.
+
+Aucune figure, aucun exercice, aucune formule n'a été modifié. Pagination
+691 → 693 pages (les quatre encadrés ajoutés) ; 180 figures et 1148 renvois
+numérotés inchangés.
+
 ## v1.5.1 — 15 septembre 2026
 Correction d'une figure. La figure 11.1 (« Le phaseur tournant », chapitre 11)
 contredisait le texte qui la précède immédiatement.
