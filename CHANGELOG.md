@@ -1,5 +1,53 @@
 # Historique des versions
 
+## v1.5.1 — 15 septembre 2026
+Correction d'une figure. La figure 11.1 (« Le phaseur tournant », chapitre 11)
+contredisait le texte qui la précède immédiatement.
+
+Le texte définit la grandeur sinusoïdale par sa **partie réelle** :
+$u(t) = \hat{U}\cos(\omega t + \varphi_u) = \mathrm{Re}[\underline{U}e^{j\omega t}]$,
+c'est-à-dire la projection du phaseur sur l'axe **horizontal**. La figure, elle,
+reportait la **hauteur** de la pointe du vecteur par un trait horizontal, et la
+courbe déroulée était tracée comme un `sin` : c'est la partie **imaginaire**. La
+légende annonçait pourtant « la projection sur l'axe réel ».
+
+Avec les valeurs du dessin ($\hat{U} = 1{,}4$ et $\varphi_u = 35°$), les deux
+lectures donnaient deux valeurs différentes au même instant :
+
+| | $u(0)$ |
+|---|---|
+| texte : $\hat{U}\cos 35°$ | **1,147** |
+| courbe tracée : $1{,}4\sin 35°$ | **0,803** |
+
+L'écart est exactement le déphasage de 90° entre sinus et cosinus. Un étudiant
+qui applique la figure repart avec $u(t) = \hat{U}\sin(\omega t + \varphi_u)$ et
+décale sa référence de phase d'un quart de période --- invisible tant qu'on ne
+fait que des rapports d'amplitudes, gênant dès qu'il y a une condition initiale
+ou une comparaison de phase entre deux signaux du circuit.
+
+Le défaut était structurel, pas typographique : la construction « cercle à
+gauche, sinusoïde déroulée à droite » reporte nécessairement une *hauteur*,
+puisque l'ordonnée de la courbe est verticale. Remplacer `sin` par `cos` aurait
+rendu le trait de liaison faux. La figure est donc redessinée :
+
+- le vecteur est projeté sur l'axe réel par un trait pointillé **vertical** ;
+- la projection est matérialisée par un segment épais sur l'axe réel, marqué
+  d'un trait de congruence et étiqueté $u(0)$ ;
+- cette **même longueur** est reportée en ordonnée à l'origine des temps, avec
+  le même trait de congruence et la même étiquette $u(0)$ ;
+- la courbe devient un cosinus, conforme au texte ;
+- les axes du plan complexe sont désormais nommés $\Re$ et $\Im$, l'angle
+  $\varphi_u$ est repéré, et une flèche indique le sens de rotation $\omega$.
+
+La légende précise que le vecteur est dessiné à l'instant $t = 0$, et énonce
+explicitement le point qui posait problème : c'est la longueur, et non la
+hauteur, que l'on reporte en ordonnée.
+
+Pagination inchangée à 691 pages. Le placement des flottants du chapitre 11
+bouge de quelques lignes (la légende est plus longue) : la figure passe de la
+page 177 à la page 178. Les 180 figures et les 1148 renvois numérotés du texte
+sont identiques à ceux de la v1.5.
+
 ## v1.5 — 15 septembre 2026
 Clôture du cycle de corrections ouvert en v1.4.1. Cette version ne contient
 aucun contenu neuf : elle consolide la revue des 180 figures (lisibilité puis

@@ -259,7 +259,7 @@ un ingénieur doit pouvoir s'y référer comme source de qualité.~»}
 
 \vfill
 {\small Distribué librement sous licence CC BY-NC-SA 4.0}\\[1mm]
-{\small Version 1.5 --- Septembre 2026}
+{\small Version 1.5.1 --- Septembre 2026}
 \end{titlepage}
 
 % === COLOPHON / LICENCE ===
@@ -274,7 +274,7 @@ Cet ouvrage est mis à disposition selon les termes de la licence \textbf{Creati
 Vous êtes libres de \textbf{partager} (copier, redistribuer) et d'\textbf{adapter} (modifier, transformer, améliorer) ce document, sous trois conditions : \textbf{créditer l'auteur}, \textbf{ne pas en faire un usage commercial}, et \textbf{rediffuser toute version modifiée sous cette même licence}. Texte intégral : \url{https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr}\\[4mm]
 Composé en \LaTeX{} (pdflatex)~; schémas et figures en CircuiTikZ et TikZ.\\
 Rédigé avec l'assistance de l'intelligence artificielle Claude (Anthropic), sous la direction et la vérification de l'auteur.\\
-Version 1.5 --- compilé le \datefr.\\
+Version 1.5.1 --- compilé le \datefr.\\
 Corrections, suggestions et contributions : \texttt{kevin.pottier@eseo.fr}
 \end{minipage}
 \end{center}
@@ -6717,21 +6717,37 @@ $\underline{U}$ contient \textit{toute} l'information sur le signal sinusoïdal~
 
 \begin{figure}[!ht]
 \centering
-\begin{tikzpicture}[scale=0.85]
-  % Plan complexe tournant
-  \draw[->] (-1.8,0) -- (1.8,0); \draw[->] (0,-1.8) -- (0,1.8);
+\begin{tikzpicture}[scale=1.0]
+  % --- Plan complexe : le phaseur a l'instant t = 0 ---
+  \draw[->] (-1.9,0) -- (1.9,0) node[below, font=\footnotesize] {$\Re$};
+  \draw[->] (0,-1.9) -- (0,1.9) node[above left, font=\footnotesize] {$\Im$};
   \draw[dashed, gray] (0,0) circle (1.4);
+  % sens de rotation
+  \draw[gray, thick, ->] (108:1.72) arc (108:138:1.72);
+  \node[gray, font=\footnotesize] at (123:1.97) {$\omega$};
+  % phaseur
   \draw[very thick, blue!70!black, -{Stealth[length=2.5mm]}] (0,0) -- (35:1.4);
-  \node[blue!70!black, font=\footnotesize] at (35:1.65) {$\underline{U}e^{j\omega t}$};
-  \draw[red!70!black, thick] (35:1.4) -- (2.0,{1.4*sin(35)});
-  \fill[red!70!black] (2.0,{1.4*sin(35)}) circle (1.5pt);
-  % Sinusoïde
-  \draw[->] (2.0,0) -- (7.0,0) node[right, font=\footnotesize] {$\omega t$};
-  \draw[very thick, red!70!black, domain=0:4.7, samples=100] plot({2.0+\x}, {1.4*sin(35+\x*57.3)});
-  \draw[dashed, gray] (2.0,{1.4*sin(35)}) -- (2.0,{1.4*sin(35)});
-  \node[red!70!black, font=\footnotesize, right] at (6.5,1.0) {$u(t)$};
+  \node[blue!70!black, font=\footnotesize, above right] at (35:1.40) {$\underline{U}e^{j\omega t}$};
+  \draw[gray] (0.62,0) arc (0:35:0.62);
+  \node[gray, font=\scriptsize] at (17:0.92) {$\varphi_u$};
+  % projection sur l'axe REEL : c'est elle qui donne u(t)
+  \draw[dashed, semithick, gray!90!black] (35:1.4) -- ({1.4*cos(35)},0);
+  \draw[very thick, red!70!black] (0,0) -- ({1.4*cos(35)},0);
+  \fill[red!70!black] ({1.4*cos(35)},0) circle (1.5pt);
+  \draw[red!70!black] ({0.7*cos(35)},0.13) -- ({0.7*cos(35)},-0.13);
+  \node[red!70!black, font=\footnotesize, below] at ({0.7*cos(35)},-0.17) {$u(0)$};
+  % --- La meme longueur, reportee en ordonnee : la sinusoide ---
+  \draw[->] (4.0,-1.75) -- (4.0,1.9);
+  \draw[->] (3.8,0) -- (9.2,0) node[right, font=\footnotesize] {$\omega t$};
+  \draw[very thick, red!70!black, domain=0:4.8, samples=140]
+        plot({4.0+\x}, {1.4*cos(35+\x*57.2958)});
+  \draw[very thick, red!70!black] (4.0,0) -- (4.0,{1.4*cos(35)});
+  \fill[red!70!black] (4.0,{1.4*cos(35)}) circle (1.5pt);
+  \draw[red!70!black] (3.87,{0.7*cos(35)}) -- (4.13,{0.7*cos(35)});
+  \node[red!70!black, font=\footnotesize, left] at (3.84,{0.7*cos(35)}) {$u(0)$};
+  \node[red!70!black, font=\footnotesize] at (7.5,1.15) {$u(t)$};
 \end{tikzpicture}
-\caption{Le phaseur tournant. $u(t) = \Re[\underline{U}e^{j\omega t}]$ est la projection sur l'axe réel d'un vecteur qui tourne à $\omega$. Amplitude $=$ longueur, phase $=$ angle initial : le régime sinusoïdal se réduit à de la géométrie.}
+\caption{Le phaseur tournant, dessiné ici à l'instant $t=0$ (angle $\varphi_u$). $u(t) = \Re[\underline{U}e^{j\omega t}]$ est la projection du vecteur sur l'axe \textit{réel} : c'est cette longueur, et non la hauteur, que l'on reporte en ordonnée pour tracer $u(t)$ --- d'où un cosinus. Amplitude $=$ longueur, phase $=$ angle initial : le régime sinusoïdal se réduit à de la géométrie.}
 \end{figure}
 
 \begin{attention}
