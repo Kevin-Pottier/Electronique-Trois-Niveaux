@@ -1,5 +1,26 @@
 # Historique des versions
 
+## v1.6.2 — 15 septembre 2026
+**La rédaction initiale date de juin 2026, pas d'avril.** Le tableau
+« Historique des versions » de l'ouvrage et ce changelog se contredisaient sur
+la date de la v0.1. L'historique du dépôt tranche :
+
+- « 15 juin 2026 » a été écrit le **21 juillet 2026**, dans le commit qui crée
+  ce changelog — cinq semaines après les faits ;
+- « avril 2026 » a été écrit le **28 août 2026**, dans un commit de
+  *renommage du projet* qui a composé le tableau d'un bloc — quatre mois
+  après, et de mémoire.
+
+Le premier commit du dépôt, daté du **6 juillet 2026**, porte déjà la mention
+« V0.5 ch. 9 — 554 pages » : à cette date la rédaction initiale était bouclée
+et la relecture technique en cours. Avec « avril », il faudrait deux mois et
+demi sans trace entre la fin du premier jet et le début de la relecture, alors
+que le rythme du projet se compte en jours. La ligne du tableau est donc
+alignée sur le changelog.
+
+Diff du PDF entier, v1.6.1 → v1.6.2 : **3 mots sur 219 862** — les deux
+chaînes de version et la cellule de date. Pagination inchangée à 703 pages.
+
 ## v1.6.1 — 15 septembre 2026
 **Le tableau « Historique des versions » de l'avant-propos est refait.** Il
 s'arrêtait à la v1.4 et ignorait donc les huit versions du cycle de
