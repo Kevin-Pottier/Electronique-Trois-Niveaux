@@ -251,7 +251,7 @@ un ingénieur doit pouvoir s'y référer comme source de qualité.~»}
 
 \vfill
 {\small Distribué librement sous licence CC BY-NC-SA 4.0}\\[1mm]
-{\small Version 1.4.3 --- Septembre 2026}
+{\small Version 1.4.4 --- Septembre 2026}
 \end{titlepage}
 
 % === COLOPHON / LICENCE ===
@@ -266,7 +266,7 @@ Cet ouvrage est mis à disposition selon les termes de la licence \textbf{Creati
 Vous êtes libres de \textbf{partager} (copier, redistribuer) et d'\textbf{adapter} (modifier, transformer, améliorer) ce document, sous trois conditions : \textbf{créditer l'auteur}, \textbf{ne pas en faire un usage commercial}, et \textbf{rediffuser toute version modifiée sous cette même licence}. Texte intégral : \url{https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr}\\[4mm]
 Composé en \LaTeX{} (pdflatex)~; schémas et figures en CircuiTikZ et TikZ.\\
 Rédigé avec l'assistance de l'intelligence artificielle Claude (Anthropic), sous la direction et la vérification de l'auteur.\\
-Version 1.4.3 --- compilé le \datefr.\\
+Version 1.4.4 --- compilé le \datefr.\\
 Corrections, suggestions et contributions : \texttt{kevin.pottier@eseo.fr}
 \end{minipage}
 \end{center}
@@ -4221,7 +4221,7 @@ maintenant de chiffrer l'erreur exactement.
 \begin{figure}[!ht]
 \centering
 \begin{circuitikz}[line width=1pt, scale=1.0, transform shape]
-\draw (0,0) to[V, l=$E_{th}$] (0,2.8);
+\draw (0,0) to[V, invert, l=$E_{th}$] (0,2.8);
 \draw (0,2.8) to[R, l=$R_{th}$] (3.4,2.8);
 \draw (3.4,2.8) -- (4.4,2.8) -- (4.4,2.5);
 \draw (4.4,2.5) to[R, l_=$R_V$] (4.4,0.3);
@@ -6136,14 +6136,14 @@ Sous-amorti & $\zeta < 1$ ($R < 2\sqrt{L/C}$) & Oscillations amorties \\
 \centering
 \begin{tikzpicture}[scale=0.75]
   \draw[->] (0,0) -- (10,0) node[right]{\small $t$};
-  \draw[->] (0,-1) -- (0,4) node[above]{\small $u_C(t)$};
+  \draw[->] (0,-1) -- (0,5) node[above]{\small $u_C(t)$};
   \draw[dashed, gray] (0,3) -- (9.5,3);
   \node[left, font=\small] at (0,3) {$E$};
-  \draw[very thick, green!60!black, domain=0:9, samples=100] plot(\x, {3*(1-1.2*exp(-0.5*\x)+0.2*exp(-2*\x))});
+  \draw[very thick, green!60!black, domain=0:9, samples=100] plot(\x, {3*(1-1.3333*exp(-0.5*\x)+0.3333*exp(-2*\x))});
   \node[green!60!black, font=\small, right] at (7,2.3) {sur-amorti ($\zeta>1$)};
   \draw[very thick, blue!70!black, domain=0:9, samples=100] plot(\x, {3*(1-(1+1.5*\x)*exp(-1.5*\x))});
   \node[blue!70!black, font=\small, right] at (5,1.4) {critique ($\zeta=1$)};
-  \draw[very thick, red!70!black, domain=0:9, samples=200] plot(\x, {3*(1-exp(-0.4*\x)*cos(120*\x))});
+  \draw[very thick, red!70!black, domain=0:9, samples=200] plot(\x, {3*(1-exp(-0.4*\x)*(cos(120*\x)+0.191*sin(120*\x)))});
   \node[red!70!black, font=\small, right] at (3.3,3.75) {sous-amorti ($\zeta<1$)};
 \end{tikzpicture}
 \caption{Réponse à un échelon selon l'amortissement. Le sous-amorti dépasse puis oscille ; le critique est la frontière du non-dépassement.}
@@ -7278,7 +7278,7 @@ La puissance oscille à $2f$ (à \SI{50}{Hz}, la puissance oscille à \SI{100}{H
   \draw[thick, green!45!black, densely dashed, domain=0:10, samples=160] plot(\x,{0.8*sin(72*\x+50)});
   % p(t) avec lobes négatifs
   \draw[very thick, red!70!black, domain=0:10, samples=240] plot(\x,{1.9*sin(72*\x+90)*sin(72*\x+50)});
-  \draw[dashed] (0,0.61) -- (10.3,0.61); \node[left, font=\footnotesize] at (-0.1,0.61) {$P$};
+  \draw[dashed] (0,0.728) -- (10.3,0.728); \node[left, font=\footnotesize] at (-0.1,0.728) {$P$};
   \node[right, red!70!black, font=\footnotesize] at (10.35,1.5) {$p(t)$};
   \node[right, blue!60!black, font=\footnotesize] at (10.35,0.95) {$u$};
   \node[right, green!45!black, font=\footnotesize] at (10.35,0.3) {$i$};
@@ -16972,8 +16972,8 @@ Deux portes NOR (ou NAND) croisées forment un \textbf{verrou\index{verrou (latc
 \begin{circuitikz}[scale=0.85, american]
   \draw (2,2) node[nor port](NOR1){};
   \draw (2,0) node[nor port](NOR2){};
-  \draw (NOR1.in 1) -- ++(-1,0) node[ocirc]{} node[left]{$S$ (Set)};
-  \draw (NOR2.in 2) -- ++(-1,0) node[ocirc]{} node[left]{$R$ (Reset)};
+  \draw (NOR1.in 1) -- ++(-1,0) node[ocirc]{} node[left]{$R$ (Reset)};
+  \draw (NOR2.in 2) -- ++(-1,0) node[ocirc]{} node[left]{$S$ (Set)};
   \draw (NOR1.out) -- ++(1.5,0) node[ocirc]{} node[right]{$Q$};
   \draw (NOR2.out) -- ++(1.5,0) node[ocirc]{} node[right]{$\overline{Q}$};
   % Rétroaction croisée (un croisement sans connexion, au centre)

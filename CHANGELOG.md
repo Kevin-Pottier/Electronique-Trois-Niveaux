@@ -1,5 +1,48 @@
 # Historique des versions
 
+## v1.4.4 — 15 septembre 2026
+Fin de la passe de justesse : les 110 figures restantes (chapitres 1 à 16 et
+22 à 34). Avec les 70 déjà relues en v1.4.2 et v1.4.3, les 180 figures du
+livre ont maintenant été vérifiées pour ce qu'elles affirment, et non
+seulement pour leur lisibilité.
+
+Cent six sont justes. Beaucoup le sont au calcul près : les $-3$~dB du
+passe-bande (13.4) tombent exactement aux fréquences qui donnent
+$\Delta f = f_0/Q$ ; le maximum de dissipation de la classe B (23.1) vaut
+$0{,}405$, soit très précisément la puissance utile au même point ; les
+échantillons du repliement (31.1) valent identiquement ceux de l'alias ; la
+dichotomie du SAR (31.3) converge bien sur 10100 ; l'arbitrage CAN (32.4)
+diverge au septième bit comme annoncé ; le détecteur de séquence « 101 »
+(27.1) gère correctement les recouvrements ; les marges de bruit CMOS (24.4)
+sont exactes.
+
+Quatre corrections :
+- **25.1** — dans le verrou SR à portes NOR croisées, $S$ et $R$ étaient
+  intervertis. Avec le câblage tracé, $Q = \mathrm{NOR}(S, \overline{Q})$ :
+  poser $S = 1$ donnait $Q = 0$. Le « Set » remettait à zéro et le « Reset »
+  mettait à un. Les sorties étaient bien nommées --- le texte les décrit
+  correctement --- donc ce sont les entrées qui ont été échangées.
+- **10.2** — deux des trois réponses à l'échelon quittaient l'origine avec une
+  pente non nulle. La tension aux bornes du condensateur d'un RLC part
+  toujours à pente nulle, puisque le courant de bobine est nul à l'instant
+  initial. Les deux expressions sont remplacées par les vraies solutions du
+  second ordre.
+- **12.1** — la valeur moyenne $P$ était tracée à $0{,}61$ quand la moyenne de
+  la courbe dessinée vaut $0{,}728$. La figure voisine 4.3, construite sur le
+  même principe, était juste.
+- **7.2** — le générateur de Thévenin avait son $+$ du côté de la masse et son
+  $-$ du côté de la sortie : il délivrait une tension négative.
+
+Un point reste ouvert, et relève d'un choix de convention plutôt que d'une
+erreur : la figure 11.1 trace le phaseur tournant projeté
+sur l'axe vertical, c'est-à-dire un sinus, alors que le texte qui la précède
+immédiatement pose $u(t) = \hat{U}\cos(\omega t + \varphi) =
+\Re[\underline{U}e^{j\omega t}]$. Rendre la figure cohérente avec la
+convention $\Re$ suppose de dérouler le temps vers le bas plutôt que vers la
+droite : c'est une décision de mise en page qui appartient à l'auteur.
+
+Pagination inchangée à 691 pages.
+
 ## v1.4.3 — 14 septembre 2026
 Suite de la passe de justesse : chapitres 20--21 (AOP, filtres actifs),
 35--38 (découpage, magnétiques, asservissement, PID) et 39--41 (CEM, PCB,
