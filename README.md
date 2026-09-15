@@ -42,6 +42,14 @@ pdflatex Electronique_Trois_Niveaux.tex
 pdflatex Electronique_Trois_Niveaux.tex
 ```
 
+> **Compiler dans un répertoire séparé ?** `makeindex` doit alors être lancé
+> *depuis* ce répertoire :
+> `(cd build && makeindex Electronique_Trois_Niveaux.idx)`.
+> La plupart des distributions TeX sont configurées avec `openout_any = p`,
+> qui interdit à `makeindex` d'écrire en dehors du répertoire courant. Il
+> échoue alors **silencieusement** : la compilation se termine sans erreur et
+> le PDF sort complet — mais sans index. Même remarque pour `latexmk -outdir`.
+
 ## Signaler une erreur, contribuer
 
 Une valeur douteuse, une coquille, un schéma perfectible ? Ouvrez une
