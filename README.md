@@ -32,7 +32,7 @@ toutes les valeurs numériques vérifiées par le calcul.
 
 ## Obtenir le livre
 
-- **PDF prêt à lire** : voir les [Releases](../../releases) (v1.6.2) ;
+- **PDF prêt à lire** : voir les [Releases](../../releases) (v1.6.3) ;
 - **Compiler soi-même** (TeX Live complet requis) :
 
 ```bash

@@ -1,5 +1,45 @@
 # Historique des versions
 
+## v1.6.3 — 15 septembre 2026
+**La figure 17.11 mesurait $t_{rr}$ autrement que les fiches techniques.**
+
+Le temps de recouvrement inverse d'une diode se lit sur toutes les fiches
+techniques de la même façon : on part de l'instant où le courant **passe par
+zéro** en descendant, et on s'arrête quand le courant inverse est retombé à
+25~% de son pic. La figure, elle, partait de $t_0$ — l'instant où le circuit
+commence à faire chuter le courant, alors que la diode conduit encore en
+direct — et s'arrêtait à un point non spécifié. Avec la géométrie du tracé,
+l'écart valait environ 15~% : un étudiant qui posait le livre à côté d'une
+fiche technique ne mesurait pas la même chose aux deux endroits.
+
+La figure est redessinée selon la convention normalisée :
+
+- l'origine de $t_{rr}$ est le passage par zéro, matérialisé par un point et
+  un repère vertical qui descend jusqu'à la cote ;
+- $t_{rr}$ se décompose en $t_a$, du passage par zéro au pic inverse, et
+  $t_b$, la queue de recouvrement, comme sur les fiches techniques. Le rapport
+  $S = t_b/t_a$ est le facteur de douceur de la diode, une grandeur que les
+  fabricants spécifient et que le livre peut maintenant nommer ;
+- la fin de $t_{rr}$ est le retour à \SI{25}{\percent} du pic, avec la cote
+  correspondante tracée ;
+- l'aire sous la partie négative du courant est hachurée et nommée $Q_{rr}$,
+  la charge recouvrée — ce qui rend visible que $E_{rr} = V_R Q_{rr}$.
+
+**Le pic de courant inverse prend sa notation normalisée $I_{RM}$.** Le livre
+l'appelait $I_{rr}$, qui ne figure sur aucune fiche technique. Les cinq
+occurrences du chapitre 17 sont converties, énoncé et corrigé de l'exercice
+compris, pour que le chapitre reste cohérent avec lui-même et avec les
+documents que le lecteur aura sous les yeux.
+
+La ligne « 1.6.1 à 1.6.3 » manquante est ajoutée au tableau « Historique des
+versions » de l'avant-propos, et la figure reçoit un `\label` plutôt que d'y
+voir son numéro écrit en dur.
+
+Pagination inchangée à 703 pages. Hors de la zone modifiée, le corps du livre
+est identique : 14 zones de différence sur 190 889 mots, toutes dans la
+figure, sa légende ou les renvois à $I_{RM}$. 180 figures, 111 tableaux et
+1147 renvois numérotés inchangés.
+
 ## v1.6.2 — 15 septembre 2026
 **La rédaction initiale date de juin 2026, pas d'avril.** Le tableau
 « Historique des versions » de l'ouvrage et ce changelog se contredisaient sur

@@ -260,7 +260,7 @@ un ingénieur doit pouvoir s'y référer comme source de qualité.~»}
 
 \vfill
 {\small Distribué librement sous licence CC BY-NC-SA 4.0}\\[1mm]
-{\small Version 1.6.2 --- Septembre 2026}
+{\small Version 1.6.3 --- Septembre 2026}
 \end{titlepage}
 
 % === COLOPHON / LICENCE ===
@@ -275,7 +275,7 @@ Cet ouvrage est mis à disposition selon les termes de la licence \textbf{Creati
 Vous êtes libres de \textbf{partager} (copier, redistribuer) et d'\textbf{adapter} (modifier, transformer, améliorer) ce document, sous trois conditions : \textbf{créditer l'auteur}, \textbf{ne pas en faire un usage commercial}, et \textbf{rediffuser toute version modifiée sous cette même licence}. Texte intégral : \url{https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr}\\[4mm]
 Composé en \LaTeX{} (pdflatex)~; schémas et figures en CircuiTikZ et TikZ.\\
 Rédigé avec l'assistance de l'intelligence artificielle Claude (Anthropic), sous la direction et la vérification de l'auteur.\\
-Version 1.6.2 --- compilé le \datefr.\\
+Version 1.6.3 --- compilé le \datefr.\\
 Corrections, suggestions et contributions : \texttt{kevin.pottier@eseo.fr}
 \end{minipage}
 \end{center}
@@ -377,6 +377,7 @@ journal détaillé se trouve dans le fichier \texttt{CHANGELOG.md}.
 1.5.1 & sept. 2026 & La figure~\ref{fig:phaseur} refaite~: la projection du phaseur tournant se fait sur l'axe réel, et non sur l'axe imaginaire comme le suggérait le tracé. \\
 1.5.2 & sept. 2026 & Ajout des encadrés \emph{À retenir} de fin de section «~Les Bases~» manquants aux chapitres~\ref{ch:instrumentation}, \ref{ch:simulation}, \ref{ch:oscillateurs} et~\ref{ch:ampli-puissance}~: les 41 chapitres ont désormais la même architecture interne. \\
 1.6 & sept. 2026 & 111 tableaux numérotés et légendés, et ajout de la \emph{Liste des tableaux} après la table des figures. \\
+1.6.1 à 1.6.3 & sept. 2026 & Le présent historique refait et redaté. Figure~\ref{fig:trr} redessinée selon la convention des fiches techniques~: $t_{rr}$ se compte à partir du passage par zéro du courant, et le pic de courant inverse prend sa notation normalisée $I_{RM}$. \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -11540,36 +11541,65 @@ Quand une diode passe de l'état passant à l'état bloqué, elle ne se bloque p
 \begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[scale=0.85]
-  \draw[-{Stealth[length=2mm]}] (0,-2.8) -- (0,2.5) node[above, font=\footnotesize]{$i_D$};
-  \draw[-{Stealth[length=2mm]}] (-0.3,0) -- (8.5,0) node[right, font=\footnotesize]{$t$};
-  % Courant direct avant t=0
+  % --- axes ---
+  \draw[-{Stealth[length=2mm]}] (0,-3.5) -- (0,2.4) node[above, font=\footnotesize]{$i_D$};
+  \draw[-{Stealth[length=2mm]}] (-0.3,0) -- (8.8,0) node[right, font=\footnotesize]{$t$};
+
+  % --- charge stockee Qrr : aire sous la partie negative ---
+  \fill[red!10] (3,0) -- (4,-1.8)
+    -- plot[domain=4:8.2, samples=90] ({\x},{-1.8*exp(-(\x-4)/1.154)}) -- (8.2,0) -- cycle;
+
+  % --- courant direct, puis rampe imposee par le circuit ---
   \draw[very thick, blue!70!black] (0,1.8) -- (2,1.8);
   \node[blue!70!black, left, font=\footnotesize] at (0,1.8) {$I_F$};
-  % Commutation : descente rapide au-delà de 0 (le circuit impose une rampe raide)
-  \draw[very thick, blue!70!black] (2,1.8) -- (3.2,-1.8);
-  \node[below, font=\footnotesize] at (2,0) {$t_0$};
-  \draw[dashed, gray] (2,0)--(2,1.8);
-  % Courant inverse peak : Irr
-  \draw[dashed, gray] (0,-1.8)--(3.2,-1.8);
-  \node[left, font=\footnotesize] at (0,-1.8) {$-I_{rr}$};
-  \filldraw[red!70!black] (3.2,-1.8) circle (2pt);
-  % Recouvrement : remontée exponentielle vers 0
-  \draw[very thick, red!70!black, domain=3.2:7.5, samples=80]
-    plot(\x, {-1.8*exp(-(\x-3.2)/0.8)});
-  % trr annotation
-  \draw[<->, thick, orange!70!black] (2,-2.3) -- (6.5,-2.3);
-  \node[orange!70!black, font=\footnotesize, below] at (4.25,-2.3) {$t_{rr}$};
-  \node[font=\footnotesize, align=center] at (4.95,-1.2) {charges\\ stockées};
-  \draw[thin, gray!60!black] (4.95,-0.98) -- (4.6,-0.42);
-  % Fin du recouvrement
-  \draw[dashed, gray] (6.5,-0.1)--(6.5,-2.3);
-  \node[below, font=\footnotesize] at (6.5,-0.05) {$t_0+t_{rr}$};
+  \draw[very thick, blue!70!black] (2,1.8) -- (4,-1.8);
+  \node[blue!70!black, font=\footnotesize, right] at (2.45,1.5)
+    {$\mathrm{d}i/\mathrm{d}t$ imposé par le circuit};
+
+  % --- t0 : debut de la commutation ---
+  \draw[dashed, gray] (2,0) -- (2,1.8);
+  \node[font=\footnotesize, above left] at (2.05,0.02) {$t_0$};
+
+  % --- passage par zero : origine de trr ---
+  \filldraw[orange!75!black] (3,0) circle (2.2pt);
+  \node[orange!70!black, font=\scriptsize, above right] at (3.02,0.04) {$i_D = 0$};
+  \draw[dashed, gray] (3,0) -- (3,-3.15);
+
+  % --- pic de courant inverse ---
+  \draw[dashed, gray] (0,-1.8) -- (4,-1.8);
+  \node[left, font=\footnotesize] at (0,-1.8) {$-I_{RM}$};
+  \filldraw[red!70!black] (4,-1.8) circle (2pt);
+  \draw[dashed, gray] (4,-1.8) -- (4,-2.45);
+
+  % --- queue de recouvrement ---
+  \draw[very thick, red!70!black, domain=4:8.2, samples=100]
+    plot(\x,{-1.8*exp(-(\x-4)/1.154)});
+
+  % --- seuil 25 % : fin de trr ---
+  \draw[dashed, gray] (0,-0.45) -- (5.6,-0.45);
+  \node[left, font=\scriptsize] at (0,-0.45) {$-0{,}25\,I_{RM}$};
+  \filldraw[red!70!black] (5.6,-0.45) circle (2pt);
+  \draw[dashed, gray] (5.6,-0.45) -- (5.6,-3.15);
+
+  % --- ta et tb ---
+  \draw[<->, thick, gray!25!black] (3,-2.6) -- (4,-2.6);
+  \node[font=\scriptsize, above] at (3.5,-2.62) {$t_a$};
+  \draw[<->, thick, gray!25!black] (4,-2.6) -- (5.6,-2.6);
+  \node[font=\scriptsize, above] at (4.8,-2.62) {$t_b$};
+
+  % --- trr ---
+  \draw[<->, very thick, orange!70!black] (3,-3.15) -- (5.6,-3.15);
+  \node[orange!70!black, font=\footnotesize, below] at (4.3,-3.13) {$t_{rr} = t_a + t_b$};
+
+  % --- charge stockee ---
+  \node[red!45!black, font=\footnotesize] at (4.15,-0.80) {$Q_{rr}$};
 \end{tikzpicture}
-\caption{Chronogramme du courant de diode au blocage. À $t_0$, le circuit impose un dI/dt inverse. Avant de se bloquer, la diode laisse passer un courant inverse $I_{rr}$ pendant $t_{rr}$ : ce sont les porteurs minoritaires stockés dans la jonction qui s'évacuent. L'énergie $E_{rr}\approx\frac12 V_R I_{rr}t_{rr}$ est dissipée à \emph{chaque} commutation.}
+\caption{Chronogramme du courant de diode au blocage, avec la définition des fiches techniques. À $t_0$, le circuit impose une pente $\mathrm{d}i/\mathrm{d}t$ inverse~; le courant ne s'arrête pas à zéro, car les porteurs minoritaires stockés dans la jonction doivent d'abord être évacués. Le temps de recouvrement $t_{rr}$ se compte à partir du \textbf{passage par zéro} du courant --- et non du début de la commutation --- jusqu'à ce que le courant inverse soit retombé à \SI{25}{\percent} de son pic $I_{RM}$. Il se décompose en $t_a$, jusqu'au pic, et $t_b$, la queue de recouvrement~; le rapport $S = t_b/t_a$ est le \emph{facteur de douceur} de la diode. L'aire hachurée $Q_{rr} \approx \frac12 I_{RM} t_{rr}$ est la charge recouvrée, et $E_{rr} = V_R Q_{rr}$ l'énergie dissipée à \emph{chaque} commutation.}
+\label{fig:trr}
 \end{figure}
 
 \begin{attention}
-\textbf{En commutation de puissance, $t_{rr}$ est critique.} Pendant le recouvrement, la diode dissipe de la puissance ($V_R \times I_{rr}$). À haute fréquence de commutation (\SI{100}{kHz}--\SI{1}{MHz} dans les convertisseurs modernes), ces pertes de commutation peuvent devenir dominantes.
+\textbf{En commutation de puissance, $t_{rr}$ est critique.} Pendant le recouvrement, la diode dissipe de la puissance ($V_R \times I_{RM}$). À haute fréquence de commutation (\SI{100}{kHz}--\SI{1}{MHz} dans les convertisseurs modernes), ces pertes de commutation peuvent devenir dominantes.
 
 \textbf{Solutions :}
 \begin{itemize}[nosep]
@@ -11755,7 +11785,7 @@ Cohérent~: $n$ entre 1 et 2, typique d'une diode Si. On a aussi confirmé la r�
 
 \subsection*{Niveau ingénieur}
 
-\exo\label{exo:17.5} Un convertisseur buck fonctionne à $f_{\text{sw}} = \SI{300}{kHz}$, $V_{\text{in}} = \SI{12}{V}$, $V_{\text{out}} = \SI{5}{V}$, $I_L = \SI{2}{A}$. Comparez les pertes totales entre une diode 1N5819 (Schottky, $V_F = \SI{0.45}{V}$, $t_{rr} \approx 0$) et une 1N4007 ($V_F = \SI{0.9}{V}$, $t_{rr} = \SI{30}{\micro s}$, $I_{rr} = \SI{0.5}{A}$).
+\exo\label{exo:17.5} Un convertisseur buck fonctionne à $f_{\text{sw}} = \SI{300}{kHz}$, $V_{\text{in}} = \SI{12}{V}$, $V_{\text{out}} = \SI{5}{V}$, $I_L = \SI{2}{A}$. Comparez les pertes totales entre une diode 1N5819 (Schottky, $V_F = \SI{0.45}{V}$, $t_{rr} \approx 0$) et une 1N4007 ($V_F = \SI{0.9}{V}$, $t_{rr} = \SI{30}{\micro s}$, $I_{RM} = \SI{0.5}{A}$).
 
 \begin{pratique}
 \textbf{Solution :}
@@ -11768,7 +11798,7 @@ $P_{\text{sw}} \approx 0$ (Schottky). $P_{\text{total}} \approx \SI{0.52}{W}$.
 
 \textbf{1N4007 :} $P_{\text{cond}} = 0{,}9 \times 1{,}16 = \SI{1.04}{W}$.
 
-$E_{rr} \approx \frac{1}{2}V_R \times I_{rr} \times t_{rr} = \frac{1}{2}\times12\times0{,}5\times30\times10^{-6} = \SI{90}{\micro J}$.
+$E_{rr} \approx \frac{1}{2}V_R \times I_{RM} \times t_{rr} = \frac{1}{2}\times12\times0{,}5\times30\times10^{-6} = \SI{90}{\micro J}$.
 
 $P_{\text{sw}} = f \times E_{rr} = 300000\times90\times10^{-6} = \SI{27}{W}$~!!
 
