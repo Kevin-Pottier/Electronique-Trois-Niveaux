@@ -1,5 +1,35 @@
 # Historique des versions
 
+## v1.5 — 15 septembre 2026
+Clôture du cycle de corrections ouvert en v1.4.1. Cette version ne contient
+aucun contenu neuf : elle consolide la revue des 180 figures (lisibilité puis
+justesse), le remaniement de l'index, et corrige un défaut de numérotation
+qui touchait la majorité des exercices.
+
+**Les exercices sont désormais numérotés automatiquement.** Les 250 énoncés
+portaient un numéro écrit en dur dans le source. L'insertion des quatre
+chapitres des versions v1.2 à v1.4 --- Instrumentation, LTspice, Oscillateurs,
+Amplification de puissance --- a décalé les chapitres suivants sans toucher à
+ces numéros. Le résultat :
+
+- **201 exercices sur 250 portaient un numéro faux**, avec un décalage de 1, 2
+  ou 4 selon leur position par rapport aux insertions. Le chapitre 32
+  (Protocoles de communication) contenait des exercices numérotés 28.1 à 28.6 ;
+  le chapitre 41, des exercices 37.x.
+- **24 numéros étaient en double** : chaque chapitre ajouté avait pris les
+  numéros que l'ancien chapitre conservait. Deux exercices différents
+  s'appelaient « Exercice 20.3 », deux autres « Exercice 7.1 ».
+
+Un compteur LaTeX lié au chapitre remplace la numérotation manuelle, et les
+dix-sept renvois du texte et des légendes de figures deviennent symboliques
+(`\ref`). Le problème ne peut plus se reproduire : insérer un chapitre
+renumérote tout automatiquement, et un renvoi cassé devient visible à la
+compilation au lieu de passer inaperçu.
+
+Aucun énoncé, aucune solution, aucune figure n'a été modifié --- seuls les
+numéros changent. Pagination inchangée à 691 pages ; 180 figures et 1623
+références croisées inchangées.
+
 ## v1.4.4 — 15 septembre 2026
 Fin de la passe de justesse : les 110 figures restantes (chapitres 1 à 16 et
 22 à 34). Avec les 70 déjà relues en v1.4.2 et v1.4.3, les 180 figures du
