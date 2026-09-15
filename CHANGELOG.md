@@ -1,5 +1,50 @@
 # Historique des versions
 
+## v1.6 — 15 septembre 2026
+**Les tableaux sont numérotés, et le livre a sa « Liste des tableaux ».**
+
+Jusqu'ici, aucun des tableaux du livre n'était numéroté ni légendé : ils
+étaient tous composés en `tabular` brut, sans titre ni entrée dans les tables
+du début d'ouvrage. Impossible, donc, d'écrire « voir tableau 17.3 », et
+impossible de retrouver un tableau autrement qu'en feuilletant. Pour un
+ouvrage qui se veut aussi une référence, c'était un manque.
+
+**111 tableaux reçoivent une légende numérotée**, placée au-dessus du tableau
+comme le veut l'usage, et une entrée dans la nouvelle **Liste des tableaux**
+qui suit la Table des figures. La numérotation suit le chapitre (1.1, 3.2,
+14.9…) et passe aux lettres dans les annexes (A.1, B.1, C.1 à C.6),
+exactement comme les figures.
+
+Deux choix méritent d'être explicités.
+
+*Les 123 tableaux de « Résumé du chapitre » ne sont pas numérotés.* Chaque
+chapitre en referme trois — un par niveau de lecture — et ils portent déjà
+leur titre dans le bandeau de l'encadré. Les numéroter aurait ajouté 123
+entrées quasi identiques à la Liste des tableaux, qui serait devenue
+illisible pour les 111 qui comptent vraiment. Même raison d'écarter les cinq
+tableaux logés dans des chapitres non numérotés (l'historique des versions de
+l'avant-propos, et les quatre blocs du lexique français–anglais) : la
+numérotation par chapitre n'y a pas de sens, et ils leur aurait été attribué
+le numéro du chapitre précédent.
+
+*Les tableaux restent à leur place, ils ne deviennent pas des flottants.* La
+légende est produite par `\captionof{table}`, qui numérote et référence sans
+transformer le tableau en objet mobile. Un tableau converti en flottant
+`table` aurait pu migrer à plusieurs pages du texte qui le commente — or dans
+ce livre les tableaux sont systématiquement discutés juste avant ou juste
+après. Le gain de canonicité ne valait pas le risque de disperser l'ouvrage.
+
+**Le README annonçait deux chiffres faux.** Il indiquait « 690 entrées
+d'index » : c'était le nombre d'appels `\index` dans le source (686), non le
+nombre d'entrées imprimées, qui est de **366** (314 entrées principales et 52
+sous-entrées). La pagination annoncée était également celle de la v1.4. Les
+deux sont corrigés, et le comptage des tableaux ajouté.
+
+Pagination 693 → 701 pages : les 111 légendes, plus les quatre pages de la
+Liste des tableaux. Les 180 figures et les 1147 renvois numérotés du texte
+sont identiques à ceux de la v1.5.2, vérifié par comparaison du texte extrait
+des deux PDF.
+
 ## v1.5.2 — 15 septembre 2026
 Comblement d'une dette de structure, et métadonnées de citation remises à jour.
 

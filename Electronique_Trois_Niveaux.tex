@@ -166,6 +166,7 @@
 \usepackage{hyperref}
 \setcounter{tocdepth}{1}
 \renewcommand{\listfigurename}{Table des figures}
+\renewcommand{\listtablename}{Liste des tableaux}
 
 %% === DATE EN FRANCAIS ===
 %% babel n'etant pas charge, \today produit une date anglaise ("September 9, 2026")
@@ -259,7 +260,7 @@ un ingénieur doit pouvoir s'y référer comme source de qualité.~»}
 
 \vfill
 {\small Distribué librement sous licence CC BY-NC-SA 4.0}\\[1mm]
-{\small Version 1.5.2 --- Septembre 2026}
+{\small Version 1.6 --- Septembre 2026}
 \end{titlepage}
 
 % === COLOPHON / LICENCE ===
@@ -274,7 +275,7 @@ Cet ouvrage est mis à disposition selon les termes de la licence \textbf{Creati
 Vous êtes libres de \textbf{partager} (copier, redistribuer) et d'\textbf{adapter} (modifier, transformer, améliorer) ce document, sous trois conditions : \textbf{créditer l'auteur}, \textbf{ne pas en faire un usage commercial}, et \textbf{rediffuser toute version modifiée sous cette même licence}. Texte intégral : \url{https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr}\\[4mm]
 Composé en \LaTeX{} (pdflatex)~; schémas et figures en CircuiTikZ et TikZ.\\
 Rédigé avec l'assistance de l'intelligence artificielle Claude (Anthropic), sous la direction et la vérification de l'auteur.\\
-Version 1.5.2 --- compilé le \datefr.\\
+Version 1.6 --- compilé le \datefr.\\
 Corrections, suggestions et contributions : \texttt{kevin.pottier@eseo.fr}
 \end{minipage}
 \end{center}
@@ -363,6 +364,12 @@ Le texte s'appuie sur des encadrés récurrents, toujours les mêmes~: \textbf{f
 \phantomsection
 \addcontentsline{toc}{chapter}{Table des figures}
 \listoffigures
+\newpage
+
+% === LISTE DES TABLEAUX ===
+\phantomsection
+\addcontentsline{toc}{chapter}{Liste des tableaux}
+\listoftables
 \newpage
 
 
@@ -483,6 +490,7 @@ Un ampère, c'est environ $6{,}24 \times 10^{18}$ électrons par seconde qui tra
 \subsection{Ordres de grandeur}\index{ordres de grandeur}
 
 \begin{center}
+\captionof{table}{Ordres de grandeur des intensités rencontrées en électronique et en électrotechnique.}
 \begin{tabular}{lll}
 \toprule
 \textbf{Situation} & \textbf{Intensité typique} & \textbf{Ordre} \\
@@ -665,6 +673,7 @@ v_d = \frac{I}{n \cdot e \cdot S} = \frac{1}{8{,}5 \times 10^{28} \times 1{,}6 \
 Le courant n'existe pas que dans les métaux~:
 
 \begin{center}
+\captionof{table}{Les porteurs de charge selon le milieu conducteur.}
 \begin{tabular}{lll}
 \toprule
 \textbf{Milieu} & \textbf{Porteurs de charge} & \textbf{Exemple} \\
@@ -776,6 +785,7 @@ Les lois de Kirchhoff\index{Kirchhoff, lois de} (loi des n\oe uds, loi des maill
 \textbf{Règle pratique :} l'ARQS est valide tant que $d < \lambda / 10$.
 
 \begin{center}
+\captionof{table}{Longueur d'onde et taille maximale de circuit pour laquelle l'ARQS reste valable.}
 \begin{tabular}{lll}
 \toprule
 \textbf{Fréquence} & \textbf{$\lambda$ (ordre de grandeur)} & \textbf{ARQS valide si circuit $<$} \\
@@ -1070,6 +1080,7 @@ Une fois la masse choisie, on peut parler du ``potentiel d'un point'' ou de la `
 \subsection{Ordres de grandeur}\index{ordres de grandeur}
 
 \begin{center}
+\captionof{table}{Ordres de grandeur des tensions rencontrées en électronique et en électrotechnique.}
 \begin{tabular}{lll}
 \toprule
 \textbf{Situation} & \textbf{Tension typique} & \textbf{Ordre} \\
@@ -1403,6 +1414,7 @@ Tout isolant a une limite~: au-delà d'un certain champ électrique, il devient 
 La \textbf{rigidité diélectrique} $E_{\text{max}}$ est le champ maximal que peut supporter un isolant avant claquage~:
 
 \begin{center}
+\captionof{table}{Rigidité diélectrique de quelques isolants, et épaisseur nécessaire pour tenir \SI{1}{kV}.}
 \begin{tabular}{lll}
 \toprule
 \textbf{Matériau} & \textbf{Rigidité diélectrique} & \textbf{Épaisseur pour tenir \SI{1}{kV}} \\
@@ -1669,6 +1681,7 @@ U = RI \qquad \Longleftrightarrow \qquad I = \frac{U}{R} \qquad \Longleftrightar
 \subsection{Ordres de grandeur}\index{ordres de grandeur}
 
 \begin{center}
+\captionof{table}{Ordres de grandeur des résistances rencontrées en électronique.}
 \begin{tabular}{lll}
 \toprule
 \textbf{Composant / Situation} & \textbf{Résistance typique} & \textbf{Ordre} \\
@@ -1688,6 +1701,7 @@ Isolation d'un condensateur & $> \SI{1}{G\ohm}$ & $> 10^{9}$ $\Omega$ \\
 Les résistances à fils (traversantes) portent des bandes de couleur qui codent leur valeur. Le code se lit de gauche à droite~:
 
 \begin{center}
+\captionof{table}{Le code des couleurs des résistances~: chiffre, multiplicateur et tolérance.}
 \begin{tabular}{clc}
 \toprule
 \textbf{Couleur} & \textbf{Chiffre} & \textbf{Multiplicateur} \\
@@ -1865,6 +1879,7 @@ La résistance d'un conducteur dépend de trois facteurs~: son matériau, sa lon
 \end{formule}
 
 \begin{center}
+\captionof{table}{Résistivité de quelques matériaux, des conducteurs aux isolants.}
 \begin{tabular}{lll}
 \toprule
 \textbf{Matériau} & \textbf{Résistivité} ($\Omega\cdot$m) & \textbf{Type} \\
@@ -1912,6 +1927,7 @@ Modèle linéaire (valable sur une plage de température raisonnable)~:
 \end{formule}
 
 \begin{center}
+\captionof{table}{Coefficient de température $\alpha$ de quelques matériaux conducteurs.}
 \begin{tabular}{ll}
 \toprule
 \textbf{Matériau} & $\alpha$ (\SI{}{\per\degreeCelsius}) \\
@@ -1950,6 +1966,7 @@ G_{\text{éq}} = G_1 + G_2 + \cdots + G_n \qquad \text{(parallèle~: les conduct
 La loi d'Ohm ($U = RI$ avec $R$ constant) n'est valable que pour les \textbf{conducteurs ohmiques} (résistances, fils métalliques à température stable). Beaucoup de composants sont \textit{non-linéaires}~:
 
 \begin{center}
+\captionof{table}{Quelques dipôles non linéaires et l'allure de leur caractéristique $I(U)$.}
 \begin{tabular}{ll}
 \toprule
 \textbf{Composant} & \textbf{Caractéristique $I(U)$} \\
@@ -2078,6 +2095,7 @@ où $K_f$ est un coefficient qui dépend de la \textbf{technologie} de la résis
 \textbf{Note :} cette loi en $1/f$ est \textit{empirique} — il n'existe pas de théorie unifiée expliquant le bruit en $1/f$ dans tous les systèmes. Le modèle est valide en pratique sur plusieurs décades de fréquence, mais diverge théoriquement en $f \to 0$ (ce qui n'est pas physique). En réalité, il existe toujours une fréquence basse de coupure en dessous de laquelle le spectre s'aplatit. Le coefficient $K_f$ varie d'un composant à l'autre, même au sein d'un même lot de fabrication :
 
 \begin{center}
+\captionof{table}{Bruit en $1/f$ relatif selon la technologie de résistance.}
 \begin{tabular}{ll}
 \toprule
 \textbf{Technologie} & \textbf{Bruit en 1/f (relatif)} \\
@@ -2101,6 +2119,7 @@ Les valeurs de résistance ne sont pas arbitraires~: elles suivent des \textbf{s
 Le principe~: dans chaque décade ($1 \rightarrow 10$, $10 \rightarrow 100$, etc.), on place $n$ valeurs réparties selon une progression \textbf{géométrique} de raison $r = 10^{1/n}$.
 
 \begin{center}
+\captionof{table}{Les séries de valeurs normalisées~: tolérance et valeurs couvrant une décade.}
 \begin{tabular}{llp{7.5cm}}
 \toprule
 \textbf{Série} & \textbf{Tolérance} & \textbf{Valeurs dans la décade $1\rightarrow10$} \\
@@ -2392,6 +2411,7 @@ Cette formule suppose que la puissance est constante. Si elle varie dans le temp
 \subsection{Ordres de grandeur}\index{ordres de grandeur}
 
 \begin{center}
+\captionof{table}{Ordres de grandeur des puissances électriques, du signal à l'électrotechnique.}
 \begin{tabular}{ll}
 \toprule
 \textbf{Appareil / Situation} & \textbf{Puissance typique} \\
@@ -2542,6 +2562,7 @@ $\eta$ est sans dimension, compris entre 0 et 1 (souvent exprimé en \%).
 \end{formule}
 
 \begin{center}
+\captionof{table}{Rendement typique de quelques systèmes de conversion d'énergie.}
 \setlength{\tabcolsep}{5pt}
 \begin{tabular}{ll}
 \toprule
@@ -3861,6 +3882,7 @@ et vaut $P_{\max} = E_{\text{th}}^2 / (4R_{\text{th}})$. Le rendement est alors 
 Thévenin et Norton permettent de \textbf{modéliser} le comportement de n'importe quel composant ou sous-circuit vu de ses bornes~:
 
 \begin{center}
+\captionof{table}{Modélisation de Thévenin ou de Norton de quelques composants réels.}
 \begin{tabular}{lll}
 \toprule
 \textbf{Composant réel} & \textbf{Modèle} & \textbf{Paramètres typiques} \\
@@ -4144,6 +4166,7 @@ circuit continu. Elles ne suffisent plus dès que le signal varie, et elles ne
 disent rien de la confiance à accorder au nombre affiché.
 
 \begin{center}
+\captionof{table}{Ce que chaque instrument de mesure donne, et ce qu'il ne donne pas.}
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{P{3.2cm}P{4.6cm}P{5.4cm}}
 \toprule
@@ -4548,6 +4571,7 @@ Le shunt (chapitre~\ref{ch:courant}) impose d'interrompre le circuit et
 introduit une tension parasite. Trois familles s'en affranchissent.
 
 \begin{center}
+\captionof{table}{Mesurer un courant sans ouvrir le circuit~: principe, domaine et limite de chaque famille.}
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{P{3.2cm}P{4.4cm}P{5.4cm}}
 \toprule
@@ -5010,6 +5034,7 @@ Le condensateur ne ``laisse passer'' le courant que \textit{quand la tension cha
 \subsection{Ordres de grandeur}\index{ordres de grandeur}
 
 \begin{center}
+\captionof{table}{Ordres de grandeur des capacités selon l'application.}
 \begin{tabular}{lll}
 \toprule
 \textbf{Application} & \textbf{Capacité typique} & \textbf{Ordre} \\
@@ -5160,6 +5185,7 @@ Capacité du condensateur plan, les technologies réelles et leurs compromis, la
 \subsection{Technologies de condensateurs}\index{technologies de condensateurs}
 
 \begin{center}
+\captionof{table}{Les technologies de condensateurs~: gamme de capacité, tenue en tension et usage.}
 \footnotesize
 \setlength{\tabcolsep}{4pt}
 \begin{tabular}{P{2.75cm}P{2.9cm}P{1.7cm}P{4.2cm}}
@@ -5524,6 +5550,7 @@ La tension aux bornes d'une bobine est proportionnelle à la \textbf{vitesse de 
 \begin{intuition}
 Comparez avec le condensateur~:
 \begin{center}
+\captionof{table}{Condensateur et bobine~: deux composants duaux, propriété par propriété.}
 \begin{tabular}{lcc}
 \toprule
  & \textbf{Condensateur} & \textbf{Bobine} \\
@@ -5548,6 +5575,7 @@ Ce sont des composants \textbf{duaux}~: chaque propriété de l'un a un miroir c
 \subsection{Ordres de grandeur}\index{ordres de grandeur}
 
 \begin{center}
+\captionof{table}{Ordres de grandeur des inductances selon l'application.}
 \begin{tabular}{lll}
 \toprule
 \textbf{Application} & \textbf{Inductance typique} & \textbf{Ordre} \\
@@ -5632,6 +5660,7 @@ Le courant monte exponentiellement vers sa valeur finale $E/R$ (loi d'Ohm\index{
 \begin{pratique}
 Comparaison des constantes de temps~:
 \begin{center}
+\captionof{table}{Constantes de temps des circuits RC et RL, et grandeur qui ne saute pas dans chacun.}
 \begin{tabular}{lcc}
 \toprule
  & \textbf{RC} & \textbf{RL} \\
@@ -5714,6 +5743,7 @@ Sans noyau ($\mu_r = 1$)~: $L = \SI{25}{\micro H}$. Le noyau multiplie l'inducta
 \subsection{Technologies d'inductances}\index{technologies d'inductances}
 
 \begin{center}
+\captionof{table}{Les technologies d'inductances~: gamme, courant admissible et usage.}
 \begin{tabular}{p{2.5cm}p{2.5cm}p{2cm}p{5cm}}
 \toprule
 \textbf{Type} & \textbf{Gamme} & \textbf{Courant} & \textbf{Usage} \\
@@ -6063,6 +6093,7 @@ Comportement qualitatif des circuits RC, RL et RLC~: constantes de temps, oscill
 \subsection{Rappel~: les trois comportements fondamentaux}
 
 \begin{center}
+\captionof{table}{Résistance, condensateur et bobine en continu et en haute fréquence.}
 \begin{tabular}{lccc}
 \toprule
 \textbf{Composant} & \textbf{En DC} & \textbf{En HF} & \textbf{Stocke l'énergie dans} \\
@@ -6141,6 +6172,7 @@ Dans le circuit RLC~:
 La réponse à un échelon\index{échelon} dépend de l'amortissement, quantifié par le \textbf{coefficient d'amortissement} $\zeta$ (zêta) --- notation universelle des systèmes du 2\textsuperscript{e} ordre (chapitres~\ref{ch:laplace}--\ref{ch:pid}) --- relié au facteur de qualité\index{facteur de qualité} par $\zeta = 1/(2Q)$. Trois régimes~:
 
 \begin{center}
+\captionof{table}{Les trois régimes du second ordre selon le coefficient d'amortissement.}
 \begin{tabular}{lll}
 \toprule
 \textbf{Régime} & \textbf{Condition} & \textbf{Comportement} \\
@@ -6374,6 +6406,7 @@ Si un pôle a une partie réelle positive, le système est \textbf{instable}~: l
 \begin{pratique}
 \textbf{Valeurs typiques de $Q$ selon l'application :}
 \begin{center}
+\captionof{table}{Facteur de qualité $Q$ typique selon l'application.}
 \begin{tabular}{ll}
 \toprule
 \textbf{Application} & \textbf{$Q$ typique} \\
@@ -6687,6 +6720,7 @@ La relation $e^{j\theta} = \cos\theta + j\sin\theta$ est la \textbf{formule d'Eu
 \subsubsection*{Opérations sur les complexes}
 
 \begin{center}
+\captionof{table}{Les opérations sur les complexes, et la forme qui les rend simples.}
 \renewcommand{\arraystretch}{1.5}
 \begin{tabular}{lll}
 \toprule
@@ -6833,6 +6867,7 @@ Comprendre le comportement asymptotique des composants est \textbf{fondamental} 
 
 \begin{formule}
 \begin{center}
+\captionof{table}{Impédance des trois composants de base et leur comportement asymptotique en basse et haute fréquence.}
 \footnotesize
 \renewcommand{\arraystretch}{1.6}
 \begin{tabular}{lcccc}
@@ -7121,6 +7156,7 @@ L'impédance a été divisée par 1000~: le condensateur laisse passer 1000 fois
 
 $\underline{H} = 1/(1 + j\omega/\omega_c)$.
 
+\captionof{table}{Gain et déphasage d'un passe-bas RC à $f_c$, $10f_c$ et $100f_c$.}
 \begin{tabular}{llll}
 \toprule
 $f$ & $\omega/\omega_c$ & $|H|$ & $\varphi$ \\
@@ -7361,6 +7397,7 @@ C'est le ``total''~: $\boxed{S^2 = P^2 + Q^2}$ (relation de Pythagore).
 \end{formule}
 
 \begin{center}
+\captionof{table}{Facteur de puissance $\cos\varphi$ selon le type de charge.}
 \begin{tabular}{lccl}
 \toprule
 \textbf{Type de charge} & $\varphi$ & $\cos\varphi$ & \textbf{Commentaire} \\
@@ -7506,6 +7543,7 @@ Pourquoi le conjugué~? Si $\underline{U} = Ue^{j0}$ et $\underline{I} = Ie^{-j\
 \subsection{Puissance dissipée dans chaque composant}
 
 \begin{center}
+\captionof{table}{Puissances active et réactive associées à chaque composant de base.}
 \renewcommand{\arraystretch}{1.5}
 \begin{tabular}{lcccl}
 \toprule
@@ -7911,6 +7949,7 @@ Dans un circuit RLC parallèle (les trois composants entre les mêmes deux n\oe 
 \textbf{Série vs parallèle :} la résonance série ``aspire'' le courant (impédance minimale = court-circuit résonant). La résonance parallèle ``bloque'' le courant (impédance maximale = circuit bouchon). Ce sont des comportements \textbf{duaux}.
 
 \begin{center}
+\captionof{table}{Résonance série et résonance parallèle~: deux comportements duaux.}
 \begin{tabular}{lcc}
 \toprule
  & \textbf{Résonance série} & \textbf{Résonance parallèle} \\
@@ -8047,6 +8086,7 @@ Si on prend la tension aux bornes de $R$ comme sortie (dans le RLC série), on o
 \end{formule}
 
 \begin{center}
+\captionof{table}{Gain et phase d'un circuit résonant de part et d'autre de $f_0$.}
 \begin{tabular}{lll}
 \toprule
 \textbf{Fréquence} & \textbf{Gain $|H|$} & \textbf{Phase $\varphi$} \\
@@ -8092,6 +8132,7 @@ Le filtre laisse passer les fréquences autour de $f_0$ et atténue le reste. La
 Le même circuit RLC série donne des filtres \textit{différents} selon le composant aux bornes duquel on prend la sortie~:
 
 \begin{center}
+\captionof{table}{Le même RLC série donne des filtres différents selon le composant aux bornes duquel on prend la sortie.}
 \begin{tabular}{lll}
 \toprule
 \textbf{Sortie aux bornes de} & \textbf{Type de filtre} & \textbf{Gain à $f_0$} \\
@@ -8203,6 +8244,7 @@ Bande passante~: $\Delta f \approx 100/1{,}73 \approx \SI{58}{MHz}$ (large bande
 Les circuits LC discrets ont un $Q$ limité par les pertes dans les composants ($Q \sim 50$--$200$). Pour obtenir des $Q$ très élevés, on utilise d'autres technologies~:
 
 \begin{center}
+\captionof{table}{Technologies de résonateurs~: facteur de qualité, gamme de fréquence et usage.}
 \footnotesize
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{llll}
@@ -8495,6 +8537,7 @@ Les gains en électronique couvrent des plages immenses~: de $0{,}001$ (atténua
 \begin{pratique}
 \textbf{Conversions rapides à connaître par c\oe ur :}
 \begin{center}
+\captionof{table}{Les conversions décibel à connaître par c\oe ur.}
 \begin{tabular}{cc|cc}
 \toprule
 \textbf{Gain} & \textbf{dB} & \textbf{Gain} & \textbf{dB} \\
@@ -8539,6 +8582,7 @@ Prenons le filtre RC passe-bas\index{filtre!passe-bas} (chapitre~\ref{ch:complex
 \textbf{Comportement asymptotique (la clé de Bode) :}
 
 \begin{center}
+\captionof{table}{Comportement asymptotique du passe-bas du premier ordre~: la clé du tracé de Bode.}
 \renewcommand{\arraystretch}{1.5}
 \begin{tabular}{lccl}
 \toprule
@@ -8758,6 +8802,7 @@ Deux paramètres fondamentaux~: $\omega_0$ (pulsation propre) et $Q$ (facteur de
 \end{itemize}
 
 \begin{center}
+\captionof{table}{Allure du second ordre au voisinage de $\omega_0$ selon le facteur de qualité.}
 \renewcommand{\arraystretch}{1.4}
 \begin{tabular}{lll}
 \toprule
@@ -8842,6 +8887,7 @@ Cette propriété n'est valable que si chaque étage \textbf{ne charge pas le pr
 \subsection{Classification des filtres}\index{classification des filtres}
 
 \begin{center}
+\captionof{table}{Les types de filtres~: ce qui passe, et à quoi cela sert.}
 \renewcommand{\arraystretch}{1.5}
 \begin{tabular}{lP{4.7cm}P{4.7cm}}
 \toprule
@@ -9074,6 +9120,7 @@ Le même verdict de stabilité se lit dans le plan complexe (diagramme de Nyquis
 \begin{pratique}
 \textbf{Valeurs cibles en conception :}
 \begin{center}
+\captionof{table}{Marges de gain et de phase visées en conception.}
 \begin{tabular}{ll}
 \toprule
 \textbf{Critère} & \textbf{Valeur typique} \\
@@ -9109,6 +9156,7 @@ D(s) = a_n s^n + a_{n-1} s^{n-1} + \cdots + a_1 s + a_0
 \textbf{Construction du tableau de Routh :}
 
 \begin{center}
+\captionof{table}{Construction du tableau de Routh à partir des coefficients du dénominateur.}
 \renewcommand{\arraystretch}{1.4}
 \begin{tabular}{c|cccc}
 $s^n$ & $a_n$ & $a_{n-2}$ & $a_{n-4}$ & $\cdots$ \\
@@ -9135,6 +9183,7 @@ Chaque ligne se calcule à partir des deux lignes précédentes par la même for
 \textbf{Exemple :} $D(s) = s^3 + 6s^2 + 11s + 6$.
 
 \begin{center}
+\captionof{table}{Tableau de Routh de $D(s) = s^3 + 6s^2 + 11s + 6$~: aucun changement de signe, système stable.}
 \begin{tabular}{c|cc}
 $s^3$ & $1$ & $11$ \\
 $s^2$ & $6$ & $6$ \\
@@ -9148,6 +9197,7 @@ Première colonne~: $1, 6, 10, 6$ --- tous positifs. \textbf{Aucun changement de
 \textbf{Contre-exemple :} $D(s) = s^3 + 2s^2 + s + 8$.
 
 \begin{center}
+\captionof{table}{Tableau de Routh de $D(s) = s^3 + 2s^2 + s + 8$~: deux changements de signe, système instable.}
 \begin{tabular}{c|cc}
 $s^3$ & $1$ & $1$ \\
 $s^2$ & $2$ & $8$ \\
@@ -9298,6 +9348,7 @@ Si $f_2$ était à \SI{100}{kHz} (= $f_{0\text{dB}}$), la phase serait $-90^\cir
 \textbf{Solution :} Tableau de Routh :
 
 \begin{center}
+\captionof{table}{Tableau de Routh de $D(s) = s^3 + 4s^2 + 5s + K$~: c'est lui qui borne la plage de $K$.}
 \begin{tabular}{c|cc}
 $s^3$ & $1$ & $5$ \\
 $s^2$ & $4$ & $K$ \\
@@ -9670,6 +9721,7 @@ La topologie MFB (ou Rauch) utilise l'AOP en \textbf{inverseur}. Elle est plus s
 Le choix de la \textbf{réponse normalisée} détermine la forme de la courbe de gain dans la bande passante et la transition vers la bande coupée.
 
 \begin{center}
+\captionof{table}{Butterworth, Bessel et Tchebychev~: ce que chaque réponse normalisée privilégie, et ce qu'elle sacrifie.}
 \renewcommand{\arraystretch}{1.5}
 \begin{tabular}{P{2.8cm}P{2.5cm}P{2.5cm}P{4.5cm}}
 \toprule
@@ -9736,6 +9788,7 @@ Le choix de la \textbf{réponse normalisée} détermine la forme de la courbe de
 Pour un filtre passe-bas\index{filtre!passe-bas} du 2nd ordre de fréquence de coupure $f_c$, les valeurs de $Q$ sont~:
 
 \begin{center}
+\captionof{table}{Facteur de qualité et dépassement transitoire des réponses normalisées du second ordre.}
 \begin{tabular}{lcc}
 \toprule
 \textbf{Type} & \textbf{$Q$ (2nd ordre)} & \textbf{Dépassement transitoire} \\
@@ -9764,6 +9817,7 @@ Toutes les cellules ont la même $f_0 = f_c$.
 \begin{pratique}
 \textbf{Valeurs de $Q$ pour Butterworth :}
 \begin{center}
+\captionof{table}{Facteurs de qualité des cellules d'un filtre de Butterworth, selon son ordre.}
 \begin{tabular}{cl}
 \toprule
 \textbf{Ordre} & \textbf{$Q$ des cellules} \\
@@ -9788,6 +9842,7 @@ Toutes les cellules ont la même $f_0 = f_c$.
 
 Plus précisément, à $f/f_c = 5$~: $|H| = 1/\sqrt{1+(f/f_c)^{2n}} = 1/\sqrt{1+5^{2n}}$.
 
+\captionof{table}{Atténuation d'un Butterworth à $5f_c$ selon l'ordre~: le choix de l'ordre nécessaire.}
 \begin{tabular}{ll}
 $n=3$ : $|H| = 1/\sqrt{1+15625} \approx \SI{-42}{dB}$ & Insuffisant \\
 $n=4$ : $|H| = 1/\sqrt{1+390625} \approx \SI{-56}{dB}$ & Presque \\
@@ -10183,6 +10238,7 @@ se compare et se met sous gestion de version.
 Presque tout se fait avec quatre directives.
 
 \begin{center}
+\captionof{table}{Les quatre analyses SPICE~: ce que chacune calcule, et quand l'employer.}
 \renewcommand{\arraystretch}{1.35}
 \begin{tabular}{P{2.1cm}P{4.6cm}P{6.4cm}}
 \toprule
@@ -10298,6 +10354,7 @@ Une même source porte plusieurs jeux de paramètres, et chaque analyse ne lit
 que le sien. C'est une source de confusion durable.
 
 \begin{center}
+\captionof{table}{Les paramètres d'une source SPICE~: chaque analyse ne lit que les siens.}
 \renewcommand{\arraystretch}{1.35}
 \begin{tabular}{P{3.9cm}P{3.4cm}P{5.8cm}}
 \toprule
@@ -10851,6 +10908,7 @@ Une diode est un composant à \textbf{deux bornes} (un dipôle) qui conduit le c
 \subsection{Tension de seuil selon la technologie}
 
 \begin{center}
+\captionof{table}{Tension de seuil $V_F$ selon la technologie de diode.}
 \begin{tabular}{lll}
 \toprule
 \textbf{Type de diode} & \textbf{$V_F$ typique} & \textbf{Usage principal} \\
@@ -11359,6 +11417,7 @@ Le pont de diodes perd \textbf{deux chutes de diode} ($2V_F \approx \SI{1.4}{V}$
 \subsection{Les variantes de diodes}\index{variantes de diodes}
 
 \begin{center}
+\captionof{table}{Les variantes de diodes~: tensions caractéristiques, fonction et usage.}
 \renewcommand{\arraystretch}{1.4}
 \begin{tabular}{P{2.5cm}P{2cm}P{7cm}}
 \toprule
@@ -11387,6 +11446,7 @@ Modèle SPICE, effets dynamiques, pertes de commutation, et diode dans les conve
 Le simulateur SPICE utilise un modèle beaucoup plus complet que Shockley. Les paramètres principaux~:
 
 \begin{center}
+\captionof{table}{Les principaux paramètres du modèle SPICE de la diode, valeurs typiques d'une 1N4148.}
 \begin{tabular}{llll}
 \toprule
 \textbf{Paramètre} & \textbf{Symbole} & \textbf{Typique (1N4148)} & \textbf{Signification} \\
@@ -11918,6 +11978,7 @@ La flèche sur l'émetteur indique le sens du courant \textit{conventionnel}. Ce
 \subsection{Les trois régimes de fonctionnement}\index{trois régimes de fonctionnement}
 
 \begin{center}
+\captionof{table}{Les trois régimes du transistor bipolaire~: condition et comportement.}
 \renewcommand{\arraystretch}{1.5}
 \begin{tabular}{lp{4.5cm}p{5cm}}
 \toprule
@@ -12323,6 +12384,7 @@ Z_{\text{in}} \approx \frac{1}{g_m} \;\; (\text{très faible~: quelques dizaines
 
 \begin{pratique}
 \begin{center}
+\captionof{table}{Émetteur commun, collecteur commun et base commune~: comparatif des trois montages.}
 \renewcommand{\arraystretch}{1.45}
 \begin{tabular}{p{2.9cm}p{3.1cm}p{3.1cm}p{3.3cm}}
 \toprule
@@ -12783,6 +12845,7 @@ Ce chapitre traite des MOSFETs \textbf{à enrichissement} (\textit{enhancement m
 \subsection{BJT vs MOSFET}\index{BJT vs MOSFET}
 
 \begin{center}
+\captionof{table}{Le transistor bipolaire et le MOSFET comparés critère par critère.}
 \renewcommand{\arraystretch}{1.4}
 \begin{tabular}{p{3.2cm}p{4.5cm}p{4.8cm}}
 \toprule
@@ -12802,6 +12865,7 @@ $g_m$ à même $I$ & $I_C/V_T$ (élevé) & $\sqrt{2k_nI_D}$ (plus faible) \\
 \subsection{Les trois régimes de fonctionnement}\index{trois régimes de fonctionnement}
 
 \begin{center}
+\captionof{table}{Les trois régimes du MOSFET (NMOS)~: condition et comportement.}
 \renewcommand{\arraystretch}{1.5}
 \begin{tabular}{lp{4cm}p{5.8cm}}
 \toprule
@@ -13078,6 +13142,7 @@ $R_{DS,\text{on}}$ dépend de trois facteurs indépendants~:
 
 \begin{pratique}
 \begin{center}
+\captionof{table}{Compromis entre tenue en tension et $R_{DS,\text{on}}$~: ordres de grandeur et applications.}
 \begin{tabular}{lll}
 \toprule
 \textbf{$V_{DS,\max}$} & \textbf{$R_{DS,\text{on}}$ typique} & \textbf{Application} \\
@@ -13876,6 +13941,7 @@ Bruit total ramené à l'entrée~:
 
 \begin{pratique}
 \begin{center}
+\captionof{table}{Choix de l'étage d'entrée d'un amplificateur opérationnel selon la résistance de source.}
 \renewcommand{\arraystretch}{1.4}
 \begin{tabular}{P{2.5cm}P{2.5cm}P{2cm}P{5cm}}
 \toprule
@@ -14235,6 +14301,7 @@ Ces spécifications se résument graphiquement en un \textbf{gabarit} que la ré
 \textbf{Le compromis fondamental du filtrage :} on ne peut \textbf{pas} avoir simultanément une bande passante parfaitement plate, une transition infiniment raide, et une phase parfaitement linéaire. Chaque type de filtre sacrifie un aspect :
 
 \begin{center}
+\captionof{table}{Le compromis du filtrage~: chaque réponse normalisée sacrifie l'un des trois aspects.}
 \renewcommand{\arraystretch}{1.5}
 \begin{tabular}{P{2.5cm}P{3cm}P{3cm}P{4.5cm}}
 \toprule
@@ -14290,6 +14357,7 @@ On utilise des tables de \textbf{pôles normalisés} qui donnent les $Q_k$ et $f
 \textbf{Tables Butterworth ($f_{0,k} = f_c$ pour toutes les cellules) :}
 
 \begin{center}
+\captionof{table}{Tables de Butterworth normalisées~: facteurs de qualité des cellules et composition du filtre.}
 \begin{tabular}{cll}
 \toprule
 \textbf{Ordre} & \textbf{$Q$ des cellules} & \textbf{Composition} \\
@@ -14383,6 +14451,7 @@ $Q$ détermine \textbf{simultanément} la réponse en fréquence et la réponse 
 \]
 
 \begin{center}
+\captionof{table}{Lien entre facteur de qualité, pic de gain et dépassement de la réponse indicielle.}
 \renewcommand{\arraystretch}{1.4}
 \begin{tabular}{lccc}
 \toprule
@@ -14535,6 +14604,7 @@ S_x^P = \frac{x}{P}\frac{\partial P}{\partial x}
 \begin{pratique}
 \textbf{Choix des condensateurs :}
 \begin{center}
+\captionof{table}{Choix du diélectrique des condensateurs de filtrage~: tolérance et stabilité.}
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{p{2.5cm}p{2cm}p{2.5cm}p{5.5cm}}
 \toprule
@@ -14886,6 +14956,7 @@ différents.
 \subsection{Ordres de grandeur}\index{ordres de grandeur}
 
 \begin{center}
+\captionof{table}{Technologies d'oscillateurs et applications, du clignotant au radar.}
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{llp{6.6cm}}
 \toprule
@@ -15129,6 +15200,7 @@ l'AOP. Il faut donc un mécanisme qui \emph{réduise le gain quand l'amplitude
 monte}.
 
 \begin{center}
+\captionof{table}{Stabiliser l'amplitude d'un oscillateur~: principe et compromis de chaque solution.}
 \renewcommand{\arraystretch}{1.35}
 \begin{tabular}{p{3.4cm}p{5.4cm}p{4.4cm}}
 \toprule
@@ -15298,6 +15370,7 @@ de fonctionnement, d'où l'importance des condensateurs de charge.
 \end{itemize}
 
 \begin{center}
+\captionof{table}{Stabilité relative et emploi des références de fréquence, du RC au rubidium.}
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{lll}
 \toprule
@@ -15616,6 +15689,7 @@ Le mécanisme de chaque classe a été établi au chapitre~\ref{ch:bjt}. Ce qui
 nous intéresse ici est leur facture énergétique.
 
 \begin{center}
+\captionof{table}{Les classes d'amplification vues du rendement~: conduction et emploi typique.}
 \renewcommand{\arraystretch}{1.35}
 \begin{tabular}{P{1.6cm}P{2.4cm}P{4.3cm}P{4.6cm}}
 \toprule
@@ -15730,6 +15804,7 @@ et l'amplificateur mourrait non pas fort, mais à mi-volume.
 \subsection{Ordres de grandeur}
 
 \begin{center}
+\captionof{table}{Ordres de grandeur de l'amplification de puissance, des écouteurs à la commande de moteur.}
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{P{3.4cm}P{3.4cm}P{6.2cm}}
 \toprule
@@ -16379,6 +16454,7 @@ Toute opération logique peut être construite à partir de trois opérations é
 \textbf{Les trois opérations de base :}
 
 \begin{center}
+\captionof{table}{Les trois opérations logiques de base~: notation, équation, table de vérité et réalisation physique.}
 \renewcommand{\arraystretch}{1.4}
 \small
 \setlength{\tabcolsep}{4pt}
@@ -16463,6 +16539,7 @@ Le tableau de Karnaugh\index{Karnaugh, tableau de} est une méthode \textbf{grap
 \textbf{Exemple :} $F(A,B,C) = \sum m(0,2,4,6,7)$.
 
 \begin{center}
+\captionof{table}{Tableau de Karnaugh de $F(A,B,C) = \sum m(0,2,4,6,7)$.}
 \begin{tabular}{c|cc}
 $AB \backslash C$ & 0 & 1 \\
 \hline
@@ -16715,6 +16792,7 @@ P_{\text{total}} = \underbrace{P_{\text{dyn}}}_{\alpha C_L V_{DD}^2 f} + \underb
 Les niveaux logiques sont définis par quatre tensions~:
 
 \begin{center}
+\captionof{table}{Les quatre tensions qui définissent les niveaux logiques, illustrées en CMOS \SI{3.3}{V}.}
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{lp{7cm}l}
 \toprule
@@ -16818,6 +16896,7 @@ Le fan-out est donc limité par le \textbf{délai} ($t_p \propto C_L$) et non pa
 
 \begin{pratique}
 \begin{center}
+\captionof{table}{Les familles logiques~: alimentation, temps de propagation, technologie et usage.}
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{P{2.5cm}P{2cm}P{2cm}P{2cm}P{3.5cm}}
 \toprule
@@ -16864,6 +16943,7 @@ Donc $F = \overline{A} \cdot \overline{BC}$. En NAND~: $F = \overline{\overline{
 \textbf{Solution :} tableau 4$\times$4 :
 
 \begin{center}
+\captionof{table}{Tableau de Karnaugh de $F(A,B,C,D) = \sum m(0,1,2,5,8,9,10)$.}
 \begin{tabular}{c|cccc}
 $AB \backslash CD$ & 00 & 01 & 11 & 10 \\
 \hline
@@ -17059,6 +17139,7 @@ Deux portes NOR (ou NAND) croisées forment un \textbf{verrou\index{verrou (latc
 
 \begin{formule}
 \begin{center}
+\captionof{table}{Table de vérité du verrou SR en portes NOR.}
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{ccl}
 \toprule
@@ -17140,6 +17221,7 @@ La quasi-totalité des circuits numériques modernes (processeurs, FPGA, ASIC) u
 
 \begin{formule}
 \begin{center}
+\captionof{table}{Les autres types de bascules~: équation caractéristique et usage principal.}
 \renewcommand{\arraystretch}{1.4}
 \begin{tabular}{lp{5cm}p{5.5cm}}
 \toprule
@@ -17280,6 +17362,7 @@ T_{\text{clk}} \geq t_{cq} + t_{\text{comb}} + t_{su}
 \begin{formule}
 \textbf{Moore vs Mealy :}
 \begin{center}
+\captionof{table}{Machines de Moore et de Mealy comparées.}
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{p{3cm}p{5cm}p{5cm}}
 \toprule
@@ -17576,6 +17659,7 @@ Typiquement~: $t_{\text{skew}} \sim \SI{50}{ps}$--$\SI{200}{ps}$, $t_j \sim \SI{
 \textbf{Solution :} $\lceil\log_2 6\rceil = 3$ bascules ($Q_2 Q_1 Q_0$).
 
 \begin{center}
+\captionof{table}{Table de transition d'un compteur modulo 6 à trois bascules D.}
 \renewcommand{\arraystretch}{1.1}
 \begin{tabular}{ccc|ccc}
 \toprule
@@ -17792,6 +17876,7 @@ Un chemin de timing (\textit{timing path}) relie une bascule source à une bascu
 \textbf{Décomposition d'un budget de timing typique} (processeur à $\SI{2}{GHz}$, $T_{\text{clk}} = \SI{500}{ps}$) :
 
 \begin{center}
+\captionof{table}{Décomposition d'un budget de timing à \SI{2}{GHz}~: d'où viennent les \SI{500}{ps}.}
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{lrl}
 \toprule
@@ -17868,6 +17953,7 @@ L'analyse de timing statique (\textit{Static Timing Analysis}, STA) est la méth
 \textbf{Coins PVT standard :}
 
 \begin{center}
+\captionof{table}{Les coins PVT standard~: procédé, tension d'alimentation et température.}
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{p{3cm}ccp{4.5cm}}
 \toprule
@@ -18472,6 +18558,7 @@ Le choix du codage des états a un impact direct sur la complexité du nuage com
 \textbf{Trois codages principaux :}
 
 \begin{center}
+\captionof{table}{Les trois codages d'états d'une machine à états~: coût en bascules, en logique, et quand les employer.}
 \renewcommand{\arraystretch}{1.4}
 \begin{tabular}{p{2.5cm}p{2cm}p{2.5cm}p{5.5cm}}
 \toprule
@@ -18704,6 +18791,7 @@ Sortie~: $Z = 1$ seulement dans $S_3$.
 
 Table de transition~:
 \begin{center}
+\captionof{table}{Table de transition et de sortie de la machine à quatre états, en codage binaire.}
 \renewcommand{\arraystretch}{1.1}
 \begin{tabular}{cc|c|cc|c}
 \toprule
@@ -18892,6 +18980,7 @@ Les trois mécanismes physiques fondamentaux de stockage d'un bit~: rétroaction
 
 \begin{formule}
 \begin{center}
+\captionof{table}{Les trois façons de stocker un bit~: mécanisme physique, rétention et usage.}
 \renewcommand{\arraystretch}{1.5}
 \begin{tabular}{p{2cm}p{3.5cm}p{3cm}p{4cm}}
 \toprule
@@ -19156,6 +19245,7 @@ Chaque REF occupe la puce pendant $t_{\text{RFC}} \approx \SI{260}{ns}$ (DDR4 \S
 Au lieu de stocker 1 bit par cellule (SLC, \textit{Single-Level Cell}~: 2 niveaux de $V_{th}$), on peut stocker plusieurs bits en distinguant plus de niveaux de tension~:
 
 \begin{center}
+\captionof{table}{SLC, MLC, TLC et QLC~: ce que coûte le stockage de plusieurs bits par cellule.}
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{lcccc}
 \toprule
@@ -19599,6 +19689,7 @@ C_3 = G_2 + P_2 G_1 + P_2 P_1 G_0 + P_2 P_1 P_0 C_0
 Les additionneurs modernes haute performance (utilisés dans tous les CPU haut de gamme) sont basés sur des structures de \textbf{calcul de préfixe parallèle}~:
 
 \begin{center}
+\captionof{table}{Architectures d'additionneurs à calcul de préfixe~: profondeur, surface et usage.}
 \renewcommand{\arraystretch}{1.4}
 \small
 \setlength{\tabcolsep}{4pt}
@@ -19692,6 +19783,7 @@ Le triangle des compromis surface/vitesse/puissance, l'arithmétique flottante (
 Toute architecture arithmétique se situe sur un triangle vitesse--surface--puissance. On ne peut pas optimiser les trois simultanément~:
 
 \begin{center}
+\captionof{table}{Le triangle vitesse--surface--puissance des architectures arithmétiques.}
 \renewcommand{\arraystretch}{1.4}
 \begin{tabular}{P{3cm}P{2.5cm}P{2.5cm}P{4cm}}
 \toprule
@@ -19721,6 +19813,7 @@ Un nombre flottant IEEE 754 est codé en trois champs~:
 \]
 
 \begin{center}
+\captionof{table}{Les formats de l'arithmétique flottante IEEE 754~: répartition des bits et précision.}
 \renewcommand{\arraystretch}{1.3}
 \small
 \setlength{\tabcolsep}{4pt}
@@ -20041,6 +20134,7 @@ Les quatre premiers éléments forment le \textbf{datapath}. Le cinquième est l
 \textbf{Les quatre familles de blocs :}
 
 \begin{center}
+\captionof{table}{Les quatre familles de blocs du datapath, et le chapitre dont chacune provient.}
 \renewcommand{\arraystretch}{1.4}
 \begin{tabular}{P{2.8cm}P{4.5cm}P{5.5cm}}
 \toprule
@@ -20221,6 +20315,7 @@ Le \textbf{jeu d'instructions} (ISA, \textit{Instruction Set Architecture}) est 
 \textbf{Les deux philosophies historiques :}
 
 \begin{center}
+\captionof{table}{CISC et RISC~: les deux philosophies d'architecture comparées.}
 \renewcommand{\arraystretch}{1.45}
 \begin{tabular}{p{3.2cm}p{4.7cm}p{4.7cm}}
 \toprule
@@ -20250,6 +20345,7 @@ Cycles par instruction & Variable (1 à $>100$) & $\sim 1$ (avec pipeline) \\
 \textbf{ARM vs RISC-V : le choix du concepteur de SoC :}
 
 \begin{center}
+\captionof{table}{ARM et RISC-V du point de vue du concepteur de circuit intégré.}
 \renewcommand{\arraystretch}{1.45}
 \begin{tabular}{p{3.0cm}p{4.8cm}p{4.8cm}}
 \toprule
@@ -20285,6 +20381,7 @@ Le pipeline matériel, ses aléas, le forwarding, et les limites physiques du da
 Le \textbf{pipeline} applique au processeur l'idée du chapitre~\ref{ch:sequentiel} (pipeline = découper le chemin critique)~: on insère des \textbf{registres de pipeline} entre les phases, et chaque phase traite \textit{une instruction différente} simultanément~:
 
 \begin{center}
+\captionof{table}{Occupation des étages d'un pipeline à cinq phases, cycle par cycle.}
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{l|ccccc}
 \toprule
@@ -20353,6 +20450,7 @@ Le forwarding accélère le programme (pas de cycle d'attente) mais ralentit lé
 Dans un processeur 5 étages typique, les candidats au chemin critique sont~:
 
 \begin{center}
+\captionof{table}{Les candidats au chemin critique d'un processeur pipeliné à cinq étages.}
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{p{2.5cm}p{6cm}p{4.5cm}}
 \toprule
@@ -20784,6 +20882,7 @@ Résultat~: \textbf{16 à 24 bits effectifs} avec un quantificateur grossier (so
 \begin{pratique}
 \textbf{Tableau de choix :}
 \begin{center}
+\captionof{table}{Choisir une architecture de conversion~: résolution, débit, latence et usage.}
 \renewcommand{\arraystretch}{1.4}
 \begin{tabular}{P{2.5cm}P{2.0cm}P{2.5cm}P{1.9cm}P{2.8cm}}
 \toprule
@@ -21223,6 +21322,7 @@ Deux paramètres définissent \textit{quand} les bits sont posés et capturés~:
 \end{itemize}
 
 \begin{center}
+\captionof{table}{Les quatre modes SPI~: polarité, phase, et fronts de capture et de pose.}
 \renewcommand{\arraystretch}{1.35}
 \begin{tabular}{P{1.5cm}P{1.6cm}P{1.6cm}P{3.6cm}P{3.6cm}}
 \toprule
@@ -21364,6 +21464,7 @@ UART, SPI et I\textsuperscript{2}C sont \textit{single-ended}~: le niveau est me
 
 \begin{pratique}
 \begin{center}
+\captionof{table}{Les bus de communication comparés~: fils, débit, portée, topologie et point fort.}
 \renewcommand{\arraystretch}{1.4}
 \begin{tabular}{p{1.4cm}p{1.1cm}p{1.9cm}p{2.0cm}p{2.1cm}p{2.7cm}}
 \toprule
@@ -21448,6 +21549,7 @@ En mode 0 par erreur~: l'horloge repose à 0 et capture sur le \textit{premier} 
 \textbf{Solution :} comparaison bit à bit (MSB en premier, dominant $= 0$ gagne) :
 
 \begin{center}
+\captionof{table}{Arbitrage CAN bit à bit entre les identifiants \texttt{0x12C} et \texttt{0x130}.}
 \begin{tabular}{lccccccc}
 bit & 10 & 9 & 8 & 7 & 6 & 5 & 4 \\
 A (0x12C) & 0 & 0 & 1 & 0 & 0 & 1 & 0 \\
@@ -22352,6 +22454,7 @@ Ces trois protections, inventées pour le \textit{µA723} puis généralisées (
 
 \begin{pratique}
 \begin{center}
+\captionof{table}{Régulation linéaire ou à découpage~: le choix raisonné, critère par critère.}
 \renewcommand{\arraystretch}{1.4}
 \begin{tabular}{p{3.2cm}p{4.4cm}p{4.6cm}}
 \toprule
@@ -22750,6 +22853,7 @@ Usage~: quand la tension d'entrée \textit{traverse} la tension de sortie --- ty
 \begin{pratique}
 \textbf{Récapitulatif des trois topologies de base :}
 \begin{center}
+\captionof{table}{Récapitulatif des trois topologies de base à découpage~: rapport de conversion, plage et usage.}
 \renewcommand{\arraystretch}{1.4}
 \begin{tabular}{p{2.6cm}p{2.8cm}p{3.0cm}p{3.6cm}}
 \toprule
@@ -23684,6 +23788,7 @@ H(s) = \frac{K\,\omega_0^2}{s^2 + 2\zeta\omega_0\,s + \omega_0^2}
 \item $\zeta$ (zêta)~: le \textbf{coefficient d'amortissement}, qui décide tout~:
 \end{itemize}
 \begin{center}
+\captionof{table}{Pôles et réponse à l'échelon du second ordre selon l'amortissement.}
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{P{3.1cm}P{2.7cm}P{6.0cm}}
 \toprule
@@ -24091,6 +24196,7 @@ Le PID apporte un \textbf{pôle à l'origine} (l'intégrateur, en $s = 0$) et \t
 \begin{pratique}
 \textbf{Effet qualitatif d'une augmentation de chaque gain (toutes choses égales) :}
 \begin{center}
+\captionof{table}{Effet d'une augmentation de chaque gain du PID sur la rapidité, le dépassement, l'erreur statique et la stabilité.}
 \renewcommand{\arraystretch}{1.35}
 \begin{tabular}{p{1.8cm}p{2.2cm}p{2.3cm}p{2.2cm}p{2.0cm}}
 \toprule
@@ -24643,6 +24749,7 @@ Cette dernière image est la bonne~: \textbf{le câble est le brin rayonnant, la
 Les exigences se répartissent en deux familles, chacune scindée en conduit / rayonné selon le chemin~:
 
 \begin{center}
+\captionof{table}{Les quatre familles d'exigences CEM~: émission et immunité, conduites et rayonnées.}
 \renewcommand{\arraystretch}{1.35}
 \begin{tabular}{p{3.3cm}p{4.6cm}p{5.3cm}}
 \toprule
@@ -24703,6 +24810,7 @@ Les valeurs chiffrées données dans ce chapitre (gabarits, niveaux d'essai) son
 \textbf{Immunité --- niveaux d'essai typiques} (environnement résidentiel, ordres de grandeur) :
 
 \begin{center}
+\captionof{table}{Essais d'immunité~: normes et sévérités typiques en environnement résidentiel.}
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{p{3.4cm}p{2.6cm}p{6.9cm}}
 \toprule
@@ -25513,6 +25621,7 @@ Exemple~: rail $\SI{1.2}{V}$, ondulation\index{ondulation} dynamique tolérée $
 Aucun composant ne tient $\SI{30}{m\ohm}$ sur six décades. Le PDN est donc une \textbf{cascade d'étages qui se relaient} en fréquence, chacun prenant la main quand le précédent devient inductif~:
 
 \begin{center}
+\captionof{table}{Le réseau de distribution d'alimentation étage par étage~: bande efficace et facteur limitant.}
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{p{4.2cm}p{3.4cm}p{5.0cm}}
 \toprule
@@ -25860,6 +25969,7 @@ Le facteur 6 est une convention d'ingénierie (certaines équipes prennent 4, le
 Application numérique sur microruban FR-4 ($t_p' \approx \SI{59}{ps/cm}$)~:
 
 \begin{center}
+\captionof{table}{Longueur critique d'une piste microruban sur FR-4 selon le temps de montée du driver.}
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{lll}
 \toprule
@@ -26340,7 +26450,8 @@ Ouvrez un catalogue de composants pour y chercher une résistance de 5,3~k$\Omeg
 
 \textbf{Comment lire le tableau ci-dessous.} Chaque nombre est une \emph{mantisse}, qui se décline sur toutes les décades. La mantisse 4,7 de la série E12 signifie qu'il existe des résistances de 4,7~$\Omega$, 47~$\Omega$, 470~$\Omega$, 4,7~k$\Omega$, 47~k$\Omega$\ldots{} --- mais aucune de 5,3~k$\Omega$, qui n'est la déclinaison d'aucune mantisse. Plus la série est fine, plus les valeurs sont rapprochées, et plus la tolérance garantie est serrée : E12 pour le tout-venant à $\pm10\,\%$, E24 pour le courant à $\pm5\,\%$, E96 pour la précision à $\pm1\,\%$. Notre 5,3~k$\Omega$ théorique deviendra donc 5,6~k$\Omega$ en E12, 5,1~k$\Omega$ en E24, ou 5,36~k$\Omega$ en E96.
 
-\begin{center}\small
+\begin{center}
+\captionof{table}{Les séries de valeurs normalisées E12, E24 et E96.}\small
 \begin{tabular}{*{12}{c}}
 \toprule
 \multicolumn{12}{c}{\textbf{E12} --- tolérance $\pm 10\,\%$}\\ \midrule
@@ -26378,6 +26489,7 @@ Le réflexe~: calculer la valeur théorique, puis prendre \textbf{la valeur norm
 Valeurs CODATA (SI 2019), arrondies à la précision utile en électronique --- quatre chiffres suffisent toujours, deux suffisent souvent.
 
 \begin{center}
+\captionof{table}{Constantes physiques et grandeurs utiles (valeurs CODATA, SI 2019).}
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{llll}
 \toprule
@@ -26414,6 +26526,7 @@ Résistivité du cuivre & $\rho$ & $1{,}68\times10^{-8}$ & $\Omega\cdot$m \\
 Convention typographique générale~: \textbf{minuscule} pour une grandeur instantanée ($v(t)$, $i(t)$), \textbf{majuscule} pour une grandeur continue, moyenne ou efficace selon le contexte ($V$, $I$), \textbf{chapeau} pour une amplitude ($\hat{V}$). Les symboles ci-dessous sont regroupés par domaine, dans l'ordre du livre.
 
 \begin{center}
+\captionof{table}{Symboles et notations~: grandeurs générales et régimes transitoires.}
 \renewcommand{\arraystretch}{1.25}\small
 \begin{tabular}{lp{10.2cm}}
 \toprule
@@ -26437,6 +26550,7 @@ ppm & partie par million ($10^{-6}$) \\
 \end{center}
 
 \begin{center}
+\captionof{table}{Symboles et notations~: régime sinusoïdal, fonctions de transfert et filtres.}
 \renewcommand{\arraystretch}{1.25}\small
 \begin{tabular}{lp{10.2cm}}
 \toprule
@@ -26453,6 +26567,7 @@ $G_{\text{dB}}$ & gain en décibels : $20\log_{10}|H|$ \\
 \end{center}
 
 \begin{center}
+\captionof{table}{Symboles et notations~: composants actifs et amplification.}
 \renewcommand{\arraystretch}{1.25}\small
 \begin{tabular}{lp{10.2cm}}
 \toprule
@@ -26476,6 +26591,7 @@ THD & taux de distorsion harmonique \\
 \end{center}
 
 \begin{center}
+\captionof{table}{Symboles et notations~: numérique et conversion.}
 \renewcommand{\arraystretch}{1.25}\small
 \begin{tabular}{lp{10.2cm}}
 \toprule
@@ -26495,6 +26611,7 @@ SNR, ENOB & rapport signal/bruit, nombre effectif de bits \\
 \end{center}
 
 \begin{center}
+\captionof{table}{Symboles et notations~: alimentations.}
 \renewcommand{\arraystretch}{1.25}\small
 \begin{tabular}{lp{10.2cm}}
 \toprule
@@ -26510,6 +26627,7 @@ ESR & résistance série équivalente ($\Omega$) \\
 \end{center}
 
 \begin{center}
+\captionof{table}{Symboles et notations~: lignes, CEM et intégrité du signal.}
 \renewcommand{\arraystretch}{1.25}\small
 \begin{tabular}{lp{10.2cm}}
 \toprule

@@ -14,7 +14,7 @@ authors:
     given-names: "Kévin"
     affiliation: "ESEO, Angers"
     email: "kevin.pottier@eseo.fr"
-version: "1.5.2"
+version: "1.6.0"
 date-released: "2026-09-15"
 license: CC-BY-NC-SA-4.0
 repository-code: "https://github.com/Kevin-Pottier/Electronique-Trois-Niveaux"
@@ -40,7 +40,7 @@ preferred-citation:
       affiliation: "ESEO, Angers"
   year: 2026
   month: 9
-  edition: "Version 1.5.2"
+  edition: "Version 1.6"
   publisher:
     name: "Kévin Pottier (auto-édition)"
   url: "https://github.com/Kevin-Pottier/Electronique-Trois-Niveaux"
