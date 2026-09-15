@@ -260,7 +260,7 @@ un ingénieur doit pouvoir s'y référer comme source de qualité.~»}
 
 \vfill
 {\small Distribué librement sous licence CC BY-NC-SA 4.0}\\[1mm]
-{\small Version 1.6 --- Septembre 2026}
+{\small Version 1.6.1 --- Septembre 2026}
 \end{titlepage}
 
 % === COLOPHON / LICENCE ===
@@ -275,7 +275,7 @@ Cet ouvrage est mis à disposition selon les termes de la licence \textbf{Creati
 Vous êtes libres de \textbf{partager} (copier, redistribuer) et d'\textbf{adapter} (modifier, transformer, améliorer) ce document, sous trois conditions : \textbf{créditer l'auteur}, \textbf{ne pas en faire un usage commercial}, et \textbf{rediffuser toute version modifiée sous cette même licence}. Texte intégral : \url{https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr}\\[4mm]
 Composé en \LaTeX{} (pdflatex)~; schémas et figures en CircuiTikZ et TikZ.\\
 Rédigé avec l'assistance de l'intelligence artificielle Claude (Anthropic), sous la direction et la vérification de l'auteur.\\
-Version 1.6 --- compilé le \datefr.\\
+Version 1.6.1 --- compilé le \datefr.\\
 Corrections, suggestions et contributions : \texttt{kevin.pottier@eseo.fr}
 \end{minipage}
 \end{center}
@@ -334,25 +334,53 @@ Le texte s'appuie sur des encadrés récurrents, toujours les mêmes~: \textbf{f
 \item \textbf{Ingénieur en exercice}~: accès direct par chapitre~; les résumés et les encadrés \emph{retenir} servent de rappels rapides, les renvois croisés permettent de remonter aux fondements au besoin.
 \end{itemize}
 
+%% raggedbottom local : sans lui, flushbottom etire la colle avant le
+%% premier sous-titre et ouvre une bande blanche au milieu de la page.
+\raggedbottom
 \section*{Historique des versions}
 
+Ce tableau ne suit que le texte de l'ouvrage~: les versions qui n'ont touché
+qu'au dépôt (licence, README, fichier de citation) n'y figurent pas. Le
+journal détaillé se trouve dans le fichier \texttt{CHANGELOG.md}.
+
+\subsection*{Construction de l'ouvrage}
+
 \begin{center}
-\renewcommand{\arraystretch}{1.35}
-\begin{tabular}{p{1.6cm}p{2.6cm}p{8.6cm}}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{p{2.5cm}p{2.0cm}p{9.3cm}}
 \toprule
 \textbf{Version} & \textbf{Date} & \textbf{Contenu} \\
 \midrule
 0.1 & avril 2026 & Rédaction initiale des 37 chapitres. \\
-0.5 & juillet 2026 & Relecture technique intégrale : trois passes par chapitre, tous les exercices vérifiés par le calcul, une soixantaine de figures créées ou refaites. \\
-0.75 & juillet 2026 & Appareil éditorial : page de garde, licence, avant-propos, guide de lecture, table des figures, pages de partie, annexes, bibliographie, glossaires. \\
-1.0 & juillet 2026 & Index complet (956 entrées), typographie française (espaces insécables), version de référence. \\
-1.1.1 & septembre 2026 & Renvois croisés convertis en références symboliques (951 renvois, 49 \texttt{\textbackslash label}). Ajout du chapitre~\ref{ch:oscillateurs}, \emph{Les Oscillateurs}, en fin de partie~\ref{part:semiconducteurs}~: les chapitres suivants sont décalés d'un rang. \\
-1.2 & septembre 2026 & Ajout du chapitre~\ref{ch:instrumentation}, \emph{Instrumentation et Mesures}, en fin de partie~\ref{part:fondamentaux}. Césure française, index resserré aux termes, 424 caractères retrouvés à l'impression, débordements de ligne supprimés. \\
-1.3 & septembre 2026 & Ajout du chapitre~\ref{ch:ampli-puissance}, \emph{L'Amplification de Puissance}, en fin de partie~\ref{part:semiconducteurs}. Correction des 35 symboles de masse qui ne s'imprimaient pas. \\
-1.4 & septembre 2026 & Ajout du chapitre~\ref{ch:simulation}, \emph{La Simulation avec LTspice}, en fin de partie~\ref{part:filtres}. \\
+0.5 & juillet 2026 & Relecture technique intégrale~: trois passes par chapitre, tous les exercices vérifiés par le calcul, une soixantaine de figures créées ou refaites. \\
+0.75 & juillet 2026 & Appareil éditorial~: page de garde, licence, avant-propos, guide de lecture, table des figures, pages de partie, annexes, bibliographie, glossaires. \\
+1.0 & juillet 2026 & Index complet, typographie française (espaces insécables), version de référence. \\
+1.1.1 & sept. 2026 & Renvois croisés convertis en références symboliques. Ajout du chapitre~\ref{ch:oscillateurs}, \emph{Les Oscillateurs}~: les chapitres suivants sont décalés d'un rang. \\
+1.2 & sept. 2026 & Ajout du chapitre~\ref{ch:instrumentation}, \emph{Instrumentation et Mesures}. Césure française, index resserré aux termes, débordements de ligne supprimés. \\
+1.3 & sept. 2026 & Ajout du chapitre~\ref{ch:ampli-puissance}, \emph{L'Amplification de Puissance}. Correction des symboles de masse qui ne s'imprimaient pas. \\
+1.4 & sept. 2026 & Ajout du chapitre~\ref{ch:simulation}, \emph{La Simulation avec LTspice}. \\
 \bottomrule
 \end{tabular}
 \end{center}
+
+\subsection*{Cycle de corrections}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{p{2.5cm}p{2.0cm}p{9.3cm}}
+\toprule
+\textbf{Version} & \textbf{Date} & \textbf{Contenu} \\
+\midrule
+1.4.1 & sept. 2026 & Revue de \textbf{lisibilité} des 180 figures, rendues en image et contrôlées une à une~: 49 défauts corrigés. Index remanié~: les entrées à plat qui doublaient une famille hiérarchique lui sont rattachées. \\
+1.4.2 à 1.4.4 & sept. 2026 & Revue de \textbf{justesse} des 180 figures~--- ce qu'elles affirment, et non plus seulement ce qu'on y lit. Neuf erreurs de fond corrigées, dont un diagramme de Nyquist ne passant pas par l'origine, un verrou SR aux entrées permutées et des asymptotes de Bode une fois et demie trop raides. \\
+1.5 & sept. 2026 & Numérotation automatique des exercices. L'insertion des quatre chapitres précédents avait laissé 201 numéros faux sur 250 et 24 doublons~; un compteur lié au chapitre rend désormais le défaut impossible. \\
+1.5.1 & sept. 2026 & La figure~\ref{fig:phaseur} refaite~: la projection du phaseur tournant se fait sur l'axe réel, et non sur l'axe imaginaire comme le suggérait le tracé. \\
+1.5.2 & sept. 2026 & Ajout des encadrés \emph{À retenir} de fin de section «~Les Bases~» manquants aux chapitres~\ref{ch:instrumentation}, \ref{ch:simulation}, \ref{ch:oscillateurs} et~\ref{ch:ampli-puissance}~: les 41 chapitres ont désormais la même architecture interne. \\
+1.6 & sept. 2026 & 111 tableaux numérotés et légendés, et ajout de la \emph{Liste des tableaux} après la table des figures. \\
+\bottomrule
+\end{tabular}
+\end{center}
+\flushbottom
 
 \newpage
 
@@ -6794,6 +6822,7 @@ $\underline{U}$ contient \textit{toute} l'information sur le signal sinusoïdal~
   \node[red!70!black, font=\footnotesize] at (7.5,1.15) {$u(t)$};
 \end{tikzpicture}
 \caption{Le phaseur tournant, dessiné ici à l'instant $t=0$ (angle $\varphi_u$). $u(t) = \Re[\underline{U}e^{j\omega t}]$ est la projection du vecteur sur l'axe \textit{réel} : c'est cette longueur, et non la hauteur, que l'on reporte en ordonnée pour tracer $u(t)$ --- d'où un cosinus. Amplitude $=$ longueur, phase $=$ angle initial : le régime sinusoïdal se réduit à de la géométrie.}
+\label{fig:phaseur}
 \end{figure}
 
 \begin{attention}

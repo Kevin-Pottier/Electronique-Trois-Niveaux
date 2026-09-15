@@ -1,5 +1,41 @@
 # Historique des versions
 
+## v1.6.1 — 15 septembre 2026
+**Le tableau « Historique des versions » de l'avant-propos est refait.** Il
+s'arrêtait à la v1.4 et ignorait donc les huit versions du cycle de
+corrections. Il annonçait par ailleurs « Index complet (956 entrées) » pour la
+v1.0 — exact à l'époque, mais trompeur depuis que l'index a été resserré.
+
+La règle éditoriale du tableau est conservée, et désormais énoncée en tête :
+il ne suit que le texte de l'ouvrage, les versions qui n'ont touché qu'au
+dépôt n'y figurent pas, et le journal détaillé renvoie à `CHANGELOG.md`.
+
+Le tableau est scindé en deux — **Construction de l'ouvrage** (0.1 à 1.4) et
+**Cycle de corrections** (1.4.1 à 1.6) — pour deux raisons. La première est
+éditoriale : ce sont deux natures de travail différentes, l'une qui ajoute du
+contenu, l'autre qui le corrige. La seconde est technique : un `tabular` ne se
+coupe pas entre deux pages, et quatorze lignes ne tiennent pas sur une seule.
+Les trois passes de justesse des figures sont regroupées en une ligne
+« 1.4.2 à 1.4.4 », puisqu'elles sont trois tranches d'une même opération.
+
+Deux corrections de forme au passage. Les renvois aux chapitres et à la figure
+du phaseur sont désormais **symboliques** : la figure 11.1 reçoit un
+`\label`, le premier du livre, plutôt que de voir son numéro écrit en dur dans
+le tableau — c'est exactement le défaut qui avait coûté 201 numéros d'exercices
+faux en v1.5. Et un `\raggedbottom` local encadre la section : sans lui, le
+`\flushbottom` de la classe `book` étirait la colle avant le premier
+sous-titre et ouvrait une bande blanche de cinq centimètres au milieu de la
+page.
+
+Le chiffre de l'index annoncé en v1.4.1 est également corrigé dans ce
+changelog : 366 entrées imprimées et non 359, recomptées sur le fichier
+`.ind`.
+
+Pagination 701 → 703 pages, entièrement en tête d'ouvrage : **le corps du
+livre est identique mot pour mot** à celui de la v1.6 (192 378 mots dans les
+deux versions, première divergence à l'Index dont les renvois glissent
+de $+2$). 180 figures, 111 tableaux et 1147 renvois numérotés inchangés.
+
 ## v1.6 — 15 septembre 2026
 **Les tableaux sont numérotés, et le livre a sa « Liste des tableaux ».**
 
@@ -293,8 +329,11 @@ Trois corrections portent sur le fond et non sur la forme :
 - **9.6** — le cycle d'hystérésis ne passait pas par les points $B_r$ et $H_c$
   qu'il prétendait repérer ; la boucle est reconstruite pour y passer.
 
-**Index.** 388 → 359 entrées, sans perte d'information : ce sont des doublons
-et des redondances qui disparaissent.
+**Index.** Ramené à 366 entrées imprimées (314 principales et 52
+sous-entrées), sans perte d'information : ce sont des doublons et des
+redondances qui disparaissent. *(Cette ligne annonçait initialement 359
+entrées ; le recomptage sur le fichier `.ind` donne 366, et c'est ce chiffre
+qui est repris dans le README.)*
 
 Le défaut principal était structurel. Pour plusieurs notions, une famille
 hiérarchique et des entrées à plat coexistaient : « convertisseur ▸ buck »
