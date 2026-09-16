@@ -1,5 +1,36 @@
 # Historique des versions
 
+## v1.7.2 — 16 septembre 2026
+**Les cinq sources primaires étaient orphelines, à la fin de la mauvaise
+annexe.**
+
+Ajoutées en v1.7, elles devaient clore le chapitre « Bibliographie
+commentée ». Le script d'insertion les a placées juste avant
+`\chapter{Formulaire}`, en supposant que le formulaire suivait la
+bibliographie. C'est l'inverse : le formulaire est l'annexe~D, donc il la
+précède. Les références ont atterri à la fin de l'annexe~C, « Symboles et
+notations », à une trentaine de pages de la bibliographie à laquelle elles
+appartiennent.
+
+Rien n'avait été perdu ni écrasé --- les neuf ouvrages d'origine, Harris \&
+Harris et les cinq articles étaient tous présents --- mais cinq références
+bibliographiques se lisaient après un tableau de notations, sans rien pour
+les y rattacher. Elles closent maintenant la bibliographie, comme prévu.
+
+**Le défaut a échappé aux contrôles de non-régression, et c'est le point
+important.** Ces contrôles comparent des compteurs : renvois numérotés,
+figures, tableaux, exercices, pages, débordements. Tous étaient corrects,
+puisque le contenu était bien là --- simplement ailleurs. Un bloc *déplacé*
+ne change aucun compteur.
+
+Le protocole gagne donc un contrôle de **structure** : la liste ordonnée des
+chapitres et des sections est extraite avant et après modification, et
+comparée. Passé sur la v1.7, il désigne le défaut en trois lignes. Il est
+désormais lancé à chaque version au même titre que le comptage des renvois.
+
+Pagination inchangée à 729 pages. 1327 renvois numérotés, 180 figures,
+111 tableaux, 249 exercices : aucune différence.
+
 ## v1.7.1 — 16 septembre 2026
 **Chaque formule du formulaire porte désormais son nom.**
 

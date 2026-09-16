@@ -278,7 +278,7 @@ un ingénieur doit pouvoir s'y référer comme source de qualité.~»}
 
 \vfill
 {\small Distribué librement sous licence CC BY-NC-SA 4.0}\\[1mm]
-{\small Version 1.7.1 --- Septembre 2026}
+{\small Version 1.7.2 --- Septembre 2026}
 \end{titlepage}
 
 % === COLOPHON / LICENCE ===
@@ -293,7 +293,7 @@ Cet ouvrage est mis à disposition selon les termes de la licence \textbf{Creati
 Vous êtes libres de \textbf{partager} (copier, redistribuer) et d'\textbf{adapter} (modifier, transformer, améliorer) ce document, sous trois conditions : \textbf{créditer l'auteur}, \textbf{ne pas en faire un usage commercial}, et \textbf{rediffuser toute version modifiée sous cette même licence}. Texte intégral : \url{https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr}\\[4mm]
 Composé en \LaTeX{} (pdflatex)~; schémas et figures en CircuiTikZ et TikZ.\\
 Rédigé avec l'assistance de l'intelligence artificielle Claude (Anthropic), sous la direction et la vérification de l'auteur.\\
-Version 1.7.1 --- compilé le \datefr.\\
+Version 1.7.2 --- compilé le \datefr.\\
 Corrections, suggestions et contributions : \texttt{kevin.pottier@eseo.fr}
 \end{minipage}
 \end{center}
@@ -26818,19 +26818,6 @@ dBm, dBµV & niveaux référencés (1 mW, 1 µV) \\
 \cleardoublepage
 \phantomsection
 \addcontentsline{toc}{chapter}{Bibliographie commentée}
-\section*{Sources primaires}
-
-Les résultats nommés dans le livre viennent d'articles précis. Les voici, pour
-le lecteur qui voudrait remonter au texte d'origine.
-
-\begin{itemize}[itemsep=3pt]
-\item J. B. \textsc{Johnson}, «~Thermal Agitation of Electricity in Conductors~», \emph{Physical Review}, vol.~32, p.~97, 1928. --- La mise en évidence expérimentale du bruit thermique (chapitre~\ref{ch:tension}).
-\item H. \textsc{Nyquist}, «~Thermal Agitation of Electric Charge in Conductors~», \emph{Physical Review}, vol.~32, p.~110, 1928. --- La théorie qui accompagne la mesure de Johnson~; ensemble, ils donnent le $4k_BTR\Delta f$.
-\item W. \textsc{Shockley}, «~The Theory of p-n Junctions in Semiconductors and p-n Junction Transistors~», \emph{Bell System Technical Journal}, vol.~28, p.~435, 1949. --- L'équation de la diode (chapitre~\ref{ch:diode}).
-\item M. J. M. \textsc{Pelgrom}, A. C. J. \textsc{Duinmaijer}, A. P. G. \textsc{Welbers}, «~Matching properties of MOS transistors~», \emph{IEEE Journal of Solid-State Circuits}, vol.~24, n\textsuperscript{o}~5, p.~1433, 1989. --- La loi qui gouverne l'appariement des transistors, et donc les limites de la conception intégrée (chapitre~\ref{ch:limites-numerique}).
-\item B. J. \textsc{Baliga}, «~Power semiconductor device figure of merit for high-frequency applications~», \emph{IEEE Electron Device Letters}, vol.~10, p.~455, 1989. --- Le compromis entre tenue en tension et résistance à l'état passant (chapitre~\ref{ch:mosfet}).
-\end{itemize}
-
 \chapter{Formulaire}\index{formulaire}\label{annexe:formulaire}
 
 Les formules encadrées du livre, chapitre par chapitre, chacune sous le nom
@@ -27227,6 +27214,19 @@ La référence pédagogique de l'intégrité du signal, fidèle à sa devise~: l
 \cleardoublepage
 \phantomsection
 \addcontentsline{toc}{chapter}{Glossaire}
+\section*{Sources primaires}
+
+Les résultats nommés dans le livre viennent d'articles précis. Les voici, pour
+le lecteur qui voudrait remonter au texte d'origine.
+
+\begin{itemize}[itemsep=3pt]
+\item J. B. \textsc{Johnson}, «~Thermal Agitation of Electricity in Conductors~», \emph{Physical Review}, vol.~32, p.~97, 1928. --- La mise en évidence expérimentale du bruit thermique (chapitre~\ref{ch:tension}).
+\item H. \textsc{Nyquist}, «~Thermal Agitation of Electric Charge in Conductors~», \emph{Physical Review}, vol.~32, p.~110, 1928. --- La théorie qui accompagne la mesure de Johnson~; ensemble, ils donnent le $4k_BTR\Delta f$.
+\item W. \textsc{Shockley}, «~The Theory of p-n Junctions in Semiconductors and p-n Junction Transistors~», \emph{Bell System Technical Journal}, vol.~28, p.~435, 1949. --- L'équation de la diode (chapitre~\ref{ch:diode}).
+\item M. J. M. \textsc{Pelgrom}, A. C. J. \textsc{Duinmaijer}, A. P. G. \textsc{Welbers}, «~Matching properties of MOS transistors~», \emph{IEEE Journal of Solid-State Circuits}, vol.~24, n\textsuperscript{o}~5, p.~1433, 1989. --- La loi qui gouverne l'appariement des transistors, et donc les limites de la conception intégrée (chapitre~\ref{ch:limites-numerique}).
+\item B. J. \textsc{Baliga}, «~Power semiconductor device figure of merit for high-frequency applications~», \emph{IEEE Electron Device Letters}, vol.~10, p.~455, 1989. --- Le compromis entre tenue en tension et résistance à l'état passant (chapitre~\ref{ch:mosfet}).
+\end{itemize}
+
 \chapter*{Glossaire}
 
 Les termes du métier, définis en une ou deux lignes, avec leur équivalent anglais en italique --- celui que vous rencontrerez dans les fiches techniques. Le lexique qui suit donne les correspondances dans les deux sens.
