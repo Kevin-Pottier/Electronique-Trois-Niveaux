@@ -171,6 +171,15 @@
 %% === DATE EN FRANCAIS ===
 %% babel n'etant pas charge, \today produit une date anglaise ("September 9, 2026")
 %% au colophon d'un ouvrage francais. \datefr rend le format attendu.
+%% === RAPPEL DE PARCOURS EN TETE DE CHAPITRE ===
+%% Un lecteur debutant ignore souvent qu'il peut s'arreter a la fin des Bases :
+%% l'avant-propos le dit, mais personne ne lit les avant-propos.
+\newcommand{\parcours}{%
+  \begin{center}\footnotesize\itshape
+  Trois niveaux dans ce chapitre. \emph{Les Bases} se suffisent à elles-mêmes~:
+  vous pouvez vous y arrêter et passer au chapitre suivant.
+  \end{center}}
+
 %% === NUMEROTATION AUTOMATIQUE DES EXERCICES ===
 %% Les énoncés étaient numérotés en dur : l'insertion de nouveaux chapitres
 %% désalignait les numéros et en créait des doublons. Le compteur suit
@@ -260,7 +269,7 @@ un ingénieur doit pouvoir s'y référer comme source de qualité.~»}
 
 \vfill
 {\small Distribué librement sous licence CC BY-NC-SA 4.0}\\[1mm]
-{\small Version 1.6.4 --- Septembre 2026}
+{\small Version 1.7 --- Septembre 2026}
 \end{titlepage}
 
 % === COLOPHON / LICENCE ===
@@ -275,7 +284,7 @@ Cet ouvrage est mis à disposition selon les termes de la licence \textbf{Creati
 Vous êtes libres de \textbf{partager} (copier, redistribuer) et d'\textbf{adapter} (modifier, transformer, améliorer) ce document, sous trois conditions : \textbf{créditer l'auteur}, \textbf{ne pas en faire un usage commercial}, et \textbf{rediffuser toute version modifiée sous cette même licence}. Texte intégral : \url{https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr}\\[4mm]
 Composé en \LaTeX{} (pdflatex)~; schémas et figures en CircuiTikZ et TikZ.\\
 Rédigé avec l'assistance de l'intelligence artificielle Claude (Anthropic), sous la direction et la vérification de l'auteur.\\
-Version 1.6.4 --- compilé le \datefr.\\
+Version 1.7 --- compilé le \datefr.\\
 Corrections, suggestions et contributions : \texttt{kevin.pottier@eseo.fr}
 \end{minipage}
 \end{center}
@@ -324,7 +333,7 @@ Chaque chapitre est découpé en trois sections de difficulté croissante, signa
 
 \section*{Les encadrés}
 
-Le texte s'appuie sur des encadrés récurrents, toujours les mêmes~: \textbf{formule} (le résultat et d'où il vient), \textbf{intuition} (l'image mentale qui fait tenir la formule), \textbf{attention} (le piège classique), \textbf{pratique} (l'application chiffrée --- c'est là que vivent les solutions d'exercices), et \textbf{retenir} (la synthèse à emporter). En fin de chapitre~: six exercices corrigés (deux par niveau), quatre questions de compréhension avec réponses rédigées, trois résumés tabulaires --- un par niveau --- et un dernier encadré qui tisse le lien vers le chapitre suivant.
+Le texte s'appuie sur des encadrés récurrents, toujours les mêmes~: \textbf{formule} (le résultat et d'où il vient), \textbf{intuition} (l'image mentale qui fait tenir la formule), \textbf{analogie} (le parallèle avec un phénomène familier), \textbf{attention} (le piège classique), \textbf{pratique} (l'application chiffrée --- c'est là que vivent les solutions d'exercices), et \textbf{retenir} (la synthèse à emporter). En fin de chapitre~: six exercices corrigés (deux par niveau), quatre questions de compréhension avec réponses rédigées, trois résumés tabulaires --- un par niveau --- et un dernier encadré qui tisse le lien vers le chapitre suivant.
 
 \section*{Trois parcours possibles}
 
@@ -377,7 +386,8 @@ journal détaillé se trouve dans le fichier \texttt{CHANGELOG.md}.
 1.5.1 & sept. 2026 & La figure~\ref{fig:phaseur} refaite~: la projection du phaseur tournant se fait sur l'axe réel, et non sur l'axe imaginaire comme le suggérait le tracé. \\
 1.5.2 & sept. 2026 & Ajout des encadrés \emph{À retenir} de fin de section «~Les Bases~» manquants aux chapitres~\ref{ch:instrumentation}, \ref{ch:simulation}, \ref{ch:oscillateurs} et~\ref{ch:ampli-puissance}~: les 41 chapitres ont désormais la même architecture interne. \\
 1.6 & sept. 2026 & 111 tableaux numérotés et légendés, et ajout de la \emph{Liste des tableaux} après la table des figures. \\
-1.6.1 à 1.6.3 & sept. 2026 & Le présent historique refait et redaté. Figure~\ref{fig:trr} redessinée selon la convention des fiches techniques~: $t_{rr}$ se compte à partir du passage par zéro du courant, et le pic de courant inverse prend sa notation normalisée $I_{RM}$. \\
+1.6.1 à 1.6.4 & sept. 2026 & Le présent historique refait et redaté. Figure~\ref{fig:trr} redessinée selon la convention des fiches techniques~: $t_{rr}$ se compte à partir du passage par zéro du courant, et le pic de courant inverse prend sa notation normalisée $I_{RM}$. Six figures comparatives rendues lisibles sans la couleur~: chaque courbe reçoit son propre style de trait. \\
+1.7 & sept. 2026 & Annexe~\ref{annexe:formulaire}, \emph{Formulaire}~: les 220 formules encadrées du livre rassemblées par chapitre. Rappel de parcours en tête de chaque chapitre. Bibliographie complétée d'un ouvrage de numérique et des cinq sources primaires des résultats nommés (Johnson, Nyquist, Shockley, Pelgrom, Baliga). \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -431,6 +441,8 @@ C'est la première grandeur que l'on manipule en électronique.}
 % ----------------------------------------------------------------------------
 % SECTION 1 : LES BASES
 % ----------------------------------------------------------------------------
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -1007,6 +1019,8 @@ et qui fixe l'énergie que chacune transporte.}
 % ----------------------------------------------------------------------------
 % SECTION 1 : LES BASES
 % ----------------------------------------------------------------------------
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -1629,6 +1643,8 @@ Au chapitre~\ref{ch:courant}, nous avons vu \textit{ce que} sont les charges en 
 % ----------------------------------------------------------------------------
 % SECTION 1 : LES BASES
 % ----------------------------------------------------------------------------
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -2357,6 +2373,8 @@ C'est elle qui dimensionne les composants, les alimentations et les systèmes de
 % ----------------------------------------------------------------------------
 % SECTION 1 : LES BASES
 % ----------------------------------------------------------------------------
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -2988,6 +3006,8 @@ Combinées à la loi d'Ohm\index{Ohm, loi d'}, elles permettent de résoudre tou
 % ----------------------------------------------------------------------------
 % SECTION 1 : LES BASES
 % ----------------------------------------------------------------------------
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -3584,6 +3604,8 @@ Au chapitre~\ref{ch:kirchhoff}, nous avons vu que les lois de Kirchhoff\index{Ki
 % ----------------------------------------------------------------------------
 % SECTION 1 : LES BASES
 % ----------------------------------------------------------------------------
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -4174,6 +4196,8 @@ et perturbe toujours un peu ce qu'il prétend observer.}
 % ----------------------------------------------------------------------------
 % SECTION 1 : LES BASES
 % ----------------------------------------------------------------------------
+\parcours
+
 \section{Les Bases}\index{bases}
 
 \begin{bases}
@@ -4956,6 +4980,8 @@ Il est omniprésent~: filtrage, découplage\index{découplage}, temporisation, m
 \vspace{0.5cm}
 
 % ----------------------------------------------------------------------------
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -5504,6 +5530,8 @@ comme le condensateur résiste aux variations de tension.}
 \vspace{0.5cm}
 
 % ----------------------------------------------------------------------------
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -6113,6 +6141,8 @@ oscillateurs et circuits de temporisation de l'électronique.}
 Les chapitres~\ref{ch:condensateur} et~\ref{ch:bobine} ont étudié le condensateur et la bobine séparément. Ce chapitre les \textbf{combine} pour révéler des comportements nouveaux~: oscillations, résonance\index{résonance}, amortissement. Ce sont les briques fondamentales de toute l'électronique analogique.
 
 % ----------------------------------------------------------------------------
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -6649,6 +6679,8 @@ C'est l'outil le plus puissant de l'électronicien.}
 Jusqu'ici, nous avons analysé les circuits en continu (DC) ou en transitoire (exponentielles, RC, RL). Mais la majorité des signaux réels sont \textbf{périodiques}~: secteur 50\,Hz, audio, radio, horloge numérique\ldots{} Ce chapitre introduit l'outil mathématique qui permet d'analyser ces signaux sans résoudre d'équation différentielle~: la \textbf{notation complexe\index{notation complexe}}.
 
 % ----------------------------------------------------------------------------
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -7325,6 +7357,8 @@ une partie de l'énergie ``fait des allers-retours'' sans jamais être utilisée
 Le chapitre~\ref{ch:puissance} a traité la puissance en DC et donné un premier aperçu du régime AC. Le chapitre~\ref{ch:complexes} a introduit la notation complexe\index{notation complexe}. Ce chapitre les réunit pour développer complètement la théorie de la puissance en régime sinusoïdal --- un sujet qui a des conséquences économiques considérables dans l'industrie.
 
 % ----------------------------------------------------------------------------
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -7875,6 +7909,8 @@ C'est la clé de la radio, des filtres, des oscillateurs et des horloges.}
 Le chapitre~\ref{ch:rc-rl-rlc} a introduit la fréquence propre $f_0 = 1/(2\pi\sqrt{LC})$ et le facteur de qualité\index{facteur de qualité} $Q$. Le chapitre~\ref{ch:complexes} a donné les outils complexes. Ce chapitre réunit tout pour étudier en détail ce qui se passe quand on \textbf{excite un circuit RLC à sa fréquence propre} --- et au voisinage.
 
 % ----------------------------------------------------------------------------
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -8504,6 +8540,8 @@ la plus utilisée en électronique et en automatique.}
 Ce chapitre est un \textbf{chapitre charnière} du livre. Il fait la synthèse de tout ce qui précède (complexes, impédances, filtres RC/RL/RLC) et ouvre la porte aux filtres, aux amplificateurs, aux asservissements et à l'analyse de stabilité. C'est probablement le chapitre le plus important pour un électronicien ou un automaticien.
 
 % ----------------------------------------------------------------------------
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -9525,6 +9563,8 @@ audio, radio, instrumentation, alimentation, télécoms\ldots}
 Le chapitre~\ref{ch:bode} a donné la théorie~: fonctions de transfert, Bode, pôles et zéros. Ce chapitre passe à la \textbf{pratique}~: comment concevoir un filtre qui répond à un cahier des charges réel, avec des composants réels, en choisissant la bonne topologie.
 
 % ----------------------------------------------------------------------------
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -10176,6 +10216,8 @@ sans jamais douter, y compris quand la question était mal posée.}
 % ----------------------------------------------------------------------------
 % SECTION 1 : LES BASES
 % ----------------------------------------------------------------------------
+\parcours
+
 \section{Les Bases}\index{bases}
 
 \begin{bases}
@@ -10207,7 +10249,9 @@ n'avait pas de sens.
 
 \begin{attention}
 Nous emploierons \textbf{LTspice}, gratuit et sans limite de taille de
-circuit. \textbf{PSpice} et les autres dérivés partagent le même moteur et la
+circuit (Windows et macOS~; sous Linux, il tourne via Wine, et l'on peut sinon
+se rabattre sur \textbf{ngspice} ou \textbf{QUCS-S}, qui partagent le même
+moteur et la même syntaxe de netlist). \textbf{PSpice} et les autres dérivés partagent le même moteur et la
 même syntaxe de netlist~: les directives et les principes présentés ici s'y
 transposent, seules changent l'interface et la bibliothèque de modèles. Ce
 chapitre parle de simulation, pas de menus.
@@ -10883,6 +10927,8 @@ et la porte d'entrée vers toute l'électronique à semi-conducteurs.}
 Jusqu'ici, tous les composants étudiés étaient \textbf{linéaires}~: la relation entre tension et courant était proportionnelle (résistance) ou différentielle linéaire (condensateur, bobine). La diode rompt cette symétrie~: son comportement dépend du \textit{signe} de la tension appliquée. C'est ce qui permet le redressement\index{redressement}, la protection, la détection et bien d'autres fonctions essentielles.
 
 % ----------------------------------------------------------------------------
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -11958,6 +12004,8 @@ Contrairement à une idée reçue tenace, le BJT n'est \textbf{pas} fondamentale
 Ce chapitre présente le BJT selon trois niveaux de lecture~: l'intuition (analogies et règles pratiques), le modèle ingénieur (outils de calcul), et le modèle physique (transport de porteurs et champs).
 
 % ============================================================================
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -12852,6 +12900,8 @@ Le MOSFET\index{MOSFET} (\textit{Metal-Oxide-Semiconductor Field-Effect Transist
 \end{attention}
 
 % ============================================================================
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -13555,6 +13605,8 @@ Ce chapitre commence par les outils pratiques (comment résoudre un circuit à A
 \end{intuition}
 
 % ============================================================================
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -14242,6 +14294,8 @@ en anticipant les limites physiques qui séparent la théorie du PCB.}
 Un filtre actif bien calculé sur le papier peut ne pas fonctionner en pratique. L'AOP n'est pas idéal (chapitre~\ref{ch:aop}), les condensateurs ne sont pas parfaits, le bruit s'accumule, et les tolérances décalent $f_0$ et $Q$. Ce chapitre fournit la méthodologie complète pour concevoir un filtre réel et anticiper tous ces pièges, en s'appuyant sur la physique des pôles et zéros, les limites de l'AOP (chapitres~\ref{ch:bjt}--\ref{ch:aop}), et la résonance\index{résonance} (chapitre~\ref{ch:resonance}).
 
 % ============================================================================
+\parcours
+
 \section{Les Bases --- rappel et vue d'ensemble}
 
 \begin{bases}
@@ -14960,6 +15014,8 @@ ou plus exactement à partir du bruit qui traîne dans le circuit.}
 % ----------------------------------------------------------------------------
 % SECTION 1 : LES BASES
 % ----------------------------------------------------------------------------
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -15712,6 +15768,8 @@ et qui meurt --- et la conception change de nature.}
 % ----------------------------------------------------------------------------
 % SECTION 1 : LES BASES
 % ----------------------------------------------------------------------------
+\parcours
+
 \section{Les Bases}\index{bases}
 
 \begin{bases}
@@ -16469,6 +16527,8 @@ L'électronique analogique (chapitres~\ref{ch:courant}--\ref{ch:filtres-actifs})
 Ce chapitre couvre la \textbf{logique combinatoire}~: les circuits dont la sortie ne dépend que de l'état \textit{actuel} des entrées, sans mémoire. Le chapitre~\ref{ch:sequentiel} abordera la logique séquentielle (avec mémoire).
 
 % ============================================================================
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -17158,6 +17218,8 @@ Le chapitre~\ref{ch:combinatoire} a montré que les circuits combinatoires calcu
 Ce chapitre couvre les briques élémentaires de mémoire (verrous, bascules), les structures construites à partir d'elles (registres, compteurs), et les contraintes temporelles (\textit{setup\index{setup, temps de}}, \textit{hold\index{hold, temps de}}, métastabilité\index{métastabilité}) qui limitent la vitesse des systèmes numériques.
 
 % ============================================================================
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -17881,6 +17943,8 @@ Le chapitre~\ref{ch:sequentiel} a introduit les notions de setup\index{setup, te
 \end{intuition}
 
 % ============================================================================
+\parcours
+
 \section{Les Bases --- le timing vu globalement}
 
 \begin{bases}
@@ -18417,6 +18481,8 @@ réduite à son essence~: un registre, un nuage combinatoire, une horloge.}
 Le chapitre~\ref{ch:sequentiel} a introduit la FSM comme modèle abstrait (diagramme d'états, Moore vs Mealy). Le chapitre~\ref{ch:timing} a montré que le timing impose des limites physiques à tout circuit séquentiel. Ce chapitre fait la synthèse~: comment \textbf{concevoir} une FSM de A à Z, de la spécification au circuit physique, en intégrant les contraintes de timing dès le départ.
 
 % ============================================================================
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -19029,6 +19095,8 @@ Les chapitres précédents ont utilisé les bascules D comme éléments de mémo
 \end{intuition}
 
 % ============================================================================
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -19555,6 +19623,8 @@ sur le triangle vitesse--surface--consommation.}
 Le chapitre~\ref{ch:combinatoire} a montré comment réaliser un additionneur\index{additionneur} 1 bit (demi et complet). Ce chapitre construit l'arithmétique numérique complète~: addition multi-bits, soustraction, multiplication, division, et comparaison. L'enjeu n'est pas seulement \textit{de faire} ces opérations --- c'est de les faire \textit{vite}, sans exploser la surface ni la consommation. Chaque architecture est un compromis différent, dicté par la physique des délais $RC$ (chapitre~\ref{ch:combinatoire}) et des contraintes de timing (chapitre~\ref{ch:timing}).
 
 % ============================================================================
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -20128,6 +20198,8 @@ et c'est avant tout un problème de matériel, de timing et de physique.}
 Les chapitres~\ref{ch:combinatoire} à~\ref{ch:arithmetique} ont construit les composants~: logique combinatoire, bascules, machines d'état, mémoires, circuits arithmétiques. Ce chapitre montre comment les \textbf{assembler} en un système numérique complet. Le modèle universel est la séparation \textbf{datapath / contrôleur}~: un chemin de données qui transporte et transforme les valeurs, et une FSM qui orchestre les opérations cycle par cycle. Nous resterons du côté \textit{matériel}~: structures physiques, chemins critiques, compromis de conception --- pas un cours d'informatique.
 
 % ============================================================================
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -20727,6 +20799,8 @@ c'est choisir précisément ce qu'on accepte de perdre.}
 Toute la partie numérique (chapitres~\ref{ch:combinatoire}--\ref{ch:architecture}) suppose que les données existent déjà sous forme de bits. Mais un capteur de température, un microphone, une antenne délivrent des \textbf{tensions continues}. Ce chapitre traite la frontière~: comment transformer une tension en nombre (\textbf{ADC}, \textit{Analog-to-Digital Converter}) et un nombre en tension (\textbf{DAC}, \textit{Digital-to-Analog Converter}). C'est le chapitre charnière du livre~: il mobilise les filtres (chapitre~\ref{ch:filtres-actifs}), les AOP (chapitre~\ref{ch:aop}), les comparateurs, la logique (chapitres~\ref{ch:combinatoire}--\ref{ch:fsm}) et le jitter d'horloge (chapitre~\ref{ch:timing}).
 
 % ============================================================================
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -21206,6 +21280,8 @@ Comprendre les deux couches, c'est savoir choisir et déboguer.}
 Les chapitres~\ref{ch:combinatoire} à~\ref{ch:conversion} ont construit des systèmes numériques complets. Ce chapitre les fait \textbf{communiquer}. La démarche reste fidèle au fil conducteur du livre~: pour chaque protocole, nous partons de la \textbf{couche électrique} (niveaux, impédances, temps de montée\index{temps de montée} --- de la physique des chapitres~\ref{ch:rc-rl-rlc}, \ref{ch:bjt}, \ref{ch:combinatoire}) avant de monter vers la couche logique (trames, adressage, arbitrage --- des FSM du chapitre~\ref{ch:fsm}). C'est l'ordre dans lequel on débogue un bus réel à l'oscilloscope.
 
 % ============================================================================
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -21726,6 +21802,8 @@ en montrant où sont les murs --- et comment l'ingénieur compose avec.}
 Les chapitres~\ref{ch:combinatoire} à~\ref{ch:protocoles} ont construit le numérique comme si les transistors étaient parfaits, identiques et éternels. Ils ne le sont pas. Ce chapitre rassemble les limites physiques qui gouvernent la conception moderne~: le \textbf{bruit} (chapitres~\ref{ch:bjt}--\ref{ch:mosfet}) qui fixe un plancher, la \textbf{consommation} (chapitre~\ref{ch:combinatoire}) qui fixe un plafond, la \textbf{variabilité} (chapitres~\ref{ch:timing}, \ref{ch:memoire}) qui mange les marges, et le \textbf{vieillissement} qui dégrade tout dans le temps. C'est la synthèse physique de toute la partie~\ref{part:numerique} --- et la raison d'être des parties suivantes (alimentations, CEM).
 
 % ============================================================================
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -22140,6 +22218,8 @@ puis construit la vraie~: le régulateur linéaire.}
 La partie~\ref{part:numerique} s'est conclue sur un constat~: l'énergie est devenue \textit{la} contrainte du numérique (chapitre~\ref{ch:limites-numerique}). Cette partie~\ref{part:alimentations} traite la discipline qui la gouverne~: les alimentations. Nous commençons par la régulation \textbf{linéaire} --- la plus simple, la plus propre, la moins efficace --- avant le découpage (chapitre~\ref{ch:decoupage}). Au passage, ce chapitre referme une boucle ouverte au chapitre~\ref{ch:resistance}~: le diviseur de tension, et pourquoi il ne faut \textit{jamais} le confondre avec une alimentation.
 
 % ============================================================================
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -22703,6 +22783,8 @@ et toute la difficulté aussi~: commutation, ondulation\index{ondulation}, stabi
 Le chapitre~\ref{ch:ldo} s'est heurté à une limite structurelle~: le rendement linéaire $\eta = V_{\text{out}}/V_{\text{in}}$ condamne tout grand écart de tension à chauffer. Ce chapitre construit l'alternative~: les convertisseurs à découpage (\textit{Switched-Mode Power Supplies}, SMPS), qui atteignent 85--98\,\% de rendement quel que soit le rapport de transformation, et savent même \textbf{élever} la tension. Le prix~: on entre dans le monde de la commutation rapide, des bobines (chapitre~\ref{ch:bobine}) et de la stabilité des boucles (chapitre~\ref{ch:magnetiques}). Le fil conducteur reste l'énergie --- celle que le chapitre~\ref{ch:limites-numerique} a placée au centre du numérique moderne.
 
 % ============================================================================
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -23192,6 +23274,8 @@ le magnétique réel, et la stabilité de la régulation.}
 Le chapitre~\ref{ch:decoupage} a construit les convertisseurs à découpage en supposant la bobine parfaite et la régulation acquise. Deux idéalisations dangereuses. D'abord, les \textbf{composants magnétiques réels} (bobines, transformateurs) saturent et dissipent --- ils sont souvent le maillon qui limite un SMPS. Ensuite, un convertisseur est une \textbf{boucle de contre-réaction\index{contre-réaction}} (chapitre~\ref{ch:aop}) avec un filtre LC en sortie~: sa stabilité n'est jamais gratuite. Ce chapitre referme la partie~\ref{part:alimentations} en reliant le magnétique (chapitre~\ref{ch:bobine}) et l'asservissement (chapitre~\ref{ch:aop}, et la future partie~\ref{part:asservissement}).
 
 % ============================================================================
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -23635,6 +23719,8 @@ qui change les équations différentielles en simple algèbre.}
 Depuis le chapitre~\ref{ch:aop} (la rétroaction de l'AOP) jusqu'au chapitre~\ref{ch:magnetiques} (la stabilité du découpage), un même principe revient~: la \textbf{boucle de contre-réaction\index{contre-réaction}}. Ce chapitre lui donne son cadre général --- l'\textbf{asservissement} --- et l'outil mathématique qui permet de le concevoir~: la \textbf{transformée de Laplace\index{Laplace, transformée de}}. Elle transforme les équations différentielles (difficiles) en fractions rationnelles en $s$ (faciles), où pôles et zéros racontent tout le comportement. C'est l'aboutissement théorique du livre~: la formalisation de ce que les chapitres précédents pratiquaient déjà.
 
 % ============================================================================
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -24124,6 +24210,8 @@ et comment lire la stabilité directement sur Bode.}
 Le chapitre~\ref{ch:laplace} a formalisé l'asservissement et introduit Laplace~; il restait le correcteur $C(s)$ comme une boîte à remplir. Ce chapitre la remplit avec le \textbf{PID\index{correcteur!PID}}, le correcteur universel de l'industrie~: trois actions élémentaires --- \textbf{P}roportionnelle, \textbf{I}ntégrale, \textbf{D}érivée --- dont la combinaison règle le compromis précision / rapidité / stabilité. On verra ensuite deux outils de conception complémentaires~: le \textbf{lieu des racines\index{lieu des racines}} (où vont les pôles quand on monte le gain) et la lecture des \textbf{marges} sur Bode (chapitre~\ref{ch:aop}). C'est le chapitre qui transforme la compréhension des boucles en capacité à les \textit{concevoir}.
 
 % ============================================================================
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -24595,6 +24683,8 @@ pour la bloquer à la source, sur le chemin, ou à l'arrivée.}
 Le chapitre~\ref{ch:limites-numerique} a montré que le numérique moderne vit de fronts raides~; les chapitres~\ref{ch:ldo} à~\ref{ch:magnetiques} ont ajouté des convertisseurs qui commutent des ampères en dizaines de nanosecondes. Chacun de ces $\mathrm{d}V/\mathrm{d}t$ et $\mathrm{d}I/\mathrm{d}t$ est une \textbf{source électromagnétique}. Ce chapitre pose la discipline qui gère les conséquences~: la \textbf{compatibilité électromagnétique} (CEM, ou EMC en anglais). On y construit le modèle source--couplage--victime, les quatre chemins de couplage, la distinction capitale mode différentiel\index{mode différentiel} / mode commun\index{mode commun}, le cadre normatif, puis les trois grandes familles de remèdes~: filtrage, blindage\index{blindage}, stratégie de masse. Le chapitre~\ref{ch:pcb} (conception PCB) et le chapitre~\ref{ch:integrite-signal} (intégrité du signal) appliqueront ces principes au routage.
 
 % ============================================================================
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -25346,6 +25436,8 @@ et chaque courant une boucle qu'il faut savoir dessiner.}
 Le chapitre~\ref{ch:cem} s'est conclu sur un constat~: la CEM se gagne ou se perd au routage, parce que la géométrie fixe les capacités parasites, les mutuelles, les impédances communes et les surfaces rayonnantes. Ce chapitre transforme ce constat en méthode~: comprendre le circuit imprimé (PCB, \emph{printed circuit board}) comme un \textbf{composant à part entière}, avec ses résistances, inductances et capacités distribuées --- puis en déduire les règles de conception~: empilage des couches, chemins de retour, découplage\index{découplage}, distribution d'alimentation, routage de puissance et thermique. Le chapitre~\ref{ch:integrite-signal} prolongera vers les hautes fréquences, quand les pistes deviennent des lignes de transmission.
 
 % ============================================================================
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -25364,6 +25456,14 @@ Le vocabulaire essentiel~:
   \item \textbf{pastille} (\emph{pad})~: zone de cuivre où se soude un composant~;
   \item \textbf{vernis épargne} et \textbf{sérigraphie}~: la couche isolante verte (ou autre) et le marquage blanc --- cosmétiques pour l'électricité, utiles pour la fabrication.
 \end{itemize}
+
+\begin{attention}
+Ce chapitre parle de routage, pas d'outils. Les règles énoncées ici sont
+indépendantes du logiciel~: \textbf{KiCad} (libre et gratuit), Altium, Eagle ou
+Cadence les appliquent à l'identique, et seules changent l'interface et la
+bibliothèque d'empreintes. Pour débuter sans budget, KiCad couvre tout ce que
+décrit ce chapitre, empilage multicouche compris.
+\end{attention}
 
 \begin{figure}[!ht]
 \centering
@@ -25986,6 +26086,8 @@ propre au bout d'un morceau de cuivre.}
 Le chapitre~\ref{ch:pcb} a modélisé la piste par des éléments R--L--C \emph{localisés} --- valable tant que le signal «~remplit~» la piste instantanément. Quand le temps de montée\index{temps de montée} devient comparable au temps de propagation\index{temps de propagation}, cette hypothèse s'effondre~: le front occupe physiquement une portion de la piste, l'énergie \textbf{se propage}, et la piste devient une \textbf{ligne de transmission\index{ligne de transmission}}, avec une impédance caractéristique\index{impédance caractéristique}, des réflexions et des règles de terminaison. Ce chapitre --- le dernier de l'ouvrage --- donne les outils pour prédire et maîtriser ce régime~: critère de bascule, impédance $Z_0$, diagramme des réflexions, terminaisons, diaphonie\index{diaphonie}, paires différentielles et pertes.
 
 % ============================================================================
+\parcours
+
 \section{Les Bases}
 
 \begin{bases}
@@ -26707,6 +26809,356 @@ dBm, dBµV & niveaux référencés (1 mW, 1 µV) \\
 \cleardoublepage
 \phantomsection
 \addcontentsline{toc}{chapter}{Bibliographie commentée}
+\section*{Sources primaires}
+
+Les résultats nommés dans le livre viennent d'articles précis. Les voici, pour
+le lecteur qui voudrait remonter au texte d'origine.
+
+\begin{itemize}[itemsep=3pt]
+\item J. B. \textsc{Johnson}, «~Thermal Agitation of Electricity in Conductors~», \emph{Physical Review}, vol.~32, p.~97, 1928. --- La mise en évidence expérimentale du bruit thermique (chapitre~\ref{ch:tension}).
+\item H. \textsc{Nyquist}, «~Thermal Agitation of Electric Charge in Conductors~», \emph{Physical Review}, vol.~32, p.~110, 1928. --- La théorie qui accompagne la mesure de Johnson~; ensemble, ils donnent le $4k_BTR\Delta f$.
+\item W. \textsc{Shockley}, «~The Theory of p-n Junctions in Semiconductors and p-n Junction Transistors~», \emph{Bell System Technical Journal}, vol.~28, p.~435, 1949. --- L'équation de la diode (chapitre~\ref{ch:diode}).
+\item M. J. M. \textsc{Pelgrom}, A. C. J. \textsc{Duinmaijer}, A. P. G. \textsc{Welbers}, «~Matching properties of MOS transistors~», \emph{IEEE Journal of Solid-State Circuits}, vol.~24, n\textsuperscript{o}~5, p.~1433, 1989. --- La loi qui gouverne l'appariement des transistors, et donc les limites de la conception intégrée (chapitre~\ref{ch:limites-numerique}).
+\item B. J. \textsc{Baliga}, «~Power semiconductor device figure of merit for high-frequency applications~», \emph{IEEE Electron Device Letters}, vol.~10, p.~455, 1989. --- Le compromis entre tenue en tension et résistance à l'état passant (chapitre~\ref{ch:mosfet}).
+\end{itemize}
+
+\chapter{Formulaire}\index{formulaire}\label{annexe:formulaire}
+
+Les formules encadrées du livre, dans l'ordre des chapitres. Ce formulaire
+ne remplace pas la lecture~: il suppose que l'on sait déjà ce que chaque
+symbole désigne, et sert à retrouver vite une expression que l'on a comprise.
+Les chapitres qui n'introduisent pas de formule encadrée n'y figurent pas.
+
+{\setlength{\abovedisplayskip}{3pt}\setlength{\belowdisplayskip}{3pt}
+\setlength{\abovedisplayshortskip}{1pt}\setlength{\belowdisplayshortskip}{3pt}
+
+\section*{Chapitre~\ref{ch:courant} --- Le Courant Électrique}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:courant} --- Le Courant Électrique}
+\[ I = \frac{Q}{t} \]
+\[ i(t) = \frac{\mathrm{d}q}{\mathrm{d}t} \]
+\[ I = n \cdot q \cdot v_d \cdot S \]
+\[ \frac{\partial \rho}{\partial t} + \nabla \cdot \vec{J} = 0 \]
+\[ \vec{J} = \sigma \vec{E} \]
+\[ d \ll \lambda = \frac{c}{f} \]
+
+\section*{Chapitre~\ref{ch:tension} --- La Tension Électrique}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:tension} --- La Tension Électrique}
+\[ U_{AB} = V_A - V_B \]
+\[ W = q \cdot U \]
+\[ \vec{E} = -\vec{\nabla}V = -\operatorname{grad}(V) \]
+\[ U_{AB} = V_A - V_B = -\int_A^B \vec{E}\cdot\mathrm{d}\vec{\ell} = \int_B^A \vec{E}\cdot\mathrm{d}\vec{\ell} \]
+\[ U = E - r \cdot I \]
+\[ P = U \cdot I \]
+\[ \oint_{\mathcal{C}} \vec{E}\cdot\mathrm{d}\vec{\ell} = -\frac{\mathrm{d}\Phi_B}{\mathrm{d}t} \]
+\[ \overline{v_n^2} = 4 k_B T R \Delta f \]
+
+\section*{Chapitre~\ref{ch:resistance} --- La Résistance et la Loi d'Ohm}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:resistance} --- La Résistance et la Loi d'Ohm}
+\[ U = R \cdot I \]
+\[ P = U \cdot I = R \cdot I^2 = \frac{U^2}{R} \]
+\[ R_{\text{éq}} = R_1 + R_2 + \cdots + R_n \]
+\[ \frac{1}{R_{\text{éq}}} = \frac{1}{R_1} + \frac{1}{R_2} + \cdots + \frac{1}{R_n} \]
+\[ V_{\text{out}} = E \cdot \frac{R_2}{R_1 + R_2} \]
+\[ R = \rho \cdot \frac{L}{S} \]
+\[ R(T) = R_0 \left[1 + \alpha (T - T_0)\right] \]
+\[ r_d = \frac{\mathrm{d}U}{\mathrm{d}I}\bigg|_{\text{point de fonctionnement}} \]
+\[ \frac{R_1}{R_3} = \frac{R_2}{R_4} \]
+
+\section*{Chapitre~\ref{ch:puissance} --- La Puissance et l'Énergie Électrique}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:puissance} --- La Puissance et l'Énergie Électrique}
+\[ P = U \cdot I \]
+\[ P = R \cdot I^2 = \frac{U^2}{R} = U \cdot I \]
+\[ W = P \cdot t \]
+\[ \sum P_{\text{fournie}} = \sum P_{\text{consommée}} \]
+\[ P = \langle p(t) \rangle = \frac{1}{T}\int_0^T u(t)\cdot i(t)\,\mathrm{d}t \]
+\[ U_{\text{eff}} = \sqrt{\frac{1}{T}\int_0^T u^2(t)\,\mathrm{d}t} \]
+\[ \eta = \frac{P_{\text{utile}}}{P_{\text{entrée}}} = 1 - \frac{P_{\text{pertes}}}{P_{\text{entrée}}} \]
+\[ P_{L,\max} \text{ lorsque } R_L = R_s \]
+\[ P = U_{\text{eff}} \cdot I_{\text{eff}} \cdot \cos\varphi \]
+\[ \Delta T = R_{\text{th}} \cdot P \]
+
+\section*{Chapitre~\ref{ch:kirchhoff} --- Les Lois de Kirchhoff}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:kirchhoff} --- Les Lois de Kirchhoff}
+\[ \sum i_{\text{entrants}} = \sum i_{\text{sortants}} \]
+\[ \sum_{\text{maille}} U_k = 0 \]
+\[ i_1 = i \cdot \frac{R_2}{R_1 + R_2} \]
+\[ i_2 = i \cdot \frac{R_1}{R_1 + R_2} \]
+\[ [G] \cdot [V] = [I] \]
+
+\section*{Chapitre~\ref{ch:theoremes} --- Théorèmes Fondamentaux}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:theoremes} --- Théorèmes Fondamentaux}
+\[ i_{R_2} = i'_{R_2} + i''_{R_2} = \SI{3}{A} \]
+\[ I_N = \frac{E_{\text{th}}}{R_{\text{th}}} \]
+\[ R_N = R_{\text{th}} \]
+\[ V_A = \frac{\displaystyle\sum_{k=1}^{n} \frac{E_k}{R_k}}{\displaystyle\sum_{k=1}^{n} \frac{1}{R_k}} = \frac{\sum G_k E_k}{\sum G_k} \]
+\[ V_A = \frac{\displaystyle\sum_{k} \frac{E_k}{R_k} + \sum_{j} I_{s,j}}{\displaystyle\sum_{k} \frac{1}{R_k}} \]
+\[ R_L = R_{\text{th}} \]
+\[ \underline{U}_{AB} = \underline{E}_{\text{th}} - \underline{Z}_{\text{th}} \cdot \underline{I} \]
+\[ R_{\text{th}} = V_t / I_t = \SI{5}{\ohm} \]
+
+\section*{Chapitre~\ref{ch:instrumentation} --- Instrumentation et Mesures}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:instrumentation} --- Instrumentation et Mesures}
+\[ \frac{\Delta V}{V} = \frac{R_{th}}{R_{th}+R_V} \]
+\[ R_1 C_1 = R_2 C_2 \]
+\[ t_r \times B = \frac{2{,}2}{2\pi} \approx 0{,}35 \]
+\[ t_{r,\text{lu}} = \sqrt{t_{r,\text{signal}}^2 + t_{r,\text{scope}}^2} \]
+\[ \frac{\Delta y}{y} = \sqrt{\left(\frac{\Delta a}{a}\right)^2 + \left(\frac{\Delta b}{b}\right)^2} \]
+\[ v_n = \sqrt{4kTRB} \]
+
+\section*{Chapitre~\ref{ch:condensateur} --- Le Condensateur}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:condensateur} --- Le Condensateur}
+\[ q = C \cdot u \]
+\[ i = C \cdot \frac{\mathrm{d}u}{\mathrm{d}t} \]
+\[ u(t) = E\left(1 - e^{-t/\tau}\right) \]
+\[ \tau = RC \]
+\[ u(t) = E \cdot e^{-t/\tau} \]
+\[ W = \frac{1}{2}CU^2 \]
+\[ C_{\text{éq}} = C_1 + C_2 + \cdots \]
+\[ \dfrac{1}{C_{\text{éq}}} = \dfrac{1}{C_1} + \dfrac{1}{C_2} + \cdots \]
+\[ C = \varepsilon_0 \varepsilon_r \frac{S}{d} \]
+\[ f_{\text{SRF}} = \frac{1}{2\pi\sqrt{\text{ESL} \cdot C}} \]
+
+\section*{Chapitre~\ref{ch:bobine} --- La Bobine (Inductance)}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:bobine} --- La Bobine (Inductance)}
+\[ \Phi = L \cdot i \]
+\[ u = L \cdot \frac{\mathrm{d}i}{\mathrm{d}t} \]
+\[ i(t) = \frac{E}{R}\left(1 - e^{-t/\tau}\right) \]
+\[ \tau = \frac{L}{R} \]
+\[ i(t) = I_0 \cdot e^{-t/\tau} \]
+\[ W = \frac{1}{2}LI^2 \]
+\[ L_{\text{éq}} = L_1 + L_2 + \cdots \]
+\[ \dfrac{1}{L_{\text{éq}}} = \dfrac{1}{L_1} + \dfrac{1}{L_2} + \cdots \]
+\[ L = \mu_0 \mu_r \frac{N^2 S}{\ell} \]
+\[ f_{\text{SRF}} = \frac{1}{2\pi\sqrt{L \cdot C_p}} \]
+\[ P_{\text{core}} = k \cdot f^\alpha \cdot B_{\text{max}}^\beta \cdot V_{\text{core}} \]
+
+\section*{Chapitre~\ref{ch:rc-rl-rlc} --- Circuits RC, RL et RLC}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:rc-rl-rlc} --- Circuits RC, RL et RLC}
+\[ f_c = \frac{1}{2\pi RC} \]
+\[ f_c = \frac{R}{2\pi L} \]
+\[ f_0 = \frac{1}{2\pi\sqrt{LC}} \]
+\[ \omega_0 = \frac{1}{\sqrt{LC}} \]
+\[ LC\frac{\mathrm{d}^2 u_C}{\mathrm{d}t^2} + RC\frac{\mathrm{d}u_C}{\mathrm{d}t} + u_C = E \]
+\[ Q = \frac{1}{R}\sqrt{\frac{L}{C}} \]
+\[ Q = R\sqrt{\frac{C}{L}} \]
+\[ \Delta f = \frac{f_0}{Q} \]
+\[ H(s) = \frac{\omega_0^2}{s^2 + \frac{\omega_0}{Q}s + \omega_0^2} \]
+
+\section*{Chapitre~\ref{ch:complexes} --- Notation Complexe et Impédances}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:complexes} --- Notation Complexe et Impédances}
+\[ z = a + jb = |z|\,e^{j\theta} = |z|(\cos\theta + j\sin\theta) \]
+\[ \underline{U} = \hat{U}\,e^{j\varphi_u} \]
+\[ \underline{U} = \underline{Z} \cdot \underline{I} \]
+\[ \underline{Z}_R = R \]
+\[ \underline{Z}_C = \frac{1}{j\omega C} = \frac{-j}{\omega C} \]
+\[ \underline{Z}_L = j\omega L \]
+\[ \underline{Y} = \frac{1}{\underline{Z}} = G + jB \]
+\[ \underline{Z}_{\text{éq}} = \underline{Z}_1 + \underline{Z}_2 + \cdots \]
+\[ \dfrac{1}{\underline{Z}_{\text{éq}}} = \dfrac{1}{\underline{Z}_1} + \dfrac{1}{\underline{Z}_2} + \cdots \]
+\[ \underline{V}_{\text{out}} = \underline{V}_{\text{in}} \cdot \frac{\underline{Z}_2}{\underline{Z}_1 + \underline{Z}_2} \]
+\[ \underline{V}_A = \frac{\displaystyle\sum_k \frac{\underline{E}_k}{\underline{Z}_k} + \sum_j \underline{I}_{s,j}}{\displaystyle\sum_k \frac{1}{\underline{Z}_k}} \]
+\[ \underline{H}(\omega) = \frac{\underline{V}_{\text{out}}}{\underline{V}_{\text{in}}} = |H(\omega)|\,e^{j\varphi(\omega)} \]
+\[ G_{\text{dB}} = 20\log_{10}|H| \]
+
+\section*{Chapitre~\ref{ch:puissance-sinus} --- Puissance en Régime Sinusoïdal}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:puissance-sinus} --- Puissance en Régime Sinusoïdal}
+\[ p(t) = \underbrace{\frac{\hat{U}\hat{I}}{2}\cos\varphi}_{\text{composante constante}} + \underbrace{\frac{\hat{U}\hat{I}}{2}\cos(2\omega t - \varphi)}_{\text{oscillation à } 2\omega} \]
+\[ P = U_{\text{eff}} \cdot I_{\text{eff}} \cdot \cos\varphi \]
+\[ Q = U_{\text{eff}} \cdot I_{\text{eff}} \cdot \sin\varphi \]
+\[ S = U_{\text{eff}} \cdot I_{\text{eff}} \]
+\[ S^2 = P^2 + Q^2 \]
+\[ \cos\varphi = \frac{P}{S} = \frac{\text{puissance utile}}{\text{puissance totale fournie}} \]
+\[ C = \frac{Q_C}{\omega U^2} = \frac{P(\tan\varphi - \tan\varphi')}{\omega U^2} \]
+\[ \underline{S} = \frac{1}{2}\underline{\hat{U}} \cdot \underline{\hat{I}}^* = \underline{U}_{\text{eff}} \cdot \underline{I}_{\text{eff}}^* = P + jQ \]
+\[ \sum P_{\text{fournie}} = \sum P_{\text{consommée}} \]
+\[ \sum Q_{\text{fournie}} = \sum Q_{\text{consommée}} \]
+\[ \text{PF} = \frac{P}{S} = \frac{P}{U_{\text{eff}} \cdot I_{\text{eff}}} \]
+\[ P = \sqrt{3}\,U_L\,I_L\,\cos\varphi \]
+\[ Q = \sqrt{3}\,U_L\,I_L\,\sin\varphi \]
+
+\section*{Chapitre~\ref{ch:resonance} --- Résonance}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:resonance} --- Résonance}
+\[ f_0 = \frac{1}{2\pi\sqrt{LC}} \]
+\[ \omega_0 = \frac{1}{\sqrt{LC}} \]
+\[ U_L = U_C = Q \times E \]
+\[ \Delta f = \frac{f_0}{Q} \]
+\[ Q = \frac{f_0}{\Delta f} \]
+\[ \frac{1}{Q_L} = \frac{1}{Q_0} + \frac{1}{Q_{\text{ext}}} \]
+
+\section*{Chapitre~\ref{ch:bode} --- Fonctions de Transfert et Diagrammes de Bode}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:bode} --- Fonctions de Transfert et Diagrammes de Bode}
+\[ \underline{H}(\omega) = \frac{\underline{V}_{\text{out}}}{\underline{V}_{\text{in}}} \]
+\[ G_{\text{dB}} = 20\log_{10}|H| \]
+\[ H(j\omega) = \frac{H_0}{1 + \frac{j\omega}{Q\omega_0} + \left(\frac{j\omega}{\omega_0}\right)^2} \]
+\[ G_{\text{total, dB}} = G_{1,\text{dB}} + G_{2,\text{dB}} + \cdots \]
+\[ \varphi_{\text{total}} = \varphi_1 + \varphi_2 + \cdots \]
+\[ H_{\text{BF}}(s) = \frac{A(s)}{1 + A(s)\cdot B(s)} = \frac{A(s)}{1 + T(s)} \]
+\[ |T(j\omega)| = 1 \quad \text{et} \quad \arg(T(j\omega)) = -180^\circ \]
+\[ M_\varphi = 180^\circ + \arg(T(j\omega_0)) \]
+\[ M_G = -|T(j\omega_{180})|_{\text{dB}} \]
+
+\section*{Chapitre~\ref{ch:simulation} --- La Simulation avec LTspice}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:simulation} --- La Simulation avec LTspice}
+\[ \texttt{maxstep} \leq \frac{1}{10\,f_{\max}} \]
+
+\section*{Chapitre~\ref{ch:diode} --- La Diode}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:diode} --- La Diode}
+\[ I_D = I_S\left(e^{V_D / nV_T} - 1\right) \]
+\[ r_d = \frac{\mathrm{d}V_D}{\mathrm{d}I_D} = \frac{nV_T}{I_D} \]
+\[ P_{\text{total}} = \underbrace{V_F \cdot I_{\text{moy}}}_{\text{pertes en conduction}} + \underbrace{f_{\text{sw}} \cdot E_{\text{rr}}}_{\text{pertes de commutation}} \]
+\[ I_Z = \frac{V_{\text{in}} - V_Z}{R} - I_L \]
+
+\section*{Chapitre~\ref{ch:bjt} --- Le Transistor Bipolaire (BJT)}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:bjt} --- Le Transistor Bipolaire (BJT)}
+\[ I_C \approx \beta \cdot I_B \]
+\[ R_B = \frac{V_{\text{cmd}} - V_{BE,\text{sat}}}{k \cdot I_C / \beta_{\min}} \]
+\[ \begin{gathered} V_{BE} \xrightarrow{\text{1. abaisse la barrière}} \text{injection d'électrons} \xrightarrow{\text{2. diffusion}} \text{traversée de la base} \\[1mm] \xrightarrow{\text{3. collecte}} I_C \end{gathered} \]
+\[ I_C = I_S\,e^{V_{BE}/V_T}\left(1 + \frac{V_{CE}}{V_A}\right) \]
+\[ g_m = \frac{\partial I_C}{\partial V_{BE}}\bigg|_Q = \frac{I_{C,Q}}{V_T} \]
+\[ r_\pi = \frac{v_{be}}{i_b} = \frac{\beta}{g_m} = \frac{\beta V_T}{I_{C,Q}} \]
+\[ r_o = \frac{\partial V_{CE}}{\partial I_C}\bigg|_Q \approx \frac{V_A}{I_{C,Q}} \]
+\[ A_v = -g_m(R_C \parallel r_o) \approx -g_m R_C = -\frac{I_{C,Q} R_C}{V_T} \]
+\[ A_v \approx -\frac{R_C}{R_E} \]
+\[ A_v = \frac{g_m R_E}{1 + g_m R_E} \approx 1 \quad (\text{non inverseur, légèrement} < 1) \]
+\[ Z_{\text{in}} = r_\pi + (\beta+1)R_E \]
+\[ Z_{\text{out}} \approx \frac{1}{g_m} + \frac{R_s}{\beta+1} \]
+\[ f_T = \frac{g_m}{2\pi(C_\pi + C_\mu)} \]
+\[ C_{\text{Miller}} = C_\mu(1 + |A_v|) \]
+\[ I_{\text{out}} \approx I_{\text{ref}} \]
+\[ A_{v,\text{diff}} = -g_m R_C \quad \text{avec} \quad g_m = \frac{I_{\text{tail}}/2}{V_T} \]
+
+\section*{Chapitre~\ref{ch:mosfet} --- Le MOSFET}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:mosfet} --- Le MOSFET}
+\[ V_{DS} = R_{DS,\text{on}} \times I_D \]
+\[ P_{\text{cond}} = R_{DS,\text{on}} \times I_D^2 \]
+\[ I_D = k_n\left[V_{\text{ov}}\,V_{DS} - \frac{V_{DS}^2}{2}\right] \]
+\[ I_D = \frac{k_n}{2}\,V_{\text{ov}}^2\,(1 + \lambda V_{DS}) \]
+\[ g_m = \frac{\partial I_D}{\partial V_{GS}}\bigg|_Q = k_n\,V_{\text{ov}} = \frac{2I_{D,Q}}{V_{\text{ov}}} = \sqrt{2\,k_n\,I_{D,Q}} \]
+\[ r_o = \frac{1}{\lambda\,I_{D,Q}} = \frac{V_A}{I_{D,Q}} \]
+\[ P_{sw} = (E_{\text{on}} + E_{\text{off}}) \cdot f_{sw} = \frac{1}{2}V_{DS}\,I_D\,(t_{\text{on}}+t_{\text{off}})\,f_{sw} \]
+\[ P_{\text{total}} = \underbrace{R_{DS,\text{on}} \cdot I_D^2 \cdot D}_{\text{conduction}} + \underbrace{(E_{\text{on}}+E_{\text{off}})\cdot f_{sw}}_{\text{commutation}} + \underbrace{\frac{1}{2}C_{oss}\,V_{DS}^2\,f_{sw}}_{\text{capacitives}} \]
+\[ P_{\text{dyn}} = \alpha \cdot C_L \cdot V_{DD}^2 \cdot f \]
+
+\section*{Chapitre~\ref{ch:aop} --- L'Amplificateur Opérationnel (AOP)}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:aop} --- L'Amplificateur Opérationnel (AOP)}
+\[ V_{\text{out}} = A_{OL} \cdot (V^+ - V^-) \]
+\[ V^+ = V^- \]
+\[ I^+ = 0 \text{ et } I^- = 0 \]
+\[ A_{CL} = 1 + \frac{R_2}{R_1} \]
+\[ A_{CL} = -\frac{R_2}{R_1} \]
+\[ A_{OL} \approx (g_{m1} \cdot r_{o1}) \times (g_{m2} \cdot r_{o2}) \times A_3 \]
+\[ A_{CL} = \frac{A_{OL}}{1 + A_{OL}\,\beta} \approx \frac{1}{\beta} \]
+\[ GBW = A_{OL,DC} \times f_p = A_{CL} \times f_{-3\text{dB}} \]
+\[ SR = \frac{I_{\text{tail}}}{C_C} \]
+\[ M_\varphi > 45^\circ \quad \text{(minimum)}, \quad 60^\circ\text{--}70^\circ \quad \text{(recommandé)} \]
+\[ e_{n,\text{total}} = \sqrt{e_n^2 + (i_n R_s)^2 + 4kTR_s} \]
+
+\section*{Chapitre~\ref{ch:filtres-actifs} --- Filtres actifs~: limites, conception et réalité}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:filtres-actifs} --- Filtres actifs~: limites, conception et réalité}
+\[ n \geq \frac{\log(10^{A/10} - 1)}{2\log(f_s/f_c)} \]
+\[ R_{\text{réel}} = R_{\text{norm}} \times Z_0 \]
+\[ C_{\text{réel}} = \frac{C_{\text{norm}}}{\omega_c \times Z_0} \]
+\[ D\% = 100 \times e^{-\pi/\sqrt{4Q^2 - 1}} \]
+\[ GBW_{\text{AOP}} > 10 \cdot Q \cdot f_0 \]
+\[ SR > 2\pi f_0 \cdot Q \cdot V_{\text{in,crête}} \]
+
+\section*{Chapitre~\ref{ch:oscillateurs} --- Les Oscillateurs}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:oscillateurs} --- Les Oscillateurs}
+\[ A\,\beta = 1 \]
+\[ |A\,\beta| = 1 \]
+\[ \arg(A\,\beta) = 0 \;[2\pi] \]
+\[ f_0 = \frac{1}{2\pi RC} \]
+\[ \beta = \frac{1}{3} \]
+\[ 1 + \frac{R_2}{R_1} = 3 \qquad\Longleftrightarrow\qquad R_2 = 2\,R_1 \]
+\[ f = \frac{1{,}44}{(R_1 + 2R_2)\,C} \]
+\[ f_0 = \frac{1}{2\pi\sqrt{L\,C_{eq}}} \]
+
+\section*{Chapitre~\ref{ch:ampli-puissance} --- L'Amplification de Puissance}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:ampli-puissance} --- L'Amplification de Puissance}
+\[ P_{\text{alim}} = P_{\text{charge}} + P_{\text{dissipée}} \]
+\[ \hat{V} = \frac{2V_{CC}}{\pi} \approx 0{,}64\,V_{CC} \]
+\[ P_{\text{diss,max}} = \frac{2\,V_{CC}^2}{\pi^2 R_L} \]
+\[ V_{\text{polar}} = V_{BE}\left(1 + \frac{R_1}{R_2}\right) \]
+\[ T_J = T_A + P\,(R_{\theta JC} + R_{\theta CS} + R_{\theta SA}) \]
+\[ R_{\theta SA} \leq \frac{T_{J,\max} - T_A}{P} - R_{\theta JC} - R_{\theta CS} \]
+
+\section*{Chapitre~\ref{ch:combinatoire} --- Logique Combinatoire}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:combinatoire} --- Logique Combinatoire}
+\[ \overline{A \cdot B} = \overline{A} + \overline{B} \]
+\[ \overline{A + B} = \overline{A} \cdot \overline{B} \]
+\[ t_p \approx 0{,}7\,R_{\text{eq}}\,C_L \]
+\[ P_{\text{dyn}} = \alpha \cdot C_L \cdot V_{DD}^2 \cdot f \]
+\[ P_{\text{stat}} = V_{DD} \cdot I_{\text{off}} \cdot N \]
+
+\section*{Chapitre~\ref{ch:sequentiel} --- Logique Séquentielle}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:sequentiel} --- Logique Séquentielle}
+\[ Q(n+1) = D(n) \]
+\[ t_{su} + t_h \approx 2 \times t_{p,\text{inverseur interne}} \]
+\[ T_{\text{clk}} \geq t_{cq} + t_{\text{comb}} + t_{su} \]
+\[ f_{\max} = \frac{1}{t_{cq} + t_{\text{comb}} + t_{su}} \]
+\[ t_{cq,\min} + t_{\text{comb,min}} \geq t_h \]
+
+\section*{Chapitre~\ref{ch:timing} --- Contraintes temporelles et synchronisation}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:timing} --- Contraintes temporelles et synchronisation}
+\[ T_{\text{clk}} \geq t_{cq} + t_{\text{comb}} + t_{su} + t_{\text{skew}} + t_j \]
+\[ t_{cq,\min} + t_{\text{comb,min}} \geq t_h + t_{\text{skew,hold}} \]
+\[ TJ = DJ + 2 \cdot N \cdot RJ_{\text{RMS}} \]
+
+\section*{Chapitre~\ref{ch:fsm} --- Machines à états (FSM)}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:fsm} --- Machines à états (FSM)}
+\[ T_{\text{clk}} \geq t_{cq} + t_{\text{comb}} + t_{su} \]
+
+\section*{Chapitre~\ref{ch:arithmetique} --- Circuits arithmétiques}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:arithmetique} --- Circuits arithmétiques}
+\[ t_{\text{RCA},n} = n \cdot t_{FA} \]
+\[ \text{acc} \leftarrow \text{acc} + a \times b \]
+
+\section*{Chapitre~\ref{ch:conversion} --- Conversion analogique-numérique et numérique-analogique}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:conversion} --- Conversion analogique-numérique et numérique-analogique}
+\[ f_s > 2 \cdot f_{\max} \]
+\[ \sigma_q = \frac{q}{\sqrt{12}} \]
+\[ SNR_{\text{idéal}} = 6{,}02 \cdot N + 1{,}76 \text{ dB} \]
+\[ ENOB = \frac{SINAD - 1{,}76}{6{,}02} \]
+\[ SNR_{\text{jitter}} = -20 \log_{10}(2\pi f_{\text{in}} \, t_j) \]
+
+\section*{Chapitre~\ref{ch:protocoles} --- Protocoles de communication}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:protocoles} --- Protocoles de communication}
+\[ t_{\text{montée}} \approx 0{,}85 \, R_p C_b \quad (\text{de } 30\% \text{ à } 70\% \text{ de } V_{DD}) \]
+
+\section*{Chapitre~\ref{ch:limites-numerique} --- Limites physiques du numérique}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:limites-numerique} --- Limites physiques du numérique}
+\[ \sigma_V = \sqrt{\frac{kT}{C}} \]
+\[ MTTF = \frac{A}{J^n}\, e^{E_a/kT} \]
+
+\section*{Chapitre~\ref{ch:ldo} --- Régulation linéaire et LDO}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:ldo} --- Régulation linéaire et LDO}
+\[ V_{\text{out}} = V_{\text{ref}}\left(1 + \frac{R_a}{R_b}\right) \]
+\[ \eta = \frac{V_{\text{out}} I_L}{V_{\text{in}} (I_L + I_q)} \approx \frac{V_{\text{out}}}{V_{\text{in}}} \]
+
+\section*{Chapitre~\ref{ch:decoupage} --- Alimentations à découpage}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:decoupage} --- Alimentations à découpage}
+\[ \langle V_L \rangle = 0 \quad\Rightarrow\quad V_L^{(\text{on})}\cdot t_{\text{on}} = -V_L^{(\text{off})}\cdot t_{\text{off}} \]
+\[ V_{\text{out}} = D \cdot V_{\text{in}} \qquad (0 \leq D \leq 1 \;\Rightarrow\; V_{\text{out}} \leq V_{\text{in}}) \]
+\[ V_{\text{out}} = \frac{V_{\text{in}}}{1 - D} \qquad (V_{\text{out}} \geq V_{\text{in}}) \]
+\[ V_{\text{out}} = -\frac{D}{1-D}\,V_{\text{in}} \]
+
+\section*{Chapitre~\ref{ch:laplace} --- Asservissement et transformée de Laplace}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:laplace} --- Asservissement et transformée de Laplace}
+\[ \frac{y}{r} = \frac{A}{1 + A\beta} \]
+\[ \text{Système stable} \iff \text{tous les pôles ont une partie réelle négative} \]
+
+\section*{Chapitre~\ref{ch:pid} --- Correcteur PID, lieu des racines et marges de stabilité}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:pid} --- Correcteur PID, lieu des racines et marges de stabilité}
+\[ C(s) = K_p + \frac{K_i}{s} + K_d\,s = K_p\left(1 + \frac{1}{T_i\,s} + T_d\,s\right) \]
+
+\section*{Chapitre~\ref{ch:integrite-signal} --- Intégrité du signal~: quand la piste devient une ligne}
+\addcontentsline{toc}{section}{Chapitre~\ref{ch:integrite-signal} --- Intégrité du signal~: quand la piste devient une ligne}
+\[ \,Z_0 = \sqrt{\frac{L'}{C'}}\, \]
+\[ R_T = \SI{39}{\ohm} \]
+\[ w \approx \SI{0.33}{mm} \]
+
+}
+
 \chapter*{Bibliographie commentée}
 
 Une bibliothèque d'électronicien tient en peu de volumes, à condition de choisir les bons. La liste ci-dessous est courte à dessein~: un ouvrage par domaine, chacun faisant autorité dans le sien. Les commentaires résument leur réception générale~; le premier relève, lui, d'un choix qui m'est personnel.
@@ -26741,6 +27193,13 @@ La référence de la conception analogique CMOS\index{CMOS}, au point que «~le 
 
 \noindent Robert \textsc{Erickson}, Dragan \textsc{Maksimovi\'c}, \emph{Fundamentals of Power Electronics}, 3\textsuperscript{e}~éd., Springer, 2020.\\[1mm]
 Le traité de référence académique des convertisseurs~: modélisation moyenne, dimensionnement des composants magnétiques, stabilité des boucles --- exactement les sujets des chapitres~\ref{ch:decoupage} et~\ref{ch:magnetiques}, poussés à leur profondeur mathématique. L'ouvrage sur lequel s'appuient la plupart des cours avancés d'électronique de puissance.
+
+\vspace{4mm}
+
+\section*{Électronique numérique et architecture}
+
+\noindent David Money \textsc{Harris}, Sarah L. \textsc{Harris}, \emph{Digital Design and Computer Architecture}, Morgan Kaufmann (éditions ARM et RISC-V).\\[1mm]
+L'ouvrage qui prolonge naturellement la partie~\ref{part:numerique}~: il part de la porte logique et arrive au processeur pipeliné sans rupture, avec le HDL introduit au fil de l'eau --- précisément ce que le présent livre n'aborde pas. Les deux éditions ne diffèrent que par le jeu d'instructions traité.
 
 \vspace{4mm}
 

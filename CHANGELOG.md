@@ -1,5 +1,47 @@
 # Historique des versions
 
+## v1.7 — 16 septembre 2026
+Trois ajouts issus d'une revue de lecteurs, et deux compléments.
+
+**Un formulaire, en annexe~D.** Les 220 formules encadrées du livre,
+rassemblées chapitre par chapitre, sur douze pages. Elles n'ont pas été
+ressaisies : elles sont extraites du manuscrit lui-même par récolte des
+`\boxed{...}`, ce qui garantit qu'elles sont identiques à celles du texte et
+qu'elles le resteront. Quatre entrées ont été écartées à la main : c'étaient
+des résultats d'exemples chiffrés (« \SI{219}{mV} », « \SI{5}{mm} »), sans
+signification hors de leur contexte. Chaque section renvoie à son chapitre par
+un lien cliquable.
+
+**Un rappel de parcours en tête de chaque chapitre.** Une ligne discrète, dans
+les quarante et un chapitres : *« Trois niveaux dans ce chapitre. Les Bases se
+suffisent à elles-mêmes : vous pouvez vous y arrêter et passer au chapitre
+suivant. »* L'avant-propos le disait déjà — mais personne ne lit les
+avant-propos, et un débutant qui s'acharne sur le Niveau Ingénieur du chapitre
+1 en conclut qu'il n'est pas fait pour l'électronique.
+
+**Cinq sources primaires en bibliographie.** Le livre invoquait le bruit de
+Johnson–Nyquist, l'équation de Shockley, la loi de Pelgrom et le facteur de
+mérite de Baliga sans jamais renvoyer aux articles d'origine. Les cinq
+références sont ajoutées, chacune reliée au chapitre qui l'emploie, et toutes
+vérifiées plutôt que citées de mémoire — le contrôle a d'ailleurs corrigé une
+pagination que j'avais fausse.
+
+**Un ouvrage de numérique.** La bibliographie ne comportait aucun livre pour
+les dix chapitres de la partie numérique. Harris \& Harris, *Digital Design
+and Computer Architecture*, comble le trou et prolonge exactement là où ce
+livre s'arrête, le HDL.
+
+**Deux compléments d'outillage.** Le chapitre~16 annonçait LTspice « gratuit
+et sans limite » sans dire sur quel système : la mention des plateformes et des
+solutions de repli (ngspice, QUCS-S) est ajoutée. Le chapitre~40 traitait du
+circuit imprimé sans nommer un seul outil de CAO : KiCad y figure désormais,
+avec la précision que les règles énoncées sont indépendantes du logiciel.
+« Analogie », absent de la liste des encadrés de « Comment lire ce livre »
+alors qu'il sert seize fois, y est rétabli.
+
+Pagination 703 → 719 pages, dont douze pour le formulaire. 180 figures,
+111 tableaux et 249 exercices inchangés.
+
 ## v1.6.4 — 16 septembre 2026
 **Les figures comparatives sont lisibles sans la couleur.**
 
