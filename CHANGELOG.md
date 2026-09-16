@@ -1,5 +1,41 @@
 # Historique des versions
 
+## v1.7.1 — 16 septembre 2026
+**Chaque formule du formulaire porte désormais son nom.**
+
+La première version de l'annexe listait les formules nues, dans l'ordre du
+texte. Le défaut est apparu à la lecture : sous « Associations de
+résistances », $R_{\text{éq}} = R_1 + R_2$ et
+$1/R_{\text{éq}} = 1/R_1 + 1/R_2$ se suivaient sans rien pour les
+distinguer. Un lecteur pressé — et on consulte un formulaire pressé — pouvait
+prendre l'une pour l'autre.
+
+Les 217 formules sont nommées. Cent onze reprennent le titre de la
+sous-section d'où elles viennent, qui les désigne déjà sans ambiguïté («~Le
+pont de Wheatstone~», «~Théorème de Millman~»). **Cent six ont reçu un nom
+écrit pour l'occasion**, dans deux cas :
+
+- les **quatre-vingts formules qui partagent une sous-section** avec une ou
+  deux voisines, et que seul un nom propre sépare : « Résistances en série »
+  et « Résistances en parallèle », « Norton --- courant équivalent » et
+  « Norton --- résistance équivalente », « Barkhausen --- condition sur le
+  module » et « ... sur la phase » ;
+- les **vingt-six titres trop longs ou trop conversationnels** pour servir
+  d'étiquette : «~Le jitter d'horloge~: le tueur silencieux du SNR~» est un
+  bon titre de cours et un mauvais nom de formule, devenu « SNR limité par la
+  gigue d'horloge ».
+
+Aucun nom n'est en double à l'intérieur d'un même chapitre, et le plus long
+tient en quarante-quatre caractères.
+
+Quatre entrées de plus ont été retirées, du même genre que les quatre de la
+v1.7 : des résultats d'exemples chiffrés ($R_T = \SI{39}{\ohm}$,
+$w \approx \SI{0.33}{mm}$) qui ne veulent rien dire hors de leur contexte.
+Le formulaire passe de 220 à 217 formules, et de douze à dix-sept pages.
+
+Pagination 719 → 729 pages. Le corps du livre est inchangé : 1268 renvois
+numérotés, 180 figures, 111 tableaux et 249 exercices identiques.
+
 ## v1.7 — 16 septembre 2026
 Trois ajouts issus d'une revue de lecteurs, et deux compléments.
 

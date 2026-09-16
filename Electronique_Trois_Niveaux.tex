@@ -171,6 +171,15 @@
 %% === DATE EN FRANCAIS ===
 %% babel n'etant pas charge, \today produit une date anglaise ("September 9, 2026")
 %% au colophon d'un ouvrage francais. \datefr rend le format attendu.
+%% === ENTREE DE FORMULAIRE (annexe) ===
+%% Nom au-dessus, formule en dessous : juxtaposees sans nom, deux formules
+%% voisines (serie et parallele) se confondent pour un lecteur presse.
+\newcommand{\form}[2]{%
+  \par\addvspace{5pt}%
+  \noindent\textbf{\footnotesize #1}%
+  \nopagebreak[4]\par\nopagebreak[4]%
+  \[ #2 \]}
+
 %% === RAPPEL DE PARCOURS EN TETE DE CHAPITRE ===
 %% Un lecteur debutant ignore souvent qu'il peut s'arreter a la fin des Bases :
 %% l'avant-propos le dit, mais personne ne lit les avant-propos.
@@ -269,7 +278,7 @@ un ingénieur doit pouvoir s'y référer comme source de qualité.~»}
 
 \vfill
 {\small Distribué librement sous licence CC BY-NC-SA 4.0}\\[1mm]
-{\small Version 1.7 --- Septembre 2026}
+{\small Version 1.7.1 --- Septembre 2026}
 \end{titlepage}
 
 % === COLOPHON / LICENCE ===
@@ -284,7 +293,7 @@ Cet ouvrage est mis à disposition selon les termes de la licence \textbf{Creati
 Vous êtes libres de \textbf{partager} (copier, redistribuer) et d'\textbf{adapter} (modifier, transformer, améliorer) ce document, sous trois conditions : \textbf{créditer l'auteur}, \textbf{ne pas en faire un usage commercial}, et \textbf{rediffuser toute version modifiée sous cette même licence}. Texte intégral : \url{https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr}\\[4mm]
 Composé en \LaTeX{} (pdflatex)~; schémas et figures en CircuiTikZ et TikZ.\\
 Rédigé avec l'assistance de l'intelligence artificielle Claude (Anthropic), sous la direction et la vérification de l'auteur.\\
-Version 1.7 --- compilé le \datefr.\\
+Version 1.7.1 --- compilé le \datefr.\\
 Corrections, suggestions et contributions : \texttt{kevin.pottier@eseo.fr}
 \end{minipage}
 \end{center}
@@ -387,7 +396,7 @@ journal détaillé se trouve dans le fichier \texttt{CHANGELOG.md}.
 1.5.2 & sept. 2026 & Ajout des encadrés \emph{À retenir} de fin de section «~Les Bases~» manquants aux chapitres~\ref{ch:instrumentation}, \ref{ch:simulation}, \ref{ch:oscillateurs} et~\ref{ch:ampli-puissance}~: les 41 chapitres ont désormais la même architecture interne. \\
 1.6 & sept. 2026 & 111 tableaux numérotés et légendés, et ajout de la \emph{Liste des tableaux} après la table des figures. \\
 1.6.1 à 1.6.4 & sept. 2026 & Le présent historique refait et redaté. Figure~\ref{fig:trr} redessinée selon la convention des fiches techniques~: $t_{rr}$ se compte à partir du passage par zéro du courant, et le pic de courant inverse prend sa notation normalisée $I_{RM}$. Six figures comparatives rendues lisibles sans la couleur~: chaque courbe reçoit son propre style de trait. \\
-1.7 & sept. 2026 & Annexe~\ref{annexe:formulaire}, \emph{Formulaire}~: les 220 formules encadrées du livre rassemblées par chapitre. Rappel de parcours en tête de chaque chapitre. Bibliographie complétée d'un ouvrage de numérique et des cinq sources primaires des résultats nommés (Johnson, Nyquist, Shockley, Pelgrom, Baliga). \\
+1.7 & sept. 2026 & Annexe~\ref{annexe:formulaire}, \emph{Formulaire}~: les 217 formules encadrées du livre, rassemblées par chapitre et nommées une à une. Rappel de parcours en tête de chaque chapitre. Bibliographie complétée d'un ouvrage de numérique et des cinq sources primaires des résultats nommés (Johnson, Nyquist, Shockley, Pelgrom, Baliga). \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -26824,338 +26833,336 @@ le lecteur qui voudrait remonter au texte d'origine.
 
 \chapter{Formulaire}\index{formulaire}\label{annexe:formulaire}
 
-Les formules encadrées du livre, dans l'ordre des chapitres. Ce formulaire
-ne remplace pas la lecture~: il suppose que l'on sait déjà ce que chaque
-symbole désigne, et sert à retrouver vite une expression que l'on a comprise.
-Les chapitres qui n'introduisent pas de formule encadrée n'y figurent pas.
+Les formules encadrées du livre, chapitre par chapitre, chacune sous le nom
+qui la désigne dans le texte. Ce formulaire ne remplace pas la lecture~: il
+suppose que l'on sait déjà ce que chaque symbole représente, et sert à
+retrouver vite une expression que l'on a comprise. Les chapitres qui
+n'introduisent pas de formule encadrée n'y figurent pas.
 
-{\setlength{\abovedisplayskip}{3pt}\setlength{\belowdisplayskip}{3pt}
-\setlength{\abovedisplayshortskip}{1pt}\setlength{\belowdisplayshortskip}{3pt}
+{\setlength{\abovedisplayskip}{1pt}\setlength{\belowdisplayskip}{5pt}
+\setlength{\abovedisplayshortskip}{1pt}\setlength{\belowdisplayshortskip}{5pt}
 
 \section*{Chapitre~\ref{ch:courant} --- Le Courant Électrique}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:courant} --- Le Courant Électrique}
-\[ I = \frac{Q}{t} \]
-\[ i(t) = \frac{\mathrm{d}q}{\mathrm{d}t} \]
-\[ I = n \cdot q \cdot v_d \cdot S \]
-\[ \frac{\partial \rho}{\partial t} + \nabla \cdot \vec{J} = 0 \]
-\[ \vec{J} = \sigma \vec{E} \]
-\[ d \ll \lambda = \frac{c}{f} \]
+\form{Intensité du courant}{I = \frac{Q}{t}}
+\form{Définition instantanée du courant}{i(t) = \frac{\mathrm{d}q}{\mathrm{d}t}}
+\form{Densité de courant}{I = n \cdot q \cdot v_d \cdot S}
+\form{Équation de continuité}{\frac{\partial \rho}{\partial t} + \nabla \cdot \vec{J} = 0}
+\form{Le modèle de Drude}{\vec{J} = \sigma \vec{E}}
+\form{ARQS~: quand peut-on utiliser Kirchhoff ?}{d \ll \lambda = \frac{c}{f}}
 
 \section*{Chapitre~\ref{ch:tension} --- La Tension Électrique}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:tension} --- La Tension Électrique}
-\[ U_{AB} = V_A - V_B \]
-\[ W = q \cdot U \]
-\[ \vec{E} = -\vec{\nabla}V = -\operatorname{grad}(V) \]
-\[ U_{AB} = V_A - V_B = -\int_A^B \vec{E}\cdot\mathrm{d}\vec{\ell} = \int_B^A \vec{E}\cdot\mathrm{d}\vec{\ell} \]
-\[ U = E - r \cdot I \]
-\[ P = U \cdot I \]
-\[ \oint_{\mathcal{C}} \vec{E}\cdot\mathrm{d}\vec{\ell} = -\frac{\mathrm{d}\Phi_B}{\mathrm{d}t} \]
-\[ \overline{v_n^2} = 4 k_B T R \Delta f \]
+\form{Définition simple}{U_{AB} = V_A - V_B}
+\form{Tension et énergie}{W = q \cdot U}
+\form{Champ et potentiel}{\vec{E} = -\vec{\nabla}V = -\operatorname{grad}(V)}
+\form{Tension comme circulation du champ}{U_{AB} = V_A - V_B = -\int_A^B \vec{E}\cdot\mathrm{d}\vec{\ell} = \int_B^A \vec{E}\cdot\mathrm{d}\vec{\ell}}
+\form{Force électromotrice (f.é.m.)}{U = E - r \cdot I}
+\form{Travail et puissance électrique}{P = U \cdot I}
+\form{La tension et les équations de Maxwell}{\oint_{\mathcal{C}} \vec{E}\cdot\mathrm{d}\vec{\ell} = -\frac{\mathrm{d}\Phi_B}{\mathrm{d}t}}
+\form{Bruit de tension et plancher thermique}{\overline{v_n^2} = 4 k_B T R \Delta f}
 
 \section*{Chapitre~\ref{ch:resistance} --- La Résistance et la Loi d'Ohm}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:resistance} --- La Résistance et la Loi d'Ohm}
-\[ U = R \cdot I \]
-\[ P = U \cdot I = R \cdot I^2 = \frac{U^2}{R} \]
-\[ R_{\text{éq}} = R_1 + R_2 + \cdots + R_n \]
-\[ \frac{1}{R_{\text{éq}}} = \frac{1}{R_1} + \frac{1}{R_2} + \cdots + \frac{1}{R_n} \]
-\[ V_{\text{out}} = E \cdot \frac{R_2}{R_1 + R_2} \]
-\[ R = \rho \cdot \frac{L}{S} \]
-\[ R(T) = R_0 \left[1 + \alpha (T - T_0)\right] \]
-\[ r_d = \frac{\mathrm{d}U}{\mathrm{d}I}\bigg|_{\text{point de fonctionnement}} \]
-\[ \frac{R_1}{R_3} = \frac{R_2}{R_4} \]
+\form{La loi d'Ohm}{U = R \cdot I}
+\form{Puissance dissipée dans une résistance}{P = U \cdot I = R \cdot I^2 = \frac{U^2}{R}}
+\form{Résistances en série}{R_{\text{éq}} = R_1 + R_2 + \cdots + R_n}
+\form{Résistances en parallèle}{\frac{1}{R_{\text{éq}}} = \frac{1}{R_1} + \frac{1}{R_2} + \cdots + \frac{1}{R_n}}
+\form{Le diviseur de tension}{V_{\text{out}} = E \cdot \frac{R_2}{R_1 + R_2}}
+\form{Résistivité et loi de Pouillet}{R = \rho \cdot \frac{L}{S}}
+\form{Effet de la température}{R(T) = R_0 \left[1 + \alpha (T - T_0)\right]}
+\form{Dipôles non-linéaires}{r_d = \frac{\mathrm{d}U}{\mathrm{d}I}\bigg|_{\text{point de fonctionnement}}}
+\form{Le pont de Wheatstone}{\frac{R_1}{R_3} = \frac{R_2}{R_4}}
 
 \section*{Chapitre~\ref{ch:puissance} --- La Puissance et l'Énergie Électrique}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:puissance} --- La Puissance et l'Énergie Électrique}
-\[ P = U \cdot I \]
-\[ P = R \cdot I^2 = \frac{U^2}{R} = U \cdot I \]
-\[ W = P \cdot t \]
-\[ \sum P_{\text{fournie}} = \sum P_{\text{consommée}} \]
-\[ P = \langle p(t) \rangle = \frac{1}{T}\int_0^T u(t)\cdot i(t)\,\mathrm{d}t \]
-\[ U_{\text{eff}} = \sqrt{\frac{1}{T}\int_0^T u^2(t)\,\mathrm{d}t} \]
-\[ \eta = \frac{P_{\text{utile}}}{P_{\text{entrée}}} = 1 - \frac{P_{\text{pertes}}}{P_{\text{entrée}}} \]
-\[ P_{L,\max} \text{ lorsque } R_L = R_s \]
-\[ P = U_{\text{eff}} \cdot I_{\text{eff}} \cdot \cos\varphi \]
-\[ \Delta T = R_{\text{th}} \cdot P \]
+\form{Puissance électrique}{P = U \cdot I}
+\form{Puissance dissipée (effet Joule)}{P = R \cdot I^2 = \frac{U^2}{R} = U \cdot I}
+\form{Énergie électrique}{W = P \cdot t}
+\form{Bilan de puissance d'un circuit}{\sum P_{\text{fournie}} = \sum P_{\text{consommée}}}
+\form{Puissance instantanée et puissance moyenne}{P = \langle p(t) \rangle = \frac{1}{T}\int_0^T u(t)\cdot i(t)\,\mathrm{d}t}
+\form{Valeur efficace (RMS)}{U_{\text{eff}} = \sqrt{\frac{1}{T}\int_0^T u^2(t)\,\mathrm{d}t}}
+\form{Rendement}{\eta = \frac{P_{\text{utile}}}{P_{\text{entrée}}} = 1 - \frac{P_{\text{pertes}}}{P_{\text{entrée}}}}
+\form{Transfert maximal de puissance}{P_{L,\max} \text{ lorsque } R_L = R_s}
+\form{Puissance en régime sinusoïdal (aperçu)}{P = U_{\text{eff}} \cdot I_{\text{eff}} \cdot \cos\varphi}
+\form{Gestion thermique~: du composant au système}{\Delta T = R_{\text{th}} \cdot P}
 
 \section*{Chapitre~\ref{ch:kirchhoff} --- Les Lois de Kirchhoff}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:kirchhoff} --- Les Lois de Kirchhoff}
-\[ \sum i_{\text{entrants}} = \sum i_{\text{sortants}} \]
-\[ \sum_{\text{maille}} U_k = 0 \]
-\[ i_1 = i \cdot \frac{R_2}{R_1 + R_2} \]
-\[ i_2 = i \cdot \frac{R_1}{R_1 + R_2} \]
-\[ [G] \cdot [V] = [I] \]
+\form{Loi des n\oe uds (KCL)}{\sum i_{\text{entrants}} = \sum i_{\text{sortants}}}
+\form{Loi des mailles (KVL)}{\sum_{\text{maille}} U_k = 0}
+\form{Diviseur de courant --- branche 1}{i_1 = i \cdot \frac{R_2}{R_1 + R_2}}
+\form{Diviseur de courant --- branche 2}{i_2 = i \cdot \frac{R_1}{R_1 + R_2}}
+\form{Écriture matricielle}{[G] \cdot [V] = [I]}
 
 \section*{Chapitre~\ref{ch:theoremes} --- Théorèmes Fondamentaux}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:theoremes} --- Théorèmes Fondamentaux}
-\[ i_{R_2} = i'_{R_2} + i''_{R_2} = \SI{3}{A} \]
-\[ I_N = \frac{E_{\text{th}}}{R_{\text{th}}} \]
-\[ R_N = R_{\text{th}} \]
-\[ V_A = \frac{\displaystyle\sum_{k=1}^{n} \frac{E_k}{R_k}}{\displaystyle\sum_{k=1}^{n} \frac{1}{R_k}} = \frac{\sum G_k E_k}{\sum G_k} \]
-\[ V_A = \frac{\displaystyle\sum_{k} \frac{E_k}{R_k} + \sum_{j} I_{s,j}}{\displaystyle\sum_{k} \frac{1}{R_k}} \]
-\[ R_L = R_{\text{th}} \]
-\[ \underline{U}_{AB} = \underline{E}_{\text{th}} - \underline{Z}_{\text{th}} \cdot \underline{I} \]
-\[ R_{\text{th}} = V_t / I_t = \SI{5}{\ohm} \]
+\form{Norton --- courant équivalent}{I_N = \frac{E_{\text{th}}}{R_{\text{th}}}}
+\form{Norton --- résistance équivalente}{R_N = R_{\text{th}}}
+\form{Théorème de Millman}{V_A = \frac{\displaystyle\sum_{k=1}^{n} \frac{E_k}{R_k}}{\displaystyle\sum_{k=1}^{n} \frac{1}{R_k}} = \frac{\sum G_k E_k}{\sum G_k}}
+\form{Millman généralisé (sources de courant)}{V_A = \frac{\displaystyle\sum_{k} \frac{E_k}{R_k} + \sum_{j} I_{s,j}}{\displaystyle\sum_{k} \frac{1}{R_k}}}
+\form{Adaptation en puissance (Thévenin)}{R_L = R_{\text{th}}}
+\form{Thévenin et Norton en régime sinusoïdal}{\underline{U}_{AB} = \underline{E}_{\text{th}} - \underline{Z}_{\text{th}} \cdot \underline{I}}
 
 \section*{Chapitre~\ref{ch:instrumentation} --- Instrumentation et Mesures}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:instrumentation} --- Instrumentation et Mesures}
-\[ \frac{\Delta V}{V} = \frac{R_{th}}{R_{th}+R_V} \]
-\[ R_1 C_1 = R_2 C_2 \]
-\[ t_r \times B = \frac{2{,}2}{2\pi} \approx 0{,}35 \]
-\[ t_{r,\text{lu}} = \sqrt{t_{r,\text{signal}}^2 + t_{r,\text{scope}}^2} \]
-\[ \frac{\Delta y}{y} = \sqrt{\left(\frac{\Delta a}{a}\right)^2 + \left(\frac{\Delta b}{b}\right)^2} \]
-\[ v_n = \sqrt{4kTRB} \]
+\form{L'effet de charge, quantifié}{\frac{\Delta V}{V} = \frac{R_{th}}{R_{th}+R_V}}
+\form{La sonde d'oscilloscope}{R_1 C_1 = R_2 C_2}
+\form{Bande passante et temps de montée}{t_r \times B = \frac{2{,}2}{2\pi} \approx 0{,}35}
+\form{Composition des temps de montée}{t_{r,\text{lu}} = \sqrt{t_{r,\text{signal}}^2 + t_{r,\text{scope}}^2}}
+\form{Composer les incertitudes}{\frac{\Delta y}{y} = \sqrt{\left(\frac{\Delta a}{a}\right)^2 + \left(\frac{\Delta b}{b}\right)^2}}
+\form{Le plancher de bruit de la mesure}{v_n = \sqrt{4kTRB}}
 
 \section*{Chapitre~\ref{ch:condensateur} --- Le Condensateur}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:condensateur} --- Le Condensateur}
-\[ q = C \cdot u \]
-\[ i = C \cdot \frac{\mathrm{d}u}{\mathrm{d}t} \]
-\[ u(t) = E\left(1 - e^{-t/\tau}\right) \]
-\[ \tau = RC \]
-\[ u(t) = E \cdot e^{-t/\tau} \]
-\[ W = \frac{1}{2}CU^2 \]
-\[ C_{\text{éq}} = C_1 + C_2 + \cdots \]
-\[ \dfrac{1}{C_{\text{éq}}} = \dfrac{1}{C_1} + \dfrac{1}{C_2} + \cdots \]
-\[ C = \varepsilon_0 \varepsilon_r \frac{S}{d} \]
-\[ f_{\text{SRF}} = \frac{1}{2\pi\sqrt{\text{ESL} \cdot C}} \]
+\form{Capacité}{q = C \cdot u}
+\form{Relation courant-tension}{i = C \cdot \frac{\mathrm{d}u}{\mathrm{d}t}}
+\form{Charge du condensateur}{u(t) = E\left(1 - e^{-t/\tau}\right)}
+\form{Constante de temps RC}{\tau = RC}
+\form{Décharge du condensateur}{u(t) = E \cdot e^{-t/\tau}}
+\form{Énergie stockée}{W = \frac{1}{2}CU^2}
+\form{Condensateurs en parallèle}{C_{\text{éq}} = C_1 + C_2 + \cdots}
+\form{Condensateurs en série}{\dfrac{1}{C_{\text{éq}}} = \dfrac{1}{C_1} + \dfrac{1}{C_2} + \cdots}
+\form{Capacité d'un condensateur plan}{C = \varepsilon_0 \varepsilon_r \frac{S}{d}}
+\form{Fréquence de résonance série (SRF)}{f_{\text{SRF}} = \frac{1}{2\pi\sqrt{\text{ESL} \cdot C}}}
 
 \section*{Chapitre~\ref{ch:bobine} --- La Bobine (Inductance)}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:bobine} --- La Bobine (Inductance)}
-\[ \Phi = L \cdot i \]
-\[ u = L \cdot \frac{\mathrm{d}i}{\mathrm{d}t} \]
-\[ i(t) = \frac{E}{R}\left(1 - e^{-t/\tau}\right) \]
-\[ \tau = \frac{L}{R} \]
-\[ i(t) = I_0 \cdot e^{-t/\tau} \]
-\[ W = \frac{1}{2}LI^2 \]
-\[ L_{\text{éq}} = L_1 + L_2 + \cdots \]
-\[ \dfrac{1}{L_{\text{éq}}} = \dfrac{1}{L_1} + \dfrac{1}{L_2} + \cdots \]
-\[ L = \mu_0 \mu_r \frac{N^2 S}{\ell} \]
-\[ f_{\text{SRF}} = \frac{1}{2\pi\sqrt{L \cdot C_p}} \]
-\[ P_{\text{core}} = k \cdot f^\alpha \cdot B_{\text{max}}^\beta \cdot V_{\text{core}} \]
+\form{Inductance}{\Phi = L \cdot i}
+\form{Relation tension-courant}{u = L \cdot \frac{\mathrm{d}i}{\mathrm{d}t}}
+\form{Établissement du courant (RL)}{i(t) = \frac{E}{R}\left(1 - e^{-t/\tau}\right)}
+\form{Constante de temps RL}{\tau = \frac{L}{R}}
+\form{Extinction du courant (RL)}{i(t) = I_0 \cdot e^{-t/\tau}}
+\form{Énergie stockée}{W = \frac{1}{2}LI^2}
+\form{Inductances en série}{L_{\text{éq}} = L_1 + L_2 + \cdots}
+\form{Inductances en parallèle}{\dfrac{1}{L_{\text{éq}}} = \dfrac{1}{L_1} + \dfrac{1}{L_2} + \cdots}
+\form{Inductance d'un solénoïde}{L = \mu_0 \mu_r \frac{N^2 S}{\ell}}
+\form{SRF et comportement fréquentiel}{f_{\text{SRF}} = \frac{1}{2\pi\sqrt{L \cdot C_p}}}
+\form{Pertes dans le noyau}{P_{\text{core}} = k \cdot f^\alpha \cdot B_{\text{max}}^\beta \cdot V_{\text{core}}}
 
 \section*{Chapitre~\ref{ch:rc-rl-rlc} --- Circuits RC, RL et RLC}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:rc-rl-rlc} --- Circuits RC, RL et RLC}
-\[ f_c = \frac{1}{2\pi RC} \]
-\[ f_c = \frac{R}{2\pi L} \]
-\[ f_0 = \frac{1}{2\pi\sqrt{LC}} \]
-\[ \omega_0 = \frac{1}{\sqrt{LC}} \]
-\[ LC\frac{\mathrm{d}^2 u_C}{\mathrm{d}t^2} + RC\frac{\mathrm{d}u_C}{\mathrm{d}t} + u_C = E \]
-\[ Q = \frac{1}{R}\sqrt{\frac{L}{C}} \]
-\[ Q = R\sqrt{\frac{C}{L}} \]
-\[ \Delta f = \frac{f_0}{Q} \]
-\[ H(s) = \frac{\omega_0^2}{s^2 + \frac{\omega_0}{Q}s + \omega_0^2} \]
+\form{Le circuit RC (rappel synthétique)}{f_c = \frac{1}{2\pi RC}}
+\form{Le circuit RL (rappel synthétique)}{f_c = \frac{R}{2\pi L}}
+\form{Fréquence propre du circuit LC}{f_0 = \frac{1}{2\pi\sqrt{LC}}}
+\form{Pulsation propre du circuit LC}{\omega_0 = \frac{1}{\sqrt{LC}}}
+\form{Équation différentielle du circuit RLC série}{LC\frac{\mathrm{d}^2 u_C}{\mathrm{d}t^2} + RC\frac{\mathrm{d}u_C}{\mathrm{d}t} + u_C = E}
+\form{Facteur de qualité $Q$}{Q = \frac{1}{R}\sqrt{\frac{L}{C}}}
+\form{Circuit RLC parallèle}{Q = R\sqrt{\frac{C}{L}}}
+\form{Bande passante d'une résonance}{\Delta f = \frac{f_0}{Q}}
+\form{Lien avec les systèmes asservis}{H(s) = \frac{\omega_0^2}{s^2 + \frac{\omega_0}{Q}s + \omega_0^2}}
 
 \section*{Chapitre~\ref{ch:complexes} --- Notation Complexe et Impédances}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:complexes} --- Notation Complexe et Impédances}
-\[ z = a + jb = |z|\,e^{j\theta} = |z|(\cos\theta + j\sin\theta) \]
-\[ \underline{U} = \hat{U}\,e^{j\varphi_u} \]
-\[ \underline{U} = \underline{Z} \cdot \underline{I} \]
-\[ \underline{Z}_R = R \]
-\[ \underline{Z}_C = \frac{1}{j\omega C} = \frac{-j}{\omega C} \]
-\[ \underline{Z}_L = j\omega L \]
-\[ \underline{Y} = \frac{1}{\underline{Z}} = G + jB \]
-\[ \underline{Z}_{\text{éq}} = \underline{Z}_1 + \underline{Z}_2 + \cdots \]
-\[ \dfrac{1}{\underline{Z}_{\text{éq}}} = \dfrac{1}{\underline{Z}_1} + \dfrac{1}{\underline{Z}_2} + \cdots \]
-\[ \underline{V}_{\text{out}} = \underline{V}_{\text{in}} \cdot \frac{\underline{Z}_2}{\underline{Z}_1 + \underline{Z}_2} \]
-\[ \underline{V}_A = \frac{\displaystyle\sum_k \frac{\underline{E}_k}{\underline{Z}_k} + \sum_j \underline{I}_{s,j}}{\displaystyle\sum_k \frac{1}{\underline{Z}_k}} \]
-\[ \underline{H}(\omega) = \frac{\underline{V}_{\text{out}}}{\underline{V}_{\text{in}}} = |H(\omega)|\,e^{j\varphi(\omega)} \]
-\[ G_{\text{dB}} = 20\log_{10}|H| \]
+\form{Les trois formes d'écriture}{z = a + jb = |z|\,e^{j\theta} = |z|(\cos\theta + j\sin\theta)}
+\form{Amplitude complexe (phaseur)}{\underline{U} = \hat{U}\,e^{j\varphi_u}}
+\form{L'impédance~: la loi d'Ohm généralisée}{\underline{U} = \underline{Z} \cdot \underline{I}}
+\form{Impédance d'une résistance}{\underline{Z}_R = R}
+\form{Impédance d'un condensateur}{\underline{Z}_C = \frac{1}{j\omega C} = \frac{-j}{\omega C}}
+\form{Impédance d'une bobine}{\underline{Z}_L = j\omega L}
+\form{Admittance}{\underline{Y} = \frac{1}{\underline{Z}} = G + jB}
+\form{Impédances en série}{\underline{Z}_{\text{éq}} = \underline{Z}_1 + \underline{Z}_2 + \cdots}
+\form{Impédances en parallèle}{\dfrac{1}{\underline{Z}_{\text{éq}}} = \dfrac{1}{\underline{Z}_1} + \dfrac{1}{\underline{Z}_2} + \cdots}
+\form{Diviseur de tension en complexe}{\underline{V}_{\text{out}} = \underline{V}_{\text{in}} \cdot \frac{\underline{Z}_2}{\underline{Z}_1 + \underline{Z}_2}}
+\form{Théorème de Millman en complexe}{\underline{V}_A = \frac{\displaystyle\sum_k \frac{\underline{E}_k}{\underline{Z}_k} + \sum_j \underline{I}_{s,j}}{\displaystyle\sum_k \frac{1}{\underline{Z}_k}}}
+\form{Fonction de transfert}{\underline{H}(\omega) = \frac{\underline{V}_{\text{out}}}{\underline{V}_{\text{in}}} = |H(\omega)|\,e^{j\varphi(\omega)}}
+\form{Le décibel (dB)}{G_{\text{dB}} = 20\log_{10}|H|}
 
 \section*{Chapitre~\ref{ch:puissance-sinus} --- Puissance en Régime Sinusoïdal}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:puissance-sinus} --- Puissance en Régime Sinusoïdal}
-\[ p(t) = \underbrace{\frac{\hat{U}\hat{I}}{2}\cos\varphi}_{\text{composante constante}} + \underbrace{\frac{\hat{U}\hat{I}}{2}\cos(2\omega t - \varphi)}_{\text{oscillation à } 2\omega} \]
-\[ P = U_{\text{eff}} \cdot I_{\text{eff}} \cdot \cos\varphi \]
-\[ Q = U_{\text{eff}} \cdot I_{\text{eff}} \cdot \sin\varphi \]
-\[ S = U_{\text{eff}} \cdot I_{\text{eff}} \]
-\[ S^2 = P^2 + Q^2 \]
-\[ \cos\varphi = \frac{P}{S} = \frac{\text{puissance utile}}{\text{puissance totale fournie}} \]
-\[ C = \frac{Q_C}{\omega U^2} = \frac{P(\tan\varphi - \tan\varphi')}{\omega U^2} \]
-\[ \underline{S} = \frac{1}{2}\underline{\hat{U}} \cdot \underline{\hat{I}}^* = \underline{U}_{\text{eff}} \cdot \underline{I}_{\text{eff}}^* = P + jQ \]
-\[ \sum P_{\text{fournie}} = \sum P_{\text{consommée}} \]
-\[ \sum Q_{\text{fournie}} = \sum Q_{\text{consommée}} \]
-\[ \text{PF} = \frac{P}{S} = \frac{P}{U_{\text{eff}} \cdot I_{\text{eff}}} \]
-\[ P = \sqrt{3}\,U_L\,I_L\,\cos\varphi \]
-\[ Q = \sqrt{3}\,U_L\,I_L\,\sin\varphi \]
+\form{La puissance instantanée}{p(t) = \underbrace{\frac{\hat{U}\hat{I}}{2}\cos\varphi}_{\text{composante constante}} + \underbrace{\frac{\hat{U}\hat{I}}{2}\cos(2\omega t - \varphi)}_{\text{oscillation à } 2\omega}}
+\form{Puissance active}{P = U_{\text{eff}} \cdot I_{\text{eff}} \cdot \cos\varphi}
+\form{Puissance réactive}{Q = U_{\text{eff}} \cdot I_{\text{eff}} \cdot \sin\varphi}
+\form{Puissance apparente}{S = U_{\text{eff}} \cdot I_{\text{eff}}}
+\form{Triangle des puissances}{S^2 = P^2 + Q^2}
+\form{Le facteur de puissance}{\cos\varphi = \frac{P}{S} = \frac{\text{puissance utile}}{\text{puissance totale fournie}}}
+\form{Compensation du facteur de puissance}{C = \frac{Q_C}{\omega U^2} = \frac{P(\tan\varphi - \tan\varphi')}{\omega U^2}}
+\form{Puissance complexe}{\underline{S} = \frac{1}{2}\underline{\hat{U}} \cdot \underline{\hat{I}}^* = \underline{U}_{\text{eff}} \cdot \underline{I}_{\text{eff}}^* = P + jQ}
+\form{Conservation de la puissance active}{\sum P_{\text{fournie}} = \sum P_{\text{consommée}}}
+\form{Conservation de la puissance réactive}{\sum Q_{\text{fournie}} = \sum Q_{\text{consommée}}}
+\form{Facteur de puissance en non sinusoïdal}{\text{PF} = \frac{P}{S} = \frac{P}{U_{\text{eff}} \cdot I_{\text{eff}}}}
+\form{Puissance active en triphasé}{P = \sqrt{3}\,U_L\,I_L\,\cos\varphi}
+\form{Puissance réactive en triphasé}{Q = \sqrt{3}\,U_L\,I_L\,\sin\varphi}
 
 \section*{Chapitre~\ref{ch:resonance} --- Résonance}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:resonance} --- Résonance}
-\[ f_0 = \frac{1}{2\pi\sqrt{LC}} \]
-\[ \omega_0 = \frac{1}{\sqrt{LC}} \]
-\[ U_L = U_C = Q \times E \]
-\[ \Delta f = \frac{f_0}{Q} \]
-\[ Q = \frac{f_0}{\Delta f} \]
-\[ \frac{1}{Q_L} = \frac{1}{Q_0} + \frac{1}{Q_{\text{ext}}} \]
+\form{Fréquence de résonance}{f_0 = \frac{1}{2\pi\sqrt{LC}}}
+\form{Pulsation de résonance}{\omega_0 = \frac{1}{\sqrt{LC}}}
+\form{Résonance série}{U_L = U_C = Q \times E}
+\form{Bande passante à $-3$~dB}{\Delta f = \frac{f_0}{Q}}
+\form{Facteur de qualité}{Q = \frac{f_0}{\Delta f}}
+\form{Facteur de qualité en charge}{\frac{1}{Q_L} = \frac{1}{Q_0} + \frac{1}{Q_{\text{ext}}}}
 
 \section*{Chapitre~\ref{ch:bode} --- Fonctions de Transfert et Diagrammes de Bode}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:bode} --- Fonctions de Transfert et Diagrammes de Bode}
-\[ \underline{H}(\omega) = \frac{\underline{V}_{\text{out}}}{\underline{V}_{\text{in}}} \]
-\[ G_{\text{dB}} = 20\log_{10}|H| \]
-\[ H(j\omega) = \frac{H_0}{1 + \frac{j\omega}{Q\omega_0} + \left(\frac{j\omega}{\omega_0}\right)^2} \]
-\[ G_{\text{total, dB}} = G_{1,\text{dB}} + G_{2,\text{dB}} + \cdots \]
-\[ \varphi_{\text{total}} = \varphi_1 + \varphi_2 + \cdots \]
-\[ H_{\text{BF}}(s) = \frac{A(s)}{1 + A(s)\cdot B(s)} = \frac{A(s)}{1 + T(s)} \]
-\[ |T(j\omega)| = 1 \quad \text{et} \quad \arg(T(j\omega)) = -180^\circ \]
-\[ M_\varphi = 180^\circ + \arg(T(j\omega_0)) \]
-\[ M_G = -|T(j\omega_{180})|_{\text{dB}} \]
+\form{Qu'est-ce qu'une fonction de transfert ?}{\underline{H}(\omega) = \frac{\underline{V}_{\text{out}}}{\underline{V}_{\text{in}}}}
+\form{Le décibel~: pourquoi et comment}{G_{\text{dB}} = 20\log_{10}|H|}
+\form{Le 2nd ordre~: pôles complexes et résonance}{H(j\omega) = \frac{H_0}{1 + \frac{j\omega}{Q\omega_0} + \left(\frac{j\omega}{\omega_0}\right)^2}}
+\form{Gains en cascade (en dB)}{G_{\text{total, dB}} = G_{1,\text{dB}} + G_{2,\text{dB}} + \cdots}
+\form{Phases en cascade}{\varphi_{\text{total}} = \varphi_1 + \varphi_2 + \cdots}
+\form{Boucle ouverte et boucle fermée}{H_{\text{BF}}(s) = \frac{A(s)}{1 + A(s)\cdot B(s)} = \frac{A(s)}{1 + T(s)}}
+\form{Condition d'instabilité}{|T(j\omega)| = 1 \quad \text{et} \quad \arg(T(j\omega)) = -180^\circ}
+\form{Marge de phase}{M_\varphi = 180^\circ + \arg(T(j\omega_0))}
+\form{Marge de gain}{M_G = -|T(j\omega_{180})|_{\text{dB}}}
 
 \section*{Chapitre~\ref{ch:simulation} --- La Simulation avec LTspice}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:simulation} --- La Simulation avec LTspice}
-\[ \texttt{maxstep} \leq \frac{1}{10\,f_{\max}} \]
+\form{Le pas de calcul, et le défaut qu'il efface}{\texttt{maxstep} \leq \frac{1}{10\,f_{\max}}}
 
 \section*{Chapitre~\ref{ch:diode} --- La Diode}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:diode} --- La Diode}
-\[ I_D = I_S\left(e^{V_D / nV_T} - 1\right) \]
-\[ r_d = \frac{\mathrm{d}V_D}{\mathrm{d}I_D} = \frac{nV_T}{I_D} \]
-\[ P_{\text{total}} = \underbrace{V_F \cdot I_{\text{moy}}}_{\text{pertes en conduction}} + \underbrace{f_{\text{sw}} \cdot E_{\text{rr}}}_{\text{pertes de commutation}} \]
-\[ I_Z = \frac{V_{\text{in}} - V_Z}{R} - I_L \]
+\form{L'équation de Shockley}{I_D = I_S\left(e^{V_D / nV_T} - 1\right)}
+\form{Résistance dynamique}{r_d = \frac{\mathrm{d}V_D}{\mathrm{d}I_D} = \frac{nV_T}{I_D}}
+\form{Pertes dans une diode de puissance}{P_{\text{total}} = \underbrace{V_F \cdot I_{\text{moy}}}_{\text{pertes en conduction}} + \underbrace{f_{\text{sw}} \cdot E_{\text{rr}}}_{\text{pertes de commutation}}}
+\form{La diode Zener~: régulation de tension}{I_Z = \frac{V_{\text{in}} - V_Z}{R} - I_L}
 
 \section*{Chapitre~\ref{ch:bjt} --- Le Transistor Bipolaire (BJT)}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:bjt} --- Le Transistor Bipolaire (BJT)}
-\[ I_C \approx \beta \cdot I_B \]
-\[ R_B = \frac{V_{\text{cmd}} - V_{BE,\text{sat}}}{k \cdot I_C / \beta_{\min}} \]
-\[ \begin{gathered} V_{BE} \xrightarrow{\text{1. abaisse la barrière}} \text{injection d'électrons} \xrightarrow{\text{2. diffusion}} \text{traversée de la base} \\[1mm] \xrightarrow{\text{3. collecte}} I_C \end{gathered} \]
-\[ I_C = I_S\,e^{V_{BE}/V_T}\left(1 + \frac{V_{CE}}{V_A}\right) \]
-\[ g_m = \frac{\partial I_C}{\partial V_{BE}}\bigg|_Q = \frac{I_{C,Q}}{V_T} \]
-\[ r_\pi = \frac{v_{be}}{i_b} = \frac{\beta}{g_m} = \frac{\beta V_T}{I_{C,Q}} \]
-\[ r_o = \frac{\partial V_{CE}}{\partial I_C}\bigg|_Q \approx \frac{V_A}{I_{C,Q}} \]
-\[ A_v = -g_m(R_C \parallel r_o) \approx -g_m R_C = -\frac{I_{C,Q} R_C}{V_T} \]
-\[ A_v \approx -\frac{R_C}{R_E} \]
-\[ A_v = \frac{g_m R_E}{1 + g_m R_E} \approx 1 \quad (\text{non inverseur, légèrement} < 1) \]
-\[ Z_{\text{in}} = r_\pi + (\beta+1)R_E \]
-\[ Z_{\text{out}} \approx \frac{1}{g_m} + \frac{R_s}{\beta+1} \]
-\[ f_T = \frac{g_m}{2\pi(C_\pi + C_\mu)} \]
-\[ C_{\text{Miller}} = C_\mu(1 + |A_v|) \]
-\[ I_{\text{out}} \approx I_{\text{ref}} \]
-\[ A_{v,\text{diff}} = -g_m R_C \quad \text{avec} \quad g_m = \frac{I_{\text{tail}}/2}{V_T} \]
+\form{Gain en courant du bipolaire}{I_C \approx \beta \cdot I_B}
+\form{Le BJT en commutation}{R_B = \frac{V_{\text{cmd}} - V_{BE,\text{sat}}}{k \cdot I_C / \beta_{\min}}}
+\form{La chaîne causale physique}{\begin{gathered} V_{BE} \xrightarrow{\text{1. abaisse la barrière}} \text{injection d'électrons} \xrightarrow{\text{2. diffusion}} \text{traversée de la base} \\[1mm] \xrightarrow{\text{3. collecte}} I_C \end{gathered}}
+\form{L'équation de Shockley pour le BJT}{I_C = I_S\,e^{V_{BE}/V_T}\left(1 + \frac{V_{CE}}{V_A}\right)}
+\form{La transconductance $g_m$}{g_m = \frac{\partial I_C}{\partial V_{BE}}\bigg|_Q = \frac{I_{C,Q}}{V_T}}
+\form{La résistance d'entrée $r_\pi$}{r_\pi = \frac{v_{be}}{i_b} = \frac{\beta}{g_m} = \frac{\beta V_T}{I_{C,Q}}}
+\form{La résistance de sortie $r_o$ (effet Early)}{r_o = \frac{\partial V_{CE}}{\partial I_C}\bigg|_Q \approx \frac{V_A}{I_{C,Q}}}
+\form{Émetteur commun --- gain (émetteur découplé)}{A_v = -g_m(R_C \parallel r_o) \approx -g_m R_C = -\frac{I_{C,Q} R_C}{V_T}}
+\form{Émetteur commun --- gain avec dégénérescence}{A_v \approx -\frac{R_C}{R_E}}
+\form{Collecteur commun --- gain en tension}{A_v = \frac{g_m R_E}{1 + g_m R_E} \approx 1 \quad (\text{non inverseur, légèrement} < 1)}
+\form{Collecteur commun --- impédance d'entrée}{Z_{\text{in}} = r_\pi + (\beta+1)R_E}
+\form{Collecteur commun --- impédance de sortie}{Z_{\text{out}} \approx \frac{1}{g_m} + \frac{R_s}{\beta+1}}
+\form{Fréquence de transition $f_T$}{f_T = \frac{g_m}{2\pi(C_\pi + C_\mu)}}
+\form{L'effet Miller et le cascode}{C_{\text{Miller}} = C_\mu(1 + |A_v|)}
+\form{Miroir de courant}{I_{\text{out}} \approx I_{\text{ref}}}
+\form{Paire différentielle --- gain différentiel}{A_{v,\text{diff}} = -g_m R_C \quad \text{avec} \quad g_m = \frac{I_{\text{tail}}/2}{V_T}}
 
 \section*{Chapitre~\ref{ch:mosfet} --- Le MOSFET}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:mosfet} --- Le MOSFET}
-\[ V_{DS} = R_{DS,\text{on}} \times I_D \]
-\[ P_{\text{cond}} = R_{DS,\text{on}} \times I_D^2 \]
-\[ I_D = k_n\left[V_{\text{ov}}\,V_{DS} - \frac{V_{DS}^2}{2}\right] \]
-\[ I_D = \frac{k_n}{2}\,V_{\text{ov}}^2\,(1 + \lambda V_{DS}) \]
-\[ g_m = \frac{\partial I_D}{\partial V_{GS}}\bigg|_Q = k_n\,V_{\text{ov}} = \frac{2I_{D,Q}}{V_{\text{ov}}} = \sqrt{2\,k_n\,I_{D,Q}} \]
-\[ r_o = \frac{1}{\lambda\,I_{D,Q}} = \frac{V_A}{I_{D,Q}} \]
-\[ P_{sw} = (E_{\text{on}} + E_{\text{off}}) \cdot f_{sw} = \frac{1}{2}V_{DS}\,I_D\,(t_{\text{on}}+t_{\text{off}})\,f_{sw} \]
-\[ P_{\text{total}} = \underbrace{R_{DS,\text{on}} \cdot I_D^2 \cdot D}_{\text{conduction}} + \underbrace{(E_{\text{on}}+E_{\text{off}})\cdot f_{sw}}_{\text{commutation}} + \underbrace{\frac{1}{2}C_{oss}\,V_{DS}^2\,f_{sw}}_{\text{capacitives}} \]
-\[ P_{\text{dyn}} = \alpha \cdot C_L \cdot V_{DD}^2 \cdot f \]
+\form{Chute de tension à l'état passant}{V_{DS} = R_{DS,\text{on}} \times I_D}
+\form{Pertes par conduction}{P_{\text{cond}} = R_{DS,\text{on}} \times I_D^2}
+\form{MOSFET en régime ohmique}{I_D = k_n\left[V_{\text{ov}}\,V_{DS} - \frac{V_{DS}^2}{2}\right]}
+\form{MOSFET en saturation}{I_D = \frac{k_n}{2}\,V_{\text{ov}}^2\,(1 + \lambda V_{DS})}
+\form{Transconductance $g_m$}{g_m = \frac{\partial I_D}{\partial V_{GS}}\bigg|_Q = k_n\,V_{\text{ov}} = \frac{2I_{D,Q}}{V_{\text{ov}}} = \sqrt{2\,k_n\,I_{D,Q}}}
+\form{Résistance de sortie $r_o$}{r_o = \frac{1}{\lambda\,I_{D,Q}} = \frac{V_A}{I_{D,Q}}}
+\form{Pertes de commutation}{P_{sw} = (E_{\text{on}} + E_{\text{off}}) \cdot f_{sw} = \frac{1}{2}V_{DS}\,I_D\,(t_{\text{on}}+t_{\text{off}})\,f_{sw}}
+\form{Pertes totales du MOSFET}{P_{\text{total}} = \underbrace{R_{DS,\text{on}} \cdot I_D^2 \cdot D}_{\text{conduction}} + \underbrace{(E_{\text{on}}+E_{\text{off}})\cdot f_{sw}}_{\text{commutation}} + \underbrace{\frac{1}{2}C_{oss}\,V_{DS}^2\,f_{sw}}_{\text{capacitives}}}
+\form{L'inverseur CMOS}{P_{\text{dyn}} = \alpha \cdot C_L \cdot V_{DD}^2 \cdot f}
 
 \section*{Chapitre~\ref{ch:aop} --- L'Amplificateur Opérationnel (AOP)}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:aop} --- L'Amplificateur Opérationnel (AOP)}
-\[ V_{\text{out}} = A_{OL} \cdot (V^+ - V^-) \]
-\[ V^+ = V^- \]
-\[ I^+ = 0 \text{ et } I^- = 0 \]
-\[ A_{CL} = 1 + \frac{R_2}{R_1} \]
-\[ A_{CL} = -\frac{R_2}{R_1} \]
-\[ A_{OL} \approx (g_{m1} \cdot r_{o1}) \times (g_{m2} \cdot r_{o2}) \times A_3 \]
-\[ A_{CL} = \frac{A_{OL}}{1 + A_{OL}\,\beta} \approx \frac{1}{\beta} \]
-\[ GBW = A_{OL,DC} \times f_p = A_{CL} \times f_{-3\text{dB}} \]
-\[ SR = \frac{I_{\text{tail}}}{C_C} \]
-\[ M_\varphi > 45^\circ \quad \text{(minimum)}, \quad 60^\circ\text{--}70^\circ \quad \text{(recommandé)} \]
-\[ e_{n,\text{total}} = \sqrt{e_n^2 + (i_n R_s)^2 + 4kTR_s} \]
+\form{Qu'est-ce qu'un AOP ?}{V_{\text{out}} = A_{OL} \cdot (V^+ - V^-)}
+\form{Règle d'or 1 --- court-circuit virtuel}{V^+ = V^-}
+\form{Règle d'or 2 --- courants d'entrée nuls}{I^+ = 0 \text{ et } I^- = 0}
+\form{Niveau 1 : calcul avec les règles d'or}{A_{CL} = 1 + \frac{R_2}{R_1}}
+\form{Les montages fondamentaux}{A_{CL} = -\frac{R_2}{R_1}}
+\form{Architecture interne~: d'où vient le gain ?}{A_{OL} \approx (g_{m1} \cdot r_{o1}) \times (g_{m2} \cdot r_{o2}) \times A_3}
+\form{Gain en boucle fermée (rétroaction)}{A_{CL} = \frac{A_{OL}}{1 + A_{OL}\,\beta} \approx \frac{1}{\beta}}
+\form{Produit gain-bande et pôle dominant}{GBW = A_{OL,DC} \times f_p = A_{CL} \times f_{-3\text{dB}}}
+\form{Slew rate d'un AOP}{SR = \frac{I_{\text{tail}}}{C_C}}
+\form{Stabilité~: marges de phase et de gain}{M_\varphi > 45^\circ \quad \text{(minimum)}, \quad 60^\circ\text{--}70^\circ \quad \text{(recommandé)}}
+\form{Bruit de l'AOP}{e_{n,\text{total}} = \sqrt{e_n^2 + (i_n R_s)^2 + 4kTR_s}}
 
 \section*{Chapitre~\ref{ch:filtres-actifs} --- Filtres actifs~: limites, conception et réalité}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:filtres-actifs} --- Filtres actifs~: limites, conception et réalité}
-\[ n \geq \frac{\log(10^{A/10} - 1)}{2\log(f_s/f_c)} \]
-\[ R_{\text{réel}} = R_{\text{norm}} \times Z_0 \]
-\[ C_{\text{réel}} = \frac{C_{\text{norm}}}{\omega_c \times Z_0} \]
-\[ D\% = 100 \times e^{-\pi/\sqrt{4Q^2 - 1}} \]
-\[ GBW_{\text{AOP}} > 10 \cdot Q \cdot f_0 \]
-\[ SR > 2\pi f_0 \cdot Q \cdot V_{\text{in,crête}} \]
+\form{Étape 3~: détermination de l'ordre}{n \geq \frac{\log(10^{A/10} - 1)}{2\log(f_s/f_c)}}
+\form{Mise à l'échelle --- résistances}{R_{\text{réel}} = R_{\text{norm}} \times Z_0}
+\form{Mise à l'échelle --- condensateurs}{C_{\text{réel}} = \frac{C_{\text{norm}}}{\omega_c \times Z_0}}
+\form{Dépassement en fonction de $Q$}{D\% = 100 \times e^{-\pi/\sqrt{4Q^2 - 1}}}
+\form{Condition sur le GBW de l'AOP}{GBW_{\text{AOP}} > 10 \cdot Q \cdot f_0}
+\form{Condition sur le slew rate}{SR > 2\pi f_0 \cdot Q \cdot V_{\text{in,crête}}}
 
 \section*{Chapitre~\ref{ch:oscillateurs} --- Les Oscillateurs}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:oscillateurs} --- Les Oscillateurs}
-\[ A\,\beta = 1 \]
-\[ |A\,\beta| = 1 \]
-\[ \arg(A\,\beta) = 0 \;[2\pi] \]
-\[ f_0 = \frac{1}{2\pi RC} \]
-\[ \beta = \frac{1}{3} \]
-\[ 1 + \frac{R_2}{R_1} = 3 \qquad\Longleftrightarrow\qquad R_2 = 2\,R_1 \]
-\[ f = \frac{1{,}44}{(R_1 + 2R_2)\,C} \]
-\[ f_0 = \frac{1}{2\pi\sqrt{L\,C_{eq}}} \]
+\form{Le principe~: une boucle fermée}{A\,\beta = 1}
+\form{Barkhausen --- condition sur le module}{|A\,\beta| = 1}
+\form{Barkhausen --- condition sur la phase}{\arg(A\,\beta) = 0 \;[2\pi]}
+\form{Pont de Wien --- fréquence d'oscillation}{f_0 = \frac{1}{2\pi RC}}
+\form{Pont de Wien --- taux de retour}{\beta = \frac{1}{3}}
+\form{L'oscillateur à pont de Wien}{1 + \frac{R_2}{R_1} = 3 \qquad\Longleftrightarrow\qquad R_2 = 2\,R_1}
+\form{Les oscillateurs à relaxation}{f = \frac{1{,}44}{(R_1 + 2R_2)\,C}}
+\form{Les oscillateurs LC}{f_0 = \frac{1}{2\pi\sqrt{L\,C_{eq}}}}
 
 \section*{Chapitre~\ref{ch:ampli-puissance} --- L'Amplification de Puissance}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:ampli-puissance} --- L'Amplification de Puissance}
-\[ P_{\text{alim}} = P_{\text{charge}} + P_{\text{dissipée}} \]
-\[ \hat{V} = \frac{2V_{CC}}{\pi} \approx 0{,}64\,V_{CC} \]
-\[ P_{\text{diss,max}} = \frac{2\,V_{CC}^2}{\pi^2 R_L} \]
-\[ V_{\text{polar}} = V_{BE}\left(1 + \frac{R_1}{R_2}\right) \]
-\[ T_J = T_A + P\,(R_{\theta JC} + R_{\theta CS} + R_{\theta SA}) \]
-\[ R_{\theta SA} \leq \frac{T_{J,\max} - T_A}{P} - R_{\theta JC} - R_{\theta CS} \]
+\form{Bilan énergétique d'un amplificateur}{P_{\text{alim}} = P_{\text{charge}} + P_{\text{dissipée}}}
+\form{Amplitude du pire cas thermique}{\hat{V} = \frac{2V_{CC}}{\pi} \approx 0{,}64\,V_{CC}}
+\form{Dissipation maximale (classe B)}{P_{\text{diss,max}} = \frac{2\,V_{CC}^2}{\pi^2 R_L}}
+\form{La distorsion de croisement}{V_{\text{polar}} = V_{BE}\left(1 + \frac{R_1}{R_2}\right)}
+\form{Température de jonction}{T_J = T_A + P\,(R_{\theta JC} + R_{\theta CS} + R_{\theta SA})}
+\form{Résistance thermique du radiateur}{R_{\theta SA} \leq \frac{T_{J,\max} - T_A}{P} - R_{\theta JC} - R_{\theta CS}}
 
 \section*{Chapitre~\ref{ch:combinatoire} --- Logique Combinatoire}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:combinatoire} --- Logique Combinatoire}
-\[ \overline{A \cdot B} = \overline{A} + \overline{B} \]
-\[ \overline{A + B} = \overline{A} \cdot \overline{B} \]
-\[ t_p \approx 0{,}7\,R_{\text{eq}}\,C_L \]
-\[ P_{\text{dyn}} = \alpha \cdot C_L \cdot V_{DD}^2 \cdot f \]
-\[ P_{\text{stat}} = V_{DD} \cdot I_{\text{off}} \cdot N \]
+\form{De Morgan --- complément d'un produit}{\overline{A \cdot B} = \overline{A} + \overline{B}}
+\form{De Morgan --- complément d'une somme}{\overline{A + B} = \overline{A} \cdot \overline{B}}
+\form{Délai de propagation}{t_p \approx 0{,}7\,R_{\text{eq}}\,C_L}
+\form{Puissance dynamique}{P_{\text{dyn}} = \alpha \cdot C_L \cdot V_{DD}^2 \cdot f}
+\form{Puissance statique}{P_{\text{stat}} = V_{DD} \cdot I_{\text{off}} \cdot N}
 
 \section*{Chapitre~\ref{ch:sequentiel} --- Logique Séquentielle}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:sequentiel} --- Logique Séquentielle}
-\[ Q(n+1) = D(n) \]
-\[ t_{su} + t_h \approx 2 \times t_{p,\text{inverseur interne}} \]
-\[ T_{\text{clk}} \geq t_{cq} + t_{\text{comb}} + t_{su} \]
-\[ f_{\max} = \frac{1}{t_{cq} + t_{\text{comb}} + t_{su}} \]
-\[ t_{cq,\min} + t_{\text{comb,min}} \geq t_h \]
+\form{Équation de la bascule D}{Q(n+1) = D(n)}
+\form{Somme setup $+$ hold}{t_{su} + t_h \approx 2 \times t_{p,\text{inverseur interne}}}
+\form{Période d'horloge minimale}{T_{\text{clk}} \geq t_{cq} + t_{\text{comb}} + t_{su}}
+\form{Fréquence maximale d'horloge}{f_{\max} = \frac{1}{t_{cq} + t_{\text{comb}} + t_{su}}}
+\form{Contrainte de maintien}{t_{cq,\min} + t_{\text{comb,min}} \geq t_h}
 
 \section*{Chapitre~\ref{ch:timing} --- Contraintes temporelles et synchronisation}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:timing} --- Contraintes temporelles et synchronisation}
-\[ T_{\text{clk}} \geq t_{cq} + t_{\text{comb}} + t_{su} + t_{\text{skew}} + t_j \]
-\[ t_{cq,\min} + t_{\text{comb,min}} \geq t_h + t_{\text{skew,hold}} \]
-\[ TJ = DJ + 2 \cdot N \cdot RJ_{\text{RMS}} \]
+\form{Budget de timing avec skew et gigue}{T_{\text{clk}} \geq t_{cq} + t_{\text{comb}} + t_{su} + t_{\text{skew}} + t_j}
+\form{Contrainte de maintien avec skew}{t_{cq,\min} + t_{\text{comb,min}} \geq t_h + t_{\text{skew,hold}}}
+\form{Gigue totale}{TJ = DJ + 2 \cdot N \cdot RJ_{\text{RMS}}}
 
 \section*{Chapitre~\ref{ch:fsm} --- Machines à états (FSM)}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:fsm} --- Machines à états (FSM)}
-\[ T_{\text{clk}} \geq t_{cq} + t_{\text{comb}} + t_{su} \]
+\form{Période d'horloge d'une FSM}{T_{\text{clk}} \geq t_{cq} + t_{\text{comb}} + t_{su}}
 
 \section*{Chapitre~\ref{ch:arithmetique} --- Circuits arithmétiques}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:arithmetique} --- Circuits arithmétiques}
-\[ t_{\text{RCA},n} = n \cdot t_{FA} \]
-\[ \text{acc} \leftarrow \text{acc} + a \times b \]
+\form{Délai d'un additionneur à propagation}{t_{\text{RCA},n} = n \cdot t_{FA}}
+\form{Unités spécialisées~: MAC, DSP, tensor cores}{\text{acc} \leftarrow \text{acc} + a \times b}
 
 \section*{Chapitre~\ref{ch:conversion} --- Conversion analogique-numérique et numérique-analogique}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:conversion} --- Conversion analogique-numérique et numérique-analogique}
-\[ f_s > 2 \cdot f_{\max} \]
-\[ \sigma_q = \frac{q}{\sqrt{12}} \]
-\[ SNR_{\text{idéal}} = 6{,}02 \cdot N + 1{,}76 \text{ dB} \]
-\[ ENOB = \frac{SINAD - 1{,}76}{6{,}02} \]
-\[ SNR_{\text{jitter}} = -20 \log_{10}(2\pi f_{\text{in}} \, t_j) \]
+\form{Le théorème de Shannon et le repliement}{f_s > 2 \cdot f_{\max}}
+\form{Bruit de quantification}{\sigma_q = \frac{q}{\sqrt{12}}}
+\form{Rapport signal/bruit idéal d'un CAN}{SNR_{\text{idéal}} = 6{,}02 \cdot N + 1{,}76 \text{ dB}}
+\form{ENOB~: les bits qui comptent vraiment}{ENOB = \frac{SINAD - 1{,}76}{6{,}02}}
+\form{SNR limité par la gigue d'horloge}{SNR_{\text{jitter}} = -20 \log_{10}(2\pi f_{\text{in}} \, t_j)}
 
 \section*{Chapitre~\ref{ch:protocoles} --- Protocoles de communication}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:protocoles} --- Protocoles de communication}
-\[ t_{\text{montée}} \approx 0{,}85 \, R_p C_b \quad (\text{de } 30\% \text{ à } 70\% \text{ de } V_{DD}) \]
+\form{L'UART~: l'asynchrone universel}{< 2{,}5\% \text{ par horloge}}
+\form{Open-drain~: le bus partagé sans conflit}{t_{\text{montée}} \approx 0{,}85 \, R_p C_b \quad (\text{de } 30\% \text{ à } 70\% \text{ de } V_{DD})}
 
 \section*{Chapitre~\ref{ch:limites-numerique} --- Limites physiques du numérique}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:limites-numerique} --- Limites physiques du numérique}
-\[ \sigma_V = \sqrt{\frac{kT}{C}} \]
-\[ MTTF = \frac{A}{J^n}\, e^{E_a/kT} \]
+\form{Le plancher~: le bruit}{\sigma_V = \sqrt{\frac{kT}{C}}}
+\form{Le vieillissement~: les transistors s'usent}{MTTF = \frac{A}{J^n}\, e^{E_a/kT}}
 
 \section*{Chapitre~\ref{ch:ldo} --- Régulation linéaire et LDO}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:ldo} --- Régulation linéaire et LDO}
-\[ V_{\text{out}} = V_{\text{ref}}\left(1 + \frac{R_a}{R_b}\right) \]
-\[ \eta = \frac{V_{\text{out}} I_L}{V_{\text{in}} (I_L + I_q)} \approx \frac{V_{\text{out}}}{V_{\text{in}}} \]
+\form{Tension de sortie d'un régulateur}{V_{\text{out}} = V_{\text{ref}}\left(1 + \frac{R_a}{R_b}\right)}
+\form{La limite fondamentale~: le rendement}{\eta = \frac{V_{\text{out}} I_L}{V_{\text{in}} (I_L + I_q)} \approx \frac{V_{\text{out}}}{V_{\text{in}}}}
 
 \section*{Chapitre~\ref{ch:decoupage} --- Alimentations à découpage}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:decoupage} --- Alimentations à découpage}
-\[ \langle V_L \rangle = 0 \quad\Rightarrow\quad V_L^{(\text{on})}\cdot t_{\text{on}} = -V_L^{(\text{off})}\cdot t_{\text{off}} \]
-\[ V_{\text{out}} = D \cdot V_{\text{in}} \qquad (0 \leq D \leq 1 \;\Rightarrow\; V_{\text{out}} \leq V_{\text{in}}) \]
-\[ V_{\text{out}} = \frac{V_{\text{in}}}{1 - D} \qquad (V_{\text{out}} \geq V_{\text{in}}) \]
-\[ V_{\text{out}} = -\frac{D}{1-D}\,V_{\text{in}} \]
+\form{Le rôle clé de la bobine~: lisser le courant}{\langle V_L \rangle = 0 \quad\Rightarrow\quad V_L^{(\text{on})}\cdot t_{\text{on}} = -V_L^{(\text{off})}\cdot t_{\text{off}}}
+\form{Le convertisseur abaisseur (buck)}{V_{\text{out}} = D \cdot V_{\text{in}} \qquad (0 \leq D \leq 1 \;\Rightarrow\; V_{\text{out}} \leq V_{\text{in}})}
+\form{Le convertisseur élévateur (boost)}{V_{\text{out}} = \frac{V_{\text{in}}}{1 - D} \qquad (V_{\text{out}} \geq V_{\text{in}})}
+\form{Convertisseur buck-boost}{V_{\text{out}} = -\frac{D}{1-D}\,V_{\text{in}}}
 
 \section*{Chapitre~\ref{ch:laplace} --- Asservissement et transformée de Laplace}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:laplace} --- Asservissement et transformée de Laplace}
-\[ \frac{y}{r} = \frac{A}{1 + A\beta} \]
-\[ \text{Système stable} \iff \text{tous les pôles ont une partie réelle négative} \]
+\form{Pourquoi la contre-réaction est si puissante}{\frac{y}{r} = \frac{A}{1 + A\beta}}
+\form{La fonction de transfert, pôles et zéros}{\text{Système stable} \iff \text{tous les pôles ont une partie réelle négative}}
 
 \section*{Chapitre~\ref{ch:pid} --- Correcteur PID, lieu des racines et marges de stabilité}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:pid} --- Correcteur PID, lieu des racines et marges de stabilité}
-\[ C(s) = K_p + \frac{K_i}{s} + K_d\,s = K_p\left(1 + \frac{1}{T_i\,s} + T_d\,s\right) \]
+\form{La fonction de transfert du PID}{C(s) = K_p + \frac{K_i}{s} + K_d\,s = K_p\left(1 + \frac{1}{T_i\,s} + T_d\,s\right)}
 
 \section*{Chapitre~\ref{ch:integrite-signal} --- Intégrité du signal~: quand la piste devient une ligne}
 \addcontentsline{toc}{section}{Chapitre~\ref{ch:integrite-signal} --- Intégrité du signal~: quand la piste devient une ligne}
-\[ \,Z_0 = \sqrt{\frac{L'}{C'}}\, \]
-\[ R_T = \SI{39}{\ohm} \]
-\[ w \approx \SI{0.33}{mm} \]
+\form{Impédance caractéristique d'une ligne}{\,Z_0 = \sqrt{\frac{L'}{C'}}\,}
 
 }
 
