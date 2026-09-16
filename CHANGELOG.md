@@ -1,5 +1,42 @@
 # Historique des versions
 
+## v1.6.4 — 16 septembre 2026
+**Les figures comparatives sont lisibles sans la couleur.**
+
+Environ 8~% des hommes ne distinguent pas le rouge du vert. Dans six figures
+du livre, deux courbes de ces deux couleurs étaient tracées du même trait
+plein : pour ces lecteurs, deux courbes identiques. Ce sont précisément les
+figures dont l'objet est « distinguez ces trois-là » — les régimes
+d'amortissement (10.2 et 37.3), les réponses selon $Q$ (14.2 et 21.3), les
+trois réponses normalisées (15.5), les trois correcteurs P, PI et PID (38.1).
+La légende de 15.5 demandait même de « trouver le bleu ».
+
+**Convention adoptée : dans une figure qui compare plusieurs courbes, chacune
+reçoit son propre style de trait en plus de sa couleur** --- plein, tireté,
+tiret-point, pointillé --- et les témoins de légende portent le même style que
+leur courbe. Dix-huit traits sont concernés. Le bénéfice dépasse le
+daltonisme : ces figures deviennent lisibles en photocopie noir et blanc, ce
+qui n'est pas un détail pour un livre de cours.
+
+Deux légendes qui désignaient une courbe par sa seule couleur sont complétées
+(15.5 et 14.1).
+
+**Sur le chiffrage, je me suis trompé deux fois avant d'avoir le bon.** Un
+premier comptage annonçait 24 figures « rouge et vert » : la plupart
+n'utilisaient le vert que pour un cadre ou une étiquette. Un second en
+retenait 11. La vérification figure par figure, par simulation de la
+deutéranopie sur les images rendues, en a écarté cinq de plus, toutes
+déjà lisibles : 12.2 et 12.3 identifient chaque vecteur par une étiquette
+adjacente et une orientation propre ; 20.4 et 30.2 n'emploient la couleur que
+comme fond de bloc ; 40.2 appliquait déjà la convention tiret/pointillé --- et
+c'est elle qui l'a inspirée. La figure du SAR (31.4), également soupçonnée,
+imprime le chiffre 0 ou 1 lui-même : la couleur n'y est que redondante. Six
+figures avaient réellement besoin d'être corrigées.
+
+Pagination inchangée à 703 pages. Hors des six figures et des deux légendes,
+le texte est identique : 1148 renvois numérotés, 180 figures, 111 tableaux,
+249 exercices, aucune différence.
+
 ## v1.6.3 — 15 septembre 2026
 **La figure 17.11 mesurait $t_{rr}$ autrement que les fiches techniques.**
 
